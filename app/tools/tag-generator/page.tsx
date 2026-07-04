@@ -1,7 +1,7 @@
 "use client";
 
 import { copyToClipboard } from "@/lib/clipboard";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Tag as TagIcon,
@@ -16,6 +16,8 @@ import {
   Hash,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { StreamingPreview } from "@/components/tools/StreamingPreview";
+import { streamJson } from "@/lib/streamJson";
 import {
   StatsStrip,
   GuideGrid,
@@ -138,6 +140,8 @@ export default function TagGeneratorPage() {
   const [data, setData] = useState<TagData | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [streamText, setStreamText] = useState("");
+  const abortRef = useRef<AbortController | null>(null);
 
   const run = async (val?: string) => {
     const v = (val ?? topic).trim();
@@ -148,30 +152,40 @@ export default function TagGeneratorPage() {
     setData(null);
     setCopiedAll(false);
     setCopiedIdx(null);
-    console.groupCollapsed("[TagGenerator] POST /api/generate-tags");
-    console.log("Topic:", v, "Endpoint:", `${BASE_URL}/api/generate-tags`);
-    try {
-      const res = await fetch(`${BASE_URL}/api/generate-tags`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: v, count: 60 }),
-      });
-      console.log("HTTP status:", res.status, res.statusText);
-      const body = await res.json().catch(() => ({}));
-      console.log("Response body:", body);
-      if (!res.ok || !body?.data) {
-        console.warn("[TagGenerator] Backend unavailable — falling back to local generator.");
-        setData(localGenerate(v));
-        return;
+    setStreamText("");
+
+    abortRef.current = streamJson<TagData>(
+      `${BASE_URL}/api/generate-tags/stream`,
+      { topic: v },
+      {
+        onDelta: (full) => setStreamText(full),
+        onDone: (result, _raw, err) => {
+          if (result) {
+            setData(result);
+          } else if (err) {
+            setError(err);
+            setData(localGenerate(v));
+          } else {
+            setData(localGenerate(v));
+          }
+          setStreamText("");
+        },
+        onError: (message) => {
+          console.warn("[TagGenerator] stream error, using local fallback:", message);
+          setData(localGenerate(v));
+          setStreamText("");
+        },
       }
-      setData(body.data as TagData);
-    } catch (err: any) {
-      console.error("[TagGenerator] FAILED, using local fallback:", err?.message);
-      setData(localGenerate(v));
-    } finally {
-      console.groupEnd();
-      setLoading(false);
-    }
+    );
+
+    setLoading(false);
+  };
+
+  const cancel = () => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setLoading(false);
+    setStreamText("");
   };
 
   const allTagsString = useMemo(
@@ -235,8 +249,15 @@ export default function TagGeneratorPage() {
         </div>
       </ToolCard>
 
+      <StreamingPreview
+        open={loading || !!streamText}
+        text={streamText}
+        onCancel={loading ? cancel : undefined}
+        title="Streaming tags"
+      />
+
       <AnimatePresence mode="wait">
-        {loading && (
+        {loading && !streamText && (
           <motion.div
             key="loading"
             initial={{ opacity: 0 }}

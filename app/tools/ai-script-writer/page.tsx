@@ -2,7 +2,7 @@
 
 import { copyToClipboard } from "@/lib/clipboard";
 import { friendlyApiError } from "@/lib/apiError";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   PenTool,
@@ -30,6 +30,8 @@ import {
 } from "lucide-react";
 import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/tools/ToolLayout";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
+import { StreamingPreview } from "@/components/tools/StreamingPreview";
+import { streamJson } from "@/lib/streamJson";
 
 const lengths = [
   { id: "5-7 minutes", label: "Short", sub: "5-7 min" },
@@ -158,44 +160,53 @@ export default function AIScriptWriterPage() {
   const [copied, setCopied] = useState(false);
   const [copiedSectionIdx, setCopiedSectionIdx] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [streamText, setStreamText] = useState("");
+  const abortRef = useRef<AbortController | null>(null);
 
   const generate = async () => {
     if (!topic.trim()) return;
     setLoading(true);
     setScript(null);
     setError(null);
+    setStreamText("");
 
-    try {
-      const lang = getLanguage(language);
-      const res = await fetch(`${BASE_URL}/api/generate-script`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          topic: topic.trim(),
-          length,
-          tone,
-          audience,
-          language: lang.name,
-        }),
-      });
-
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        throw new Error(friendlyApiError(errBody.error || "", res.status));
+    const lang = getLanguage(language);
+    abortRef.current = streamJson<{ script: ScriptResponse }>(
+      `${BASE_URL}/api/generate-script/stream`,
+      {
+        topic: topic.trim(),
+        length,
+        tone,
+        audience,
+        language: lang.name,
+      },
+      {
+        onDelta: (full) => setStreamText(full),
+        onDone: (result, _raw, err) => {
+          if (result?.script) {
+            setScript(result.script);
+          } else if (err) {
+            setError(friendlyApiError(err, 0));
+          } else {
+            setError(friendlyApiError("Unexpected response format", 0));
+          }
+          setStreamText("");
+          setLoading(false);
+        },
+        onError: (message) => {
+          setError(friendlyApiError(message, 0));
+          setStreamText("");
+          setLoading(false);
+        },
       }
+    );
+  };
 
-      const data = await res.json();
-      if (data.success && data.data?.script) {
-        setScript(data.data.script);
-      } else {
-        throw new Error("Unexpected response format");
-      }
-    } catch (err) {
-      setError(friendlyApiError(err instanceof Error ? err.message : "", 0));
-      console.error("Script generation error:", err);
-    } finally {
-      setLoading(false);
-    }
+  const cancel = () => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setLoading(false);
+    setStreamText("");
   };
 
   const scriptToText = (s: ScriptResponse) => {
@@ -375,8 +386,16 @@ export default function AIScriptWriterPage() {
             </div>
           )}
 
+          {/* Streaming preview */}
+          <StreamingPreview
+            open={loading || !!streamText}
+            text={streamText}
+            onCancel={loading ? cancel : undefined}
+            title="Streaming script"
+          />
+
           {/* Loading state */}
-          {loading && (
+          {loading && !streamText && (
             <div className="py-8 flex flex-col items-center text-center">
               <div className="relative mb-5">
                 <motion.div

@@ -29,6 +29,8 @@ import {
   PrimaryButton,
 } from "@/components/tools/ToolLayout";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
+import { StreamingPreview } from "@/components/tools/StreamingPreview";
+import { streamJson } from "@/lib/streamJson";
 
 const styleOptions: Record<
   string,
@@ -497,6 +499,8 @@ export default function ViralTitleGeneratorPage() {
   const [activeStyle, setActiveStyle] = useState<keyof typeof styleOptions>("clickbait");
   const [emotion, setEmotion] = useState<keyof typeof emotionOptions>("excited");
   const [titles, setTitles] = useState<GeneratedTitle[]>([]);
+  const [streamText, setStreamText] = useState("");
+  const abortRef = useRef<AbortController | null>(null);
   const [loading, setLoading] = useState(false);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
@@ -510,52 +514,58 @@ export default function ViralTitleGeneratorPage() {
     setTitles([]);
     setFavorites(new Set());
     setError(null);
-    const minDisplay = new Promise((res) => setTimeout(res, 20000));
-    // Scroll to results immediately so the loader is visible
+    setStreamText("");
     setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
 
-    try {
-      const lang = getLanguage(language);
-      const fetchPromise = fetch("https://tubeai-backend.vercel.app/api/generate-titles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const lang = getLanguage(language);
+    abortRef.current = streamJson<{ titles: GeneratedTitle[] }>(
+      "https://tubeai-backend.vercel.app/api/generate-titles/stream",
+      {
+        topic: keyword.trim(),
+        language: lang.name,
+        style: styleOptions[activeStyle].apiValue,
+        emotion: emotionOptions[emotion].apiValue,
+      },
+      {
+        onDelta: (full) => setStreamText(full),
+        onDone: (result, _raw, err) => {
+          if (result?.titles?.length) {
+            setTitles(result.titles);
+          } else if (err) {
+            setError("Live AI is temporarily unavailable — showing high-quality template titles. Try again shortly for AI-tuned results.");
+            setTitles(
+              localGenerateTitles(
+                keyword.trim(),
+                styleOptions[activeStyle].apiValue,
+                emotionOptions[emotion].apiValue,
+              ),
+            );
+          }
+          setStreamText("");
+          setLoading(false);
         },
-        body: JSON.stringify({
-          topic: keyword.trim(),
-          language: lang.name,
-          style: styleOptions[activeStyle].apiValue,
-          emotion: emotionOptions[emotion].apiValue,
-        }),
-      });
-
-      const [response] = await Promise.all([fetchPromise, minDisplay]);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(friendlyApiError(errorData.error || "", response.status));
+        onError: () => {
+          console.warn("[ViralTitleGenerator] stream error, using local fallback");
+          setTitles(
+            localGenerateTitles(
+              keyword.trim(),
+              styleOptions[activeStyle].apiValue,
+              emotionOptions[emotion].apiValue,
+            ),
+          );
+          setError("Live AI is temporarily unavailable — showing high-quality template titles. Try again shortly for AI-tuned results.");
+          setStreamText("");
+          setLoading(false);
+        },
       }
+    );
+  };
 
-      const data = await response.json();
-      if (data.success && data.data?.titles) {
-        setTitles(data.data.titles);
-      } else {
-        throw new Error("Invalid response format");
-      }
-    } catch (err) {
-      await minDisplay;
-      console.warn("[ViralTitleGenerator] Backend unavailable — using local fallback:", err);
-      setTitles(
-        localGenerateTitles(
-          keyword.trim(),
-          styleOptions[activeStyle].apiValue,
-          emotionOptions[emotion].apiValue,
-        ),
-      );
-      setError("Live AI is temporarily unavailable — showing high-quality template titles. Try again shortly for AI-tuned results.");
-    } finally {
-      setLoading(false);
-    }
+  const cancel = () => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setLoading(false);
+    setStreamText("");
   };
 
   const copy = (text: string, idx: number) => {
@@ -694,9 +704,17 @@ export default function ViralTitleGeneratorPage() {
       {/* Scroll anchor */}
       <div ref={resultsRef} />
 
+      {/* Streaming preview */}
+      <StreamingPreview
+        open={loading || !!streamText}
+        text={streamText}
+        onCancel={loading ? cancel : undefined}
+        title="Streaming titles"
+      />
+
       {/* Loading State */}
       <AnimatePresence>
-        {loading && <GenerationLoader />}
+        {loading && !streamText && <GenerationLoader />}
       </AnimatePresence>
 
       {/* Results */}

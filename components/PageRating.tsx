@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Star, X, MessageSquare, Check, Sparkles, ThumbsUp, Loader2, AlertTriangle, MessageCircle, Send, Bot, Plus } from "lucide-react";
+import { ChatMarkdown } from "./ChatMarkdown";
 
 const STORAGE_KEY = "ytforge_page_ratings_v1";
 const BASE_URL = "https://tubeai-backend.vercel.app";
@@ -56,10 +57,18 @@ export function PageRating() {
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
   const chatEndRef = React.useRef<HTMLDivElement>(null);
+  const abortRef = React.useRef<AbortController | null>(null);
+  const finishRef = React.useRef<(() => void) | null>(null);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages, chatLoading, chatOpen]);
+
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+    };
+  }, []);
 
   const sendChat = async () => {
     const text = chatInput.trim();
@@ -74,12 +83,15 @@ export function PageRating() {
 
     try {
       console.log("[AI Chat] POST", `${BASE_URL}/api/chat`);
+      const abort = new AbortController();
+      abortRef.current = abort;
       const res = await fetch(`${BASE_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           history: history.map((m) => ({ role: m.role, content: m.text })),
         }),
+        signal: abort.signal,
       });
 
       console.log("[AI Chat] status", res.status, res.headers.get("content-type"));
@@ -91,30 +103,62 @@ export function PageRating() {
       if (!res.body) throw new Error("No response stream from server.");
 
       // Server-Sent Events stream: accumulate `delta` events into the reply,
-      // streaming each token into the UI as it arrives.
+      // then flush to React state on a time throttle so the UI stays smooth
+      // even on long replies (no per-token re-render / markdown re-parse).
       const reader = res.body.getReader();
       const decoder = new TextDecoder("utf-8");
-      let buffer = "";
+      let sseBuffer = "";
       let reply = "";
       const botId = `b-${Date.now()}`;
+      let flushTimer: ReturnType<typeof setTimeout> | null = null;
 
-      const pushBot = () =>
+      const commit = (text: string) =>
         setChatMessages((prev) => {
           const exists = prev.some((m) => m.id === botId);
           return exists
-            ? prev.map((m) => (m.id === botId ? { ...m, text: reply } : m))
-            : [...prev, { id: botId, role: "bot", text: reply }];
+            ? prev.map((m) => (m.id === botId ? { ...m, text } : m))
+            : [...prev, { id: botId, role: "bot", text }];
         });
 
-      pushBot();
+      const cancelFlush = () => {
+        if (flushTimer) {
+          clearTimeout(flushTimer);
+          flushTimer = null;
+        }
+      };
+
+      const FLUSH_MS = 60;
+      let lastFlush = 0;
+      const scheduleFlush = () => {
+        if (flushTimer) return;
+        flushTimer = setTimeout(() => {
+          flushTimer = null;
+          lastFlush = Date.now();
+          commit(reply);
+        }, FLUSH_MS);
+      };
+
+      try {
+        cancelFlush();
+      } catch {
+        /* no-op: timer not yet set */
+      }
+
+      commit("");
+
+      const finish = () => {
+        cancelFlush();
+        commit(reply);
+      };
+      finishRef.current = finish;
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        buffer += decoder.decode(value, { stream: true });
-        const events = buffer.split("\n\n");
-        buffer = events.pop() || "";
+        sseBuffer += decoder.decode(value, { stream: true });
+        const events = sseBuffer.split("\n\n");
+        sseBuffer = events.pop() || "";
 
         for (const block of events) {
           const lines = block.split("\n");
@@ -135,21 +179,42 @@ export function PageRating() {
 
           if (eventType === "delta" && typeof parsed.content === "string") {
             reply += parsed.content;
-            pushBot();
+            // Throttle: flush immediately on the first chunk, then at most
+            // every FLUSH_MS thereafter so we never re-render per token.
+            if (!lastFlush || Date.now() - lastFlush >= FLUSH_MS) {
+              lastFlush = Date.now();
+              commit(reply);
+            } else {
+              scheduleFlush();
+            }
+          } else if (eventType === "done") {
+            // Backend signaled completion — stop reading immediately so the
+            // loading state clears, without waiting for the TCP connection
+            // to finish closing.
+            finish();
+            return;
           } else if (eventType === "error") {
             throw new Error(parsed.message || "Streaming interrupted");
           }
         }
       }
 
+      // Final flush guarantees the complete response is rendered.
+      finish();
+
       if (!reply.trim()) throw new Error("Empty response from server.");
       console.log("[AI Chat] complete", reply.length, "chars");
     } catch (err) {
       console.error("[AI Chat] error", err);
-      setChatError(
-        err instanceof Error ? err.message : "Couldn't reach the assistant. Try again."
-      );
+      const aborted = err instanceof DOMException && err.name === "AbortError";
+      if (!aborted) {
+        setChatError(
+          err instanceof Error ? err.message : "Couldn't reach the assistant. Try again."
+        );
+      }
     } finally {
+      finishRef.current = null;
+      abortRef.current = null;
       setChatLoading(false);
     }
   };
@@ -418,31 +483,54 @@ export function PageRating() {
 
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-neutral-50">
-                  {chatMessages.map((m) => (
-                    <motion.div
-                      key={m.id}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className={`flex items-end gap-2 ${m.role === "user" ? "justify-end" : "justify-start"}`}
-                    >
-                      {m.role === "bot" && (
-                        <div className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-red-600 text-white border-2 border-black">
-                          <Bot className="w-3.5 h-3.5" />
-                        </div>
-                      )}
-                      <div
-                        className={`max-w-[78%] px-3.5 py-2.5 text-sm leading-relaxed border-2 border-black ${
-                          m.role === "user"
-                            ? "bg-red-600 text-white rounded-2xl rounded-br-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-                            : "bg-white text-neutral-800 rounded-2xl rounded-bl-sm shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]"
-                        }`}
+                  {chatMessages.map((m, idx) => {
+                    const isStreaming =
+                      chatLoading &&
+                      m.role === "bot" &&
+                      idx === chatMessages.length - 1;
+                    return (
+                      <motion.div
+                        key={m.id}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={`flex items-end gap-2 ${m.role === "user" ? "justify-end" : "justify-start"}`}
                       >
-                        {m.text}
-                      </div>
-                    </motion.div>
-                  ))}
+                        {m.role === "bot" && (
+                          <div className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-red-600 text-white border-2 border-black">
+                            <Bot className="w-3.5 h-3.5" />
+                          </div>
+                        )}
+                        <div
+                          className={`max-w-[86%] px-3.5 py-2.5 border-2 border-black ${
+                            m.role === "user"
+                              ? "bg-red-600 text-white rounded-2xl rounded-br-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                              : "bg-white text-neutral-800 rounded-2xl rounded-bl-sm shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]"
+                          }`}
+                        >
+                          {m.role === "bot" ? (
+                          <div className="relative">
+                            <ChatMarkdown content={m.text} />
+                            {isStreaming && (
+                              <motion.span
+                                aria-hidden
+                                className="inline-block w-[2px] h-[1em] align-text-bottom ml-0.5 bg-red-600"
+                                animate={{ opacity: [1, 0, 1] }}
+                                transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
+                              />
+                            )}
+                          </div>
+                          ) : (
+                            <span className="text-sm leading-relaxed whitespace-pre-wrap break-words">{m.text}</span>
+                          )}
+                        </div>
+                      </motion.div>
+                    );
+                  })}
 
-                  {chatLoading && (
+                  {chatLoading &&
+                    (chatMessages.length === 0 ||
+                      chatMessages[chatMessages.length - 1].role !== "bot" ||
+                      !chatMessages[chatMessages.length - 1].text) && (
                     <motion.div
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}

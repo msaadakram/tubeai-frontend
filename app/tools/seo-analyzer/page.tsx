@@ -2,7 +2,7 @@
 
 import { copyToClipboard } from "@/lib/clipboard";
 import { friendlyApiError } from "@/lib/apiError";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   LineChart,
@@ -25,6 +25,8 @@ import {
   Wand2,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { StreamingPreview } from "@/components/tools/StreamingPreview";
+import { streamJson } from "@/lib/streamJson";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 
 const BASE_URL =
@@ -163,6 +165,8 @@ export default function SeoAnalyzerPage() {
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<SeoResult | null>(null);
   const [seoStep, setSeoStep] = useState(0);
+  const [streamText, setStreamText] = useState("");
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (!loading) {
@@ -180,27 +184,43 @@ export default function SeoAnalyzerPage() {
     setLoading(true);
     setError(null);
     setData(null);
-    try {
-      const res = await fetch(`${BASE_URL}/api/seo-analyze`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: title.trim(),
-          description: description.trim(),
-          language,
-          audience,
-        }),
-      });
-      const body = await res.json().catch(() => ({}));
-      if (!res.ok || !body?.success) {
-        throw new Error(friendlyApiError(body?.error || "", res.status));
+    setStreamText("");
+
+    abortRef.current = streamJson<SeoResult>(
+      `${BASE_URL}/api/seo-analyze/stream`,
+      {
+        title: title.trim(),
+        description: description.trim(),
+        language,
+        audience,
+      },
+      {
+        onDelta: (full) => setStreamText(full),
+        onDone: (result, _raw, err) => {
+          if (result) {
+            setData(result);
+          } else if (err) {
+            setError(friendlyApiError(err, 0));
+          } else {
+            setError(friendlyApiError("Empty response from server.", 0));
+          }
+          setStreamText("");
+        },
+        onError: (message) => {
+          setError(friendlyApiError(message, 0));
+          setStreamText("");
+        },
       }
-      setData(body.data as SeoResult);
-    } catch (err: any) {
-      setError(friendlyApiError(err?.message || "", 0));
-    } finally {
-      setLoading(false);
-    }
+    );
+
+    setLoading(false);
+  };
+
+  const cancel = () => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setLoading(false);
+    setStreamText("");
   };
 
   return (
@@ -275,6 +295,13 @@ export default function SeoAnalyzerPage() {
         </div>
       </ToolCard>
 
+      <StreamingPreview
+        open={loading || !!streamText}
+        text={streamText}
+        onCancel={loading ? cancel : undefined}
+        title="Streaming analysis"
+      />
+
       <AnimatePresence>
         {error && !loading && (
           <motion.div
@@ -308,7 +335,7 @@ export default function SeoAnalyzerPage() {
       </AnimatePresence>
 
       <AnimatePresence mode="wait">
-        {loading && (
+        {loading && !streamText && (
           <motion.div
             key="loading"
             initial={{ opacity: 0, y: 12, scale: 0.98 }}

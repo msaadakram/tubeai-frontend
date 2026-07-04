@@ -1,7 +1,7 @@
 "use client";
 
 import { copyToClipboard } from "@/lib/clipboard";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Hash,
@@ -17,6 +17,8 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { StreamingPreview } from "@/components/tools/StreamingPreview";
+import { streamJson } from "@/lib/streamJson";
 import {
   StatsStrip,
   GuideGrid,
@@ -166,6 +168,8 @@ export default function HashtagGeneratorPage() {
   const [data, setData] = useState<HashtagData | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [streamText, setStreamText] = useState("");
+  const abortRef = useRef<AbortController | null>(null);
 
   const run = async (val?: string) => {
     const v = (val ?? topic).trim();
@@ -176,30 +180,40 @@ export default function HashtagGeneratorPage() {
     setData(null);
     setCopiedAll(false);
     setCopiedIdx(null);
-    console.groupCollapsed("[HashtagGenerator] POST /api/generate-hashtags");
-    console.log("Topic:", v, "Endpoint:", `${BASE_URL}/api/generate-hashtags`);
-    try {
-      const res = await fetch(`${BASE_URL}/api/generate-hashtags`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: v }),
-      });
-      console.log("HTTP status:", res.status, res.statusText);
-      const body = await res.json().catch(() => ({}));
-      console.log("Response body:", body);
-      if (!res.ok || !body?.data) {
-        console.warn("[HashtagGenerator] Backend unavailable — falling back to local generator.");
-        setData(localGenerate(v));
-        return;
+    setStreamText("");
+
+    abortRef.current = streamJson<HashtagData>(
+      `${BASE_URL}/api/generate-hashtags/stream`,
+      { topic: v },
+      {
+        onDelta: (full) => setStreamText(full),
+        onDone: (result, _raw, err) => {
+          if (result) {
+            setData(result);
+          } else if (err) {
+            setError(err);
+            setData(localGenerate(v));
+          } else {
+            setData(localGenerate(v));
+          }
+          setStreamText("");
+        },
+        onError: (message) => {
+          console.warn("[HashtagGenerator] stream error, using local fallback:", message);
+          setData(localGenerate(v));
+          setStreamText("");
+        },
       }
-      setData(body.data as HashtagData);
-    } catch (err: any) {
-      console.error("[HashtagGenerator] FAILED, using local fallback:", err?.message);
-      setData(localGenerate(v));
-    } finally {
-      console.groupEnd();
-      setLoading(false);
-    }
+    );
+
+    setLoading(false);
+  };
+
+  const cancel = () => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setLoading(false);
+    setStreamText("");
   };
 
   const allTagsString = useMemo(
@@ -260,8 +274,15 @@ export default function HashtagGeneratorPage() {
         </div>
       </ToolCard>
 
+      <StreamingPreview
+        open={loading || !!streamText}
+        text={streamText}
+        onCancel={loading ? cancel : undefined}
+        title="Streaming hashtags"
+      />
+
       <AnimatePresence mode="wait">
-        {loading && (
+        {loading && !streamText && (
           <motion.div
             key="loading"
             initial={{ opacity: 0 }}
