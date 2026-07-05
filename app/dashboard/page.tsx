@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
@@ -44,7 +44,7 @@ import {
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { useAuth } from "@/lib/auth";
+import { useAuth, authFetch } from "@/lib/auth";
 
 const tools = [
   { name: "AI Chat Coach", desc: "Ask anything, get streamed advice", href: "/chat", icon: MessageCircle, color: "bg-red-100 text-red-700" },
@@ -93,18 +93,44 @@ const planMeta: Record<string, { label: string; color: string; cap: string; perk
   },
 };
 
-const usageStats = [
-  { label: "AI generations", value: "247", change: "+38 this week", icon: Sparkles, color: "text-red-600" },
-  { label: "Tools used", value: "8 / 10", change: "Try 2 more", icon: Zap, color: "text-yellow-600" },
-  { label: "Days active", value: "24", change: "🔥 5-day streak", icon: Activity, color: "text-emerald-600" },
-  { label: "Avg CTR lift", value: "+312%", change: "vs. baseline", icon: TrendingUp, color: "text-blue-600" },
-];
+const TOOL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  titles: Type,
+  tags: TagIcon,
+  hashtags: Hash,
+  script: PenLine,
+  seo: Search,
+  chat: MessageCircle,
+};
 
-const recentActivity = [
-  { tool: "Viral Title Generator", action: "Generated 20 titles for 'Morning Routine 2026'", time: "2h ago", icon: Type },
-  { tool: "SEO Analyzer", action: "Scored video — 92/100", time: "Yesterday", icon: Search },
-  { tool: "AI Script Writer", action: "Drafted 8-min script", time: "2d ago", icon: PenLine },
-];
+type Stats = {
+  generations: number;
+  toolsUsed: number;
+  daysActive: number;
+  byTool: Record<string, number>;
+  lastActiveAt: string | null;
+  streak: number;
+};
+
+type ActivityItem = {
+  id: string;
+  tool: string;
+  toolLabel: string;
+  action: string;
+  createdAt: string;
+};
+
+function relTime(iso: string): string {
+  const then = new Date(iso).getTime();
+  const diff = Date.now() - then;
+  const m = Math.round(diff / 60000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m}m ago`;
+  const h = Math.round(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.round(h / 24);
+  if (d < 7) return `${d}d ago`;
+  return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
 
 const community = [
   { t: "Join Discord", d: "12,400 creators sharing wins", icon: MessageCircle, href: "#", color: "bg-indigo-600 text-white" },
@@ -117,14 +143,42 @@ export default function DashboardPage() {
   const { user, signOut } = useAuth();
   const router = useRouter();
 
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [activity, setActivity] = useState<ActivityItem[]>([]);
+  const [loadingDash, setLoadingDash] = useState(true);
+
   useEffect(() => {
-    if (!user) router.replace("/signin");
+    if (!user) {
+      router.replace("/signin");
+      return;
+    }
+    let cancelled = false;
+    setLoadingDash(true);
+    Promise.all([
+      authFetch<{ stats: Stats }>("/api/stats").catch(() => null),
+      authFetch<{ activity: ActivityItem[] }>("/api/activity?limit=8").catch(() => null),
+    ]).then(([s, a]) => {
+      if (cancelled) return;
+      if (s?.stats) setStats(s.stats);
+      if (a?.activity) setActivity(a.activity);
+      setLoadingDash(false);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [user, router]);
 
   if (!user) return null;
 
   const meta = planMeta[user.plan] || planMeta.creator;
   const canUpgrade = user.plan === "free" || user.plan === "creator";
+
+  const usageStats = [
+    { label: "AI generations", value: stats ? String(stats.generations) : "—", change: stats && stats.generations > 0 ? "all time" : "start creating", icon: Sparkles, color: "text-red-600" },
+    { label: "Tools used", value: stats ? `${stats.toolsUsed} / 6` : "—", change: stats && stats.toolsUsed < 6 ? `${6 - stats.toolsUsed} to explore` : "all tools tried", icon: Zap, color: "text-yellow-600" },
+    { label: "Days active", value: stats ? String(stats.daysActive) : "—", change: stats && stats.streak > 0 ? `🔥 ${stats.streak}-day streak` : "keep going", icon: Activity, color: "text-emerald-600" },
+    { label: "Last active", value: stats?.lastActiveAt ? relTime(stats.lastActiveAt) : "—", change: stats?.lastActiveAt ? "most recent" : "no activity yet", icon: Clock, color: "text-blue-600" },
+  ];
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -216,33 +270,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Goal card */}
-            <div className="bg-black text-white border-2 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6 relative overflow-hidden">
-              <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-red-600/40 blur-3xl" />
-              <div className="relative">
-                <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-300 text-black border-2 border-black text-[10px] font-black uppercase tracking-wider mb-3">
-                  <Target className="w-3 h-3" /> Your Goal
-                </div>
-                <h3 className="text-lg sm:text-xl font-black tracking-tight mb-2">Hit 100K subs in 90 days</h3>
-                <p className="text-xs text-neutral-300 font-medium mb-4 leading-relaxed">
-                  You're 38% there. Ship 2 more videos this week with YTForge to stay on track.
-                </p>
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center justify-between text-[11px] font-bold">
-                    <span>Subscribers</span>
-                    <span>38,420 / 100K</span>
-                  </div>
-                  <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                    <div className="h-full bg-yellow-300" style={{ width: "38%" }} />
-                  </div>
-                </div>
-                <Link
-                  href="/tools/ai-script-writer"
-                  className="inline-flex items-center gap-1.5 text-xs font-black text-yellow-300 hover:text-white transition-colors"
-                >
-                  Start next video <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
+            <GoalCard goal={user.goal} loading={loadingDash} />
           </motion.div>
         </div>
       </section>
@@ -274,7 +302,9 @@ export default function DashboardPage() {
                 className="bg-white border-2 border-black rounded-xl sm:rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-3 sm:p-5 hover:shadow-[6px_6px_0px_0px_rgba(220,38,38,1)] transition-all"
               >
                 <s.icon className={`w-4 h-4 sm:w-5 sm:h-5 mb-2 sm:mb-3 ${s.color}`} />
-                <div className="text-xl sm:text-3xl font-black tracking-tight leading-none">{s.value}</div>
+                <div className="text-xl sm:text-3xl font-black tracking-tight leading-none">
+                  {loadingDash ? <span className="inline-block w-10 h-5 rounded bg-neutral-200 animate-pulse align-middle" /> : s.value}
+                </div>
                 <div className="text-[10px] sm:text-xs font-bold text-neutral-700 mt-0.5">{s.label}</div>
                 <div className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-neutral-400 mt-1.5">{s.change}</div>
               </motion.div>
@@ -349,23 +379,51 @@ export default function DashboardPage() {
               <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-400 shrink-0" />
             </div>
             <div className="space-y-2 sm:space-y-3">
-              {recentActivity.map((a, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-2 sm:gap-3 p-2.5 sm:p-3 bg-neutral-50 border-2 border-black rounded-xl hover:bg-yellow-50 transition-colors"
-                >
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg border-2 border-black bg-white flex items-center justify-center shrink-0">
-                    <a.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600" />
+              {loadingDash ? (
+                [0, 1, 2].map((i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 bg-neutral-50 border-2 border-black rounded-xl">
+                    <div className="w-9 h-9 rounded-lg border-2 border-black bg-white animate-pulse" />
+                    <div className="flex-1 space-y-1.5">
+                      <div className="h-3 w-1/3 bg-neutral-200 rounded animate-pulse" />
+                      <div className="h-2.5 w-2/3 bg-neutral-200 rounded animate-pulse" />
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-black text-xs sm:text-sm">{a.tool}</div>
-                    <div className="text-[10px] sm:text-xs text-neutral-600 font-medium line-clamp-1 mt-0.5">{a.action}</div>
+                ))
+              ) : activity.length === 0 ? (
+                <div className="text-center py-8 px-4">
+                  <div className="w-12 h-12 mx-auto rounded-xl bg-red-100 border-2 border-black flex items-center justify-center mb-3">
+                    <Sparkles className="w-5 h-5 text-red-600" />
                   </div>
-                  <div className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-neutral-400 shrink-0 mt-0.5 whitespace-nowrap">
-                    {a.time}
-                  </div>
+                  <div className="font-black text-sm mb-1">No activity yet</div>
+                  <p className="text-xs text-neutral-500 font-medium mb-4 max-w-xs mx-auto">
+                    Fire up any tool and your generations will show up here.
+                  </p>
+                  <Link href="/tools/viral-title-generator" className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 text-white border-2 border-black rounded-xl font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-transform">
+                    Try a tool <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
                 </div>
-              ))}
+              ) : (
+                activity.map((a) => {
+                  const Icon = TOOL_ICONS[a.tool] || Sparkles;
+                  return (
+                    <div
+                      key={a.id}
+                      className="flex items-start gap-2 sm:gap-3 p-2.5 sm:p-3 bg-neutral-50 border-2 border-black rounded-xl hover:bg-yellow-50 transition-colors"
+                    >
+                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg border-2 border-black bg-white flex items-center justify-center shrink-0">
+                        <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-black text-xs sm:text-sm">{a.toolLabel}</div>
+                        <div className="text-[10px] sm:text-xs text-neutral-600 font-medium line-clamp-1 mt-0.5">{a.action}</div>
+                      </div>
+                      <div className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-neutral-400 shrink-0 mt-0.5 whitespace-nowrap">
+                        {relTime(a.createdAt)}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
 
@@ -474,6 +532,81 @@ export default function DashboardPage() {
       </main>
 
       <Footer />
+    </div>
+  );
+}
+
+/* ─── GOAL CARD (reads the user's saved goal, or nudges them to set one) ─── */
+function GoalCard({ goal, loading }: { goal: import("@/lib/auth").Goal | undefined; loading: boolean }) {
+  if (loading) {
+    return (
+      <div className="bg-black text-white border-2 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6 relative overflow-hidden">
+        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-red-600/40 blur-3xl" />
+        <div className="relative space-y-3">
+          <div className="h-5 w-20 bg-white/20 rounded animate-pulse" />
+          <div className="h-6 w-3/4 bg-white/20 rounded animate-pulse" />
+          <div className="h-3 w-full bg-white/10 rounded animate-pulse" />
+          <div className="h-2 w-full bg-white/10 rounded animate-pulse" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!goal || !goal.title) {
+    return (
+      <div className="bg-black text-white border-2 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6 relative overflow-hidden">
+        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-red-600/40 blur-3xl" />
+        <div className="relative">
+          <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-300 text-black border-2 border-black text-[10px] font-black uppercase tracking-wider mb-3">
+            <Target className="w-3 h-3" /> Set a goal
+          </div>
+          <h3 className="text-lg sm:text-xl font-black tracking-tight mb-2">What are you aiming for?</h3>
+          <p className="text-xs text-neutral-300 font-medium mb-4 leading-relaxed">
+            Set a subscriber, views, or watch-time target and we&apos;ll track your progress here.
+          </p>
+          <Link
+            href="/settings"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-yellow-300 text-black border-2 border-black rounded-lg font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(255,255,255,0.3)] hover:-translate-y-0.5 transition-transform"
+          >
+            Set a goal <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const target = Math.max(1, Number(goal.target) || 0);
+  const current = Math.max(0, Number(goal.current) || 0);
+  const pct = Math.min(100, Math.round((current / target) * 100));
+  const fmt = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}K` : String(n));
+
+  return (
+    <div className="bg-black text-white border-2 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6 relative overflow-hidden">
+      <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-red-600/40 blur-3xl" />
+      <div className="relative">
+        <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-300 text-black border-2 border-black text-[10px] font-black uppercase tracking-wider mb-3">
+          <Target className="w-3 h-3" /> Your Goal
+        </div>
+        <h3 className="text-lg sm:text-xl font-black tracking-tight mb-2">{goal.title}</h3>
+        <p className="text-xs text-neutral-300 font-medium mb-4 leading-relaxed">
+          {pct >= 100 ? "Goal smashed. Time to set a bigger one." : `You're ${pct}% there. Ship your next video with YTForge to stay on track.`}
+        </p>
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center justify-between text-[11px] font-bold">
+            <span className="capitalize">{goal.metric || "Progress"}</span>
+            <span>{fmt(current)} / {fmt(target)}</span>
+          </div>
+          <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+            <div className="h-full bg-yellow-300" style={{ width: `${pct}%` }} />
+          </div>
+        </div>
+        <Link
+          href="/tools/ai-script-writer"
+          className="inline-flex items-center gap-1.5 text-xs font-black text-yellow-300 hover:text-white transition-colors"
+        >
+          Start next video <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
     </div>
   );
 }
