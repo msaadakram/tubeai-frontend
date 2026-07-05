@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 import {
   Play,
   Mail,
@@ -18,6 +19,7 @@ import {
   Star,
   Shield,
   CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 
 const benefits = [
@@ -40,20 +42,26 @@ function GoogleIcon() {
 export default function SignInPage() {
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
 
   const { signIn } = useAuth();
   const router = useRouter();
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
+    setError(null);
     setLoading(true);
-    setTimeout(() => {
-      signIn(email);
-      setLoading(false);
+    const res = await signIn(email.trim(), pwd);
+    setLoading(false);
+    if (res.ok) {
+      toast.success("Welcome back!");
       router.push("/dashboard");
-    }, 900);
+    } else {
+      setError(res.error);
+    }
   };
 
   return (
@@ -171,6 +179,12 @@ export default function SignInPage() {
             </div>
 
             <form onSubmit={submit} className="space-y-4">
+              {error && (
+                <div className="flex items-start gap-2 p-3 bg-red-50 border-2 border-red-500 rounded-xl text-xs font-bold text-red-700">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>{error}</span>
+                </div>
+              )}
               <div>
                 <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Email</label>
                 <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">

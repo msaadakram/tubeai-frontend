@@ -16,8 +16,8 @@ import {
   Hash,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
-import { StreamingPreview } from "@/components/tools/StreamingPreview";
 import { streamJson } from "@/lib/streamJson";
+import { extractStringArray } from "@/lib/parseStream";
 import {
   StatsStrip,
   GuideGrid,
@@ -140,7 +140,6 @@ export default function TagGeneratorPage() {
   const [data, setData] = useState<TagData | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
-  const [streamText, setStreamText] = useState("");
   const abortRef = useRef<AbortController | null>(null);
 
   const run = async (val?: string) => {
@@ -149,43 +148,48 @@ export default function TagGeneratorPage() {
     if (val !== undefined) setTopic(val);
     setLoading(true);
     setError(null);
-    setData(null);
+    setData({ topic: v, tags: [] });
     setCopiedAll(false);
     setCopiedIdx(null);
-    setStreamText("");
 
     abortRef.current = streamJson<TagData>(
       `${BASE_URL}/api/generate-tags/stream`,
       { topic: v },
       {
-        onDelta: (full) => setStreamText(full),
+        onDelta: (full) => {
+          const tags = extractStringArray(full, "tags");
+          if (tags.length) {
+            setData({ topic: v, tags });
+          }
+        },
         onDone: (result, _raw, err) => {
-          if (result) {
+          if (result && Array.isArray(result.tags) && result.tags.length) {
             setData(result);
           } else if (err) {
             setError(err);
             setData(localGenerate(v));
           } else {
-            setData(localGenerate(v));
+            setData((prev) =>
+              prev && prev.tags.length ? prev : localGenerate(v)
+            );
           }
-          setStreamText("");
+          setLoading(false);
         },
         onError: (message) => {
           console.warn("[TagGenerator] stream error, using local fallback:", message);
-          setData(localGenerate(v));
-          setStreamText("");
+          setData((prev) =>
+            prev && prev.tags.length ? prev : localGenerate(v)
+          );
+          setLoading(false);
         },
       }
     );
-
-    setLoading(false);
   };
 
   const cancel = () => {
     abortRef.current?.abort();
     abortRef.current = null;
     setLoading(false);
-    setStreamText("");
   };
 
   const allTagsString = useMemo(
@@ -249,15 +253,8 @@ export default function TagGeneratorPage() {
         </div>
       </ToolCard>
 
-      <StreamingPreview
-        open={loading || !!streamText}
-        text={streamText}
-        onCancel={loading ? cancel : undefined}
-        title="Streaming tags"
-      />
-
       <AnimatePresence mode="wait">
-        {loading && !streamText && (
+        {loading && !(data && data.tags.length > 0) && (
           <motion.div
             key="loading"
             initial={{ opacity: 0 }}
@@ -325,7 +322,7 @@ export default function TagGeneratorPage() {
           </motion.div>
         )}
 
-        {error && !loading && (
+        {error && !loading && !(data && data.tags.length > 0) && (
           <motion.div
             key="error"
             initial={{ opacity: 0, y: 12 }}
@@ -343,7 +340,7 @@ export default function TagGeneratorPage() {
           </motion.div>
         )}
 
-        {!loading && data && (
+        {data && data.tags.length > 0 && (
           <motion.div
             key={data.topic}
             initial={{ opacity: 0, y: 16 }}
@@ -382,22 +379,47 @@ export default function TagGeneratorPage() {
               <div className="px-4 sm:px-5 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                 <TagIcon className="w-4 h-4 text-red-600" />
                 <div className="font-black text-sm">All video tags ({data.tags.length})</div>
+                {loading && (
+                  <span className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-red-600">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    Streaming…
+                  </span>
+                )}
               </div>
               <div className="p-4 sm:p-5 flex flex-wrap gap-2">
-                {data.tags.map((t, idx) => (
-                  <button
-                    key={`${t}-${idx}`}
-                    onClick={() => copyOne(t, idx)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 text-xs font-black transition hover:-translate-y-0.5 ${
-                      copiedIdx === idx
-                        ? "bg-green-500 text-white border-black"
-                        : "bg-white text-black border-black hover:bg-red-600 hover:text-white"
-                    }`}
-                  >
-                    {copiedIdx === idx ? <Check className="w-3 h-3" /> : null}
-                    {t}
-                  </button>
-                ))}
+                {data.tags.map((t, idx) => {
+                  const isNew = loading && idx === data.tags.length - 1;
+                  return (
+                    <motion.button
+                      key={`${t}-${idx}`}
+                      onClick={() => copyOne(t, idx)}
+                      initial={{ opacity: 0, scale: 0.85, y: 6 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      transition={{ duration: 0.22, ease: "easeOut" }}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 text-xs font-black transition hover:-translate-y-0.5 ${
+                        copiedIdx === idx
+                          ? "bg-green-500 text-white border-black"
+                          : isNew
+                          ? "bg-red-600 text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                          : "bg-white text-black border-black hover:bg-red-600 hover:text-white"
+                      }`}
+                    >
+                      {copiedIdx === idx ? <Check className="w-3 h-3" /> : null}
+                      {t}
+                    </motion.button>
+                  );
+                })}
+                {loading && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border-2 border-dashed border-neutral-300 text-xs font-black text-neutral-400">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <motion.span
+                      animate={{ opacity: [0.3, 1, 0.3] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    >
+                      more…
+                    </motion.span>
+                  </span>
+                )}
               </div>
             </div>
           </motion.div>

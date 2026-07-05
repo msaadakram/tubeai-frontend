@@ -17,8 +17,8 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
-import { StreamingPreview } from "@/components/tools/StreamingPreview";
 import { streamJson } from "@/lib/streamJson";
+import { extractObjectArray, extractStringArray, extractStringField, type HashtagItem } from "@/lib/parseStream";
 import {
   StatsStrip,
   GuideGrid,
@@ -34,8 +34,8 @@ const BASE_URL =
 type Hashtag = {
   tag: string;
   category?: string;
-  searchVolume?: "high" | "medium" | "low";
-  competition?: "high" | "medium" | "low";
+  searchVolume?: string;
+  competition?: string;
   relevanceScore?: number;
   reason?: string;
 };
@@ -168,7 +168,6 @@ export default function HashtagGeneratorPage() {
   const [data, setData] = useState<HashtagData | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
-  const [streamText, setStreamText] = useState("");
   const abortRef = useRef<AbortController | null>(null);
 
   const run = async (val?: string) => {
@@ -177,43 +176,66 @@ export default function HashtagGeneratorPage() {
     if (val !== undefined) setTopic(val);
     setLoading(true);
     setError(null);
-    setData(null);
+    setData({ topic: v, recommended: [] });
     setCopiedAll(false);
     setCopiedIdx(null);
-    setStreamText("");
 
     abortRef.current = streamJson<HashtagData>(
       `${BASE_URL}/api/generate-hashtags/stream`,
       { topic: v },
       {
-        onDelta: (full) => setStreamText(full),
-        onDone: (result, _raw, err) => {
-          if (result) {
-            setData(result);
-          } else if (err) {
-            setError(err);
-            setData(localGenerate(v));
-          } else {
-            setData(localGenerate(v));
+        onDelta: (full) => {
+          const recommended = extractObjectArray<HashtagItem>(full, "recommended");
+          if (recommended.length) {
+            setData((prev) => ({
+              topic: v,
+              recommended,
+              trending: prev?.trending,
+              niche: prev?.niche,
+              broad: prev?.broad,
+              strategy: prev?.strategy,
+            }));
           }
-          setStreamText("");
+        },
+        onDone: (result, raw, err) => {
+          if (result && Array.isArray(result.recommended) && result.recommended.length) {
+            setData(result);
+          } else {
+            // Try to recover whatever we parsed from the partial stream first.
+            const partial = extractObjectArray<HashtagItem>(raw, "recommended");
+            if (partial.length) {
+              setData({
+                topic: v,
+                recommended: partial,
+                trending: extractStringArray(raw, "trending").slice(0, 15),
+                niche: extractStringArray(raw, "niche").slice(0, 15),
+                broad: extractStringArray(raw, "broad").slice(0, 15),
+                strategy: extractStringField(raw, "strategy") || undefined,
+              });
+            } else if (err) {
+              setError(err);
+              setData(localGenerate(v));
+            } else {
+              setData(localGenerate(v));
+            }
+          }
+          setLoading(false);
         },
         onError: (message) => {
           console.warn("[HashtagGenerator] stream error, using local fallback:", message);
-          setData(localGenerate(v));
-          setStreamText("");
+          setData((prev) =>
+            prev && prev.recommended.length ? prev : localGenerate(v)
+          );
+          setLoading(false);
         },
       }
     );
-
-    setLoading(false);
   };
 
   const cancel = () => {
     abortRef.current?.abort();
     abortRef.current = null;
     setLoading(false);
-    setStreamText("");
   };
 
   const allTagsString = useMemo(
@@ -274,15 +296,8 @@ export default function HashtagGeneratorPage() {
         </div>
       </ToolCard>
 
-      <StreamingPreview
-        open={loading || !!streamText}
-        text={streamText}
-        onCancel={loading ? cancel : undefined}
-        title="Streaming hashtags"
-      />
-
       <AnimatePresence mode="wait">
-        {loading && !streamText && (
+        {loading && !(data && data.recommended.length > 0) && (
           <motion.div
             key="loading"
             initial={{ opacity: 0 }}
@@ -361,7 +376,7 @@ export default function HashtagGeneratorPage() {
           </motion.div>
         )}
 
-        {error && !loading && (
+        {error && !loading && !(data && data.recommended.length > 0) && (
           <motion.div
             key="error"
             initial={{ opacity: 0, y: 12 }}
@@ -379,7 +394,7 @@ export default function HashtagGeneratorPage() {
           </motion.div>
         )}
 
-        {!loading && data && (
+        {data && data.recommended.length > 0 && (
           <motion.div
             key={data.topic}
             initial={{ opacity: 0, y: 16 }}
@@ -414,10 +429,17 @@ export default function HashtagGeneratorPage() {
               <div className="px-4 sm:px-5 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                 <Hash className="w-4 h-4 text-red-600" />
                 <div className="font-black text-sm">All hashtags</div>
+                {loading && (
+                  <span className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-red-600">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    Streaming…
+                  </span>
+                )}
               </div>
               <div className="p-3 sm:p-5 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                 {data.recommended.map((h, idx) => {
                   const copied = copiedIdx === idx;
+                  const isNew = loading && idx === data.recommended.length - 1;
                   return (
                     <motion.button
                       key={`${h.tag}-${idx}`}
@@ -425,12 +447,14 @@ export default function HashtagGeneratorPage() {
                       title={h.reason}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.28, delay: idx * 0.04 }}
+                      transition={{ duration: 0.24, ease: "easeOut" }}
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.97 }}
                       className={`group relative flex items-center gap-2.5 px-3 sm:px-4 py-2.5 rounded-xl border-2 text-left transition-all overflow-hidden ${
                         copied
                           ? "bg-green-500 border-green-600 shadow-[3px_3px_0px_0px_rgba(22,163,74,1)]"
+                          : isNew
+                          ? "bg-red-50 border-red-600 shadow-[3px_3px_0px_0px_rgba(220,38,38,1)]"
                           : "bg-white border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] hover:border-red-600"
                       }`}
                     >
@@ -468,11 +492,22 @@ export default function HashtagGeneratorPage() {
                     </motion.button>
                   );
                 })}
+                {loading && (
+                  <span className="col-span-1 sm:col-span-2 inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl border-2 border-dashed border-neutral-300 text-xs font-black text-neutral-400">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <motion.span
+                      animate={{ opacity: [0.3, 1, 0.3] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    >
+                      more hashtags incoming…
+                    </motion.span>
+                  </span>
+                )}
               </div>
             </div>
 
             {/* STRATEGY CALLOUT */}
-            {data.strategy && (
+            {!loading && data.strategy && (
               <div className="bg-black text-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] p-4 sm:p-5">
                 <div className="flex items-center gap-2 mb-2">
                   <Sparkles className="w-4 h-4 text-red-500" />
@@ -483,6 +518,7 @@ export default function HashtagGeneratorPage() {
             )}
 
             {/* CATEGORY BREAKDOWN */}
+            {!loading && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
                 { title: "Trending now", icon: TrendingUp, color: "text-red-600", items: data.trending },
@@ -514,6 +550,7 @@ export default function HashtagGeneratorPage() {
                   )
               )}
             </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

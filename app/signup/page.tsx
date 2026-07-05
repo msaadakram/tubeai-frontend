@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 import {
   Play,
   Mail,
@@ -22,6 +23,7 @@ import {
   Rocket,
   Zap,
   Shield,
+  AlertCircle,
 } from "lucide-react";
 
 const perks = [
@@ -54,6 +56,7 @@ function strength(pwd: string) {
 export default function SignUpPage() {
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
@@ -63,18 +66,22 @@ export default function SignUpPage() {
   const labels = ["Too weak", "Weak", "Okay", "Strong", "Excellent"];
   const colors = ["bg-neutral-200", "bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-green-600"];
 
-  const { signIn } = useAuth();
+  const { signUp } = useAuth();
   const router = useRouter();
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!agree) return;
+    if (!agree || loading) return;
+    setError(null);
     setLoading(true);
-    setTimeout(() => {
-      signIn(email, name);
-      setLoading(false);
+    const res = await signUp(name.trim(), email.trim(), pwd);
+    setLoading(false);
+    if (res.ok) {
+      toast.success("Account created — welcome to YTForge!");
       router.push("/dashboard");
-    }, 1100);
+    } else {
+      setError(res.error);
+    }
   };
 
   return (
@@ -137,6 +144,12 @@ export default function SignUpPage() {
           </div>
 
           <form onSubmit={submit} className="space-y-4">
+            {error && (
+              <div className="flex items-start gap-2 p-3 bg-red-50 border-2 border-red-500 rounded-xl text-xs font-bold text-red-700">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{error}</span>
+              </div>
+            )}
             <div>
               <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Full name</label>
               <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
