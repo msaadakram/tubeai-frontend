@@ -196,9 +196,18 @@ export default function ChatPage() {
       abortRef.current = controller;
 
       try {
+        const chatHeaders: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
+        try {
+          const t = localStorage.getItem("ytforge.token");
+          if (t) chatHeaders["Authorization"] = `Bearer ${t}`;
+        } catch {
+          /* localStorage unavailable */
+        }
         const res = await fetch(`${BASE_URL}/api/chat`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: chatHeaders,
           body: JSON.stringify({ history }),
           signal: controller.signal,
         });

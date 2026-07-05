@@ -28,9 +28,18 @@ export function streamJson<T = unknown>(
 
   (async () => {
     try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      try {
+        const token = localStorage.getItem("ytforge.token");
+        if (token) headers["Authorization"] = `Bearer ${token}`;
+      } catch {
+        /* localStorage unavailable */
+      }
       const res = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(body),
         signal: abort.signal,
       });

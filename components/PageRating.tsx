@@ -85,9 +85,18 @@ export function PageRating() {
       console.log("[AI Chat] POST", `${BASE_URL}/api/chat`);
       const abort = new AbortController();
       abortRef.current = abort;
+      const ratingHeaders: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      try {
+        const t = localStorage.getItem("ytforge.token");
+        if (t) ratingHeaders["Authorization"] = `Bearer ${t}`;
+      } catch {
+        /* localStorage unavailable */
+      }
       const res = await fetch(`${BASE_URL}/api/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: ratingHeaders,
         body: JSON.stringify({
           history: history.map((m) => ({ role: m.role, content: m.text })),
         }),

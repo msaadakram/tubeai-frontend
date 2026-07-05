@@ -519,7 +519,7 @@ export default function ViralTitleGeneratorPage() {
 
     const lang = getLanguage(language);
     abortRef.current = streamJson<{ titles: GeneratedTitle[] }>(
-      "https://tubeai-backend.vercel.app/api/generate-titles/stream",
+      `${process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app"}/api/generate-titles/stream`,
       {
         topic: keyword.trim(),
         language: lang.name,
