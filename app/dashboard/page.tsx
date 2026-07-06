@@ -73,17 +73,11 @@ const planMeta: Record<string, { label: string; color: string; cap: string; perk
     cap: "10 generations / month",
     perks: ["Basic AI tools", "Community support", "Limited exports"],
   },
-  creator: {
-    label: "Creator",
-    color: "bg-yellow-300 text-black",
-    cap: "Unlimited generations",
-    perks: ["All 10 tools", "Priority queue", "HD thumbnail exports", "Email support"],
-  },
   pro: {
     label: "Pro",
     color: "bg-red-600 text-white",
-    cap: "Unlimited + team seats",
-    perks: ["Everything in Creator", "5 team members", "API access", "Priority chat support"],
+    cap: "Unlimited generations",
+    perks: ["All 10 tools", "Priority queue", "HD exports", "API access", "Priority chat"],
   },
   enterprise: {
     label: "Enterprise",
@@ -170,8 +164,8 @@ export default function DashboardPage() {
 
   if (!user) return null;
 
-  const meta = planMeta[user.plan] || planMeta.creator;
-  const canUpgrade = user.plan === "free" || user.plan === "creator";
+  const meta = planMeta[user.plan] || planMeta.free;
+  const canUpgrade = user.plan === "free";
 
   const usageStats = [
     { label: "AI generations", value: stats ? String(stats.generations) : "—", change: stats && stats.generations > 0 ? "all time" : "start creating", icon: Sparkles, color: "text-red-600" },
@@ -495,7 +489,7 @@ export default function DashboardPage() {
                   Unlock the full toolkit.<br />Save <span className="text-red-500">20%</span> annually.
                 </h3>
                 <p className="text-neutral-300 text-sm sm:text-base mb-5 sm:mb-6 max-w-md leading-relaxed">
-                  Upgrade to {user.plan === "free" ? "Creator" : "Pro"} and get unlimited generations, priority queue, team seats, and dedicated support.
+                  Upgrade to Pro and get unlimited generations, priority queue, API access, and dedicated chat support.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <Link

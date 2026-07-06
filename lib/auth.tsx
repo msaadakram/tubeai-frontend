@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { friendlyApiError } from "@/lib/apiError";
 
-export type Plan = "free" | "creator" | "pro" | "enterprise";
+export type Plan = "free" | "pro" | "enterprise";
 
 export type Goal = {
   title: string;
@@ -11,6 +11,13 @@ export type Goal = {
   target: number;
   current: number;
   deadline: string;
+};
+
+export type Payment = {
+  brand: string;
+  last4: string;
+  expMonth: number;
+  expYear: number;
 };
 
 export type User = {
@@ -21,6 +28,11 @@ export type User = {
   avatar: string;
   joined: string;
   goal?: Goal;
+  referralCode?: string;
+  referredBy?: string;
+  referrals?: number;
+  payment?: Payment;
+  planRenewsAt?: string | null;
 };
 
 type AuthResult = { ok: true; user: User } | { ok: false; error: string };
@@ -29,11 +41,12 @@ type AuthCtx = {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<AuthResult>;
-  signUp: (name: string, email: string, password: string) => Promise<AuthResult>;
+  signUp: (name: string, email: string, password: string, referralCode?: string) => Promise<AuthResult>;
   signOut: () => void;
   upgrade: (plan: Plan) => Promise<void>;
   updateProfile: (patch: Partial<Pick<User, "name" | "email" | "avatar">>) => Promise<void>;
   setGoal: (goal: Goal) => Promise<void>;
+  deleteAccount: () => Promise<{ ok: boolean; error?: string }>;
 };
 
 const Ctx = createContext<AuthCtx>({
@@ -45,6 +58,7 @@ const Ctx = createContext<AuthCtx>({
   upgrade: async () => {},
   updateProfile: async () => {},
   setGoal: async () => {},
+  deleteAccount: async () => ({ ok: false, error: "Not implemented" }),
 });
 
 export function useAuth() {
@@ -152,10 +166,15 @@ function normalizeUser(u: any): User {
     id: u?.id || u?._id,
     name,
     email: String(u?.email || ""),
-    plan: (u?.plan as Plan) || "creator",
+    plan: (u?.plan as Plan) || "free",
     avatar: u?.avatar || avatarFor(name),
     joined: u?.joined || todayIso(),
     goal: u?.goal,
+    referralCode: u?.referralCode || "",
+    referredBy: u?.referredBy || "",
+    referrals: Number(u?.referrals) || 0,
+    payment: u?.payment || { brand: "", last4: "", expMonth: 0, expYear: 0 },
+    planRenewsAt: u?.planRenewsAt || null,
   };
 }
 
@@ -204,13 +223,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signUp = useCallback(
-    async (name: string, email: string, password: string): Promise<AuthResult> => {
+    async (name: string, email: string, password: string, referralCode?: string): Promise<AuthResult> => {
       try {
+        const body: Record<string, string> = { name, email, password };
+        if (referralCode) body.referralCode = referralCode;
         const res = await authFetch<{ user: any; token: string }>(
           "/api/auth/signup",
           {
             method: "POST",
-            body: JSON.stringify({ name, email, password }),
+            body: JSON.stringify(body),
           }
         );
         const u = normalizeUser(res.user);
@@ -284,6 +305,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [user, persist]
   );
 
+  const deleteAccount = useCallback(async (): Promise<{ ok: boolean; error?: string }> => {
+    try {
+      await authFetch("/api/auth/me", { method: "DELETE" });
+      clearToken();
+      setUser(null);
+      return { ok: true };
+    } catch (err: any) {
+      return { ok: false, error: err?.message || "Failed to delete account" };
+    }
+  }, []);
+
   const setGoal = useCallback(
     async (goal: Goal) => {
       if (!user) return;
@@ -303,7 +335,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <Ctx.Provider
-      value={{ user, loading, signIn, signUp, signOut, upgrade, updateProfile, setGoal }}
+      value={{ user, loading, signIn, signUp, signOut, upgrade, updateProfile, setGoal, deleteAccount }}
     >
       {children}
     </Ctx.Provider>

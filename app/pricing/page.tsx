@@ -55,41 +55,24 @@ const plans: Plan[] = [
     cta: "Start Free",
   },
   {
-    name: "Creator",
-    tagline: "For serious YouTubers ready to grow",
-    monthly: 19,
-    yearly: 15,
-    icon: Zap,
+    name: "Pro",
+    tagline: "For serious YouTubers & teams",
+    monthly: 29,
+    yearly: 23,
+    icon: Crown,
     highlight: true,
     badge: "Most Popular",
     features: [
       "Unlimited AI title generations",
-      "Unlimited script writer (up to 10K words)",
-      "100 AI thumbnails / month",
+      "Unlimited script writer",
+      "Unlimited AI thumbnails",
       "Full SEO analyzer + keyword research",
-      "Channel Analytics (5 channels)",
+      "Channel Analytics (unlimited)",
       "Monetization checker",
       "Shorts ideas generator",
       "AI transcript & translation",
-      "Priority email support",
-    ],
-    cta: "Start 7-Day Trial",
-  },
-  {
-    name: "Pro",
-    tagline: "For agencies and creator teams",
-    monthly: 49,
-    yearly: 39,
-    icon: Crown,
-    badge: "Best Value",
-    features: [
-      "Everything in Creator, plus:",
-      "Unlimited AI thumbnails",
-      "Channel Analytics (unlimited)",
-      "Bulk title & script generation",
-      "Team workspaces (5 seats)",
+      "Bulk generation",
       "API access (10K req/mo)",
-      "Custom brand voice training",
       "White-label exports",
       "Priority chat support",
       "Early access to new tools",
@@ -119,22 +102,21 @@ const plans: Plan[] = [
 ];
 
 const compareRows = [
-  { label: "AI title generations", values: ["5/day", "Unlimited", "Unlimited", "Unlimited"] },
-  { label: "AI script writer", values: [false, "10K words", "Unlimited", "Unlimited"] },
-  { label: "AI thumbnails / month", values: [false, "100", "Unlimited", "Unlimited"] },
-  { label: "Channel Analytics", values: [false, "5 channels", "Unlimited", "Unlimited"] },
-  { label: "Monetization checker", values: [false, true, true, true] },
-  { label: "SEO analyzer + keywords", values: ["Basic", true, true, true] },
-  { label: "Shorts ideas generator", values: [false, true, true, true] },
-  { label: "AI transcript & translation", values: [false, true, true, true] },
-  { label: "Bulk generation", values: [false, false, true, true] },
-  { label: "Team seats", values: ["1", "1", "5", "Unlimited"] },
-  { label: "API access", values: [false, false, "10K req/mo", "Unlimited"] },
-  { label: "Custom brand voice", values: [false, false, true, true] },
-  { label: "White-label exports", values: [false, false, true, true] },
-  { label: "SSO & SAML", values: [false, false, false, true] },
-  { label: "SLA guarantee", values: [false, false, false, "99.99%"] },
-  { label: "Support", values: ["Community", "Email", "Priority chat", "24/7 phone + AM"] },
+  { label: "AI title generations", values: ["5/day", "Unlimited", "Unlimited"] },
+  { label: "AI script writer", values: [false, "Unlimited", "Unlimited"] },
+  { label: "AI thumbnails / month", values: [false, "Unlimited", "Unlimited"] },
+  { label: "Channel Analytics", values: [false, "Unlimited", "Unlimited"] },
+  { label: "Monetization checker", values: [false, true, true] },
+  { label: "SEO analyzer + keywords", values: ["Basic", true, true] },
+  { label: "Shorts ideas generator", values: [false, true, true] },
+  { label: "AI transcript & translation", values: [false, true, true] },
+  { label: "Bulk generation", values: [false, true, true] },
+  { label: "Team seats", values: ["1", "5", "Unlimited"] },
+  { label: "API access", values: [false, "10K req/mo", "Unlimited"] },
+  { label: "White-label exports", values: [false, true, true] },
+  { label: "SSO & SAML", values: [false, false, true] },
+  { label: "SLA guarantee", values: [false, false, "99.99%"] },
+  { label: "Support", values: ["Community", "Priority chat", "24/7 phone + AM"] },
 ];
 
 const testimonials = [
@@ -251,7 +233,7 @@ export default function PricingPage() {
       {/* Plans */}
       <section className="bg-neutral-50 py-12 sm:py-16">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {plans.map((plan, i) => {
               const price = yearly ? plan.yearly : plan.monthly;
               return (
@@ -306,6 +288,15 @@ export default function PricingPage() {
                   </div>
 
                   <button
+                    onClick={() => {
+                      if (plan.name === "Enterprise") {
+                        window.location.href = `mailto:arhamsaad453@gmail.com?subject=YTForge%20Enterprise%20inquiry&body=Hi%2C%20I%27d%20like%20to%20discuss%20an%20YTForge%20Enterprise%20plan%20for%20my%20team.`;
+                      } else if (plan.name === "Pro") {
+                        window.location.href = "/settings?tab=plan";
+                      } else {
+                        window.location.href = "/signup";
+                      }
+                    }}
                     className={`w-full py-3 text-sm font-black rounded-xl border-2 border-black uppercase tracking-wider mb-6 transition-all ${
                       plan.highlight
                         ? "bg-red-600 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5"
@@ -371,10 +362,10 @@ export default function PricingPage() {
           </motion.div>
 
           <div className="overflow-x-auto -mx-4 sm:mx-0">
-            <div className="min-w-[760px] px-4 sm:px-0">
+            <div className="min-w-[560px] px-4 sm:px-0">
               <div className="bg-white border-2 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                 {/* Header */}
-                <div className="grid grid-cols-5 bg-black text-white">
+                <div className="grid grid-cols-4 bg-black text-white">
                   <div className="p-4 font-black text-sm">Feature</div>
                   {plans.map((p) => (
                     <div key={p.name} className={`p-4 font-black text-sm text-center ${p.highlight ? "bg-red-600" : ""}`}>
@@ -385,7 +376,7 @@ export default function PricingPage() {
                 {compareRows.map((row, i) => (
                   <div
                     key={row.label}
-                    className={`grid grid-cols-5 ${i % 2 === 0 ? "bg-neutral-50" : "bg-white"} border-t-2 border-black`}
+                    className={`grid grid-cols-4 ${i % 2 === 0 ? "bg-neutral-50" : "bg-white"} border-t-2 border-black`}
                   >
                     <div className="p-4 font-bold text-xs sm:text-sm">{row.label}</div>
                     {row.values.map((v, j) => (

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { motion } from "motion/react";
 import { toast } from "sonner";
@@ -61,6 +61,8 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [agree, setAgree] = useState(false);
+  const [referralCode, setReferralCode] = useState("");
+  const [referrerName, setReferrerName] = useState("");
 
   const score = strength(pwd);
   const labels = ["Too weak", "Weak", "Okay", "Strong", "Excellent"];
@@ -68,16 +70,30 @@ export default function SignUpPage() {
 
   const { signUp } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const code = searchParams.get("ref") || "";
+    if (code) {
+      setReferralCode(code);
+      // Look up who the code belongs to (best-effort).
+      const base = process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app";
+      fetch(`${base}/api/referral/lookup?code=${encodeURIComponent(code)}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => d?.referral?.name && setReferrerName(d.referral.name))
+        .catch(() => {});
+    }
+  }, [searchParams]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agree || loading) return;
     setError(null);
     setLoading(true);
-    const res = await signUp(name.trim(), email.trim(), pwd);
+    const res = await signUp(name.trim(), email.trim(), pwd, referralCode.trim() || undefined);
     setLoading(false);
     if (res.ok) {
-      toast.success("Account created — welcome to YTForge!");
+      toast.success(referralCode ? `Welcome to YTForge! ${referrerName ? `Referred by ${referrerName}.` : ""}` : "Account created — welcome to YTForge!");
       router.push("/dashboard");
     } else {
       setError(res.error);
@@ -210,6 +226,25 @@ export default function SignUpPage() {
                     Strength: <span className={`${score >= 3 ? "text-green-600" : score >= 2 ? "text-yellow-600" : "text-red-600"}`}>{labels[score]}</span>
                   </div>
                 </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Referral code (optional)</label>
+              <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
+                <Gift className="w-4 h-4 text-red-600 shrink-0" />
+                <input
+                  type="text"
+                  value={referralCode}
+                  onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                  placeholder="e.g. YT3A4B6"
+                  className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
+                />
+              </div>
+              {referrerName && (
+                <p className="text-[11px] text-green-600 font-black mt-1.5 inline-flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Referred by {referrerName}
+                </p>
               )}
             </div>
 

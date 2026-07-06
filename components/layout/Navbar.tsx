@@ -90,8 +90,8 @@ export function Navbar() {
     router.push("/");
   };
 
-  const planLabel = user?.plan === "creator" ? "Creator" : user?.plan === "pro" ? "Pro" : user?.plan === "enterprise" ? "Enterprise" : "Free";
-  const planColor = user?.plan === "creator" ? "bg-red-600" : user?.plan === "pro" ? "bg-yellow-400 text-black" : user?.plan === "enterprise" ? "bg-black" : "bg-neutral-200 text-black";
+  const planLabel = user?.plan === "pro" ? "Pro" : user?.plan === "enterprise" ? "Enterprise" : "Free";
+  const planColor = user?.plan === "pro" ? "bg-red-600 text-white" : user?.plan === "enterprise" ? "bg-black text-white" : "bg-neutral-200 text-black";
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 10);
