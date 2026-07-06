@@ -54,6 +54,22 @@ function strength(pwd: string) {
 }
 
 export default function SignUpPage() {
+  return (
+    <React.Suspense fallback={<SignUpSkeleton />}>
+      <SignUpPageInner />
+    </React.Suspense>
+  );
+}
+
+function SignUpSkeleton() {
+  return (
+    <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <Loader2 className="w-6 h-6 animate-spin text-red-600" />
+    </div>
+  );
+}
+
+function SignUpPageInner() {
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

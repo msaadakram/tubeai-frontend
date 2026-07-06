@@ -82,6 +82,22 @@ const goalPresets = [
 type Tab = "profile" | "goals" | "plan" | "refer" | "danger";
 
 export default function SettingsPage() {
+  return (
+    <React.Suspense fallback={<SettingsSkeleton />}>
+      <SettingsPageInner />
+    </React.Suspense>
+  );
+}
+
+function SettingsSkeleton() {
+  return (
+    <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <Loader2 className="w-6 h-6 animate-spin text-red-600" />
+    </div>
+  );
+}
+
+function SettingsPageInner() {
   const { user, signOut } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
