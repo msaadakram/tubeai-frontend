@@ -21,7 +21,6 @@ import {
   ArrowRight,
   ArrowUpRight,
   Rocket,
-  TrendingUp,
   Zap,
   Clock,
   CheckCircle2,
@@ -36,15 +35,19 @@ import {
   ChevronRight,
   Activity,
   Target,
-  Trophy,
   HeartHandshake,
   Tag as TagIcon,
   Code2,
   QrCode,
+  Share2,
+  Copy,
+  Check,
+  Trophy,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useAuth, authFetch } from "@/lib/auth";
+import { toast } from "sonner";
 
 const tools = [
   { name: "AI Chat Coach", desc: "Ask anything, get streamed advice", href: "/chat", icon: MessageCircle, color: "bg-red-100 text-red-700" },
@@ -126,12 +129,139 @@ function relTime(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
-const community = [
-  { t: "Join Discord", d: "12,400 creators sharing wins", icon: MessageCircle, href: "#", color: "bg-indigo-600 text-white" },
-  { t: "Creator Academy", d: "Free 4-hour growth course", icon: BookOpen, href: "#", color: "bg-emerald-600 text-white" },
-  { t: "Refer a friend", d: "Both get 1 month free", icon: Gift, href: "#", color: "bg-pink-600 text-white" },
-  { t: "Ambassador Program", d: "Earn 30% lifetime commission", icon: Trophy, href: "#", color: "bg-yellow-400 text-black" },
-];
+function ReferFriendCard() {
+  const { user } = useAuth();
+  const [referral, setReferral] = useState<{
+    referralCode: string;
+    referrals: number;
+    shareUrl?: string;
+    earnedProViaReferral?: boolean;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    authFetch<{ referral: any }>("/api/referral")
+      .then((res) => setReferral(res.referral))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const code = referral?.referralCode || user?.referralCode || "";
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const shareUrl = code ? `${origin}/signup?ref=${code}` : referral?.shareUrl || "";
+  const friendsReferred = referral?.referrals ?? 0;
+  const earned = referral?.earnedProViaReferral;
+
+  const copy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      toast.success("Referral link copied");
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      toast.error("Couldn't copy — select and copy manually");
+    }
+  };
+
+  const steps = [
+    { n: "1", t: "Share your link", d: "Send your unique code to a friend." },
+    { n: "2", t: "They sign up", d: "Your friend creates a free YTForge account." },
+    { n: "3", t: "Both get Pro", d: "You each earn 1 month of Pro — free." },
+  ];
+
+  return (
+    <div className="relative bg-black text-white border-2 border-black rounded-2xl sm:rounded-3xl shadow-[6px_6px_0px_0px_rgba(220,38,38,1)] overflow-hidden">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:2.5rem_2.5rem]" />
+      <div className="absolute -top-12 -right-12 w-56 h-56 rounded-full bg-red-600/30 blur-3xl" />
+      <div className="relative p-5 sm:p-7 lg:p-8">
+        {/* Header */}
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-yellow-300 text-black border-2 border-black text-[10px] font-black uppercase tracking-wider">
+            <Gift className="w-3 h-3" /> Refer & Earn
+          </span>
+          {friendsReferred > 0 && (
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border-2 border-emerald-500/40 text-[10px] font-black uppercase tracking-wider">
+              <Users className="w-3 h-3" /> {friendsReferred} referred
+            </span>
+          )}
+        </div>
+        <h3 className="text-2xl sm:text-3xl font-black tracking-tight mb-2 leading-tight">
+          Give a month, get a month.
+        </h3>
+        <p className="text-neutral-300 text-sm font-medium mb-5 sm:mb-6 max-w-lg leading-relaxed">
+          Invite a friend to YTForge with your code. When they sign up, you both get 1 month of Pro — free.
+        </p>
+
+        {/* Referral link */}
+        <div className="bg-white rounded-xl p-3 sm:p-4 border-2 border-black mb-4 sm:mb-5">
+          {loading ? (
+            <div className="space-y-2">
+              <div className="h-3 w-24 bg-neutral-200 rounded animate-pulse" />
+              <div className="h-9 w-full bg-neutral-100 rounded-lg animate-pulse" />
+            </div>
+          ) : code ? (
+            <>
+              <div className="flex items-center justify-between mb-2 gap-3">
+                <div className="min-w-0">
+                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Your code</div>
+                  <div className="font-black text-lg sm:text-xl tracking-tight text-black truncate">{code}</div>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Friends referred</div>
+                  <div className="font-black text-lg sm:text-xl tracking-tight text-black">{friendsReferred}</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 px-2.5 sm:px-3 border-2 border-black rounded-lg bg-white">
+                <Share2 className="w-4 h-4 text-red-600 shrink-0" />
+                <input readOnly value={shareUrl} className="flex-1 py-2.5 outline-none text-xs sm:text-sm font-medium bg-transparent truncate min-w-0" />
+                <button
+                  onClick={() => copy(shareUrl)}
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-red-600 text-white rounded-md text-[10px] sm:text-xs font-black uppercase border-2 border-black hover:bg-red-700 transition-colors shrink-0"
+                >
+                  {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                  <span className="hidden sm:inline">{copied ? "Copied" : "Copy"}</span>
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="text-sm font-bold text-neutral-600 py-2 text-center">Sign in to load your referral code.</div>
+          )}
+        </div>
+
+        {/* How it works */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mb-5">
+          {steps.map((s) => (
+            <div key={s.n} className="bg-white/5 border-2 border-white/15 rounded-xl p-3">
+              <div className="w-6 h-6 rounded-lg bg-yellow-300 text-black border-2 border-black flex items-center justify-center text-xs font-black mb-2">{s.n}</div>
+              <div className="font-black text-sm tracking-tight mb-0.5">{s.t}</div>
+              <div className="text-[11px] text-neutral-300 font-bold leading-snug">{s.d}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Status / CTA */}
+        {earned ? (
+          <div className="flex items-start gap-3 p-3 sm:p-4 bg-emerald-500/15 border-2 border-emerald-500/40 rounded-xl">
+            <Trophy className="w-5 h-5 text-emerald-300 shrink-0 mt-0.5" />
+            <div>
+              <div className="font-black text-sm">You&apos;ve earned 1 month of Pro</div>
+              <div className="text-xs text-emerald-200 font-bold mt-0.5">Keep referring friends to extend it further.</div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-start gap-3 p-3 sm:p-4 bg-yellow-300/10 border-2 border-yellow-300/40 rounded-xl">
+            <Gift className="w-5 h-5 text-yellow-300 shrink-0 mt-0.5" />
+            <div>
+              <div className="font-black text-sm">Earn Pro free — refer a friend</div>
+              <div className="text-xs text-yellow-100 font-bold mt-0.5">Your first successful referral unlocks a free month of Pro.</div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function DashboardPage() {
   const { user, signOut } = useAuth();
@@ -428,32 +558,13 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* ─── COMMUNITY ─── */}
+        {/* ─── REFER A FRIEND ─── */}
         <section>
           <div className="mb-4 sm:mb-5">
-            <h2 className="text-xl sm:text-2xl font-black tracking-tight">Things to join</h2>
-            <p className="text-xs sm:text-sm text-neutral-500 font-medium">Programs, perks, and people that grow with you</p>
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight">Refer a friend</h2>
+            <p className="text-xs sm:text-sm text-neutral-500 font-medium">Share YTForge and you both get a month of Pro — free</p>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {community.map((c, i) => (
-              <motion.a
-                key={c.t}
-                href={c.href}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className={`block ${c.color} border-2 border-black rounded-xl sm:rounded-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-3 sm:p-5 hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all`}
-              >
-                <c.icon className="w-5 h-5 sm:w-6 sm:h-6 mb-2 sm:mb-3" />
-                <div className="font-black text-sm sm:text-base tracking-tight mb-0.5 sm:mb-1 leading-tight">{c.t}</div>
-                <div className="text-[10px] sm:text-xs font-bold opacity-90 mb-2 sm:mb-3 leading-snug line-clamp-2">{c.d}</div>
-                <div className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-black">
-                  Join <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                </div>
-              </motion.a>
-            ))}
-          </div>
+          <ReferFriendCard />
         </section>
 
         {/* ─── UPGRADE CTA ─── */}

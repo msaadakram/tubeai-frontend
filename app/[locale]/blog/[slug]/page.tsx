@@ -19,9 +19,9 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
-  if (!post) return { title: "Article not found — YTForge" };
+  if (!post) return { title: "Article not found" };
   return buildMetadata({
-    title: `${post.title} — YTForge Blog`,
+    title: post.title,
     description: post.description,
     path: `/blog/${post.slug}`,
     keywords: post.keywords,

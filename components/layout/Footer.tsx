@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Play,
   Twitter,
-  Github,
   Linkedin,
   Youtube,
   Mail,
@@ -48,10 +47,9 @@ const toolsList = [
 ] as const;
 
 const socials = [
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Youtube, href: "#", label: "YouTube" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Github, href: "#", label: "GitHub" },
+  { icon: Twitter, href: "https://twitter.com/ytforge", label: "Twitter" },
+  { icon: Youtube, href: "https://www.youtube.com/@ytforge", label: "YouTube" },
+  { icon: Linkedin, href: "https://www.linkedin.com/company/ytforge", label: "LinkedIn" },
 ];
 
 export function Footer() {
@@ -108,9 +106,8 @@ export function Footer() {
       links: [
         { name: t("nav.features"), href: getLocalePath(locale, "/#features") },
         { name: t("nav.demo"), href: getLocalePath(locale, "/#demo") },
-        { name: t("nav.pricing"), href: getLocalePath(locale, "/#pricing") },
-        { name: t("footer.changelog"), href: "#" },
-        { name: t("footer.roadmap"), href: "#" },
+        { name: t("nav.pricing"), href: getLocalePath(locale, "/pricing") },
+        { name: t("nav.dashboard"), href: getLocalePath(locale, "/dashboard") },
       ],
     },
     {
@@ -120,17 +117,15 @@ export function Footer() {
         { name: t("footer.seoGuide"), href: getLocalePath(locale, "/blog/guide-to-yt-seo-grow") },
         { name: t("footer.cpmRates"), href: getLocalePath(locale, "/blog/youtube-cpm-rates-by-country") },
         { name: t("footer.aiPolicy"), href: getLocalePath(locale, "/ai-policy") },
-        { name: t("footer.helpCenter"), href: "#" },
       ],
     },
     {
       title: t("footer.company"),
       links: [
-        { name: t("footer.about"), href: "#" },
-        { name: t("footer.careers"), href: "#" },
-        { name: t("footer.pressKit"), href: "#" },
-        { name: t("footer.contact"), href: "#" },
-        { name: t("footer.affiliates"), href: "#" },
+        { name: t("footer.privacy"), href: getLocalePath(locale, "/privacy") },
+        { name: t("footer.terms"), href: getLocalePath(locale, "/terms") },
+        { name: t("footer.disclaimer"), href: getLocalePath(locale, "/disclaimer") },
+        { name: t("footer.contact"), href: "mailto:hello@ytforge.app" },
       ],
     },
   ];

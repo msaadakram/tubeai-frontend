@@ -44,13 +44,6 @@ export type Messages = {
     seoGuide: string;
     cpmRates: string;
     aiPolicy: string;
-    helpCenter: string;
-    changelog: string;
-    roadmap: string;
-    about: string;
-    careers: string;
-    pressKit: string;
-    affiliates: string;
     madeWith: string;
     privacy: string;
     terms: string;

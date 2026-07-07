@@ -20,7 +20,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const resolved = (locales as readonly string[]).includes(locale) ? (locale as Locale) : defaultLocale;
   const base = buildMetadata({
-    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    title: "YTForge — Free YouTube Tools & AI Creator Toolkit",
     description: SITE_DESCRIPTION,
     path: "/",
     keywords: [
