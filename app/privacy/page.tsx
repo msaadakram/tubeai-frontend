@@ -22,16 +22,17 @@ const sections = [
   { id: "intro", title: "1. Introduction" },
   { id: "data-we-collect", title: "2. Data We Collect" },
   { id: "how-we-use", title: "3. How We Use Your Data" },
-  { id: "ai-training", title: "4. AI Training & Your Content" },
-  { id: "sharing", title: "5. How We Share Data" },
-  { id: "cookies", title: "6. Cookies & Tracking" },
-  { id: "retention", title: "7. Data Retention" },
-  { id: "security", title: "8. Security Measures" },
-  { id: "rights", title: "9. Your Privacy Rights" },
-  { id: "international", title: "10. International Transfers" },
-  { id: "children", title: "11. Children's Privacy" },
-  { id: "changes", title: "12. Changes to This Policy" },
-  { id: "contact", title: "13. Contact & DPO" },
+  { id: "newsletter", title: "4. Newsletter & Marketing Email" },
+  { id: "ai-training", title: "5. AI Training & Your Content" },
+  { id: "sharing", title: "6. How We Share Data" },
+  { id: "cookies", title: "7. Cookies & Tracking" },
+  { id: "retention", title: "8. Data Retention" },
+  { id: "security", title: "9. Security Measures" },
+  { id: "rights", title: "10. Your Privacy Rights" },
+  { id: "international", title: "11. International Transfers" },
+  { id: "children", title: "12. Children's Privacy" },
+  { id: "changes", title: "13. Changes to This Policy" },
+  { id: "contact", title: "14. Contact & DPO" },
 ];
 
 const principles = [
@@ -133,6 +134,7 @@ export default function PrivacyPage() {
                   <li><strong>Account data:</strong> name, email, password (hashed), profile photo, billing address</li>
                   <li><strong>Payment data:</strong> processed by Stripe — we never store full card numbers, only the last 4 digits and expiration</li>
                   <li><strong>Content you submit:</strong> channel URLs, prompts, scripts, transcripts, uploaded images, and any other inputs to AI tools</li>
+                  <li><strong>Newsletter sign-ups:</strong> the email address you enter in the footer newsletter form when you subscribe to the weekly creator newsletter</li>
                   <li><strong>Communications:</strong> support tickets, survey responses, community forum posts</li>
                 </ul>
                 <h3>Collected automatically</h3>
@@ -159,13 +161,14 @@ export default function PrivacyPage() {
                     <tr><td>Process payments and prevent fraud</td><td>Performance of contract / Legal obligation</td></tr>
                     <tr><td>Improve features and infrastructure</td><td>Legitimate interests</td></tr>
                     <tr><td>Send service emails (security alerts, billing)</td><td>Performance of contract</td></tr>
+                    <tr><td>Send the weekly creator newsletter (opt-in only)</td><td>Consent</td></tr>
                     <tr><td>Send marketing emails (opt-in only)</td><td>Consent</td></tr>
                     <tr><td>Comply with legal obligations</td><td>Legal obligation</td></tr>
                     <tr><td>Defend against fraud and abuse</td><td>Legitimate interests</td></tr>
                   </tbody>
                 </table>
 
-                <h2 id="ai-training">4. AI Training & Your Content</h2>
+                <h2 id="ai-training">5. AI Training & Your Content</h2>
                 <p>This is the most important section, so we're saying it twice: <strong>we never train our public AI models on your private content.</strong> Your scripts, channel data, prompts, and outputs are processed solely to deliver the Service to you.</p>
                 <h3>How we actually train models</h3>
                 <p>Our AI models are trained on a curated dataset of <strong>4.2 million publicly accessible viral YouTube videos</strong>, plus licensed datasets from third-party data partners. We never include private user content in training data, even in aggregated or anonymized form.</p>
@@ -174,7 +177,22 @@ export default function PrivacyPage() {
                 <h3>Output ownership</h3>
                 <p>You own the AI Output you generate. We don't claim any rights to it beyond what's necessary to operate the Service.</p>
 
-                <h2 id="sharing">5. How We Share Data</h2>
+                <h2 id="newsletter">4. Newsletter & Marketing Email</h2>
+                <p>When you enter your email in the footer "Creator Newsletter" form and click Subscribe, we save only your email address (lowercased, deduplicated) in a dedicated subscribers store. We use it for one purpose: sending the weekly Sunday newsletter containing viral case studies, algorithm updates, and creator tactics.</p>
+                <h3>What we store</h3>
+                <ul>
+                  <li><strong>Email address</strong> — required to send the newsletter</li>
+                  <li><strong>Subscription status</strong> — <code>subscribed</code> or <code>unsubscribed</code></li>
+                  <li><strong>Source</strong> — where you signed up (e.g. <code>footer-newsletter</code>), for our records</li>
+                  <li><strong>Timestamps</strong> — when you subscribed and last updated</li>
+                </ul>
+                <p>We do <strong>not</strong> link your newsletter sign-up to a YTForge account unless you use the same email to register. We never share, rent, or sell the subscriber list.</p>
+                <h3>Consent & unsubscribing</h3>
+                <p>Subscribing is explicit consent to receive the weekly newsletter. You can withdraw consent at any time — every email includes a one-click unsubscribe link, and we process opt-outs immediately. You can also email <a href="mailto:privacy@ytforge.app">privacy@ytforge.app</a> with "Unsubscribe" in the subject line.</p>
+                <h3>Retention</h3>
+                <p>We keep your email for as long as you're subscribed, plus 30 days after you unsubscribe (to honor opt-outs across systems), then it's permanently deleted.</p>
+
+                <h2 id="sharing">6. How We Share Data</h2>
                 <p>We share data only with:</p>
                 <ul>
                   <li><strong>Service providers (sub-processors):</strong> AWS (hosting), Stripe (payments), Postmark (email), Sentry (error logs), Cloudflare (CDN/security), Datadog (monitoring). All bound by data-processing agreements.</li>
@@ -184,7 +202,7 @@ export default function PrivacyPage() {
                 </ul>
                 <p>A live list of sub-processors is published at <a href="#">ytforge.app/sub-processors</a>.</p>
 
-                <h2 id="cookies">6. Cookies & Tracking</h2>
+                <h2 id="cookies">7. Cookies & Tracking</h2>
                 <p>We use a minimal cookie set:</p>
                 <ul>
                   <li><strong>Strictly necessary:</strong> session, CSRF, and load-balancing cookies — cannot be disabled</li>
@@ -194,7 +212,7 @@ export default function PrivacyPage() {
                 </ul>
                 <p>Manage preferences anytime via the cookie banner at the bottom of any page.</p>
 
-                <h2 id="retention">7. Data Retention</h2>
+                <h2 id="retention">8. Data Retention</h2>
                 <table>
                   <thead>
                     <tr><th>Data Category</th><th>Retention Period</th></tr>
@@ -209,7 +227,7 @@ export default function PrivacyPage() {
                   </tbody>
                 </table>
 
-                <h2 id="security">8. Security Measures</h2>
+                <h2 id="security">9. Security Measures</h2>
                 <p>YTForge is SOC 2 Type II certified, audited annually by an independent third party. Our security program includes:</p>
                 <ul>
                   <li>TLS 1.3 encryption for all data in transit</li>
@@ -222,7 +240,7 @@ export default function PrivacyPage() {
                 </ul>
                 <p>If a security incident affects your data, we'll notify you within 72 hours of discovery as required by GDPR.</p>
 
-                <h2 id="rights">9. Your Privacy Rights</h2>
+                <h2 id="rights">10. Your Privacy Rights</h2>
                 <p>Depending on your jurisdiction, you have rights to:</p>
                 <ul>
                   <li><strong>Access:</strong> request a copy of all data we hold about you</li>
@@ -236,16 +254,16 @@ export default function PrivacyPage() {
                 <p>Most rights can be exercised in one click via your account dashboard. Otherwise, email <a href="mailto:privacy@ytforge.app">privacy@ytforge.app</a> — we respond within 30 days, free of charge.</p>
                 <p><strong>Do Not Sell My Personal Information:</strong> we don't sell personal data. California residents can confirm this by emailing <a href="mailto:privacy@ytforge.app">privacy@ytforge.app</a>.</p>
 
-                <h2 id="international">10. International Data Transfers</h2>
+                <h2 id="international">11. International Data Transfers</h2>
                 <p>YTForge is headquartered in the United States. If you're outside the U.S., your data may be transferred and processed there. For EEA/UK transfers, we rely on the Standard Contractual Clauses approved by the European Commission, plus supplementary measures (encryption, pseudonymization, transparency reports). EU-U.S. Data Privacy Framework certification is in progress.</p>
 
-                <h2 id="children">11. Children's Privacy</h2>
+                <h2 id="children">12. Children's Privacy</h2>
                 <p>YTForge is not intended for children under 13 (or 16 in the EEA). We don't knowingly collect data from minors. If you believe a child has provided personal data, contact us and we'll delete it immediately.</p>
 
-                <h2 id="changes">12. Changes to This Policy</h2>
+                <h2 id="changes">13. Changes to This Policy</h2>
                 <p>We'll notify you of material changes via email and a banner on the Service at least 30 days before they take effect. Non-material changes (typo fixes, clarifications) take effect on publication. The "Last updated" date at the top of this page reflects the most recent revision.</p>
 
-                <h2 id="contact">13. Contact & Data Protection Officer</h2>
+                <h2 id="contact">14. Contact & Data Protection Officer</h2>
                 <p>For privacy questions or to exercise your rights:</p>
                 <ul>
                   <li><strong>Privacy team:</strong> <a href="mailto:privacy@ytforge.app">privacy@ytforge.app</a></li>

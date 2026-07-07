@@ -59,11 +59,11 @@ const linkSections = [
   {
     title: "Resources",
     links: [
-      { name: "Blog", href: "#" },
-      { name: "Creator Guides", href: "#" },
-      { name: "YouTube SEO 101", href: "#" },
+      { name: "Blog", href: "/blog" },
+      { name: "YT SEO & Growth Guide", href: "/blog/guide-to-yt-seo-grow" },
+      { name: "CPM Rates by Country", href: "/blog/youtube-cpm-rates-by-country" },
+      { name: "AI Policy", href: "/ai-policy" },
       { name: "Help Center", href: "#" },
-      { name: "Community", href: "#" },
     ],
   },
   {
@@ -322,7 +322,9 @@ export function Footer() {
             © {year} YTForge Inc. Made with <Heart className="w-3 h-3 text-red-500 fill-red-500" /> for creators worldwide.
           </p>
           <div className="flex flex-wrap gap-x-5 gap-y-2 justify-center">
+            <Link href="/blog" className="text-xs text-neutral-500 hover:text-white transition-colors">Blog</Link>
             <Link href="/privacy" className="text-xs text-neutral-500 hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/ai-policy" className="text-xs text-neutral-500 hover:text-white transition-colors">AI Policy</Link>
             <Link href="/terms" className="text-xs text-neutral-500 hover:text-white transition-colors">Terms of Service</Link>
             <Link href="/disclaimer" className="text-xs text-neutral-500 hover:text-white transition-colors">Disclaimer</Link>
             <a href="mailto:dmca@ytforge.app" className="text-xs text-neutral-500 hover:text-white transition-colors">DMCA</a>

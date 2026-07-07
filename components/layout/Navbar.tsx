@@ -56,6 +56,7 @@ const tools = [
 
 const navLinks = [
   { name: "Features", href: "/features" },
+  { name: "Blog", href: "/blog" },
   { name: "AI Chat", href: "/chat" },
   { name: "Demo", href: "/demo" },
   { name: "Disclaimer", href: "/disclaimer" },
