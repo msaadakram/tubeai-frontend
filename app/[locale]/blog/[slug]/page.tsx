@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       type: "article",
       publishedTime: post.date,
       authors: [post.author],
+      images: post.image ? [{ url: post.image, width: 1536, height: 1024, alt: post.title }] : undefined,
     },
     robots: { index: true, follow: true },
   };
@@ -49,6 +50,7 @@ export default async function BlogPostPage({ params }: Params) {
     date: post.date,
     readTime: post.readTime,
     accent: post.accent,
+    image: post.image,
     keywords: post.keywords,
     blocks: post.blocks,
   };

@@ -25,7 +25,6 @@ import {
   LogOut,
   Settings,
   CreditCard,
-  User as UserIcon,
   Crown,
   Tag as TagIcon,
   Code2,
@@ -34,36 +33,33 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { getLocalePath } from "@/lib/i18n/utils";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
-const tools = [
-  { name: "Viral Title Generator", to: "/tools/viral-title-generator", icon: TrendingUp, desc: "High-CTR YouTube titles" },
-  { name: "AI Script Writer", to: "/tools/ai-script-writer", icon: PenTool, desc: "Retention-optimized scripts" },
-  { name: "Thumbnail Downloader", to: "/tools/thumbnail-downloader", icon: Download, desc: "Grab any HD thumbnail" },
-  { name: "Thumbnail Preview", to: "/tools/thumbnail-preview", icon: ImageIcon, desc: "All sizes + device mockups" },
-  { name: "Embed Generator", to: "/tools/embed-generator", icon: Code2, desc: "Custom iframe with live preview" },
-  { name: "QR Code Generator", to: "/tools/qr-code-generator", icon: QrCode, desc: "QR codes for any YouTube link" },
-  { name: "SEO Analyzer", to: "/tools/seo-analyzer", icon: LineChart, desc: "Rank #1 in search" },
-  { name: "Channel Analytics", to: "/tools/channel-analytics", icon: BarChart3, desc: "Analyze any YT channel" },
-  { name: "Channel ID Finder", to: "/tools/channel-id-finder", icon: Hash, desc: "Get any channel's UC... ID" },
-  { name: "Monetization Checker", to: "/tools/monetization-checker", icon: DollarSign, desc: "Channel eligibility audit" },
-  { name: "AI Transcript", to: "/tools/ai-transcript", icon: FileText, desc: "Transcribe + translate" },
-  { name: "AI Short Video Creator", to: "/tools/shorts-ideas", icon: Video, desc: "Viral 60s Shorts", upgrade: true },
-  { name: "Earnings Calculator", to: "/tools/earnings-calculator", icon: Calculator, desc: "Estimate your revenue" },
-  { name: "AI Thumbnail Generator", to: "/tools/ai-thumbnail-generator", icon: ImageIcon, desc: "Studio-grade thumbnails", upgrade: true },
-  { name: "Hashtag Generator", to: "/tools/hashtag-generator", icon: Hash, desc: "30+ trending #hashtags" },
-  { name: "Tag Generator", to: "/tools/tag-generator", icon: TagIcon, desc: "40+ SEO video tags" },
-];
-
-const navLinks = [
-  { name: "Features", href: "/features" },
-  { name: "Blog", href: "/blog" },
-  { name: "AI Chat", href: "/chat" },
-  { name: "Demo", href: "/demo" },
-  { name: "Disclaimer", href: "/disclaimer" },
-  { name: "Pricing", href: "/pricing" },
-];
+const toolsList = [
+  { key: "viral-title-generator", to: "/tools/viral-title-generator", icon: TrendingUp, upgrade: false },
+  { key: "ai-script-writer", to: "/tools/ai-script-writer", icon: PenTool, upgrade: false },
+  { key: "thumbnail-downloader", to: "/tools/thumbnail-downloader", icon: Download, upgrade: false },
+  { key: "thumbnail-preview", to: "/tools/thumbnail-preview", icon: ImageIcon, upgrade: false },
+  { key: "embed-generator", to: "/tools/embed-generator", icon: Code2, upgrade: false },
+  { key: "qr-code-generator", to: "/tools/qr-code-generator", icon: QrCode, upgrade: false },
+  { key: "seo-analyzer", to: "/tools/seo-analyzer", icon: LineChart, upgrade: false },
+  { key: "channel-analytics", to: "/tools/channel-analytics", icon: BarChart3, upgrade: false },
+  { key: "channel-id-finder", to: "/tools/channel-id-finder", icon: Hash, upgrade: false },
+  { key: "monetization-checker", to: "/tools/monetization-checker", icon: DollarSign, upgrade: false },
+  { key: "ai-transcript", to: "/tools/ai-transcript", icon: FileText, upgrade: false },
+  { key: "shorts-ideas", to: "/tools/shorts-ideas", icon: Video, upgrade: true },
+  { key: "earnings-calculator", to: "/tools/earnings-calculator", icon: Calculator, upgrade: false },
+  { key: "ai-thumbnail-generator", to: "/tools/ai-thumbnail-generator", icon: ImageIcon, upgrade: true },
+  { key: "hashtag-generator", to: "/tools/hashtag-generator", icon: Hash, upgrade: false },
+  { key: "tag-generator", to: "/tools/tag-generator", icon: TagIcon, upgrade: false },
+] as const;
 
 export function Navbar() {
+  const { t } = useTranslations();
+  const { locale } = useLocale();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
@@ -73,8 +69,17 @@ export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, signOut } = useAuth();
-  const onTool = pathname.startsWith("/tools/");
-  const onDashboard = pathname.startsWith("/dashboard");
+  const onTool = pathname.includes("/tools/");
+  const onDashboard = pathname.includes("/dashboard");
+
+  const navLinks = [
+    { name: t("nav.features"), href: getLocalePath(locale, "/features") },
+    { name: t("nav.blog"), href: getLocalePath(locale, "/blog") },
+    { name: t("nav.chat"), href: getLocalePath(locale, "/chat") },
+    { name: t("nav.demo"), href: getLocalePath(locale, "/demo") },
+    { name: t("nav.disclaimer"), href: getLocalePath(locale, "/disclaimer") },
+    { name: t("nav.pricing"), href: getLocalePath(locale, "/pricing") },
+  ];
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -88,7 +93,7 @@ export function Navbar() {
     signOut();
     setUserOpen(false);
     setMobileOpen(false);
-    router.push("/");
+    router.push(getLocalePath(locale, "/"));
   };
 
   const planLabel = user?.plan === "pro" ? "Pro" : user?.plan === "enterprise" ? "Enterprise" : "Free";
@@ -119,7 +124,7 @@ export function Navbar() {
       >
         <div className="container mx-auto px-4 sm:px-6 h-16 sm:h-18 flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group shrink-0">
+          <Link href={getLocalePath(locale, "/")} className="flex items-center gap-2 group shrink-0">
             <div className="w-9 h-9 rounded-xl bg-red-600 flex items-center justify-center border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
               <Play className="w-4 h-4 text-white fill-white" />
             </div>
@@ -138,7 +143,7 @@ export function Navbar() {
                 onClick={() => setToolsOpen((o) => !o)}
                 className="flex items-center gap-1 px-3 py-2 text-sm font-bold text-neutral-700 hover:text-black rounded-lg hover:bg-neutral-100 transition-colors"
               >
-                Tools
+                {t("nav.tools")}
                 <ChevronDown
                   className={cn("w-4 h-4 transition-transform", toolsOpen && "rotate-180 text-red-600")}
                 />
@@ -154,29 +159,31 @@ export function Navbar() {
                     className="absolute left-0 top-full pt-3 w-[760px]"
                   >
                     <div className="bg-white border-2 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-3 grid grid-cols-3 gap-2">
-                      {tools.map((t) => (
-                        
+                      {toolsList.map((tool) => {
+                        const tr = t(`features.tools.${tool.key}`);
+                        return (
                           <Link
-                          key={t.to}
-                          href={t.to}
-                          className="flex items-start gap-3 p-3 rounded-xl hover:bg-red-50 border-2 border-transparent hover:border-black transition-all group"
-                        >
-                          <div className="w-9 h-9 rounded-lg bg-red-600 text-white flex items-center justify-center border-2 border-black shrink-0 group-hover:rotate-3 transition-transform">
-                            <t.icon className="w-4 h-4" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-1.5">
-                              <div className="font-black text-sm text-black truncate">{t.name}</div>
-                              {t.upgrade && (
-                                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[9px] font-black rounded-md border-2 border-black tracking-wide shrink-0">
-                                  <Crown className="w-2.5 h-2.5" /> PRO
-                                </span>
-                              )}
+                            key={tool.to}
+                            href={getLocalePath(locale, tool.to)}
+                            className="flex items-start gap-3 p-3 rounded-xl hover:bg-red-50 border-2 border-transparent hover:border-black transition-all group"
+                          >
+                            <div className="w-9 h-9 rounded-lg bg-red-600 text-white flex items-center justify-center border-2 border-black shrink-0 group-hover:rotate-3 transition-transform">
+                              <tool.icon className="w-4 h-4" />
                             </div>
-                            <div className="text-xs text-neutral-500 truncate">{t.desc}</div>
-                          </div>
-                        </Link>
-                      ))}
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1.5">
+                                <div className="font-black text-sm text-black truncate">{tr.title}</div>
+                                {tool.upgrade && (
+                                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[9px] font-black rounded-md border-2 border-black tracking-wide shrink-0">
+                                    <Crown className="w-2.5 h-2.5" /> PRO
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-xs text-neutral-500 truncate">{tr.description}</div>
+                            </div>
+                          </Link>
+                        );
+                      })}
                     </div>
                   </motion.div>
                 )}
@@ -184,22 +191,24 @@ export function Navbar() {
             </div>
 
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
                 href={link.href}
                 className="px-3 py-2 text-sm font-bold text-neutral-700 hover:text-black rounded-lg hover:bg-neutral-100 transition-colors"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-2">
+            <LanguageSwitcher />
+
             {user ? (
               <>
-                <Link href="/dashboard" className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-black text-black hover:text-red-600 transition-colors">
-                  <LayoutDashboard className="w-4 h-4" /> Dashboard
+                <Link href={getLocalePath(locale, "/dashboard")} className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-black text-black hover:text-red-600 transition-colors">
+                  <LayoutDashboard className="w-4 h-4" /> {t("nav.dashboard")}
                 </Link>
                 <div className="relative" ref={userRef}>
                   <button
@@ -232,19 +241,19 @@ export function Navbar() {
                           </div>
                         </div>
                         <div className="p-2">
-                          <Link href="/dashboard" onClick={() => setUserOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-50 hover:text-red-600 transition-colors">
-                            <LayoutDashboard className="w-4 h-4" /> Dashboard
+                          <Link href={getLocalePath(locale, "/dashboard")} onClick={() => setUserOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-50 hover:text-red-600 transition-colors">
+                            <LayoutDashboard className="w-4 h-4" /> {t("nav.dashboard")}
                           </Link>
-                          <Link href="/settings" onClick={() => setUserOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-50 hover:text-red-600 transition-colors">
-                            <Settings className="w-4 h-4" /> Settings
+                          <Link href={getLocalePath(locale, "/settings")} onClick={() => setUserOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-50 hover:text-red-600 transition-colors">
+                            <Settings className="w-4 h-4" /> {t("nav.settings")}
                           </Link>
-                          <Link href="/pricing" onClick={() => setUserOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-50 hover:text-red-600 transition-colors">
-                            <CreditCard className="w-4 h-4" /> Billing & Plan
+                          <Link href={getLocalePath(locale, "/pricing")} onClick={() => setUserOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-50 hover:text-red-600 transition-colors">
+                            <CreditCard className="w-4 h-4" /> {t("nav.billing")}
                           </Link>
                         </div>
                         <div className="p-2 border-t-2 border-black bg-neutral-50">
                           <button onClick={handleSignOut} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-black text-red-600 hover:bg-red-600 hover:text-white transition-colors">
-                            <LogOut className="w-4 h-4" /> Sign Out
+                            <LogOut className="w-4 h-4" /> {t("nav.signOut")}
                           </button>
                         </div>
                       </motion.div>
@@ -254,24 +263,27 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Link href="/signin" className="px-4 py-2 text-sm font-black text-black hover:text-red-600 transition-colors">
-                  Sign In
+                <Link href={getLocalePath(locale, "/signin")} className="px-4 py-2 text-sm font-black text-black hover:text-red-600 transition-colors">
+                  {t("nav.signIn")}
                 </Link>
-                <Link href="/signup" className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
-                  <Sparkles className="w-4 h-4" /> Start Free
+                <Link href={getLocalePath(locale, "/signup")} className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
+                  <Sparkles className="w-4 h-4" /> {t("nav.startFree")}
                 </Link>
               </>
             )}
           </div>
 
           {/* Mobile Toggle */}
-          <button
-            aria-label="Toggle menu"
-            className="lg:hidden p-2 rounded-lg border-2 border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
-            onClick={() => setMobileOpen((o) => !o)}
-          >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          <div className="flex items-center gap-2 lg:hidden">
+            <LanguageSwitcher compact />
+            <button
+              aria-label={t("nav.toggleMenu")}
+              className="p-2 rounded-lg border-2 border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
+              onClick={() => setMobileOpen((o) => !o)}
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -301,7 +313,7 @@ export function Navbar() {
                   <span className="font-black text-lg tracking-tight">YTForge</span>
                 </div>
                 <button
-                  aria-label="Close menu"
+                  aria-label={t("nav.closeMenu")}
                   onClick={() => setMobileOpen(false)}
                   className="p-2 rounded-lg border-2 border-black bg-white"
                 >
@@ -315,7 +327,7 @@ export function Navbar() {
                   className="w-full flex items-center justify-between py-3 font-black text-base text-black border-b-2 border-dashed border-neutral-200"
                 >
                   <span className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-red-600" /> All Tools
+                    <Sparkles className="w-4 h-4 text-red-600" /> {t("nav.allTools")}
                   </span>
                   <ChevronDown
                     className={cn(
@@ -334,44 +346,46 @@ export function Navbar() {
                       className="overflow-hidden"
                     >
                       <div className="grid grid-cols-1 gap-2 py-3">
-                        {tools.map((t) => (
-                          
+                        {toolsList.map((tool) => {
+                          const tr = t(`features.tools.${tool.key}`);
+                          return (
                             <Link
-                            key={t.to}
-                            href={t.to}
-                            className="flex items-center gap-3 p-2.5 rounded-xl border-2 border-black bg-white hover:bg-red-50 transition-colors"
-                          >
-                            <div className="w-9 h-9 rounded-lg bg-red-600 text-white flex items-center justify-center border-2 border-black shrink-0">
-                              <t.icon className="w-4 h-4" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-1.5">
-                                <div className="font-black text-sm text-black truncate">{t.name}</div>
-                                {t.upgrade && (
-                                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[9px] font-black rounded-md border-2 border-black shrink-0">
-                                    <Crown className="w-2.5 h-2.5" /> PRO
-                                  </span>
-                                )}
+                              key={tool.to}
+                              href={getLocalePath(locale, tool.to)}
+                              className="flex items-center gap-3 p-2.5 rounded-xl border-2 border-black bg-white hover:bg-red-50 transition-colors"
+                            >
+                              <div className="w-9 h-9 rounded-lg bg-red-600 text-white flex items-center justify-center border-2 border-black shrink-0">
+                                <tool.icon className="w-4 h-4" />
                               </div>
-                              <div className="text-[10px] text-neutral-500 truncate">{t.desc}</div>
-                            </div>
-                            <ChevronRight className="w-4 h-4 text-neutral-400 shrink-0" />
-                          </Link>
-                        ))}
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5">
+                                  <div className="font-black text-sm text-black truncate">{tr.title}</div>
+                                  {tool.upgrade && (
+                                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[9px] font-black rounded-md border-2 border-black shrink-0">
+                                      <Crown className="w-2.5 h-2.5" /> PRO
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-[10px] text-neutral-500 truncate">{tr.description}</div>
+                              </div>
+                              <ChevronRight className="w-4 h-4 text-neutral-400 shrink-0" />
+                            </Link>
+                          );
+                        })}
                       </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
 
                 {navLinks.map((link) => (
-                  <a
+                  <Link
                     key={link.name}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
                     className="block py-3 font-black text-base text-black border-b-2 border-dashed border-neutral-200 hover:text-red-600 transition-colors"
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
 
@@ -388,20 +402,20 @@ export function Navbar() {
                         <Crown className="w-2.5 h-2.5" /> {planLabel}
                       </div>
                     </div>
-                    <Link href="/dashboard" className="w-full inline-flex items-center justify-center gap-2 py-3 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase tracking-wider">
-                      <LayoutDashboard className="w-4 h-4" /> Dashboard
+                    <Link href={getLocalePath(locale, "/dashboard")} className="w-full inline-flex items-center justify-center gap-2 py-3 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase tracking-wider">
+                      <LayoutDashboard className="w-4 h-4" /> {t("nav.dashboard")}
                     </Link>
                     <button onClick={handleSignOut} className="w-full inline-flex items-center justify-center gap-2 py-3 text-sm font-black text-red-600 border-2 border-black rounded-xl bg-white hover:bg-red-600 hover:text-white transition-colors uppercase tracking-wider">
-                      <LogOut className="w-4 h-4" /> Sign Out
+                      <LogOut className="w-4 h-4" /> {t("nav.signOut")}
                     </button>
                   </>
                 ) : (
                   <>
-                    <Link href="/signin" className="w-full block text-center py-3 text-sm font-black text-black border-2 border-black rounded-xl bg-white hover:bg-neutral-100 transition-colors">
-                      Sign In
+                    <Link href={getLocalePath(locale, "/signin")} className="w-full block text-center py-3 text-sm font-black text-black border-2 border-black rounded-xl bg-white hover:bg-neutral-100 transition-colors">
+                      {t("nav.signIn")}
                     </Link>
-                    <Link href="/signup" className="w-full inline-flex items-center justify-center gap-2 py-3 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase tracking-wider">
-                      <Sparkles className="w-4 h-4" /> Start Free Trial
+                    <Link href={getLocalePath(locale, "/signup")} className="w-full inline-flex items-center justify-center gap-2 py-3 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase tracking-wider">
+                      <Sparkles className="w-4 h-4" /> {t("nav.startFreeTrial")}
                     </Link>
                   </>
                 )}

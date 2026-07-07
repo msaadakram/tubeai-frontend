@@ -27,56 +27,25 @@ import {
   QrCode,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { getLocalePath } from "@/lib/i18n/utils";
 
-const tools = [
-  { name: "Viral Title Generator", to: "/tools/viral-title-generator", icon: TrendingUp },
-  { name: "AI Script Writer", to: "/tools/ai-script-writer", icon: PenTool },
-  { name: "Thumbnail Downloader", to: "/tools/thumbnail-downloader", icon: Download },
-  { name: "Thumbnail Preview", to: "/tools/thumbnail-preview", icon: ImageIcon },
-  { name: "Embed Generator", to: "/tools/embed-generator", icon: Code2 },
-  { name: "QR Code Generator", to: "/tools/qr-code-generator", icon: QrCode },
-  { name: "SEO Analyzer", to: "/tools/seo-analyzer", icon: LineChart },
-  { name: "Monetization Checker", to: "/tools/monetization-checker", icon: DollarSign },
-  { name: "AI Transcript", to: "/tools/ai-transcript", icon: FileText },
-  { name: "AI Short Video Creator", to: "/tools/shorts-ideas", icon: Video, upgrade: true },
-  { name: "Earnings Calculator", to: "/tools/earnings-calculator", icon: Calculator },
-  { name: "AI Thumbnail Generator", to: "/tools/ai-thumbnail-generator", icon: ImageIcon, upgrade: true },
-  { name: "Hashtag Generator", to: "/tools/hashtag-generator", icon: Hash },
-  { name: "Tag Generator", to: "/tools/tag-generator", icon: TagIcon },
-];
-
-const linkSections = [
-  {
-    title: "Product",
-    links: [
-      { name: "Features", href: "/#features" },
-      { name: "Demo", href: "/#demo" },
-      { name: "Pricing", href: "/#pricing" },
-      { name: "Changelog", href: "#" },
-      { name: "Roadmap", href: "#" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { name: "Blog", href: "/blog" },
-      { name: "YT SEO & Growth Guide", href: "/blog/guide-to-yt-seo-grow" },
-      { name: "CPM Rates by Country", href: "/blog/youtube-cpm-rates-by-country" },
-      { name: "AI Policy", href: "/ai-policy" },
-      { name: "Help Center", href: "#" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { name: "About Us", href: "#" },
-      { name: "Careers", href: "#" },
-      { name: "Press Kit", href: "#" },
-      { name: "Contact", href: "#" },
-      { name: "Affiliates", href: "#" },
-    ],
-  },
-];
+const toolsList = [
+  { key: "viral-title-generator", to: "/tools/viral-title-generator", icon: TrendingUp },
+  { key: "ai-script-writer", to: "/tools/ai-script-writer", icon: PenTool },
+  { key: "thumbnail-downloader", to: "/tools/thumbnail-downloader", icon: Download },
+  { key: "thumbnail-preview", to: "/tools/thumbnail-preview", icon: ImageIcon },
+  { key: "embed-generator", to: "/tools/embed-generator", icon: Code2 },
+  { key: "qr-code-generator", to: "/tools/qr-code-generator", icon: QrCode },
+  { key: "seo-analyzer", to: "/tools/seo-analyzer", icon: LineChart },
+  { key: "monetization-checker", to: "/tools/monetization-checker", icon: DollarSign },
+  { key: "ai-transcript", to: "/tools/ai-transcript", icon: FileText },
+  { key: "shorts-ideas", to: "/tools/shorts-ideas", icon: Video },
+  { key: "earnings-calculator", to: "/tools/earnings-calculator", icon: Calculator },
+  { key: "hashtag-generator", to: "/tools/hashtag-generator", icon: Hash },
+  { key: "tag-generator", to: "/tools/tag-generator", icon: TagIcon },
+] as const;
 
 const socials = [
   { icon: Twitter, href: "#", label: "Twitter" },
@@ -86,6 +55,8 @@ const socials = [
 ];
 
 export function Footer() {
+  const { t } = useTranslations();
+  const { locale } = useLocale();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -98,7 +69,7 @@ export function Footer() {
     const trimmed = email.trim();
     if (!/^\S+@\S+\.\S+$/.test(trimmed)) {
       setStatus("error");
-      setMessage("Please enter a valid email address.");
+      setMessage(t("footer.emailInvalid"));
       return;
     }
 
@@ -119,7 +90,7 @@ export function Footer() {
       }
 
       setStatus("success");
-      setMessage(body.created ? "You're in! See you Sunday." : "You're already subscribed!");
+      setMessage(body.created ? t("footer.subscribedNew") : t("footer.subscribedExisting"));
       setEmail("");
       setTimeout(() => {
         setStatus("idle");
@@ -127,11 +98,42 @@ export function Footer() {
       }, 4000);
     } catch (err) {
       setStatus("error");
-      setMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setMessage(err instanceof Error ? err.message : t("footer.subscribeError"));
     }
   };
 
-  const subscribed = status === "success";
+  const linkSections = [
+    {
+      title: t("footer.product"),
+      links: [
+        { name: t("nav.features"), href: getLocalePath(locale, "/#features") },
+        { name: t("nav.demo"), href: getLocalePath(locale, "/#demo") },
+        { name: t("nav.pricing"), href: getLocalePath(locale, "/#pricing") },
+        { name: t("footer.changelog"), href: "#" },
+        { name: t("footer.roadmap"), href: "#" },
+      ],
+    },
+    {
+      title: t("footer.resources"),
+      links: [
+        { name: t("footer.blog"), href: getLocalePath(locale, "/blog") },
+        { name: t("footer.seoGuide"), href: getLocalePath(locale, "/blog/guide-to-yt-seo-grow") },
+        { name: t("footer.cpmRates"), href: getLocalePath(locale, "/blog/youtube-cpm-rates-by-country") },
+        { name: t("footer.aiPolicy"), href: getLocalePath(locale, "/ai-policy") },
+        { name: t("footer.helpCenter"), href: "#" },
+      ],
+    },
+    {
+      title: t("footer.company"),
+      links: [
+        { name: t("footer.about"), href: "#" },
+        { name: t("footer.careers"), href: "#" },
+        { name: t("footer.pressKit"), href: "#" },
+        { name: t("footer.contact"), href: "#" },
+        { name: t("footer.affiliates"), href: "#" },
+      ],
+    },
+  ];
 
   return (
     <footer className="relative bg-black text-white overflow-hidden">
@@ -154,13 +156,13 @@ export function Footer() {
           <div className="relative grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10 items-center">
             <div className="lg:col-span-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-black text-white text-[10px] font-black uppercase tracking-wider rounded-full mb-3 border-2 border-white/20">
-                <Sparkles className="w-3 h-3 text-yellow-300" /> Creator Newsletter
+                <Sparkles className="w-3 h-3 text-yellow-300" /> {t("footer.newsletterBadge")}
               </div>
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white leading-tight mb-2">
-                Join 50K+ creators growing weekly
+                {t("footer.newsletterTitle")}
               </h3>
               <p className="text-sm sm:text-base text-red-100 max-w-lg">
-                One email every Sunday. Viral case studies, algorithm updates, and the exact tactics top creators use this week.
+                {t("footer.newsletterDesc")}
               </p>
             </div>
             <form onSubmit={subscribe} className="lg:col-span-2 flex flex-col sm:flex-row gap-3">
@@ -170,7 +172,7 @@ export function Footer() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@channel.com"
+                  placeholder={t("footer.emailPlaceholder")}
                   className="flex-1 py-3 outline-none text-sm font-bold text-black placeholder:text-neutral-400 bg-transparent"
                 />
               </div>
@@ -182,9 +184,9 @@ export function Footer() {
                 {status === "loading" ? (
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
                 ) : status === "success" ? (
-                  "✓ Subscribed!"
+                  t("footer.subscribed")
                 ) : (
-                  <>Subscribe <ArrowRight className="w-4 h-4" /></>
+                  <>{t("footer.subscribe")} <ArrowRight className="w-4 h-4" /></>
                 )}
               </button>
               {status === "error" && message && (
@@ -201,29 +203,29 @@ export function Footer() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-12 gap-8 sm:gap-10 mb-12 sm:mb-16">
           {/* Brand */}
           <div className="col-span-2 sm:col-span-3 lg:col-span-4">
-            <Link href="/" className="inline-flex items-center gap-2 group mb-5">
+            <Link href={getLocalePath(locale, "/")} className="inline-flex items-center gap-2 group mb-5">
               <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center border-2 border-white shadow-[3px_3px_0px_0px_rgba(255,255,255,0.4)] group-hover:-translate-y-0.5 transition-transform">
                 <Play className="w-5 h-5 text-white fill-white" />
               </div>
               <span className="font-black text-2xl tracking-tight">YTForge</span>
             </Link>
             <p className="text-sm text-neutral-400 leading-relaxed mb-6 max-w-sm">
-              The ultimate AI toolkit for YouTube creators. Grow your channel faster with data-driven insights, automated workflows, and creator-tested templates.
+              {t("footer.brandDesc")}
             </p>
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-3 mb-6 max-w-sm">
               <div className="bg-white/5 border border-white/10 rounded-xl p-3 text-center">
                 <div className="text-lg font-black text-red-500">50K+</div>
-                <div className="text-[9px] font-black text-neutral-400 uppercase tracking-wider">Creators</div>
+                <div className="text-[9px] font-black text-neutral-400 uppercase tracking-wider">{t("footer.creators")}</div>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-xl p-3 text-center">
                 <div className="text-lg font-black text-red-500">4.9★</div>
-                <div className="text-[9px] font-black text-neutral-400 uppercase tracking-wider">Rated</div>
+                <div className="text-[9px] font-black text-neutral-400 uppercase tracking-wider">{t("footer.rated")}</div>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-xl p-3 text-center">
                 <div className="text-lg font-black text-red-500">14</div>
-                <div className="text-[9px] font-black text-neutral-400 uppercase tracking-wider">Tools</div>
+                <div className="text-[9px] font-black text-neutral-400 uppercase tracking-wider">{t("footer.tools")}</div>
               </div>
             </div>
 
@@ -245,25 +247,23 @@ export function Footer() {
           {/* Tools column */}
           <div className="col-span-2 sm:col-span-3 lg:col-span-3">
             <h4 className="font-black text-sm uppercase tracking-wider mb-5 flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-red-500" /> All Tools
+              <Sparkles className="w-3.5 h-3.5 text-red-500" /> {t("nav.allTools")}
             </h4>
             <ul className="grid grid-cols-1 gap-2.5">
-              {tools.map((t) => (
-                <li key={t.to}>
-                  <Link
-                    href={t.to}
-                    className="group flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors"
-                  >
-                    <t.icon className="w-3.5 h-3.5 text-red-500/70 group-hover:text-red-500 transition-colors" />
-                    <span className="group-hover:translate-x-0.5 transition-transform">{t.name}</span>
-                    {t.upgrade && (
-                      <span className="ml-1 px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[9px] font-black rounded border border-black tracking-wide">
-                        PRO
-                      </span>
-                    )}
-                  </Link>
-                </li>
-              ))}
+              {toolsList.map((tool) => {
+                const tr = t(`features.tools.${tool.key}`);
+                return (
+                  <li key={tool.to}>
+                    <Link
+                      href={getLocalePath(locale, tool.to)}
+                      className="group flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors"
+                    >
+                      <tool.icon className="w-3.5 h-3.5 text-red-500/70 group-hover:text-red-500 transition-colors" />
+                      <span className="group-hover:translate-x-0.5 transition-transform">{tr.title}</span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -274,12 +274,12 @@ export function Footer() {
               <ul className="flex flex-col gap-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <a
+                    <Link
                       href={link.href}
                       className="text-sm text-neutral-400 hover:text-white hover:translate-x-0.5 inline-block transition-all"
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -288,7 +288,7 @@ export function Footer() {
 
           {/* Contact */}
           <div className="col-span-2 sm:col-span-3 lg:col-span-2">
-            <h4 className="font-black text-sm uppercase tracking-wider mb-5">Contact</h4>
+            <h4 className="font-black text-sm uppercase tracking-wider mb-5">{t("footer.contact")}</h4>
             <ul className="flex flex-col gap-3 mb-5">
               <li>
                 <a href="mailto:hello@ytforge.app" className="text-sm text-neutral-400 hover:text-white inline-flex items-center gap-2 transition-colors">
@@ -302,9 +302,9 @@ export function Footer() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
-                <span className="text-xs font-black text-emerald-400 uppercase tracking-wider">All systems operational</span>
+                <span className="text-xs font-black text-emerald-400 uppercase tracking-wider">{t("footer.operational")}</span>
               </div>
-              <p className="text-[10px] text-neutral-500">Last checked just now</p>
+              <p className="text-[10px] text-neutral-500">{t("footer.lastChecked")}</p>
             </div>
           </div>
         </div>
@@ -319,14 +319,14 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="pt-6 sm:pt-8 border-t-2 border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 pb-8">
           <p className="text-xs text-neutral-500 flex items-center gap-1.5 flex-wrap justify-center">
-            © {year} YTForge Inc. Made with <Heart className="w-3 h-3 text-red-500 fill-red-500" /> for creators worldwide.
+            © {year} YTForge Inc. {t("footer.madeWith")} <Heart className="w-3 h-3 text-red-500 fill-red-500" /> for creators worldwide.
           </p>
           <div className="flex flex-wrap gap-x-5 gap-y-2 justify-center">
-            <Link href="/blog" className="text-xs text-neutral-500 hover:text-white transition-colors">Blog</Link>
-            <Link href="/privacy" className="text-xs text-neutral-500 hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/ai-policy" className="text-xs text-neutral-500 hover:text-white transition-colors">AI Policy</Link>
-            <Link href="/terms" className="text-xs text-neutral-500 hover:text-white transition-colors">Terms of Service</Link>
-            <Link href="/disclaimer" className="text-xs text-neutral-500 hover:text-white transition-colors">Disclaimer</Link>
+            <Link href={getLocalePath(locale, "/blog")} className="text-xs text-neutral-500 hover:text-white transition-colors">{t("footer.blog")}</Link>
+            <Link href={getLocalePath(locale, "/privacy")} className="text-xs text-neutral-500 hover:text-white transition-colors">{t("footer.privacy")}</Link>
+            <Link href={getLocalePath(locale, "/ai-policy")} className="text-xs text-neutral-500 hover:text-white transition-colors">{t("footer.aiPolicy")}</Link>
+            <Link href={getLocalePath(locale, "/terms")} className="text-xs text-neutral-500 hover:text-white transition-colors">{t("footer.terms")}</Link>
+            <Link href={getLocalePath(locale, "/disclaimer")} className="text-xs text-neutral-500 hover:text-white transition-colors">{t("footer.disclaimer")}</Link>
             <a href="mailto:dmca@ytforge.app" className="text-xs text-neutral-500 hover:text-white transition-colors">DMCA</a>
           </div>
         </div>

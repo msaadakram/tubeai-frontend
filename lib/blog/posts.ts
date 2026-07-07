@@ -33,6 +33,7 @@ export type Post = {
   iconName: string;
   accent: string;
   featured?: boolean;
+  image?: string;
   keywords: string[];
   blocks: Block[];
 };
@@ -60,6 +61,7 @@ export const posts: Post[] = [
     iconName: "TrendingUp",
     accent: "bg-red-600",
     featured: true,
+    image: "/blog/guide-to-yt-seo-grow.png",
     keywords: [
       "YouTube SEO",
       "YouTube growth",
@@ -226,6 +228,7 @@ export const posts: Post[] = [
     icon: DollarSign,
     iconName: "DollarSign",
     accent: "bg-emerald-600",
+    image: "/blog/youtube-cpm-rates-by-country.png",
     keywords: [
       "YouTube CPM",
       "YouTube RPM",
@@ -396,6 +399,7 @@ export const posts: Post[] = [
     icon: PenTool,
     iconName: "PenTool",
     accent: "bg-purple-600",
+    image: "/blog/ai-thumbnail-design-system.png",
     keywords: ["YouTube thumbnails", "AI thumbnail", "CTR", "thumbnail design"],
     blocks: [
       {
@@ -462,6 +466,7 @@ export const posts: Post[] = [
     icon: BarChart3,
     iconName: "BarChart3",
     accent: "bg-blue-600",
+    image: "/blog/youtube-algorithm-2026.png",
     keywords: ["YouTube algorithm", "recommendation system", "YouTube ranking"],
     blocks: [
       {
@@ -514,6 +519,7 @@ export const posts: Post[] = [
     icon: Hash,
     iconName: "Hash",
     accent: "bg-orange-600",
+    image: "/blog/hashtag-strategy-2026.png",
     keywords: ["YouTube hashtags", "hashtag strategy", "YouTube discoverability"],
     blocks: [
       {

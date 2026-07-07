@@ -18,7 +18,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        
+
         {/* Trusted By Section — looping marquee */}
         <section className="py-10 sm:py-12 border-y border-neutral-200 bg-white relative z-20 overflow-hidden">
           <p className="text-center text-xs sm:text-sm font-bold text-red-600 mb-6 sm:mb-8 tracking-widest uppercase px-4">

@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "motion/react";
 import {
   ArrowRight,
@@ -44,6 +45,7 @@ export type SerializablePost = {
   date: string;
   readTime: string;
   accent: string;
+  image?: string;
   keywords: string[];
   blocks: Block[];
 };
@@ -215,6 +217,26 @@ export function BlogPostContent({
           </motion.div>
         </div>
       </section>
+
+      {/* Cover image */}
+      {post.image && (
+        <div className="bg-white">
+          <div className="container mx-auto px-4 sm:px-6 -mt-8 sm:-mt-12 relative">
+            <div className="max-w-4xl mx-auto">
+              <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] aspect-[16/9] bg-neutral-100">
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 768px"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Body */}
       <main className="flex-1 bg-white py-10 sm:py-14">

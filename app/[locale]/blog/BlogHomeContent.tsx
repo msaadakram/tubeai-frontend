@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { ArrowRight, Clock, Sparkles, Search, TrendingUp } from "lucide-react";
 import { posts, categories } from "@/lib/blog/posts";
@@ -65,6 +66,16 @@ export function BlogHomeContent() {
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 <div className={cn("relative aspect-[16/10] lg:aspect-auto p-8 sm:p-12 flex flex-col justify-between", featured.accent)}>
                   <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,rgba(0,0,0,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.3)_1px,transparent_1px)] bg-[size:2rem_2rem]" />
+                  {featured.image && (
+                    <Image
+                      src={featured.image}
+                      alt={featured.title}
+                      fill
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-cover opacity-90 mix-blend-luminosity"
+                    />
+                  )}
                   <div className="relative">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white text-[10px] font-black uppercase tracking-wider rounded-full border-2 border-white/30">
                       <TrendingUp className="w-3 h-3 text-red-500" /> Featured
@@ -164,10 +175,19 @@ export function BlogHomeContent() {
                       href={`/blog/${post.slug}`}
                       className="group block h-full bg-white border-2 border-black rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(220,38,38,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
                     >
-                      <div className={cn("relative h-36 p-5 flex items-end justify-between", post.accent)}>
+                      <div className={cn("relative h-36 p-5 flex items-end justify-between overflow-hidden", post.accent)}>
                         <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,rgba(0,0,0,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.3)_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]" />
-                        <post.icon className="absolute top-4 right-4 w-10 h-10 text-white/90" />
-                        <span className="relative px-2.5 py-1 bg-black text-white text-[9px] font-black uppercase tracking-wider rounded-full border border-white/30">
+                        {post.image && (
+                          <Image
+                            src={post.image}
+                            alt={post.title}
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover opacity-90 mix-blend-luminosity"
+                          />
+                        )}
+                        <post.icon className="absolute top-4 right-4 w-10 h-10 text-white/90 z-10" />
+                        <span className="relative px-2.5 py-1 bg-black text-white text-[9px] font-black uppercase tracking-wider rounded-full border border-white/30 z-10">
                           {post.category}
                         </span>
                       </div>

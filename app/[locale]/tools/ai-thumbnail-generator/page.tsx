@@ -19,6 +19,39 @@ import {
   Clock,
 } from "lucide-react";
 import { ToolLayout } from "@/components/tools/ToolLayout";
+import {
+  StatsStrip,
+  GuideGrid,
+  Workflow,
+  SeoContent,
+  FaqAccordion,
+  CrossCTA,
+} from "@/components/tools/ToolSections";
+
+const stats = [
+  { value: "1.4M+", label: "Thumbnails Generated" },
+  { value: "+62%", label: "Avg CTR Lift" },
+  { value: "4", label: "Variants / Prompt" },
+  { value: "1280×720", label: "HD PNG Export" },
+];
+
+const guides = [
+  { icon: Wand2, color: "text-purple-600 bg-purple-100", title: "One focal point per thumbnail", desc: "The eye needs a single anchor — a face, a product, or a bold object. AI generates around one focal point; don't add a second." },
+  { icon: Palette, color: "text-purple-600 bg-purple-100", title: "High contrast wins clicks", desc: "Light text on dark backgrounds or vice versa. AI thumbnails that maximize contrast outperform muted ones by 20-30% in CTR." },
+  { icon: Layers, color: "text-purple-600 bg-purple-100", title: "Three words of text max", desc: "Thumbnails render at 2 inches on mobile. More than three words becomes noise. Let AI simplify your headline." },
+  { icon: ImageIcon, color: "text-red-600 bg-red-100", title: "Don't reuse the same template", desc: "Viewers develop banner blindness to repeated layouts. Rotate styles so each video looks fresh in the feed." },
+  { icon: ImageIcon, color: "text-red-600 bg-red-100", title: "Don't overstuff with arrows and circles", desc: "One annotation element is fine; three looks spammy. Trust a clean composition over clutter." },
+  { icon: Clock, color: "text-yellow-600 bg-yellow-100", title: "A/B test in the first 24 hours", desc: "Upload two variants and let YouTube's Test & Compare feature pick the winner while the video has momentum." },
+];
+
+const faqs = [
+  { q: "How does the AI thumbnail generator work?", a: "You describe your video's topic and angle in a prompt, and the model generates four 1280×720 thumbnail variants matching proven high-CTR patterns — bold focal point, high contrast, minimal text. Pick the strongest, export as lossless PNG, and upload." },
+  { q: "Are AI-generated thumbnails allowed by YouTube?", a: "Yes. YouTube's policies allow AI-generated imagery in thumbnails as long as the content isn't deceptive, sexually explicit, or harmful. Always review AI output for accuracy before publishing." },
+  { q: "What resolution do the thumbnails export at?", a: "1280×720 pixels — YouTube's recommended resolution — exported as lossless PNG so there's no compression artifacting when the platform re-encodes for different devices." },
+  { q: "Can I use my own face in AI thumbnails?", a: "Pro plans support reference-image style transfer — upload a swipe-file thumbnail you admire and the model remixes its composition and color style around your topic, while keeping your branding consistent." },
+  { q: "How many thumbnails can I generate per month?", a: "The Creator plan includes 100 generations per month (4 variants each = 400 thumbnails). Pro includes 500 generations. Unused generations don't roll over." },
+  { q: "Is there a free trial?", a: "Yes — start a free trial on any paid plan, no credit card required. Cancel anytime within the trial period and pay nothing." },
+];
 
 const perks = [
   { icon: Wand2, title: "4 variants per prompt", desc: "Generate four click-tested thumbnail concepts in a single click." },
@@ -76,6 +109,8 @@ export default function AIThumbnailGeneratorPage() {
       icon={ImageIcon}
       badge="Premium · Pro Feature"
     >
+      <StatsStrip stats={stats} />
+
       {/* HERO Lock Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -318,6 +353,48 @@ export default function AIThumbnailGeneratorPage() {
           ))}
         </div>
       </section>
+
+      <GuideGrid
+        badge="Thumbnail Design"
+        title="What makes a YouTube thumbnail that gets clicked"
+        intro="Six rules the AI is trained on — and that you should enforce on every thumbnail you ship."
+        cards={guides}
+      />
+
+      <Workflow
+        title="Your 4-step AI thumbnail workflow"
+        steps={[
+          { n: "01", t: "Describe your video", d: "Enter the topic, angle, and the emotion you want viewers to feel." },
+          { n: "02", t: "Generate 4 variants", d: "The AI produces four high-CTR concepts based on proven patterns." },
+          { n: "03", t: "Pick & refine", d: "Choose the strongest variant and tweak text or focal point if needed." },
+          { n: "04", t: "Export HD PNG", d: "Download a 1280×720 lossless PNG ready for YouTube Studio." },
+        ]}
+      />
+
+      <SeoContent badge="AI Thumbnail Strategy" title="AI YouTube thumbnails in 2026: design systems, not one-offs">
+        <p>A great YouTube thumbnail is not designed — it's engineered. Top creators in 2026 run a repeatable system: one focal point, high contrast, three words of text, and an A/B test in the first 24 hours. AI now handles the generation; your job is the system around it. The <strong>thumbnail</strong> is the single biggest lever on click-through rate, and CTR is the gate to every other ranking signal YouTube measures.</p>
+        <h3>The three-element rule</h3>
+        <p>Every high-performing thumbnail has at most three elements: a focal subject (a face, a product, or a bold object), a short text overlay, and a background that creates contrast. More than three elements and the eye doesn't know where to land. The AI thumbnail generator is trained to enforce this constraint — describe your topic and it returns compositions that respect it.</p>
+        <h3>Contrast beats aesthetics</h3>
+        <p>A "beautiful" thumbnail with low contrast loses to an "ugly" thumbnail with high contrast every time. Light text on a dark background, or a saturated subject against a muted background, makes the thumbnail pop in a feed full of competing videos. If your AI-generated variant looks too tasteful, prompt for bolder colors and higher contrast.</p>
+        <h3>Text that survives at 2 inches</h3>
+        <p>Most views come from mobile, where your thumbnail renders at roughly 2 inches wide. Any text smaller than three words becomes illegible. Use text to reinforce the title's promise — not to repeat it. The AI keeps overlays to a maximum of three words by default.</p>
+        <h3>Faces and emotion</h3>
+        <p>Thumbnails with expressive faces consistently outperform faceless ones — YouTube's own data shows faces with visible emotion lift CTR by up to 38%. If your video is people-centric, generate variants with a clear facial focal point. For product or tutorial videos, let the product be the focal point.</p>
+        <h3>A/B testing while it matters</h3>
+        <p>YouTube's Test & Compare feature lets you upload three thumbnail variants and serve them to equal audience slices for up to 14 days. The winner gets promoted to 100% of impressions. Run the test in the first 24-48 hours — that's when a video's momentum compounds, and a stronger thumbnail early lifts the ceiling on total views.</p>
+        <h3>From thumbnail to full system</h3>
+        <p>The thumbnail is step one. Pair it with a <a href="/tools/viral-title-generator">clickable title</a>, preview how it renders across devices with our <a href="/tools/thumbnail-preview">Thumbnail Preview</a> tool, and download any competitor's thumbnail with the <a href="/tools/thumbnail-downloader">Thumbnail Downloader</a> for swipe-file inspiration.</p>
+      </SeoContent>
+
+      <FaqAccordion faqs={faqs} />
+
+      <CrossCTA
+        title="Pair your thumbnail with a viral title"
+        desc="The best thumbnail fails without a clickable title. Generate both in one workflow."
+        primary={{ label: "Generate Titles", href: "/tools/viral-title-generator", icon: Sparkles }}
+        secondary={{ label: "Preview Thumbnail", href: "/tools/thumbnail-preview", icon: ImageIcon }}
+      />
 
       {/* Bottom CTA */}
       <motion.div
