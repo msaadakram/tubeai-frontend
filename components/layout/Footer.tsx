@@ -87,18 +87,51 @@ const socials = [
 
 export function Footer() {
   const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
   const year = new Date().getFullYear();
 
-  const subscribe = (e: React.FormEvent) => {
+  const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
-    setSubscribed(true);
-    setTimeout(() => {
-      setSubscribed(false);
+    if (status === "loading" || status === "success") return;
+
+    const trimmed = email.trim();
+    if (!/^\S+@\S+\.\S+$/.test(trimmed)) {
+      setStatus("error");
+      setMessage("Please enter a valid email address.");
+      return;
+    }
+
+    setStatus("loading");
+    setMessage("");
+
+    const base = process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app";
+    try {
+      const res = await fetch(`${base}/api/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-source": "footer-newsletter" },
+        body: JSON.stringify({ email: trimmed }),
+      });
+
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(body.error || `Failed to subscribe (${res.status})`);
+      }
+
+      setStatus("success");
+      setMessage(body.created ? "You're in! See you Sunday." : "You're already subscribed!");
       setEmail("");
-    }, 3000);
+      setTimeout(() => {
+        setStatus("idle");
+        setMessage("");
+      }, 4000);
+    } catch (err) {
+      setStatus("error");
+      setMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    }
   };
+
+  const subscribed = status === "success";
 
   return (
     <footer className="relative bg-black text-white overflow-hidden">
@@ -143,11 +176,23 @@ export function Footer() {
               </div>
               <button
                 type="submit"
-                disabled={subscribed}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-black text-white font-black rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(255,255,255,0.3)] hover:-translate-y-0.5 transition-transform text-sm uppercase tracking-wider whitespace-nowrap"
+                disabled={status === "loading" || status === "success"}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-black text-white font-black rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(255,255,255,0.3)] hover:-translate-y-0.5 transition-transform text-sm uppercase tracking-wider whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                {subscribed ? "✓ Subscribed!" : <>Subscribe <ArrowRight className="w-4 h-4" /></>}
+                {status === "loading" ? (
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                ) : status === "success" ? (
+                  "✓ Subscribed!"
+                ) : (
+                  <>Subscribe <ArrowRight className="w-4 h-4" /></>
+                )}
               </button>
+              {status === "error" && message && (
+                <p className="sm:absolute sm:mt-1 text-xs font-bold text-yellow-200">{message}</p>
+              )}
+              {status === "success" && message && (
+                <p className="sm:absolute sm:mt-1 text-xs font-bold text-yellow-200">{message}</p>
+              )}
             </form>
           </div>
         </motion.div>
