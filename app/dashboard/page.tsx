@@ -230,36 +230,16 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              {/* Plan perks + quota */}
-              <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t-2 border-dashed border-neutral-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">Plan includes</div>
-                  <ul className="space-y-1.5">
-                    {meta.perks.map((p) => (
-                      <li key={p} className="flex items-center gap-2 text-xs sm:text-sm font-bold">
-                        <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0" /> {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">Quota</div>
-                  <div className="bg-neutral-50 border-2 border-black rounded-xl p-3 sm:p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-black text-xs sm:text-sm">{meta.cap}</span>
-                      <Sparkles className="w-4 h-4 text-red-600" />
-                    </div>
-                    <div className="h-2 bg-neutral-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-red-600 to-red-400"
-                        style={{ width: user.plan === "free" ? "65%" : "24%" }}
-                      />
-                    </div>
-                    <div className="text-[10px] font-bold text-neutral-500 mt-1.5">
-                      {user.plan === "free" ? "6.5 / 10 generations used" : "Refreshes monthly · Plenty of headroom"}
-                    </div>
-                  </div>
-                </div>
+              {/* Plan perks */}
+              <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t-2 border-dashed border-neutral-200">
+                <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">Plan includes</div>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                  {meta.perks.map((p) => (
+                    <li key={p} className="flex items-center gap-2 text-xs sm:text-sm font-bold">
+                      <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0" /> {p}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 

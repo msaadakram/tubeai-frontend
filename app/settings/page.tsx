@@ -626,7 +626,14 @@ function PlanTab() {
 /* ========== Refer & Earn ========== */
 function ReferTab() {
   const { user } = useAuth();
-  const [referral, setReferral] = useState<{ referralCode: string; referrals: number; referredByName: string; shareUrl: string } | null>(null);
+  const [referral, setReferral] = useState<{
+    referralCode: string;
+    referrals: number;
+    referredByName: string;
+    shareUrl: string;
+    earnedProViaReferral?: boolean;
+    history?: { name: string; status: string; date: string }[];
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
@@ -638,7 +645,11 @@ function ReferTab() {
   }, []);
 
   const code = referral?.referralCode || user?.referralCode || "";
-  const shareUrl = referral?.shareUrl || `${typeof window !== "undefined" ? window.location.origin : ""}/signup?ref=${code}`;
+  // Always build the share URL from the current origin + code so it can never
+  // be blank even if the backend omits shareUrl. The link points to *this*
+  // frontend, which is always the right destination.
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const shareUrl = code ? `${origin}/signup?ref=${code}` : referral?.shareUrl || "";
 
   const copy = async (text: string) => {
     try {
@@ -660,6 +671,12 @@ function ReferTab() {
           </div>
         ) : (
           <div className="space-y-4">
+            {loading === false && !referral && (
+              <div className="flex items-start gap-2 p-3 bg-yellow-50 border-2 border-yellow-400 rounded-xl text-xs font-bold text-yellow-800">
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>Couldn't load your referral details from the server. Your code is still shown below and sharing it works.</span>
+              </div>
+            )}
             <div className="grid sm:grid-cols-2 gap-3">
               <div className="border-2 border-black rounded-xl p-4 bg-black text-white relative overflow-hidden">
                 <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-red-600/40 blur-2xl" />
@@ -708,6 +725,59 @@ function ReferTab() {
                 <Share2 className="w-3.5 h-3.5" /> Share on X
               </a>
             </div>
+
+            {referral?.earnedProViaReferral ? (
+              <div className="flex items-start gap-3 p-4 bg-emerald-50 border-2 border-emerald-600 rounded-xl">
+                <Trophy className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-black text-sm text-emerald-800">You've earned 1 month of Pro</div>
+                  <div className="text-xs text-emerald-700 font-bold mt-0.5">
+                    Someone referred you — enjoy Pro on us. Keep referring friends to extend it.
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-start gap-3 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-xl">
+                <Gift className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-black text-sm text-yellow-800">Earn Pro free — refer a friend</div>
+                  <div className="text-xs text-yellow-700 font-bold mt-0.5">
+                    Share your code. When a friend signs up, you both get 1 month of Pro free.
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {referral?.history && referral.history.length > 0 && (
+              <div>
+                <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">Recent referrals</div>
+                <div className="border-2 border-black rounded-xl overflow-hidden divide-y-2 divide-black/10">
+                  {referral.history.map((h, i) => (
+                    <div key={i} className="flex items-center justify-between gap-3 p-3 bg-white">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="w-7 h-7 rounded-full bg-red-100 text-red-700 flex items-center justify-center border-2 border-black text-[10px] font-black shrink-0">
+                          {h.name?.slice(0, 2).toUpperCase() || "??"}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="font-black text-sm tracking-tight truncate">{h.name || "Creator"}</div>
+                          <div className="text-[10px] text-neutral-500 font-bold">
+                            {h.date ? new Date(h.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : ""}
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border-2 border-black ${
+                          h.status === "rewarded" ? "bg-emerald-100 text-emerald-800" : h.status === "voided" ? "bg-neutral-100 text-neutral-500" : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {h.status === "rewarded" ? <CheckCircle2 className="w-2.5 h-2.5" /> : null}
+                        {h.status === "rewarded" ? "Rewarded" : h.status === "voided" ? "Voided" : "Pending"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </Card>

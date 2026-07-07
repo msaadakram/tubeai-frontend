@@ -11,6 +11,7 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { Pricing } from "@/components/sections/Pricing";
 import { FAQ } from "@/components/sections/FAQ";
 import { CTA } from "@/components/sections/CTA";
+import { Newsletter } from "@/components/sections/Newsletter";
 
 export default function Home() {
   return (
@@ -55,6 +56,7 @@ export default function Home() {
         <Pricing />
         <FAQ />
         <CTA />
+        <Newsletter />
       </main>
       <Footer />
     </div>

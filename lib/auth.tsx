@@ -258,6 +258,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         persist(u, res.token);
         return { ok: true, user: u };
       } catch (err: any) {
+        // 401/403 on the signin endpoint always means bad credentials. Don't
+        // surface the generic "AI service auth" message from friendlyApiError.
+        if (err?.status === 401 || err?.status === 403) {
+          return { ok: false, error: "Invalid email or password" };
+        }
         return { ok: false, error: err?.message || "Sign in failed" };
       }
     },
