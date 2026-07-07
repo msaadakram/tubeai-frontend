@@ -16,6 +16,7 @@ import {
   Hash,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { streamJson } from "@/lib/streamJson";
 import { extractStringArray } from "@/lib/parseStream";
 import {
@@ -474,6 +475,17 @@ export default function TagGeneratorPage() {
         primary={{ label: "Generate Hashtags", href: "/tools/hashtag-generator", icon: Hash }}
         secondary={{ label: "Write Viral Titles", href: "/tools/viral-title-generator", icon: TrendingUp }}
       />
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube Tag Generator"
+        description={"Generate SEO-optimized YouTube tags from any topic — exact, broad, and long-tail, within the 500-char limit."}
+        slug="tag-generator"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube Tag Generator", slug: "/tools/tag-generator" },
+        ]}
+      />
+</ToolLayout>
   );
 }

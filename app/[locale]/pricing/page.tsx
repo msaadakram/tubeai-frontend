@@ -530,10 +530,56 @@ export default function PricingPage() {
       </section>
 
       <Footer />
+      <PricingJsonLd />
     </div>
   );
 }
 
 function Heart() {
   return <span className="w-3 h-3 rounded-full bg-white inline-block" />;
+}
+
+function PricingJsonLd() {
+  const products = plans
+    .filter((p) => p.monthly > 0)
+    .map((p, i) => ({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: `YTForge ${p.name}`,
+      description: p.tagline,
+      brand: { "@type": "Brand", name: "YTForge" },
+      offers: {
+        "@type": "Offer",
+        price: p.monthly,
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+        url: "https://ytforge.app/pricing",
+      },
+    }));
+  const faq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  const bc = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://ytforge.app/" },
+      { "@type": "ListItem", position: 2, name: "Pricing", item: "https://ytforge.app/pricing" },
+    ],
+  };
+  return (
+    <>
+      {products.map((p, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(p) }} />
+      ))}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />
+    </>
+  );
 }

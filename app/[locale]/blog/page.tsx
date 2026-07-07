@@ -1,28 +1,26 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { BlogHomeContent } from "./BlogHomeContent";
+import { buildMetadata, JsonLd, breadcrumbJsonLd, websiteJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "YTForge Blog — YouTube Growth, SEO & Monetization",
+export const metadata: Metadata = buildMetadata({
+  title: "YTForge Blog — YouTube Growth, SEO & Monetization Guides",
   description:
-    "Viral case studies, YouTube algorithm updates, SEO playbooks, and country-wise CPM benchmarks. The exact tactics top creators use — written by the YTForge team.",
+    "The YouTube blog for creators: viral case studies, algorithm updates, SEO playbooks, and country-wise CPM benchmarks. The exact tactics top creators use, written by the YTForge team.",
+  path: "/blog",
   keywords: [
-    "YouTube blog",
-    "YouTube SEO",
-    "YouTube growth",
-    "YouTube CPM",
-    "YouTube algorithm",
+    "youtube blog",
+    "youtube content",
+    "youtube meta",
+    "youtube tools",
+    "youtube seo",
+    "youtube growth",
+    "youtube cpm",
+    "youtube algorithm",
     "creator tactics",
   ],
-  openGraph: {
-    title: "YTForge Blog — YouTube Growth, SEO & Monetization",
-    description:
-      "Viral case studies, algorithm updates, SEO playbooks, and monetization benchmarks for YouTube creators.",
-    type: "website",
-  },
-  robots: { index: true, follow: true },
-};
+});
 
 export default function BlogPage() {
   return (
@@ -30,6 +28,15 @@ export default function BlogPage() {
       <Navbar />
       <BlogHomeContent />
       <Footer />
+      <JsonLd
+        data={[
+          websiteJsonLd(),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+          ]),
+        ]}
+      />
     </div>
   );
 }

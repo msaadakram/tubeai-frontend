@@ -852,6 +852,51 @@ export default function FeaturesPage() {
       </section>
 
       <Footer />
+      <FeaturesSeoJsonLd />
     </div>
+  );
+}
+
+function FeaturesSeoJsonLd() {
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "YTForge Features — YouTube Creator Toolkit",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Viral Title Generator", url: "https://ytforge.app/tools/viral-title-generator" },
+      { "@type": "ListItem", position: 2, name: "AI Script Writer", url: "https://ytforge.app/tools/ai-script-writer" },
+      { "@type": "ListItem", position: 3, name: "AI Thumbnail Generator", url: "https://ytforge.app/tools/ai-thumbnail-generator" },
+      { "@type": "ListItem", position: 4, name: "SEO Analyzer", url: "https://ytforge.app/tools/seo-analyzer" },
+      { "@type": "ListItem", position: 5, name: "Channel Analytics", url: "https://ytforge.app/tools/channel-analytics" },
+      { "@type": "ListItem", position: 6, name: "Tag Generator", url: "https://ytforge.app/tools/tag-generator" },
+      { "@type": "ListItem", position: 7, name: "Hashtag Generator", url: "https://ytforge.app/tools/hashtag-generator" },
+      { "@type": "ListItem", position: 8, name: "Monetization Checker", url: "https://ytforge.app/tools/monetization-checker" },
+      { "@type": "ListItem", position: 9, name: "Earnings Calculator", url: "https://ytforge.app/tools/earnings-calculator" },
+      { "@type": "ListItem", position: 10, name: "Thumbnail Downloader", url: "https://ytforge.app/tools/thumbnail-downloader" },
+    ],
+  };
+  const faq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  const bc = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://ytforge.app/" },
+      { "@type": "ListItem", position: 2, name: "Features", item: "https://ytforge.app/features" },
+    ],
+  };
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />
+    </>
   );
 }

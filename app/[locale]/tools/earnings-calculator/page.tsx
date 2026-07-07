@@ -22,6 +22,7 @@ import {
   Zap,
 } from "lucide-react";
 import { ToolLayout, ToolCard } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 
 const niches = [
@@ -487,6 +488,17 @@ export default function EarningsCalculatorPage() {
         primary={{ label: "Check Monetization Status", href: "/tools/monetization-checker", icon: Sparkles }}
         secondary={{ label: "Generate Viral Titles", href: "/tools/viral-title-generator", icon: PenTool }}
       />
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube Earnings Calculator"
+        description={"Estimate YouTube AdSense earnings from your views, country mix, niche, and RPM — free, instant projections."}
+        slug="earnings-calculator"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube Earnings Calculator", slug: "/tools/earnings-calculator" },
+        ]}
+      />
+</ToolLayout>
   );
 }

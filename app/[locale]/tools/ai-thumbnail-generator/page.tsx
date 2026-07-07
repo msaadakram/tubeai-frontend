@@ -19,6 +19,7 @@ import {
   Clock,
 } from "lucide-react";
 import { ToolLayout } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import {
   StatsStrip,
   GuideGrid,
@@ -433,6 +434,17 @@ export default function AIThumbnailGeneratorPage() {
           <p className="text-[10px] text-neutral-400 mt-3">No credit card required · cancel anytime</p>
         </div>
       </motion.div>
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="AI YouTube Thumbnail Generator"
+        description={"Generate click-magnet YouTube thumbnails with AI — 4 high-CTR variants per prompt, HD PNG export."}
+        slug="ai-thumbnail-generator"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "AI YouTube Thumbnail Generator", slug: "/tools/ai-thumbnail-generator" },
+        ]}
+      />
+</ToolLayout>
   );
 }

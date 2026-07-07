@@ -18,6 +18,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 import { useAuth } from "@/lib/auth";
@@ -256,6 +257,17 @@ export default function ShortsIdeasPage() {
         primary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: PenTool }}
         secondary={{ label: "Generate Title", href: "/tools/viral-title-generator", icon: TrendingUp }}
       />
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube Shorts Ideas"
+        description={"Generate viral YouTube Shorts ideas — hooks, formats, and looped endings — tuned for the Shorts algorithm in 2026."}
+        slug="shorts-ideas"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube Shorts Ideas", slug: "/tools/shorts-ideas" },
+        ]}
+      />
+</ToolLayout>
   );
 }

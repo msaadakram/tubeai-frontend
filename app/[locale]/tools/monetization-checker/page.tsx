@@ -32,6 +32,7 @@ import {
   RadialBarChart, RadialBar, PolarAngleAxis, Cell,
 } from "recharts";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 
 const BASE_URL =
@@ -418,7 +419,18 @@ export default function MonetizationCheckerPage() {
         primary={{ label: "Calculate Earnings", href: "/tools/earnings-calculator", icon: DollarSign }}
         secondary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: PenTool }}
       />
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube Monetization Checker"
+        description={"Check any channel monetization status, YPP eligibility, and estimated ad-revenue tier in seconds."}
+        slug="monetization-checker"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube Monetization Checker", slug: "/tools/monetization-checker" },
+        ]}
+      />
+</ToolLayout>
   );
 }
 

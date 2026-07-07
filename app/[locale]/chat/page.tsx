@@ -521,6 +521,19 @@ export default function ChatPage() {
       </main>
 
       <Footer />
+      <ChatBreadcrumbJsonLd />
     </div>
   );
+}
+
+function ChatBreadcrumbJsonLd() {
+  const bc = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://ytforge.app/" },
+      { "@type": "ListItem", position: 2, name: "AI Chat", item: "https://ytforge.app/chat" },
+    ],
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />;
 }

@@ -25,6 +25,7 @@ import {
   Play,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 
 const BASE_URL =
@@ -528,6 +529,17 @@ export default function ChannelIdFinderPage() {
         primary={{ label: "Analyze Channel", href: "/tools/channel-analytics", icon: BarChart3 }}
         secondary={{ label: "Check Monetization", href: "/tools/monetization-checker", icon: DollarSign }}
       />
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube Channel ID Finder"
+        description={"Find any YouTube channel ID, RSS feed, and canonical URL from a video link, @handle, or channel URL."}
+        slug="channel-id-finder"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube Channel ID Finder", slug: "/tools/channel-id-finder" },
+        ]}
+      />
+</ToolLayout>
   );
 }

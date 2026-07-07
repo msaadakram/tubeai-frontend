@@ -29,6 +29,7 @@ import {
   Flag,
 } from "lucide-react";
 import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StreamingPreview } from "@/components/tools/StreamingPreview";
 import { streamJson } from "@/lib/streamJson";
@@ -926,6 +927,17 @@ export default function AIScriptWriterPage() {
           </a>
         </div>
       </motion.div>
+      <ToolSeoJsonLd
+        name="AI Script Writer"
+        description="Write retention-optimized YouTube scripts with a hook, promise, pattern interrupts, and a single CTA — in any tone or language."
+        slug="ai-script-writer"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "AI Script Writer", slug: "/tools/ai-script-writer" },
+        ]}
+      />
     </ToolLayout>
   );
 }

@@ -304,6 +304,19 @@ export default function PrivacyPage() {
       </main>
 
       <Footer />
+      <LegalBreadcrumbJsonLd slug="/privacy" name="Privacy Policy" />
     </div>
   );
+}
+
+function LegalBreadcrumbJsonLd({ slug, name }: { slug: string; name: string }) {
+  const bc = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://ytforge.app/" },
+      { "@type": "ListItem", position: 2, name, item: `https://ytforge.app${slug}` },
+    ],
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />;
 }

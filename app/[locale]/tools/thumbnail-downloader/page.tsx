@@ -15,6 +15,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 
 const BASE_URL =
@@ -412,6 +413,17 @@ export default function ThumbnailDownloaderPage() {
         primary={{ label: "Generate Title", href: "/tools/viral-title-generator", icon: Sparkles }}
         secondary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: ImageIcon }}
       />
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube Thumbnail Downloader"
+        description={"Download any YouTube video thumbnail in HD, full, or standard resolution — free, no signup, unlimited."}
+        slug="thumbnail-downloader"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube Thumbnail Downloader", slug: "/tools/thumbnail-downloader" },
+        ]}
+      />
+</ToolLayout>
   );
 }

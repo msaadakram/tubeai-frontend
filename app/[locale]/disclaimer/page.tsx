@@ -256,6 +256,19 @@ export default function DisclaimerPage() {
       </main>
 
       <Footer />
+      <DisclaimerBreadcrumbJsonLd />
     </div>
   );
+}
+
+function DisclaimerBreadcrumbJsonLd() {
+  const bc = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://ytforge.app/" },
+      { "@type": "ListItem", position: 2, name: "Disclaimer", item: "https://ytforge.app/disclaimer" },
+    ],
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />;
 }

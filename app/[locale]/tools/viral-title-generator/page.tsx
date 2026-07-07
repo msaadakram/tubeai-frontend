@@ -28,6 +28,7 @@ import {
   ToolInput,
   PrimaryButton,
 } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StreamingPreview } from "@/components/tools/StreamingPreview";
 import { streamJson } from "@/lib/streamJson";
@@ -1316,6 +1317,17 @@ export default function ViralTitleGeneratorPage() {
           </a>
         </div>
       </motion.div>
+      <ToolSeoJsonLd
+        name="Viral Title Generator"
+        description="Generate viral, SEO-optimized YouTube titles with built-in CTR scoring and keyword front-loading."
+        slug="viral-title-generator"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "Viral Title Generator", slug: "/tools/viral-title-generator" },
+        ]}
+      />
     </ToolLayout>
   );
 }

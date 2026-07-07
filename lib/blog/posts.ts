@@ -210,6 +210,66 @@ export const posts: Post[] = [
         text: "YouTube SEO in 2026 is a system: research the right keywords, package them in a clickable title-and-thumbnail pair, satisfy the viewer with strong retention, reinforce relevance with description and chapters, and amplify with Shorts. Run the loop on every video, measure the results, and reinvest in what compounds. Do that consistently for 90 days and you'll see search impressions, click-through rate, and watch time all move in the same direction — up.",
       },
       {
+        type: "h3",
+        text: "A repeatable weekly workflow",
+      },
+      {
+        type: "p",
+        text: "Block out one afternoon a week for the loop above. Monday: pull five keyword ideas from YouTube autocomplete and the Trending tab, score them with the SEO Analyzer, and lock the strongest. Tuesday: write the title and script around the chosen keyword, then generate three thumbnail variants. Wednesday: record and edit, front-loading the hook and placing a pattern interrupt every 30-45 seconds. Thursday: publish with a keyword-rich description, eight to fifteen specific tags, and six to ten chapter timestamps. Friday: cut two Shorts from the best moments and link them back to the long-form video. The following Monday, read CTR, APV, and traffic source split in YouTube Studio, then reinvest in the cluster that's climbing. Consistency beats intensity — a channel that runs this loop every week for a quarter will out-rank one that uploads sporadically with twice the production budget.",
+      },
+      {
+        type: "h3",
+        text: "Common mistakes to avoid",
+      },
+      {
+        type: "ul",
+        items: [
+          "Keyword-stuffing titles and descriptions — YouTube's algorithm reads it as spam and suppresses reach.",
+          "Treating tags as the main SEO lever — they are a secondary signal; title, thumbnail, and retention matter far more.",
+          "Ignoring the first 15 seconds — a slow intro tanks average view duration before the algorithm ever gives you a real chance.",
+          "Publishing one-off videos instead of clusters — YouTube rewards topical authority, so build 3-5 videos around each theme.",
+          "Skipping the 7-day analytics review — without reading CTR and APV, you cannot tell which part of the loop to fix next.",
+          "Forgetting Google AI Overviews — structure your description and chapters so Google can extract a clean answer for how-to queries.",
+        ],
+      },
+      {
+        type: "h2",
+        id: "faqs",
+        text: "Frequently asked questions",
+      },
+      {
+        type: "h3",
+        text: "How long does YouTube SEO take to work?",
+      },
+      {
+        type: "p",
+        text: "Search-driven videos often climb for 30 to 90 days after publishing, because YouTube needs watch-time and CTR data from real viewers before it confidently ranks a video in search. Browse and Suggested traffic can land faster — sometimes within hours — but durable search rankings compound over weeks. Run the optimization loop on every video for a full quarter before judging whether the system is working.",
+      },
+      {
+        type: "h3",
+        text: "Do tags still matter for YouTube SEO in 2026?",
+      },
+      {
+        type: "p",
+        text: "Tags are a secondary signal. They help YouTube disambiguate similar topics and group your video with the right recommendations, but they will not rescue a weak title or low-retention content. Use eight to fifteen specific, relevant tags — never stuff thirty generic ones — and lead with your primary keyword. The Tag Generator and Hashtag Generator inside YTForge handle this in seconds.",
+      },
+      {
+        type: "h3",
+        text: "Can I rank an old video by updating its SEO?",
+      },
+      {
+        type: "p",
+        text: "Yes. Rewriting the title to front-load the keyword, expanding the description, adding chapter timestamps, and refreshing the thumbnail can revive a video that plateaued — YouTube re-evaluates the metadata and often re-tests the video in search and Suggested. You do not need to re-upload; edit in place inside YouTube Studio and watch the next 14 days of analytics.",
+      },
+      {
+        type: "h3",
+        text: "Should I optimize Shorts differently from long-form?",
+      },
+      {
+        type: "p",
+        text: "Yes. Shorts are behavior-driven, not search-driven, so the priority shifts from keyword placement to the hook (frame one), pacing (2-3 second average shot length), and a looped ending that pushes rewatches. Use Shorts as a top-of-funnel hook that links to your search-optimized long-form video — that combination lifts both subscriber growth and watch time.",
+      },
+      {
         type: "p",
         text: "Want to skip the manual work? YTForge's AI tools handle keyword research, title generation, SEO audits, and channel analytics in one place — start free and let the data tell you what to make next.",
       },
@@ -383,6 +443,59 @@ export const posts: Post[] = [
       {
         type: "p",
         text: "Stop treating CPM as a number you're handed. Treat it as a number you design for. Build for commercial intent, build for retention, build for the markets that pay — and your RPM will follow.",
+      },
+      {
+        type: "h3",
+        text: "A practical 30-day RPM plan",
+      },
+      {
+        type: "p",
+        text: "Spend the first week auditing your current audience geography in YouTube Studio's Analytics > Audience tab. If more than 60% of your watch time comes from Tier C markets, your fastest RPM lift comes from redirecting future videos toward commercial-intent keywords and English-language metadata that captures Tier S search traffic. In week two, audit your niche against the table above and identify one adjacent, higher-CPM angle you can blend into your next three videos without alienating your existing audience. Week three: make every new video eight minutes or longer to unlock mid-roll ads, and add a single sponsorship or affiliate offer so each view earns beyond the ad auction. Week four: model the projected lift with the Earnings Calculator and confirm whether the new audience mix and niche shift moved RPM. Most channels see a 20-40% RPM improvement inside 60 days of running this plan.",
+      },
+      {
+        type: "h3",
+        text: "Beyond AdSense: the full monetization stack",
+      },
+      {
+        type: "p",
+        text: "AdSense is the floor, not the ceiling. Once a video ranks and holds retention, layer revenue streams that pay out at full RPM regardless of geography: brand sponsorships (negotiated per-1,000-impression or flat fee), affiliate links in the pinned comment, digital products or courses sold from the description, and channel memberships. A channel earning $3 RPM on AdSense can triple effective earnings by adding one sponsorship per month and two evergreen affiliate links — the same views, paid multiple ways.",
+      },
+      {
+        type: "h2",
+        id: "cpm-faqs",
+        text: "Frequently asked questions",
+      },
+      {
+        type: "h3",
+        text: "What is a good YouTube CPM in 2026?",
+      },
+      {
+        type: "p",
+        text: "A blended CPM of $6-$10 is solid for a general-interest English-language channel. Finance, SaaS, and B2B-tech channels routinely clear $15-$25 CPM, while entertainment and gaming sit lower at $2-$5. What matters more than the headline number is your RPM — the share of that CPM you actually keep after YouTube's cut and unfilled impressions.",
+      },
+      {
+        type: "h3",
+        text: "Why is my RPM so much lower than my CPM?",
+      },
+      {
+        type: "p",
+        text: "RPM is always lower than CPM because not every view is monetized — some viewers use YouTube Premium, skip ads, or sit in regions with low ad fill rates — and because YouTube keeps 45% of ad revenue. A typical channel keeps roughly 40-55% of its blended CPM as RPM. If the gap is wider than that, your audience skews toward Tier C markets or non-monetized impressions, and the levers above (commercial-intent keywords, longer videos, higher-CPM niches) are how you close it.",
+      },
+      {
+        type: "h3",
+        text: "Does video length affect CPM?",
+      },
+      {
+        type: "p",
+        text: "Indirectly, yes. Videos under eight minutes cannot serve mid-roll ads, so they monetize only pre-roll and post-roll inventory. Videos eight minutes and longer unlock mid-rolls, which roughly double the ad impressions per view and lift both CPM and RPM. Length alone won't help if retention is poor — YouTube only serves mid-rolls where viewers keep watching — but it's the single easiest structural change to raise earnings.",
+      },
+      {
+        type: "h3",
+        text: "How do Shorts CPMs compare to long-form?",
+      },
+      {
+        type: "p",
+        text: "Shorts RPMs are much lower than long-form — typically $0.05-$0.15 per 1,000 views — because Shorts ads are served between videos, not within them, and the inventory is priced for volume not intent. Treat Shorts as a discovery and subscriber-growth tool, not a direct revenue source; the long-form videos those Shorts viewers convert into will carry the real RPM.",
       },
     ],
   },

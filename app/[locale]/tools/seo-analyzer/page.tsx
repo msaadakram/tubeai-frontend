@@ -25,6 +25,7 @@ import {
   Wand2,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StreamingPreview } from "@/components/tools/StreamingPreview";
 import { streamJson } from "@/lib/streamJson";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
@@ -767,6 +768,17 @@ export default function SeoAnalyzerPage() {
         primary={{ label: "Generate Title", href: "/tools/viral-title-generator", icon: TrendingUp }}
         secondary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: PenTool }}
       />
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube SEO Analyzer"
+        description={"Audit any YouTube video or channel for SEO — title, description, tags, chapters, and ranking opportunities — in seconds."}
+        slug="seo-analyzer"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube SEO Analyzer", slug: "/tools/seo-analyzer" },
+        ]}
+      />
+</ToolLayout>
   );
 }

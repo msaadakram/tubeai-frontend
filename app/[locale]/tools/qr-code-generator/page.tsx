@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { copyToClipboard } from "@/lib/clipboard";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import {
   StatsStrip,
   GuideGrid,
@@ -722,6 +723,17 @@ export default function QrCodeGeneratorPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube QR Code Generator"
+        description={"Generate branded QR codes for your YouTube videos, channels, and Shorts — with logos, colors, and HD export."}
+        slug="qr-code-generator"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube QR Code Generator", slug: "/tools/qr-code-generator" },
+        ]}
+      />
+</ToolLayout>
   );
 }

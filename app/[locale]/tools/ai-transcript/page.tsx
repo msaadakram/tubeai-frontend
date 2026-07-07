@@ -24,6 +24,7 @@ import {
   ListOrdered,
 } from "lucide-react";
 import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 
@@ -584,7 +585,18 @@ export default function AITranscriptPage() {
         primary={{ label: "Analyze SEO", href: "/tools/seo-analyzer", icon: Sparkles }}
         secondary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: PenTool }}
       />
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="AI Transcript"
+        description={"Extract, translate, and search YouTube video transcripts into 100+ languages with AI-powered accuracy."}
+        slug="ai-transcript"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "AI Transcript", slug: "/tools/ai-transcript" },
+        ]}
+      />
+</ToolLayout>
   );
 }
 

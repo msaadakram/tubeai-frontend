@@ -38,6 +38,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 import {
   BarChart,
@@ -1241,6 +1242,17 @@ export default function ChannelAnalyticsPage() {
         primary={{ label: "Generate Title", href: "/tools/viral-title-generator", icon: Sparkles }}
         secondary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: PenTool }}
       />
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube Channel Analytics"
+        description={"Pull live channel analytics — subscribers, views, watch time, top videos, and growth velocity — from any channel URL."}
+        slug="channel-analytics"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube Channel Analytics", slug: "/tools/channel-analytics" },
+        ]}
+      />
+</ToolLayout>
   );
 }

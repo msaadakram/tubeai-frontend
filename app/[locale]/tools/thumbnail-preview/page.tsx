@@ -29,6 +29,7 @@ import {
   Zap,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import {
   StatsStrip,
   GuideGrid,
@@ -722,6 +723,17 @@ export default function ThumbnailPreviewPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube Thumbnail Preview"
+        description={"Preview how your YouTube thumbnail renders across mobile, desktop, search, and the Shorts shelf before you publish."}
+        slug="thumbnail-preview"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube Thumbnail Preview", slug: "/tools/thumbnail-preview" },
+        ]}
+      />
+</ToolLayout>
   );
 }

@@ -17,6 +17,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { streamJson } from "@/lib/streamJson";
 import { extractObjectArray, extractStringArray, extractStringField, type HashtagItem } from "@/lib/parseStream";
 import {
@@ -603,6 +604,17 @@ export default function HashtagGeneratorPage() {
         primary={{ label: "Generate Video Tags", href: "/tools/tag-generator", icon: Target }}
         secondary={{ label: "Write Viral Titles", href: "/tools/viral-title-generator", icon: TrendingUp }}
       />
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube Hashtag Generator"
+        description={"Generate relevant YouTube hashtags from any topic — tuned for reach without spam or repetition."}
+        slug="hashtag-generator"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube Hashtag Generator", slug: "/tools/hashtag-generator" },
+        ]}
+      />
+</ToolLayout>
   );
 }

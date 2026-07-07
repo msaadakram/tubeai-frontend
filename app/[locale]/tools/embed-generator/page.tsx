@@ -30,6 +30,7 @@ import {
   Play,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import {
   StatsStrip,
   GuideGrid,
@@ -773,7 +774,18 @@ ${embedHtml}
           </motion.div>
         )}
       </AnimatePresence>
-    </ToolLayout>
+          <ToolSeoJsonLd
+        name="YouTube Embed Generator"
+        description={"Generate responsive, privacy-enhanced YouTube embed codes with custom dimensions, start times, and captions."}
+        slug="embed-generator"
+        faqs={faqs}
+        breadcrumb={[
+          { name: "Home", slug: "/" },
+          { name: "Tools", slug: "/tools" },
+          { name: "YouTube Embed Generator", slug: "/tools/embed-generator" },
+        ]}
+      />
+</ToolLayout>
   );
 }
 
