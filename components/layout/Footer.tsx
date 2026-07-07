@@ -109,8 +109,8 @@ export function Footer() {
     try {
       const res = await fetch(`${base}/api/subscribe`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-source": "footer-newsletter" },
-        body: JSON.stringify({ email: trimmed }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: trimmed, source: "footer-newsletter" }),
       });
 
       const body = await res.json().catch(() => ({}));
