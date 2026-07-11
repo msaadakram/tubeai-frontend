@@ -7,6 +7,7 @@ import RouteShell from "@/components/RouteShell";
 import { LocaleProvider } from "@/lib/i18n/LocaleContext";
 import { locales, defaultLocale, type Locale } from "@/lib/i18n/config";
 import { JsonLd, organizationJsonLd, websiteJsonLd, buildMetadata, SITE_DESCRIPTION } from "@/lib/seo";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // Add RTL locale codes here when you support Arabic, Hebrew, etc.
 const RTL_LOCALES: string[] = [];
@@ -62,13 +63,15 @@ export default async function LocaleLayout({
   return (
     <html lang={resolved} dir={dir}>
       <body>
-        <AuthProvider>
-          {/* Pass resolved locale as prop so LocaleProvider syncs on every SSR navigation */}
-          <LocaleProvider locale={resolved}>
-            <RouteShell>{children}</RouteShell>
-            <Toaster position="bottom-right" richColors closeButton />
-          </LocaleProvider>
-        </AuthProvider>
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+          <AuthProvider>
+            {/* Pass resolved locale as prop so LocaleProvider syncs on every SSR navigation */}
+            <LocaleProvider locale={resolved}>
+              <RouteShell>{children}</RouteShell>
+              <Toaster position="bottom-right" richColors closeButton />
+            </LocaleProvider>
+          </AuthProvider>
+        </GoogleOAuthProvider>
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
       </body>
     </html>
