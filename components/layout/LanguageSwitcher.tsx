@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Globe, Check, ChevronDown, Loader2 } from "lucide-react";
-import { locales, localeNames, LOCALE_COOKIE, type Locale, isLocale } from "@/lib/i18n/config";
+import { locales, localeNames, LOCALE_COOKIE, defaultLocale, type Locale, isLocale } from "@/lib/i18n/config";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 
@@ -35,13 +35,24 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
 
     // 3. Build the canonical locale-prefixed path
     const parts = pathname.split("/").filter(Boolean);
+    let rawPath: string;
     let newPath: string;
+
     if (parts.length > 0 && isLocale(parts[0])) {
-      parts[0] = next;
-      const rest = parts.slice(1).join("/");
-      newPath = `/${parts[0]}${rest ? `/${rest}` : ""}`;
+      // Current URL already has a locale prefix (e.g. /fr/tools/seo-analyzer)
+      // Strip the old locale to get the bare path
+      rawPath = "/" + parts.slice(1).join("/") || "/";
     } else {
-      newPath = `/${next}`;
+      // Current URL has no locale prefix — it is the default locale (en)
+      // The full pathname IS the bare path (e.g. /tools/seo-analyzer)
+      rawPath = pathname;
+    }
+
+    if (next === defaultLocale) {
+      // Switching back to default locale: no prefix needed
+      newPath = rawPath || "/";
+    } else {
+      newPath = `/${next}${rawPath === "/" ? "" : rawPath}`;
     }
 
     // 4. Navigate inside a transition so React shows isPending while re-rendering
