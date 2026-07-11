@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { getLocalePath } from "@/lib/i18n/utils";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import TurnstileWidget, { TurnstileHandle } from "@/components/ui/turnstile-widget";
@@ -89,9 +91,17 @@ function SignUpPageInner() {
   const labels = ["Too weak", "Weak", "Okay", "Strong", "Excellent"];
   const colors = ["bg-neutral-200", "bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-green-600"];
 
-  const { signUp } = useAuth();
+  const { signUp, user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const { locale } = useLocale();
   const searchParams = useSearchParams();
+
+  // ── Redirect already-authenticated users away from this page ──────────────
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.replace(getLocalePath(locale, "/dashboard"));
+    }
+  }, [user, authLoading, router, locale]);
 
   useEffect(() => {
     const code = searchParams.get("ref") || "";
@@ -104,6 +114,15 @@ function SignUpPageInner() {
         .catch(() => {});
     }
   }, [searchParams]);
+
+  // Show a full-screen spinner while auth state is resolving
+  if (authLoading || user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+        <Loader2 className="w-8 h-8 animate-spin text-red-600" />
+      </div>
+    );
+  }
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,7 +140,7 @@ function SignUpPageInner() {
 
     if (res.ok) {
       toast.success(referralCode ? `Welcome to YTForge! ${referrerName ? `Referred by ${referrerName}.` : ""}` : "Account created — welcome to YTForge!");
-      router.push("/dashboard");
+      router.push(getLocalePath(locale, "/dashboard"));
     } else {
       turnstileRef.current?.reset();
       setTurnstileToken("");
@@ -133,13 +152,13 @@ function SignUpPageInner() {
     <div className="min-h-screen bg-neutral-50 flex flex-col lg:flex-row">
       {/* Mobile Top Bar */}
       <div className="lg:hidden border-b-2 border-black bg-white p-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href={getLocalePath(locale, "/")} className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-xl bg-red-600 flex items-center justify-center border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
             <Play className="w-4 h-4 text-white fill-white" />
           </div>
           <span className="font-black text-lg tracking-tight">YTForge</span>
         </Link>
-        <Link href="/signin" className="text-xs font-black text-red-600 hover:text-black">
+        <Link href={getLocalePath(locale, "/signin")} className="text-xs font-black text-red-600 hover:text-black">
           Sign In →
         </Link>
       </div>
@@ -148,7 +167,7 @@ function SignUpPageInner() {
       <div className="flex-1 flex items-center justify-center p-6 sm:p-10 order-2 lg:order-1">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
           <div className="hidden lg:flex mb-10">
-            <Link href="/" className="inline-flex items-center gap-2">
+            <Link href={getLocalePath(locale, "/")} className="inline-flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <Play className="w-4 h-4 text-white fill-white" />
               </div>
@@ -164,7 +183,7 @@ function SignUpPageInner() {
             <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">Create your account</h1>
             <p className="text-sm text-neutral-600">
               Already a member?{" "}
-              <Link href="/signin" className="text-red-600 font-black underline">
+              <Link href={getLocalePath(locale, "/signin")} className="text-red-600 font-black underline">
                 Sign in
               </Link>
             </p>
@@ -286,12 +305,11 @@ function SignUpPageInner() {
               />
               <span className="leading-snug">
                 I agree to YTForge&apos;s{" "}
-                <Link href="/terms" className="underline text-red-600">Terms of Service</Link> and{" "}
-                <Link href="/privacy" className="underline text-red-600">Privacy Policy</Link>.
+                <Link href={getLocalePath(locale, "/terms")} className="underline text-red-600">Terms of Service</Link> and{" "}
+                <Link href={getLocalePath(locale, "/privacy")} className="underline text-red-600">Privacy Policy</Link>.
               </span>
             </label>
 
-            {/* Cloudflare Turnstile CAPTCHA */}
             {TURNSTILE_SITE_KEY && (
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-black uppercase tracking-wider text-neutral-500">Security check</label>
@@ -334,7 +352,7 @@ function SignUpPageInner() {
         </div>
 
         <div className="relative flex justify-end">
-          <Link href="/signin" className="text-xs font-black text-white/70 hover:text-white">
+          <Link href={getLocalePath(locale, "/signin")} className="text-xs font-black text-white/70 hover:text-white">
             Have an account? <span className="text-red-500 underline">Sign in</span>
           </Link>
         </div>

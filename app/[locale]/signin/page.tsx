@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { getLocalePath } from "@/lib/i18n/utils";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import TurnstileWidget, { TurnstileHandle } from "@/components/ui/turnstile-widget";
@@ -50,14 +52,30 @@ export default function SignInPage() {
   const [turnstileToken, setTurnstileToken] = useState("");
 
   const turnstileRef = useRef<TurnstileHandle>(null);
-  const { signIn } = useAuth();
+  const { signIn, user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const { locale } = useLocale();
+
+  // ── Redirect already-authenticated users away from this page ──────────────
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.replace(getLocalePath(locale, "/dashboard"));
+    }
+  }, [user, authLoading, router, locale]);
+
+  // Show a full-screen spinner while we resolve auth state (prevents flash)
+  if (authLoading || user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+        <Loader2 className="w-8 h-8 animate-spin text-red-600" />
+      </div>
+    );
+  }
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (loading) return;
 
-    // In production the widget must have issued a token before we submit.
     if (TURNSTILE_SITE_KEY && !turnstileToken) {
       setError("Please complete the CAPTCHA verification.");
       return;
@@ -71,9 +89,8 @@ export default function SignInPage() {
 
     if (res.ok) {
       toast.success("Welcome back!");
-      router.push("/dashboard");
+      router.push(getLocalePath(locale, "/dashboard"));
     } else {
-      // Reset CAPTCHA on failure so user can get a fresh token.
       turnstileRef.current?.reset();
       setTurnstileToken("");
       setError(res.error);
@@ -102,7 +119,7 @@ export default function SignInPage() {
         </div>
 
         <div className="relative">
-          <Link href="/" className="inline-flex items-center gap-2 group">
+          <Link href={getLocalePath(locale, "/")} className="inline-flex items-center gap-2 group">
             <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
               <Play className="w-4 h-4 text-red-600 fill-red-600" />
             </div>
@@ -153,13 +170,13 @@ export default function SignInPage() {
       {/* Right form panel */}
       <div className="flex-1 flex flex-col">
         <div className="lg:hidden border-b-2 border-black bg-white p-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href={getLocalePath(locale, "/")} className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-xl bg-red-600 flex items-center justify-center border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
               <Play className="w-4 h-4 text-white fill-white" />
             </div>
             <span className="font-black text-lg tracking-tight">YTForge</span>
           </Link>
-          <Link href="/signup" className="text-xs font-black text-red-600 hover:text-black">
+          <Link href={getLocalePath(locale, "/signup")} className="text-xs font-black text-red-600 hover:text-black">
             Sign Up →
           </Link>
         </div>
@@ -170,7 +187,7 @@ export default function SignInPage() {
               <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">Sign in</h1>
               <p className="text-sm text-neutral-600">
                 New here?{" "}
-                <Link href="/signup" className="text-red-600 font-black underline">
+                <Link href={getLocalePath(locale, "/signup")} className="text-red-600 font-black underline">
                   Create a free account
                 </Link>
               </p>
@@ -219,7 +236,7 @@ export default function SignInPage() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-xs font-black uppercase tracking-wider">Password</label>
-                  <Link href="/forgot-password" className="text-xs font-black text-red-600 hover:text-black">
+                  <Link href={getLocalePath(locale, "/forgot-password")} className="text-xs font-black text-red-600 hover:text-black">
                     Forgot?
                   </Link>
                 </div>
@@ -245,7 +262,6 @@ export default function SignInPage() {
                 Keep me signed in for 30 days
               </label>
 
-              {/* Cloudflare Turnstile CAPTCHA */}
               {TURNSTILE_SITE_KEY && (
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-black uppercase tracking-wider text-neutral-500">Security check</label>
@@ -272,8 +288,8 @@ export default function SignInPage() {
 
             <p className="mt-8 text-center text-[11px] text-neutral-500 leading-relaxed">
               By signing in you agree to our{" "}
-              <Link href="/terms" className="underline font-bold">Terms</Link> and{" "}
-              <Link href="/privacy" className="underline font-bold">Privacy Policy</Link>. Protected by enterprise-grade encryption.
+              <Link href={getLocalePath(locale, "/terms")} className="underline font-bold">Terms</Link> and{" "}
+              <Link href={getLocalePath(locale, "/privacy")} className="underline font-bold">Privacy Policy</Link>. Protected by enterprise-grade encryption.
             </p>
           </motion.div>
         </div>
