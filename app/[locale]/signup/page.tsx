@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import TurnstileWidget, { TurnstileHandle } from "@/components/ui/turnstile-widget";
 import {
   Play,
   Mail,
@@ -25,6 +26,8 @@ import {
   Shield,
   AlertCircle,
 } from "lucide-react";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
 const perks = [
   { icon: Gift, t: "7-day free trial", d: "All Creator features unlocked, no card needed" },
@@ -79,7 +82,9 @@ function SignUpPageInner() {
   const [agree, setAgree] = useState(false);
   const [referralCode, setReferralCode] = useState("");
   const [referrerName, setReferrerName] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
+  const turnstileRef = useRef<TurnstileHandle>(null);
   const score = strength(pwd);
   const labels = ["Too weak", "Weak", "Okay", "Strong", "Excellent"];
   const colors = ["bg-neutral-200", "bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-green-600"];
@@ -92,7 +97,6 @@ function SignUpPageInner() {
     const code = searchParams.get("ref") || "";
     if (code) {
       setReferralCode(code);
-      // Look up who the code belongs to (best-effort).
       const base = process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app";
       fetch(`${base}/api/referral/lookup?code=${encodeURIComponent(code)}`)
         .then((r) => (r.ok ? r.json() : null))
@@ -104,14 +108,23 @@ function SignUpPageInner() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agree || loading) return;
+
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setError("Please complete the CAPTCHA verification.");
+      return;
+    }
+
     setError(null);
     setLoading(true);
-    const res = await signUp(name.trim(), email.trim(), pwd, referralCode.trim() || undefined);
+    const res = await signUp(name.trim(), email.trim(), pwd, referralCode.trim() || undefined, turnstileToken || undefined);
     setLoading(false);
+
     if (res.ok) {
       toast.success(referralCode ? `Welcome to YTForge! ${referrerName ? `Referred by ${referrerName}.` : ""}` : "Account created — welcome to YTForge!");
       router.push("/dashboard");
     } else {
+      turnstileRef.current?.reset();
+      setTurnstileToken("");
       setError(res.error);
     }
   };
@@ -272,15 +285,30 @@ function SignUpPageInner() {
                 onChange={(e) => setAgree(e.target.checked)}
               />
               <span className="leading-snug">
-                I agree to YTForge's{" "}
+                I agree to YTForge&apos;s{" "}
                 <Link href="/terms" className="underline text-red-600">Terms of Service</Link> and{" "}
                 <Link href="/privacy" className="underline text-red-600">Privacy Policy</Link>.
               </span>
             </label>
 
+            {/* Cloudflare Turnstile CAPTCHA */}
+            {TURNSTILE_SITE_KEY && (
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-black uppercase tracking-wider text-neutral-500">Security check</label>
+                <TurnstileWidget
+                  ref={turnstileRef}
+                  siteKey={TURNSTILE_SITE_KEY}
+                  onToken={(t) => setTurnstileToken(t)}
+                  onExpire={() => setTurnstileToken("")}
+                  theme="light"
+                  className="mt-1"
+                />
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={loading || !agree}
+              disabled={loading || !agree || (Boolean(TURNSTILE_SITE_KEY) && !turnstileToken)}
               className="w-full inline-flex items-center justify-center gap-2 py-3.5 bg-red-600 text-white font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 transition-all uppercase tracking-wider text-sm"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />}
@@ -341,7 +369,7 @@ function SignUpPageInner() {
               <Star key={i} className="w-3.5 h-3.5 fill-yellow-300 text-yellow-300" />
             ))}
           </div>
-          <p className="text-white text-sm leading-relaxed mb-3">"Went from 12K to 480K subs in 9 months. The Creator plan paid for itself in week one."</p>
+          <p className="text-white text-sm leading-relaxed mb-3">&quot;Went from 12K to 480K subs in 9 months. The Creator plan paid for itself in week one.&quot;</p>
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <img src="https://ui-avatars.com/api/?name=Aisha+Patel&background=000&color=fff&bold=true" alt="" className="w-8 h-8 rounded-full border-2 border-white" />

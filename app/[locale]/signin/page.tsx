@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import TurnstileWidget, { TurnstileHandle } from "@/components/ui/turnstile-widget";
 import {
   Play,
   Mail,
@@ -18,9 +19,10 @@ import {
   TrendingUp,
   Star,
   Shield,
-  CheckCircle2,
   AlertCircle,
 } from "lucide-react";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
 const benefits = [
   { icon: Sparkles, t: "Unlimited AI generations", d: "Titles, scripts, thumbnails — all unlimited" },
@@ -45,21 +47,35 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
+  const turnstileRef = useRef<TurnstileHandle>(null);
   const { signIn } = useAuth();
   const router = useRouter();
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (loading) return;
+
+    // In production the widget must have issued a token before we submit.
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setError("Please complete the CAPTCHA verification.");
+      return;
+    }
+
     setError(null);
     setLoading(true);
-    const res = await signIn(email.trim(), pwd);
+
+    const res = await signIn(email.trim(), pwd, turnstileToken || undefined);
     setLoading(false);
+
     if (res.ok) {
       toast.success("Welcome back!");
       router.push("/dashboard");
     } else {
+      // Reset CAPTCHA on failure so user can get a fresh token.
+      turnstileRef.current?.reset();
+      setTurnstileToken("");
       setError(res.error);
     }
   };
@@ -123,7 +139,7 @@ export default function SignInPage() {
               <Star key={i} className="w-3.5 h-3.5 fill-yellow-300 text-yellow-300" />
             ))}
           </div>
-          <p className="text-white text-sm leading-relaxed mb-3">"YTForge tripled my CTR overnight. Single best subscription I pay for."</p>
+          <p className="text-white text-sm leading-relaxed mb-3">&quot;YTForge tripled my CTR overnight. Single best subscription I pay for.&quot;</p>
           <div className="flex items-center gap-2">
             <img src="https://ui-avatars.com/api/?name=Maya+Chen&background=000&color=fff&bold=true" alt="" className="w-8 h-8 rounded-full border-2 border-white" />
             <div>
@@ -229,9 +245,24 @@ export default function SignInPage() {
                 Keep me signed in for 30 days
               </label>
 
+              {/* Cloudflare Turnstile CAPTCHA */}
+              {TURNSTILE_SITE_KEY && (
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-black uppercase tracking-wider text-neutral-500">Security check</label>
+                  <TurnstileWidget
+                    ref={turnstileRef}
+                    siteKey={TURNSTILE_SITE_KEY}
+                    onToken={(t) => setTurnstileToken(t)}
+                    onExpire={() => setTurnstileToken("")}
+                    theme="light"
+                    className="mt-1"
+                  />
+                </div>
+              )}
+
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || (Boolean(TURNSTILE_SITE_KEY) && !turnstileToken)}
                 className="w-full inline-flex items-center justify-center gap-2 py-3.5 bg-red-600 text-white font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed transition-all uppercase tracking-wider text-sm"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
