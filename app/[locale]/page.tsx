@@ -12,26 +12,25 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { Pricing } from "@/components/sections/Pricing";
 import { FAQ } from "@/components/sections/FAQ";
 import { CTA } from "@/components/sections/CTA";
-
-const homeFaqs = [
-  { q: "What is YTForge?", a: "YTForge is an all-in-one AI toolkit for YouTube creators. It bundles 16 purpose-built tools — a viral title generator, AI script writer, AI thumbnail generator, SEO analyzer, channel analytics, channel ID finder, monetization checker, earnings calculator, hashtag and tag generators, thumbnail downloader and preview, embed and QR code generators, AI transcript, and Shorts ideas — into one workspace tuned for the YouTube algorithm in 2026." },
-  { q: "Are the YouTube tools free?", a: "Most tools are free with no signup: the tag generator, hashtag generator, channel ID finder, thumbnail downloader, embed generator, QR code generator, and Shorts ideas. AI-powered tools like the script writer, thumbnail generator, and channel analytics are part of the Creator and Pro plans, with a free trial and no credit card required." },
-  { q: "Do I need to install anything?", a: "No. YTForge runs entirely in your browser. Every tool is a one-input-to-one-output flow — paste a link or topic, get the result, copy it into YouTube Studio. There is no extension, plugin, or desktop app to install." },
-  { q: "Will these tools work for my niche?", a: "Yes. The underlying models are trained across every major YouTube niche — tech, gaming, finance, education, vlogs, fitness, beauty, business, and entertainment — and you can specify your niche and audience so output is tuned accordingly." },
-  { q: "Is my data used to train AI?", a: "No. YTForge never trains its models on your private prompts, scripts, or channel data. Your inputs are encrypted in transit (TLS 1.3) and at rest (AES-256), and you retain full ownership of everything you generate. See our AI Policy for the full breakdown." },
-];
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 export default function Home() {
+  const { t } = useTranslations();
+
+  // FAQ items come from the translations so they change with the locale
+  const faqItems = t("faq.items") as unknown as { q: string; a: string }[];
+  const safeFaqItems = Array.isArray(faqItems) ? faqItems : [];
+
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-red-600/20 selection:text-red-900">
       <Navbar />
       <main>
         <Hero />
 
-        {/* Trusted By Section — looping marquee */}
+        {/* Trusted By Section */}
         <section className="py-10 sm:py-12 border-y border-neutral-200 bg-white relative z-20 overflow-hidden">
           <p className="text-center text-xs sm:text-sm font-bold text-red-600 mb-6 sm:mb-8 tracking-widest uppercase px-4">
-            Trusted by over 10,000 creators and agencies
+            {t("trusted.label")}
           </p>
           <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]">
             <div className="flex w-max animate-[marquee_28s_linear_infinite] gap-12 md:gap-24 pr-12 md:pr-24">
@@ -64,7 +63,7 @@ export default function Home() {
         <Pricing />
         <FAQ />
 
-        {/* SEO content — the YouTube tools hub */}
+        {/* SEO content hub */}
         <section className="bg-white border-t-2 border-black py-14 sm:py-20">
           <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-600 text-white text-[10px] font-black tracking-wider uppercase rounded-full mb-4">
@@ -99,9 +98,7 @@ export default function Home() {
                 high-contrast, one-focal-point variants per prompt at 1280×720; the{" "}
                 <a href="/tools/thumbnail-preview">Thumbnail Preview</a> tool shows how each renders across device sizes
                 before you commit; and the <a href="/tools/thumbnail-downloader">Thumbnail Downloader</a> pulls any
-                competitor&apos;s thumbnail for swipe-file inspiration. Need an embed code or a QR code for a printed
-                campaign? The <a href="/tools/embed-generator">Embed Generator</a> and{" "}
-                <a href="/tools/qr-code-generator">QR Code Generator</a> handle both in one click.
+                competitor&apos;s thumbnail for swipe-file inspiration.
               </p>
               <h3>Channel research and monetization</h3>
               <p>
@@ -110,28 +107,17 @@ export default function Home() {
                 <a href="/tools/channel-analytics">Channel Analytics</a> tool breaks down subscriber growth, view
                 velocity, and top videos. The <a href="/tools/monetization-checker">Monetization Checker</a> reports
                 YPP eligibility, and the <a href="/tools/earnings-calculator">Earnings Calculator</a> projects AdSense
-                revenue from your views, country mix, and niche. The{" "}
-                <a href="/tools/ai-transcript">AI Transcript</a> tool extracts and translates video transcripts into
-                100+ languages for accessibility and repurposing.
-              </p>
-              <h3>Built for the 2026 YouTube algorithm</h3>
-              <p>
-                Every tool is tuned for the signals YouTube weights today: click-through rate, average view duration,
-                and topical authority through keyword clusters. Run the full stack — research, package, publish, audit —
-                and you compound search impressions, watch time, and subscribers month over month. Read the{" "}
-                <a href="/blog/guide-to-yt-seo-grow">complete YouTube SEO guide</a> for the system behind the tools, or
-                the <a href="/blog/youtube-cpm-rates-by-country">CPM rates by country report</a> for the monetization
-                side.
+                revenue from your views, country mix, and niche.
               </p>
             </div>
 
-            {/* FAQ */}
+            {/* Home FAQ — pulled from i18n so it translates with locale */}
             <div className="mt-12">
               <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-black mb-6">
-                Frequently asked questions
+                {t("faq.title")}
               </h3>
               <div className="space-y-3 max-w-3xl">
-                {homeFaqs.map((f, i) => (
+                {safeFaqItems.map((f, i) => (
                   <details
                     key={i}
                     className="bg-white border-2 border-black rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] overflow-hidden group"
@@ -153,16 +139,16 @@ export default function Home() {
         <CTA />
       </main>
       <Footer />
-      <HomeJsonLd />
+      <HomeJsonLd items={safeFaqItems} />
     </div>
   );
 }
 
-function HomeJsonLd() {
+function HomeJsonLd({ items }: { items: { q: string; a: string }[] }) {
   const faq = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: homeFaqs.map((f) => ({
+    mainEntity: items.map((f) => ({
       "@type": "Question",
       name: f.q,
       acceptedAnswer: { "@type": "Answer", text: f.a },

@@ -25,18 +25,28 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const choose = (next: Locale) => {
     setOpen(false);
     if (next === locale) return;
+
+    // 1. Update React context so client components re-render immediately
     setLocale(next);
+
+    // 2. Persist in cookie for SSR on future navigations
     document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
 
-    // Rewrite the current path's locale segment
+    // 3. Navigate to the new locale path so the URL stays canonical
     const parts = pathname.split("/").filter(Boolean);
+    let newPath: string;
     if (parts.length > 0 && isLocale(parts[0])) {
       parts[0] = next;
       const rest = parts.slice(1).join("/");
-      router.push(`/${parts[0]}${rest ? `/${rest}` : ""}`);
+      newPath = `/${parts[0]}${rest ? `/${rest}` : ""}`;
     } else {
-      router.push(`/${next}`);
+      newPath = `/${next}`;
     }
+
+    // Use router.push then router.refresh so Next.js re-runs server
+    // components (layout, page) with the new locale segment.
+    router.push(newPath);
+    router.refresh();
   };
 
   const current = localeNames[locale];
