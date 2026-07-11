@@ -5,8 +5,11 @@ import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "sonner";
 import RouteShell from "@/components/RouteShell";
 import { LocaleProvider } from "@/lib/i18n/LocaleContext";
-import { locales, defaultLocale, type Locale, localeNames } from "@/lib/i18n/config";
-import { JsonLd, organizationJsonLd, websiteJsonLd, buildMetadata, SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION } from "@/lib/seo";
+import { locales, defaultLocale, type Locale } from "@/lib/i18n/config";
+import { JsonLd, organizationJsonLd, websiteJsonLd, buildMetadata, SITE_DESCRIPTION } from "@/lib/seo";
+
+// Add RTL locale codes here when you support Arabic, Hebrew, etc.
+const RTL_LOCALES: string[] = [];
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -18,7 +21,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const resolved = (locales as readonly string[]).includes(locale) ? (locale as Locale) : defaultLocale;
+  const resolved = (locales as readonly string[]).includes(locale)
+    ? (locale as Locale)
+    : defaultLocale;
+  const dir = RTL_LOCALES.includes(resolved) ? "rtl" : "ltr";
   const base = buildMetadata({
     title: "YTForge — Free YouTube Tools & AI Creator Toolkit",
     description: SITE_DESCRIPTION,
@@ -36,7 +42,7 @@ export async function generateMetadata({
     ],
     locale: resolved,
   });
-  return { ...base, other: { lang: resolved, dir: "ltr" } };
+  return { ...base, other: { lang: resolved, dir } };
 }
 
 export default async function LocaleLayout({
@@ -51,12 +57,13 @@ export default async function LocaleLayout({
     notFound();
   }
   const resolved = locale as Locale;
-  const dir = "ltr";
+  const dir = RTL_LOCALES.includes(resolved) ? "rtl" : "ltr";
 
   return (
     <html lang={resolved} dir={dir}>
       <body>
         <AuthProvider>
+          {/* Pass resolved locale as prop so LocaleProvider syncs on every SSR navigation */}
           <LocaleProvider locale={resolved}>
             <RouteShell>{children}</RouteShell>
             <Toaster position="bottom-right" richColors closeButton />

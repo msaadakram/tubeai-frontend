@@ -1,7 +1,7 @@
 "use client";
 
-import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
-import { defaultLocale, isLocale, locales, type Locale } from "./config";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { defaultLocale, isLocale, locales, LOCALE_COOKIE, type Locale } from "./config";
 import type { Messages } from "./messages-schema";
 import { getMessages } from "./messages";
 
@@ -28,9 +28,21 @@ export function LocaleProvider({
 }) {
   const [activeLocale, setActiveLocale] = useState<Locale>(locale);
 
+  // Sync state whenever the server-side locale prop changes (e.g. after router.push)
+  useEffect(() => {
+    if (isLocale(locale) && locale !== activeLocale) {
+      setActiveLocale(locale);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale]);
+
   const setLocale = useCallback((next: Locale) => {
     if (!isLocale(next)) return;
     setActiveLocale(next);
+    // Persist immediately so SSR picks up the correct locale on the next request
+    if (typeof document !== "undefined") {
+      document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+    }
   }, []);
 
   const value = useMemo<LocaleContextValue>(

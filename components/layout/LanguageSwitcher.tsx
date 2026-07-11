@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Globe, Check, ChevronDown } from "lucide-react";
+import { Globe, Check, ChevronDown, Loader2 } from "lucide-react";
 import { locales, localeNames, LOCALE_COOKIE, type Locale, isLocale } from "@/lib/i18n/config";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -26,13 +27,13 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
     setOpen(false);
     if (next === locale) return;
 
-    // 1. Update React context so client components re-render immediately
-    setLocale(next);
-
-    // 2. Persist in cookie for SSR on future navigations
+    // 1. Persist cookie FIRST so the SSR re-render reads the correct locale
     document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
 
-    // 3. Navigate to the new locale path so the URL stays canonical
+    // 2. Update React context for instant client-side re-render of all translated strings
+    setLocale(next);
+
+    // 3. Build the canonical locale-prefixed path
     const parts = pathname.split("/").filter(Boolean);
     let newPath: string;
     if (parts.length > 0 && isLocale(parts[0])) {
@@ -43,10 +44,10 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
       newPath = `/${next}`;
     }
 
-    // Use router.push then router.refresh so Next.js re-runs server
-    // components (layout, page) with the new locale segment.
-    router.push(newPath);
-    router.refresh();
+    // 4. Navigate inside a transition so React shows isPending while re-rendering
+    startTransition(() => {
+      router.push(newPath);
+    });
   };
 
   const current = localeNames[locale];
@@ -57,12 +58,17 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label="Change language"
+        disabled={isPending}
         className={cn(
-          "flex items-center gap-1.5 rounded-lg border-2 border-black bg-white px-2.5 py-1.5 text-xs font-black transition-all hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
+          "flex items-center gap-1.5 rounded-lg border-2 border-black bg-white px-2.5 py-1.5 text-xs font-black transition-all hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] disabled:opacity-60",
           open && "shadow-[3px_3px_0px_0px_rgba(220,38,38,1)]"
         )}
       >
-        <Globe className="w-3.5 h-3.5 text-red-600" />
+        {isPending ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin text-red-600" />
+        ) : (
+          <Globe className="w-3.5 h-3.5 text-red-600" />
+        )}
         <span className="text-base leading-none">{current.flag}</span>
         {!compact && <span className="hidden sm:inline uppercase tracking-wider">{locale}</span>}
         <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", open && "rotate-180")} />

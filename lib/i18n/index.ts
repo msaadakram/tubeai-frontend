@@ -1,11 +1,7 @@
 import { defaultLocale, isLocale, locales, type Locale } from "./config";
-import { messages, type Messages } from "./messages";
+import { getMessages, type Messages } from "./messages";
 
-export { locales, defaultLocale, isLocale, type Locale, type Messages };
-
-export function getMessages(locale: Locale): Messages {
-  return messages[locale] ?? messages[defaultLocale];
-}
+export { locales, defaultLocale, isLocale, getMessages, type Locale, type Messages };
 
 type Resolve<T, P extends string> = P extends `${infer K}.${infer R}`
   ? K extends keyof T
