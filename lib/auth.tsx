@@ -40,8 +40,8 @@ type AuthResult = { ok: true; user: User } | { ok: false; error: string };
 type AuthCtx = {
   user: User | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<AuthResult>;
-  signUp: (name: string, email: string, password: string, referralCode?: string) => Promise<AuthResult>;
+  signIn: (email: string, password: string, turnstileToken?: string) => Promise<AuthResult>;
+  signUp: (name: string, email: string, password: string, referralCode?: string, turnstileToken?: string) => Promise<AuthResult>;
   signOut: () => void;
   upgrade: (plan: Plan) => Promise<void>;
   updateProfile: (patch: Partial<Pick<User, "name" | "email" | "avatar">>) => Promise<void>;
@@ -182,8 +182,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Restore session on mount: optimistically show cached user, then verify
-  // the token against /api/auth/me so a stale/expired token is cleared.
   useEffect(() => {
     let cancelled = false;
     const cached = readCachedUser();
@@ -223,10 +221,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signUp = useCallback(
-    async (name: string, email: string, password: string, referralCode?: string): Promise<AuthResult> => {
+    async (
+      name: string,
+      email: string,
+      password: string,
+      referralCode?: string,
+      turnstileToken?: string
+    ): Promise<AuthResult> => {
       try {
         const body: Record<string, string> = { name, email, password };
         if (referralCode) body.referralCode = referralCode;
+        // Forward the Turnstile CAPTCHA token so the backend middleware can verify it.
+        if (turnstileToken) body["cf-turnstile-response"] = turnstileToken;
         const res = await authFetch<{ user: any; token: string }>(
           "/api/auth/signup",
           {
@@ -245,21 +251,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const signIn = useCallback(
-    async (email: string, password: string): Promise<AuthResult> => {
+    async (
+      email: string,
+      password: string,
+      turnstileToken?: string
+    ): Promise<AuthResult> => {
       try {
+        const body: Record<string, string> = { email, password };
+        // Forward the Turnstile CAPTCHA token so the backend middleware can verify it.
+        if (turnstileToken) body["cf-turnstile-response"] = turnstileToken;
         const res = await authFetch<{ user: any; token: string }>(
           "/api/auth/signin",
           {
             method: "POST",
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify(body),
           }
         );
         const u = normalizeUser(res.user);
         persist(u, res.token);
         return { ok: true, user: u };
       } catch (err: any) {
-        // 401/403 on the signin endpoint always means bad credentials. Don't
-        // surface the generic "AI service auth" message from friendlyApiError.
         if (err?.status === 401 || err?.status === 403) {
           return { ok: false, error: "Invalid email or password" };
         }
