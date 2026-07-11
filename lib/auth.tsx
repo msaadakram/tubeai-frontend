@@ -70,23 +70,28 @@ export function useAuth() {
 }
 
 /**
- * API base URL — MUST be set via NEXT_PUBLIC_API_URL environment variable.
- * Remove fallback to prevent accidentally hitting the production backend
- * from development or staging environments.
+ * API base URL — reads NEXT_PUBLIC_API_URL at build time.
+ * Falls back to the deployed Vercel backend URL so the app
+ * works even when the env var is not explicitly set on Vercel.
+ *
+ * To override locally, add to .env.local:
+ *   NEXT_PUBLIC_API_URL=http://localhost:3001
  */
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-if (!BASE_URL) {
-  // Warn loudly in development; fail silently in production (network calls will just fail with a clear error).
-  if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
-    console.error(
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://vu-web-backend.vercel.app";
+
+if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    console.warn(
       "[auth] NEXT_PUBLIC_API_URL is not set. " +
-      "Add it to your .env.local (e.g. NEXT_PUBLIC_API_URL=http://localhost:3001) " +
-      "or to your Vercel environment variables."
+      "Falling back to https://vu-web-backend.vercel.app. " +
+      "Add NEXT_PUBLIC_API_URL to your .env.local for local development."
     );
   }
 }
 
-const API_BASE = BASE_URL || "";
+const API_BASE = BASE_URL.replace(/\/$/, ""); // strip trailing slash
 
 const TOKEN_KEY = "ytforge.token";
 const USER_KEY = "ytforge.user";
@@ -139,9 +144,6 @@ export async function authFetch<T>(
   path: string,
   opts: RequestInit = {}
 ): Promise<T> {
-  if (!API_BASE) {
-    throw new Error("API is not configured. Please set NEXT_PUBLIC_API_URL.");
-  }
   const token = readToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -149,7 +151,19 @@ export async function authFetch<T>(
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}${path}`, { ...opts, headers });
+  const url = `${API_BASE}${path}`;
+  let res: Response;
+  try {
+    res = await fetch(url, { ...opts, headers });
+  } catch (networkErr: any) {
+    // Provide a clear error instead of a raw TypeError
+    throw new Error(
+      `Cannot reach the server at ${API_BASE}. ` +
+      `Check your internet connection or the NEXT_PUBLIC_API_URL setting. ` +
+      `(${networkErr?.message || "Network error"})`
+    );
+  }
+
   const text = await res.text();
   let data: any = null;
   if (text) {
@@ -300,9 +314,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * Authenticate with a Google ID-token obtained by the frontend via
    * @react-oauth/google `useGoogleLogin` / `GoogleLogin`.
-   *
-   * The backend verifies the token with Google's public keys, handles the
-   * link-existing-account loop-hole, and returns a signed app JWT.
    */
   const signInWithGoogle = useCallback(
     async (idToken: string, referralCode?: string): Promise<AuthResult> => {
@@ -317,6 +328,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         persist(u, res.token);
         return { ok: true, user: u };
       } catch (err: any) {
+        if (err?.code === "SERVER_CONFIG") {
+          return { ok: false, error: "Google login is not configured. Please use email/password." };
+        }
         return { ok: false, error: err?.message || "Google sign-in failed" };
       }
     },
