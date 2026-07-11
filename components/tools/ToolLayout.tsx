@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { Navbar } from "../layout/Navbar";
 import { Footer } from "../layout/Footer";
+import { TurnstileGate } from "./TurnstileGate";
 
 type ToolLayoutProps = {
   title: string;
@@ -105,9 +106,13 @@ export function ToolLayout({ title, description, icon: Icon, badge, children }: 
         </div>
       </section>
 
-      {/* Content */}
+      {/* Content — gated behind Turnstile verification */}
       <main className="flex-1 bg-neutral-50">
-        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">{children}</div>
+        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+          <TurnstileGate>
+            {children}
+          </TurnstileGate>
+        </div>
       </main>
 
       <Footer />
