@@ -22,6 +22,8 @@ import {
   QrCode,
 } from "lucide-react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { getLocalePath } from "@/lib/i18n/utils";
 
 type CategoryId = "all" | "ai" | "download" | "analytics" | "seo";
 
@@ -46,6 +48,7 @@ const toolMeta: {
   { slug: "monetization-checker",   icon: DollarSign,            category: "analytics" },
   { slug: "earnings-calculator",    icon: Calculator,            category: "analytics" },
   { slug: "seo-analyzer",           icon: LineChart,             category: "seo" },
+  { slug: "channel-id-finder",      icon: Hash,                  category: "analytics" },
 ];
 
 function badgeStyle(badge?: string) {
@@ -58,8 +61,17 @@ function badgeStyle(badge?: string) {
 
 const FeatureCard = React.forwardRef<
   HTMLDivElement,
-  { slug: string; icon: React.ComponentType<{ className?: string }>; badge?: string; index: number; title: string; description: string; tryFree: string }
->(function FeatureCard({ slug, icon: Icon, badge, index, title, description, tryFree }, ref) {
+  {
+    slug: string;
+    icon: React.ComponentType<{ className?: string }>;
+    badge?: string;
+    index: number;
+    title: string;
+    description: string;
+    tryFree: string;
+    localePath: string;
+  }
+>(function FeatureCard({ slug, icon: Icon, badge, index, title, description, tryFree, localePath }, ref) {
   return (
     <motion.div
       ref={ref}
@@ -70,7 +82,7 @@ const FeatureCard = React.forwardRef<
       transition={{ duration: 0.35, delay: (index % 4) * 0.06 }}
     >
       <Link
-        href={`/tools/${slug}`}
+        href={localePath}
         className="flex flex-col h-full bg-white border-2 border-black rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(220,38,38,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all duration-200 group relative overflow-hidden"
       >
         {badge && (
@@ -102,6 +114,7 @@ const FeatureCard = React.forwardRef<
 
 export function Features() {
   const { t } = useTranslations();
+  const { locale } = useLocale();
   const [active, setActive] = useState<CategoryId>("all");
 
   const categories: { id: CategoryId; label: string; count: number }[] = [
@@ -175,6 +188,7 @@ export function Features() {
                     title={tr?.title ?? tool.slug}
                     description={tr?.description ?? ""}
                     tryFree={tryFree}
+                    localePath={getLocalePath(locale, `/tools/${tool.slug}`)}
                   />
                 );
               })}
@@ -183,7 +197,7 @@ export function Features() {
 
           <div className="flex justify-center mt-10 sm:mt-12">
             <Link
-              href="/features"
+              href={getLocalePath(locale, "/features")}
               className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white font-black rounded-full border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] hover:shadow-[6px_6px_0px_0px_rgba(220,38,38,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all duration-200 text-sm uppercase tracking-wider"
             >
               <Sparkles className="w-4 h-4 text-red-500" /> {t("features.exploreAll")}
