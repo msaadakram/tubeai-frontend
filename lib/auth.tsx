@@ -33,6 +33,8 @@ export type User = {
   referrals?: number;
   payment?: Payment;
   planRenewsAt?: string | null;
+  googleLinked?: boolean;
+  hasPassword?: boolean;
 };
 
 type AuthResult = { ok: true; user: User } | { ok: false; error: string };
@@ -42,6 +44,7 @@ type AuthCtx = {
   loading: boolean;
   signIn: (email: string, password: string, turnstileToken?: string) => Promise<AuthResult>;
   signUp: (name: string, email: string, password: string, referralCode?: string, turnstileToken?: string) => Promise<AuthResult>;
+  signInWithGoogle: (idToken: string, referralCode?: string) => Promise<AuthResult>;
   signOut: () => void;
   upgrade: (plan: Plan) => Promise<void>;
   updateProfile: (patch: Partial<Pick<User, "name" | "email" | "avatar">>) => Promise<void>;
@@ -54,6 +57,7 @@ const Ctx = createContext<AuthCtx>({
   loading: true,
   signIn: async () => ({ ok: false, error: "Not implemented" }),
   signUp: async () => ({ ok: false, error: "Not implemented" }),
+  signInWithGoogle: async () => ({ ok: false, error: "Not implemented" }),
   signOut: () => {},
   upgrade: async () => {},
   updateProfile: async () => {},
@@ -175,6 +179,8 @@ function normalizeUser(u: any): User {
     referrals: Number(u?.referrals) || 0,
     payment: u?.payment || { brand: "", last4: "", expMonth: 0, expYear: 0 },
     planRenewsAt: u?.planRenewsAt || null,
+    googleLinked: Boolean(u?.googleLinked),
+    hasPassword: Boolean(u?.hasPassword),
   };
 }
 
@@ -231,14 +237,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const body: Record<string, string> = { name, email, password };
         if (referralCode) body.referralCode = referralCode;
-        // Forward the Turnstile CAPTCHA token so the backend middleware can verify it.
         if (turnstileToken) body["cf-turnstile-response"] = turnstileToken;
         const res = await authFetch<{ user: any; token: string }>(
           "/api/auth/signup",
-          {
-            method: "POST",
-            body: JSON.stringify(body),
-          }
+          { method: "POST", body: JSON.stringify(body) }
         );
         const u = normalizeUser(res.user);
         persist(u, res.token);
@@ -258,14 +260,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     ): Promise<AuthResult> => {
       try {
         const body: Record<string, string> = { email, password };
-        // Forward the Turnstile CAPTCHA token so the backend middleware can verify it.
         if (turnstileToken) body["cf-turnstile-response"] = turnstileToken;
         const res = await authFetch<{ user: any; token: string }>(
           "/api/auth/signin",
-          {
-            method: "POST",
-            body: JSON.stringify(body),
-          }
+          { method: "POST", body: JSON.stringify(body) }
         );
         const u = normalizeUser(res.user);
         persist(u, res.token);
@@ -275,6 +273,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return { ok: false, error: "Invalid email or password" };
         }
         return { ok: false, error: err?.message || "Sign in failed" };
+      }
+    },
+    [persist]
+  );
+
+  /**
+   * Authenticate with a Google ID-token obtained by the frontend via
+   * @react-oauth/google `useGoogleLogin` / `GoogleLogin`.
+   *
+   * The backend verifies the token with Google's public keys, handles the
+   * link-existing-account loop-hole, and returns a signed app JWT.
+   */
+  const signInWithGoogle = useCallback(
+    async (idToken: string, referralCode?: string): Promise<AuthResult> => {
+      try {
+        const body: Record<string, string> = { idToken };
+        if (referralCode) body.referralCode = referralCode;
+        const res = await authFetch<{ user: any; token: string; isNew: boolean }>(
+          "/api/auth/google",
+          { method: "POST", body: JSON.stringify(body) }
+        );
+        const u = normalizeUser(res.user);
+        persist(u, res.token);
+        return { ok: true, user: u };
+      } catch (err: any) {
+        return { ok: false, error: err?.message || "Google sign-in failed" };
       }
     },
     [persist]
@@ -351,7 +375,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <Ctx.Provider
-      value={{ user, loading, signIn, signUp, signOut, upgrade, updateProfile, setGoal, deleteAccount }}
+      value={{ user, loading, signIn, signUp, signInWithGoogle, signOut, upgrade, updateProfile, setGoal, deleteAccount }}
     >
       {children}
     </Ctx.Provider>
