@@ -22,8 +22,10 @@ import {
   Zap,
 } from "lucide-react";
 import { ToolLayout, ToolCard } from "@/components/tools/ToolLayout";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 
 const niches = [
   { name: "Finance", rpm: 12, color: "from-green-500 to-emerald-600" },
@@ -84,6 +86,7 @@ export default function EarningsCalculatorPage() {
   const [geography, setGeography] = useState(geoRegions[0]);
   const [videoLength, setVideoLength] = useState(videoLengths[1]);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const { verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   const result = useMemo(() => {
     // AdSense calculation with all modifiers
@@ -118,6 +121,7 @@ export default function EarningsCalculatorPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-12">
         {/* INPUTS SECTION */}
         <ToolCard>
+          <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
           <div className="flex items-center justify-between mb-4 sm:mb-6">
             <div className="flex items-center gap-2">
               <Calculator className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
@@ -311,6 +315,7 @@ export default function EarningsCalculatorPage() {
               )}
             </AnimatePresence>
           </div>
+          </TurnstileGate>
         </ToolCard>
 
         {/* RESULTS SECTION */}

@@ -38,8 +38,10 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 import {
   BarChart,
   Bar,
@@ -211,6 +213,7 @@ export default function ChannelAnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [bannerFailed, setBannerFailed] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
+  const { token, verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   const run = async (val?: string) => {
     const v = (val ?? input).trim();
@@ -224,7 +227,7 @@ export default function ChannelAnalyticsPage() {
       const res = await fetch(`${BASE_URL}/api/channel-analytics`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: v }),
+        body: JSON.stringify({ url: v, "cf-turnstile-response": token }),
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok || !body?.success) {
@@ -258,37 +261,39 @@ export default function ChannelAnalyticsPage() {
       <StatsStrip stats={stats} />
 
       <ToolCard className="mb-6">
-        <label className="flex items-center gap-2 text-xs font-black uppercase tracking-wider mb-3">
-          <Youtube className="w-4 h-4 text-red-600" /> YouTube URL or @handle
-        </label>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] transition-shadow">
-            <LinkIcon className="w-4 h-4 text-red-600 shrink-0" />
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && run()}
-              placeholder="https://youtube.com/@MrBeast or any video link"
-              className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
-            />
+        <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
+          <label className="flex items-center gap-2 text-xs font-black uppercase tracking-wider mb-3">
+            <Youtube className="w-4 h-4 text-red-600" /> YouTube URL or @handle
+          </label>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] transition-shadow">
+              <LinkIcon className="w-4 h-4 text-red-600 shrink-0" />
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && run()}
+                placeholder="https://youtube.com/@MrBeast or any video link"
+                className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
+              />
+            </div>
+            <PrimaryButton onClick={() => run()} disabled={loading || !input.trim()}>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <BarChart3 className="w-4 h-4" />}
+              {loading ? "Analyzing..." : "Analyze Channel"}
+            </PrimaryButton>
           </div>
-          <PrimaryButton onClick={() => run()} disabled={loading || !input.trim()}>
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <BarChart3 className="w-4 h-4" />}
-            {loading ? "Analyzing..." : "Analyze Channel"}
-          </PrimaryButton>
-        </div>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider">Try:</span>
-          {suggestions.map((s) => (
-            <button
-              key={s}
-              onClick={() => run(s)}
-              className="text-[11px] font-black px-2.5 py-1 rounded-full border-2 border-black bg-white text-black hover:bg-red-600 hover:text-white transition-colors"
-            >
-              {s}
-            </button>
-          ))}
-        </div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider">Try:</span>
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                onClick={() => run(s)}
+                className="text-[11px] font-black px-2.5 py-1 rounded-full border-2 border-black bg-white text-black hover:bg-red-600 hover:text-white transition-colors"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </TurnstileGate>
       </ToolCard>
 
       <AnimatePresence>

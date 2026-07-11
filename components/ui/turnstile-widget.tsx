@@ -42,7 +42,9 @@ export interface TurnstileHandle {
 
 interface TurnstileWidgetProps {
   siteKey: string;
-  onToken: (token: string) => void;
+  onToken?: (token: string) => void;
+  onSuccess?: (token: string) => void;
+  onError?: () => void;
   onExpire?: () => void;
   theme?: 'light' | 'dark' | 'auto';
   size?: 'normal' | 'compact';
@@ -69,8 +71,8 @@ function loadScript(): Promise<void> {
   });
 }
 
-const TurnstileWidget = forwardRef<TurnstileHandle, TurnstileWidgetProps>(
-  ({ siteKey, onToken, onExpire, theme = 'light', size = 'normal', className }, ref) => {
+export const TurnstileWidget = forwardRef<TurnstileHandle, TurnstileWidgetProps>(
+  ({ siteKey, onToken, onSuccess, onError, onExpire, theme = 'light', size = 'normal', className }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const widgetIdRef = useRef<string | null>(null);
 
@@ -97,9 +99,18 @@ const TurnstileWidget = forwardRef<TurnstileHandle, TurnstileWidgetProps>(
           sitekey: siteKey,
           theme,
           size,
-          callback: (token: string) => onToken(token),
-          'expired-callback': () => { onExpire?.(); onToken(''); },
-          'error-callback': () => { onExpire?.(); onToken(''); },
+          callback: (token: string) => {
+            onToken?.(token);
+            onSuccess?.(token);
+          },
+          'expired-callback': () => {
+            onExpire?.();
+            onToken?.('');
+          },
+          'error-callback': () => {
+            onError?.();
+            onToken?.('');
+          },
         });
       });
 

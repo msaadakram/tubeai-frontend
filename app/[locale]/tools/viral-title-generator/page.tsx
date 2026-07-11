@@ -31,6 +31,8 @@ import {
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StreamingPreview } from "@/components/tools/StreamingPreview";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 import { streamJson } from "@/lib/streamJson";
 
 const styleOptions: Record<
@@ -508,6 +510,7 @@ export default function ViralTitleGeneratorPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [error, setError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const { token, verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   const generate = async () => {
     if (!keyword.trim()) return;
@@ -526,6 +529,7 @@ export default function ViralTitleGeneratorPage() {
         language: lang.name,
         style: styleOptions[activeStyle].apiValue,
         emotion: emotionOptions[emotion].apiValue,
+        "cf-turnstile-response": token,
       },
       {
         onDelta: (full) => setStreamText(full),
@@ -613,69 +617,71 @@ export default function ViralTitleGeneratorPage() {
 
       {/* Generator */}
       <ToolCard className="mb-8 sm:mb-10">
-        <div className="flex items-center gap-2 mb-4 sm:mb-6">
-          <Sparkles className="w-5 h-5 text-red-600" />
-          <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">Generator</h2>
-        </div>
+        <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
+          <div className="flex items-center gap-2 mb-4 sm:mb-6">
+            <Sparkles className="w-5 h-5 text-red-600" />
+            <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">Generator</h2>
+          </div>
 
-        {/* Keyword */}
-        <label className="block text-xs font-black uppercase tracking-wider mb-2">
-          Topic or Main Keyword
-        </label>
-        <div className="flex flex-col sm:flex-row gap-3 mb-3">
-          <ToolInput
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="e.g. AI productivity, fitness routine, crypto..."
-            onKeyDown={(e) => e.key === "Enter" && generate()}
-            className="flex-1"
-          />
-          <PrimaryButton onClick={generate} disabled={loading || !keyword.trim()}>
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {loading ? "Generating..." : "Generate"}
-          </PrimaryButton>
-        </div>
-        <div className="mb-5 sm:mb-6 max-w-sm">
-          <LanguageSelect value={language} onChange={setLanguage} label="Title language" />
-        </div>
+          {/* Keyword */}
+          <label className="block text-xs font-black uppercase tracking-wider mb-2">
+            Topic or Main Keyword
+          </label>
+          <div className="flex flex-col sm:flex-row gap-3 mb-3">
+            <ToolInput
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="e.g. AI productivity, fitness routine, crypto..."
+              onKeyDown={(e) => e.key === "Enter" && generate()}
+              className="flex-1"
+            />
+            <PrimaryButton onClick={generate} disabled={loading || !keyword.trim()}>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {loading ? "Generating..." : "Generate"}
+            </PrimaryButton>
+          </div>
+          <div className="mb-5 sm:mb-6 max-w-sm">
+            <LanguageSelect value={language} onChange={setLanguage} label="Title language" />
+          </div>
 
-        {/* Style picker */}
-        <label className="block text-xs font-black uppercase tracking-wider mb-2">Title Style</label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-5 sm:mb-6">
-          {Object.entries(styleOptions).map(([key, s]) => {
-            const active = activeStyle === key;
-            return (
+          {/* Style picker */}
+          <label className="block text-xs font-black uppercase tracking-wider mb-2">Title Style</label>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-5 sm:mb-6">
+            {Object.entries(styleOptions).map(([key, s]) => {
+              const active = activeStyle === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setActiveStyle(key as keyof typeof styleOptions)}
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border-2 border-black text-xs sm:text-sm font-black transition-all ${
+                    active
+                      ? "bg-red-600 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-y-0.5"
+                      : "bg-white text-black hover:bg-neutral-50"
+                  }`}
+                >
+                  <s.icon className="w-3.5 h-3.5" />
+                  {s.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Emotion picker */}
+          <label className="block text-xs font-black uppercase tracking-wider mb-2">Emotion</label>
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(emotionOptions).map(([key, e]) => (
               <button
                 key={key}
-                onClick={() => setActiveStyle(key as keyof typeof styleOptions)}
-                className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border-2 border-black text-xs sm:text-sm font-black transition-all ${
-                  active
-                    ? "bg-red-600 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] -translate-y-0.5"
-                    : "bg-white text-black hover:bg-neutral-50"
+                onClick={() => setEmotion(key as keyof typeof emotionOptions)}
+                className={`px-4 py-2 rounded-full border-2 border-black text-xs font-black transition-all ${
+                  emotion === key ? "bg-black text-white" : "bg-white text-black hover:bg-neutral-50"
                 }`}
               >
-                <s.icon className="w-3.5 h-3.5" />
-                {s.label}
+                {e.label}
               </button>
-            );
-          })}
-        </div>
-
-        {/* Emotion picker */}
-        <label className="block text-xs font-black uppercase tracking-wider mb-2">Emotion</label>
-        <div className="flex flex-wrap gap-2">
-          {Object.entries(emotionOptions).map(([key, e]) => (
-            <button
-              key={key}
-              onClick={() => setEmotion(key as keyof typeof emotionOptions)}
-              className={`px-4 py-2 rounded-full border-2 border-black text-xs font-black transition-all ${
-                emotion === key ? "bg-black text-white" : "bg-white text-black hover:bg-neutral-50"
-              }`}
-            >
-              {e.label}
-            </button>
-          ))}
-        </div>
+            ))}
+          </div>
+        </TurnstileGate>
       </ToolCard>
 
       {/* Error Display */}

@@ -18,10 +18,12 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/tools/ToolLayout";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 import { useAuth } from "@/lib/auth";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 
 const stats = [
   { value: "4.1M+", label: "Shorts Generated" },
@@ -54,6 +56,7 @@ export default function ShortsIdeasPage() {
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState("en");
   const [ideas, setIdeas] = useState<{ hook: string; body: string; cta: string }[]>([]);
+  const { verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   const gen = () => {
     if (!topic.trim()) return;
@@ -83,18 +86,20 @@ export default function ShortsIdeasPage() {
       {isPro ? (
         <>
           <ToolCard className="mb-6">
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <ToolInput value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="What's your topic? e.g. productivity, AI, fitness..." className="flex-1" />
-                <PrimaryButton onClick={gen} disabled={loading || !topic.trim()}>
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                  {loading ? "Generating..." : "Generate Shorts"}
-                </PrimaryButton>
+            <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <ToolInput value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="What's your topic? e.g. productivity, AI, fitness..." className="flex-1" />
+                  <PrimaryButton onClick={gen} disabled={loading || !topic.trim()}>
+                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                    {loading ? "Generating..." : "Generate Shorts"}
+                  </PrimaryButton>
+                </div>
+                <div className="max-w-sm">
+                  <LanguageSelect value={language} onChange={setLanguage} label="Shorts language" />
+                </div>
               </div>
-              <div className="max-w-sm">
-                <LanguageSelect value={language} onChange={setLanguage} label="Shorts language" />
-              </div>
-            </div>
+            </TurnstileGate>
           </ToolCard>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12 sm:mb-16">

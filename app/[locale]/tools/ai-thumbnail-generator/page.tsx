@@ -19,6 +19,7 @@ import {
   Clock,
 } from "lucide-react";
 import { ToolLayout } from "@/components/tools/ToolLayout";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import {
   StatsStrip,
@@ -28,6 +29,7 @@ import {
   FaqAccordion,
   CrossCTA,
 } from "@/components/tools/ToolSections";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 
 const stats = [
   { value: "1.4M+", label: "Thumbnails Generated" },
@@ -103,6 +105,8 @@ const social = [
 ];
 
 export default function AIThumbnailGeneratorPage() {
+  const { verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
+
   return (
     <ToolLayout
       title="AI Thumbnail Generator"
@@ -113,10 +117,11 @@ export default function AIThumbnailGeneratorPage() {
       <StatsStrip stats={stats} />
 
       {/* HERO Lock Card */}
+      <div className="relative bg-black text-white rounded-3xl border-2 border-black shadow-[8px_8px_0px_0px_rgba(220,38,38,1)] overflow-hidden mb-10 sm:mb-12">
+      <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative bg-black text-white rounded-3xl border-2 border-black shadow-[8px_8px_0px_0px_rgba(220,38,38,1)] overflow-hidden mb-10 sm:mb-12"
       >
         {/* Background grid texture */}
         <div
@@ -154,6 +159,8 @@ export default function AIThumbnailGeneratorPage() {
             >
               <Sparkles className="w-3.5 h-3.5 text-red-500" />
             </motion.div>
+            </TurnstileGate>
+            </div>
           ))}
         </div>
 

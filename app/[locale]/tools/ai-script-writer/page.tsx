@@ -32,6 +32,8 @@ import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/too
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StreamingPreview } from "@/components/tools/StreamingPreview";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 import { streamJson } from "@/lib/streamJson";
 
 const lengths = [
@@ -163,6 +165,7 @@ export default function AIScriptWriterPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [streamText, setStreamText] = useState("");
   const abortRef = useRef<AbortController | null>(null);
+  const { token, verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   const generate = async () => {
     if (!topic.trim()) return;
@@ -180,6 +183,7 @@ export default function AIScriptWriterPage() {
         tone,
         audience,
         language: lang.name,
+        "cf-turnstile-response": token,
       },
       {
         onDelta: (full) => setStreamText(full),
@@ -272,86 +276,88 @@ export default function AIScriptWriterPage() {
       {/* Generator */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 sm:gap-6 mb-12 sm:mb-16">
         <ToolCard className="lg:col-span-2">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-5 h-5 text-red-600" />
-            <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">Configure</h2>
-          </div>
-
-          <div className="space-y-5">
-            <div>
-              <label className="block text-xs font-black uppercase tracking-wider mb-2">Video Topic</label>
-              <ToolInput
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                placeholder="e.g. AI productivity hacks for students"
-                onKeyDown={(e) => e.key === "Enter" && generate()}
-              />
+          <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles className="w-5 h-5 text-red-600" />
+              <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">Configure</h2>
             </div>
 
-            <div>
-              <label className="block text-xs font-black uppercase tracking-wider mb-2">Length</label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {lengths.map((l) => (
-                  <button
-                    key={l.id}
-                    onClick={() => setLength(l.id)}
-                    className={`flex flex-col items-center justify-center py-2 rounded-lg border-2 border-black text-[10px] font-black transition-all ${
-                      length === l.id
-                        ? "bg-red-600 text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] -translate-y-0.5"
-                        : "bg-white text-black hover:bg-neutral-50"
-                    }`}
-                  >
-                    <span>{l.label}</span>
-                    <span className="opacity-70 text-[9px]">{l.sub}</span>
-                  </button>
-                ))}
+            <div className="space-y-5">
+              <div>
+                <label className="block text-xs font-black uppercase tracking-wider mb-2">Video Topic</label>
+                <ToolInput
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  placeholder="e.g. AI productivity hacks for students"
+                  onKeyDown={(e) => e.key === "Enter" && generate()}
+                />
               </div>
-            </div>
 
-            <div>
-              <label className="block text-xs font-black uppercase tracking-wider mb-2">Tone</label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {tones.map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => setTone(t.id)}
-                    className={`flex items-center justify-center gap-1.5 py-2 rounded-lg border-2 border-black text-xs font-black transition-all ${
-                      tone === t.id
-                        ? "bg-black text-white shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]"
-                        : "bg-white text-black hover:bg-neutral-50"
-                    }`}
-                  >
-                    <t.icon className="w-3.5 h-3.5" />
-                    {t.id}
-                  </button>
-                ))}
+              <div>
+                <label className="block text-xs font-black uppercase tracking-wider mb-2">Length</label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {lengths.map((l) => (
+                    <button
+                      key={l.id}
+                      onClick={() => setLength(l.id)}
+                      className={`flex flex-col items-center justify-center py-2 rounded-lg border-2 border-black text-[10px] font-black transition-all ${
+                        length === l.id
+                          ? "bg-red-600 text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] -translate-y-0.5"
+                          : "bg-white text-black hover:bg-neutral-50"
+                      }`}
+                    >
+                      <span>{l.label}</span>
+                      <span className="opacity-70 text-[9px]">{l.sub}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-xs font-black uppercase tracking-wider mb-2">Audience</label>
-              <div className="flex flex-wrap gap-2">
-                {audiences.map((a) => (
-                  <button
-                    key={a}
-                    onClick={() => setAudience(a)}
-                    className={`px-3 py-1.5 rounded-full border-2 border-black text-[11px] font-black transition-all ${
-                      audience === a ? "bg-red-600 text-white" : "bg-white text-black hover:bg-neutral-50"
-                    }`}
-                  >
-                    {a}
-                  </button>
-                ))}
+              <div>
+                <label className="block text-xs font-black uppercase tracking-wider mb-2">Tone</label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {tones.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => setTone(t.id)}
+                      className={`flex items-center justify-center gap-1.5 py-2 rounded-lg border-2 border-black text-xs font-black transition-all ${
+                        tone === t.id
+                          ? "bg-black text-white shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]"
+                          : "bg-white text-black hover:bg-neutral-50"
+                      }`}
+                    >
+                      <t.icon className="w-3.5 h-3.5" />
+                      {t.id}
+                    </button>
+                  ))}
+                </div>
               </div>
+
+              <div>
+                <label className="block text-xs font-black uppercase tracking-wider mb-2">Audience</label>
+                <div className="flex flex-wrap gap-2">
+                  {audiences.map((a) => (
+                    <button
+                      key={a}
+                      onClick={() => setAudience(a)}
+                      className={`px-3 py-1.5 rounded-full border-2 border-black text-[11px] font-black transition-all ${
+                        audience === a ? "bg-red-600 text-white" : "bg-white text-black hover:bg-neutral-50"
+                      }`}
+                    >
+                      {a}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <LanguageSelect value={language} onChange={setLanguage} />
+
+              <PrimaryButton onClick={generate} disabled={loading || !topic.trim()} className="w-full">
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <PenTool className="w-4 h-4" />}
+                {loading ? "Writing..." : "Generate Script"}
+              </PrimaryButton>
             </div>
-
-            <LanguageSelect value={language} onChange={setLanguage} />
-
-            <PrimaryButton onClick={generate} disabled={loading || !topic.trim()} className="w-full">
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <PenTool className="w-4 h-4" />}
-              {loading ? "Writing..." : "Generate Script"}
-            </PrimaryButton>
-          </div>
+          </TurnstileGate>
         </ToolCard>
 
         <ToolCard className="lg:col-span-3">

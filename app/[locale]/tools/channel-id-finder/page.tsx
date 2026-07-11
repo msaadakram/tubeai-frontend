@@ -25,8 +25,10 @@ import {
   Play,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -107,6 +109,7 @@ export default function ChannelIdFinderPage() {
   const [copied, setCopied] = useState<string | null>(null);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [bannerFailed, setBannerFailed] = useState(false);
+  const { token, verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   const run = async (val?: string) => {
     const v = (val ?? input).trim();
@@ -121,7 +124,7 @@ export default function ChannelIdFinderPage() {
       const res = await fetch(`${BASE_URL}/api/channel-info`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: v }),
+        body: JSON.stringify({ url: v, "cf-turnstile-response": token }),
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok || !body?.success) {
@@ -160,34 +163,36 @@ export default function ChannelIdFinderPage() {
       <StatsStrip stats={stats} />
 
       <ToolCard className="mb-6">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white">
-            <LinkIcon className="w-4 h-4 text-red-600 shrink-0" />
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && run()}
-              placeholder="Paste any YouTube URL, @handle, or video link..."
-              className="flex-1 py-3 outline-none text-sm font-medium"
-            />
+        <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white">
+              <LinkIcon className="w-4 h-4 text-red-600 shrink-0" />
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && run()}
+                placeholder="Paste any YouTube URL, @handle, or video link..."
+                className="flex-1 py-3 outline-none text-sm font-medium"
+              />
+            </div>
+            <PrimaryButton onClick={() => run()} disabled={loading || !input.trim()}>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+              {loading ? "Fetching..." : "Find Channel"}
+            </PrimaryButton>
           </div>
-          <PrimaryButton onClick={() => run()} disabled={loading || !input.trim()}>
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-            {loading ? "Fetching..." : "Find Channel"}
-          </PrimaryButton>
-        </div>
-        <div className="flex flex-wrap items-center gap-2 mt-4">
-          <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">Try:</span>
-          {suggestions.map((s) => (
-            <button
-              key={s}
-              onClick={() => run(s)}
-              className="px-2.5 py-1 text-xs font-bold rounded-full border-2 border-black bg-white hover:bg-red-50 hover:-translate-y-0.5 transition-all"
-            >
-              {s}
-            </button>
-          ))}
-        </div>
+          <div className="flex flex-wrap items-center gap-2 mt-4">
+            <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">Try:</span>
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                onClick={() => run(s)}
+                className="px-2.5 py-1 text-xs font-bold rounded-full border-2 border-black bg-white hover:bg-red-50 hover:-translate-y-0.5 transition-all"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </TurnstileGate>
 
       </ToolCard>
 

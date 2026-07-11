@@ -25,8 +25,10 @@ import {
   Wand2,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StreamingPreview } from "@/components/tools/StreamingPreview";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 import { streamJson } from "@/lib/streamJson";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 
@@ -168,6 +170,7 @@ export default function SeoAnalyzerPage() {
   const [seoStep, setSeoStep] = useState(0);
   const [streamText, setStreamText] = useState("");
   const abortRef = useRef<AbortController | null>(null);
+  const { token, verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   useEffect(() => {
     if (!loading) {
@@ -194,6 +197,7 @@ export default function SeoAnalyzerPage() {
         description: description.trim(),
         language,
         audience,
+        "cf-turnstile-response": token,
       },
       {
         onDelta: (full) => setStreamText(full),
@@ -234,66 +238,68 @@ export default function SeoAnalyzerPage() {
       <StatsStrip stats={stats} />
 
       <ToolCard className="mb-6">
-        <div className="space-y-4">
-          <div>
-            <label className="text-[11px] font-black uppercase tracking-wider text-neutral-600 flex items-center gap-1.5 mb-2">
-              <Type className="w-3.5 h-3.5 text-red-600" /> Video Title
-            </label>
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. 7 React Hooks That Changed How I Code Forever"
-              className="w-full px-3 py-3 border-2 border-black rounded-xl outline-none text-sm font-medium bg-white"
-            />
-            <div className="text-[10px] font-bold text-neutral-500 mt-1">{title.length} chars · YouTube limit 100</div>
-          </div>
-
-          <div>
-            <label className="text-[11px] font-black uppercase tracking-wider text-neutral-600 flex items-center gap-1.5 mb-2">
-              <FileText className="w-3.5 h-3.5 text-red-600" /> Video Description
-            </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={6}
-              placeholder="Paste your full video description here including timestamps, links, hashtags..."
-              className="w-full px-3 py-3 border-2 border-black rounded-xl outline-none text-sm font-medium bg-white resize-y"
-            />
-            <div className="text-[10px] font-bold text-neutral-500 mt-1">{description.length} chars · YouTube limit 5000</div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
+          <div className="space-y-4">
             <div>
               <label className="text-[11px] font-black uppercase tracking-wider text-neutral-600 flex items-center gap-1.5 mb-2">
-                <Languages className="w-3.5 h-3.5 text-red-600" /> Language
+                <Type className="w-3.5 h-3.5 text-red-600" /> Video Title
               </label>
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="w-full px-3 py-3 border-2 border-black rounded-xl outline-none text-sm font-bold bg-white"
-              >
-                {LANGUAGES.map((l) => <option key={l} value={l}>{l}</option>)}
-              </select>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g. 7 React Hooks That Changed How I Code Forever"
+                className="w-full px-3 py-3 border-2 border-black rounded-xl outline-none text-sm font-medium bg-white"
+              />
+              <div className="text-[10px] font-bold text-neutral-500 mt-1">{title.length} chars · YouTube limit 100</div>
             </div>
+
             <div>
               <label className="text-[11px] font-black uppercase tracking-wider text-neutral-600 flex items-center gap-1.5 mb-2">
-                <Users className="w-3.5 h-3.5 text-red-600" /> Target Audience
+                <FileText className="w-3.5 h-3.5 text-red-600" /> Video Description
               </label>
-              <select
-                value={audience}
-                onChange={(e) => setAudience(e.target.value)}
-                className="w-full px-3 py-3 border-2 border-black rounded-xl outline-none text-sm font-bold bg-white"
-              >
-                {AUDIENCES.map((a) => <option key={a} value={a}>{a}</option>)}
-              </select>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={6}
+                placeholder="Paste your full video description here including timestamps, links, hashtags..."
+                className="w-full px-3 py-3 border-2 border-black rounded-xl outline-none text-sm font-medium bg-white resize-y"
+              />
+              <div className="text-[10px] font-bold text-neutral-500 mt-1">{description.length} chars · YouTube limit 5000</div>
             </div>
-          </div>
 
-          <PrimaryButton onClick={run} disabled={loading || !title.trim() || !description.trim()}>
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {loading ? "Analyzing..." : "Analyze SEO"}
-          </PrimaryButton>
-        </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-[11px] font-black uppercase tracking-wider text-neutral-600 flex items-center gap-1.5 mb-2">
+                  <Languages className="w-3.5 h-3.5 text-red-600" /> Language
+                </label>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="w-full px-3 py-3 border-2 border-black rounded-xl outline-none text-sm font-bold bg-white"
+                >
+                  {LANGUAGES.map((l) => <option key={l} value={l}>{l}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-[11px] font-black uppercase tracking-wider text-neutral-600 flex items-center gap-1.5 mb-2">
+                  <Users className="w-3.5 h-3.5 text-red-600" /> Target Audience
+                </label>
+                <select
+                  value={audience}
+                  onChange={(e) => setAudience(e.target.value)}
+                  className="w-full px-3 py-3 border-2 border-black rounded-xl outline-none text-sm font-bold bg-white"
+                >
+                  {AUDIENCES.map((a) => <option key={a} value={a}>{a}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <PrimaryButton onClick={run} disabled={loading || !title.trim() || !description.trim()}>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {loading ? "Analyzing..." : "Analyze SEO"}
+            </PrimaryButton>
+          </div>
+        </TurnstileGate>
       </ToolCard>
 
       <StreamingPreview

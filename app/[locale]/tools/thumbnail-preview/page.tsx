@@ -38,6 +38,8 @@ import {
   FaqAccordion,
   CrossCTA,
 } from "@/components/tools/ToolSections";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 
 // ─── Types ───
 type ThumbKey = "default" | "mqdefault" | "hqdefault" | "sddefault" | "maxresdefault";
@@ -255,6 +257,7 @@ export default function ThumbnailPreviewPage() {
   const [compareOpen, setCompareOpen] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -348,52 +351,54 @@ export default function ThumbnailPreviewPage() {
 
       {/* Input */}
       <ToolCard className="mb-6">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
-            <LinkIcon className="w-4 h-4 text-red-600 shrink-0" aria-hidden />
-            <input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handlePreview()}
-              placeholder="Video URL, Shorts URL, or 11-character video ID…"
-              aria-label="YouTube video URL, Shorts URL, or video ID"
-              className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
-            />
-            {input && !loading && (
-              <button
-                onClick={reset}
-                aria-label="Clear input"
-                className="p-1 rounded-md hover:bg-neutral-100 transition shrink-0"
-              >
-                <X className="w-3.5 h-3.5 text-neutral-500" />
-              </button>
-            )}
+        <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
+              <LinkIcon className="w-4 h-4 text-red-600 shrink-0" aria-hidden />
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handlePreview()}
+                placeholder="Video URL, Shorts URL, or 11-character video ID…"
+                aria-label="YouTube video URL, Shorts URL, or video ID"
+                className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
+              />
+              {input && !loading && (
+                <button
+                  onClick={reset}
+                  aria-label="Clear input"
+                  className="p-1 rounded-md hover:bg-neutral-100 transition shrink-0"
+                >
+                  <X className="w-3.5 h-3.5 text-neutral-500" />
+                </button>
+              )}
+            </div>
+            <PrimaryButton onClick={() => handlePreview()} disabled={loading || !input.trim()}>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              {loading ? "Loading..." : "Preview Thumbnails"}
+            </PrimaryButton>
           </div>
-          <PrimaryButton onClick={() => handlePreview()} disabled={loading || !input.trim()}>
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {loading ? "Loading..." : "Preview Thumbnails"}
-          </PrimaryButton>
-        </div>
 
-        <AnimatePresence>
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mt-4 flex items-start gap-2 p-3 bg-red-50 border-2 border-red-300 rounded-xl"
-              role="alert"
-            >
-              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-              <div className="text-xs font-bold text-red-700">{error}</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="mt-4 flex items-start gap-2 p-3 bg-red-50 border-2 border-red-300 rounded-xl"
+                role="alert"
+              >
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                <div className="text-xs font-bold text-red-700">{error}</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-        <div className="mt-3 text-[11px] text-neutral-400 font-medium">
-          Supports: <code className="font-mono">youtube.com/watch?v=…</code> · <code className="font-mono">youtu.be/…</code> · <code className="font-mono">/shorts/…</code> · <code className="font-mono">/live/…</code> · <code className="font-mono">/embed/…</code> · <code className="font-mono">m.youtube.com</code> · bare 11-char IDs
-        </div>
+          <div className="mt-3 text-[11px] text-neutral-400 font-medium">
+            Supports: <code className="font-mono">youtube.com/watch?v=…</code> · <code className="font-mono">youtu.be/…</code> · <code className="font-mono">/shorts/…</code> · <code className="font-mono">/live/…</code> · <code className="font-mono">/embed/…</code> · <code className="font-mono">m.youtube.com</code> · bare 11-char IDs
+          </div>
+        </TurnstileGate>
       </ToolCard>
 
       {/* Loading skeleton */}

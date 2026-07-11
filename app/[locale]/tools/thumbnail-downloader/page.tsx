@@ -15,8 +15,10 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -72,6 +74,7 @@ export default function ThumbnailDownloaderPage() {
   const [result, setResult] = useState<ThumbResponse["data"] | null>(null);
   const [downloadingKey, setDownloadingKey] = useState<string | null>(null);
   const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
+  const { token, verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   const markImgError = (quality: string) =>
     setImgErrors((prev) => (prev[quality] ? prev : { ...prev, [quality]: true }));
@@ -115,7 +118,7 @@ export default function ThumbnailDownloaderPage() {
       const res = await fetch(`${BASE_URL}/api/thumbnail`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: url.trim() }),
+        body: JSON.stringify({ url: url.trim(), "cf-turnstile-response": token }),
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok || !body?.success) {
@@ -139,36 +142,38 @@ export default function ThumbnailDownloaderPage() {
       <StatsStrip stats={stats} />
 
       <ToolCard className="mb-6">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white">
-            <LinkIcon className="w-4 h-4 text-red-600 shrink-0" />
-            <input
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleFetch()}
-              placeholder="https://youtube.com/watch?v=..."
-              className="flex-1 py-3 outline-none text-sm font-medium"
-            />
+        <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white">
+              <LinkIcon className="w-4 h-4 text-red-600 shrink-0" />
+              <input
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleFetch()}
+                placeholder="https://youtube.com/watch?v=..."
+                className="flex-1 py-3 outline-none text-sm font-medium"
+              />
+            </div>
+            <PrimaryButton onClick={handleFetch} disabled={loading || !url.trim()}>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              {loading ? "Fetching..." : "Get Thumbnails"}
+            </PrimaryButton>
           </div>
-          <PrimaryButton onClick={handleFetch} disabled={loading || !url.trim()}>
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-            {loading ? "Fetching..." : "Get Thumbnails"}
-          </PrimaryButton>
-        </div>
 
-        <AnimatePresence>
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mt-4 flex items-start gap-2 p-3 bg-red-50 border-2 border-red-300 rounded-xl"
-            >
-              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-              <div className="text-xs font-bold text-red-700">{error}</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="mt-4 flex items-start gap-2 p-3 bg-red-50 border-2 border-red-300 rounded-xl"
+              >
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                <div className="text-xs font-bold text-red-700">{error}</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </TurnstileGate>
       </ToolCard>
 
       <AnimatePresence mode="wait">

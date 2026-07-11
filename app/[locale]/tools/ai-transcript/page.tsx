@@ -26,7 +26,9 @@ import {
 import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/tools/ToolLayout";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -143,6 +145,7 @@ export default function AITranscriptPage() {
   const [view, setView] = useState<"plain" | "segments">("plain");
   const [showOriginal, setShowOriginal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { token, verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   const run = async (overrideLang?: string) => {
     if (!url.trim() || loading) return;
@@ -158,7 +161,7 @@ export default function AITranscriptPage() {
       const res = await fetch(`${BASE_URL}/api/transcribe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: url.trim(), language: targetLang }),
+        body: JSON.stringify({ url: url.trim(), language: targetLang, "cf-turnstile-response": token }),
       });
       console.log("HTTP status:", res.status, res.statusText);
       const body = await res.json().catch((e) => {
@@ -219,7 +222,7 @@ export default function AITranscriptPage() {
       const procRes = await fetch(`${BASE_URL}/api/transcribe/process`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ xml, language: lang }),
+        body: JSON.stringify({ xml, language: lang, "cf-turnstile-response": token }),
       });
       console.log("Process HTTP status:", procRes.status, procRes.statusText);
       const procBody = await procRes.json().catch((e) => {
@@ -289,23 +292,25 @@ export default function AITranscriptPage() {
       <StatsStrip stats={stats} />
 
       <ToolCard className="mb-6">
-        <div className="flex flex-col gap-3">
-          <ToolInput
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && run()}
-            placeholder="https://youtube.com/watch?v=..."
-          />
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1 min-w-0">
-              <LanguageSelect value={lang} onChange={setLang} compact label="Transcript language" />
+        <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
+          <div className="flex flex-col gap-3">
+            <ToolInput
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && run()}
+              placeholder="https://youtube.com/watch?v=..."
+            />
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1 min-w-0">
+                <LanguageSelect value={lang} onChange={setLang} compact label="Transcript language" />
+              </div>
+              <PrimaryButton onClick={() => run()} disabled={loading || !url.trim()}>
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+                {loading ? "Fetching transcript..." : "Generate Transcript"}
+              </PrimaryButton>
             </div>
-            <PrimaryButton onClick={() => run()} disabled={loading || !url.trim()}>
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
-              {loading ? "Fetching transcript..." : "Generate Transcript"}
-            </PrimaryButton>
           </div>
-        </div>
+        </TurnstileGate>
       </ToolCard>
 
       {/* Loading */}

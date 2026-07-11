@@ -16,7 +16,9 @@ import {
   Hash,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { TurnstileGate } from "@/components/tools/TurnstileGate";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
+import { useTurnstileSession } from "@/hooks/useTurnstileSession";
 import { streamJson } from "@/lib/streamJson";
 import { extractStringArray } from "@/lib/parseStream";
 import {
@@ -142,6 +144,7 @@ export default function TagGeneratorPage() {
   const [copiedAll, setCopiedAll] = useState(false);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const { token, verified, turnstileRef, onSuccess, onExpire, onError } = useTurnstileSession();
 
   const run = async (val?: string) => {
     const v = (val ?? topic).trim();
@@ -155,7 +158,7 @@ export default function TagGeneratorPage() {
 
     abortRef.current = streamJson<TagData>(
       `${BASE_URL}/api/generate-tags/stream`,
-      { topic: v },
+      { topic: v, "cf-turnstile-response": token },
       {
         onDelta: (full) => {
           const tags = extractStringArray(full, "tags");
@@ -224,34 +227,36 @@ export default function TagGeneratorPage() {
       <StatsStrip stats={stats} />
 
       <ToolCard className="mb-6">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white">
-            <Sparkles className="w-4 h-4 text-red-600 shrink-0" />
-            <input
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && run()}
-              placeholder="Enter your video topic or main keyword..."
-              className="flex-1 py-3 outline-none text-sm font-medium"
-            />
+        <TurnstileGate verified={verified} turnstileRef={turnstileRef} onSuccess={onSuccess} onExpire={onExpire} onError={onError}>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white">
+              <Sparkles className="w-4 h-4 text-red-600 shrink-0" />
+              <input
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && run()}
+                placeholder="Enter your video topic or main keyword..."
+                className="flex-1 py-3 outline-none text-sm font-medium"
+              />
+            </div>
+            <PrimaryButton onClick={() => run()} disabled={loading || !topic.trim()}>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <TagIcon className="w-4 h-4" />}
+              {loading ? "Generating..." : "Generate Tags"}
+            </PrimaryButton>
           </div>
-          <PrimaryButton onClick={() => run()} disabled={loading || !topic.trim()}>
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <TagIcon className="w-4 h-4" />}
-            {loading ? "Generating..." : "Generate Tags"}
-          </PrimaryButton>
-        </div>
-        <div className="flex flex-wrap items-center gap-2 mt-4">
-          <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">Try:</span>
-          {suggestions.map((s) => (
-            <button
-              key={s}
-              onClick={() => run(s)}
-              className="px-2.5 py-1 text-xs font-bold rounded-full border-2 border-black bg-white hover:bg-red-50 hover:-translate-y-0.5 transition-all"
-            >
-              {s}
-            </button>
-          ))}
-        </div>
+          <div className="flex flex-wrap items-center gap-2 mt-4">
+            <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">Try:</span>
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                onClick={() => run(s)}
+                className="px-2.5 py-1 text-xs font-bold rounded-full border-2 border-black bg-white hover:bg-red-50 hover:-translate-y-0.5 transition-all"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </TurnstileGate>
       </ToolCard>
 
       <AnimatePresence mode="wait">
