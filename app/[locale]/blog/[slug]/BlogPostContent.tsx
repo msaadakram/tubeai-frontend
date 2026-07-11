@@ -58,6 +58,7 @@ export type SerializableRelated = {
   readTime: string;
   date: string;
   accent: string;
+  image?: string; // ✅ FIX: added image field
 };
 
 function BlockRenderer({ block }: { block: Block }) {
@@ -341,7 +342,7 @@ export function BlogPostContent({
             </article>
           </div>
 
-          {/* Related */}
+          {/* ✅ FIX: Related posts now show the actual blog post image */}
           {related.length > 0 && (
             <div className="max-w-5xl mx-auto mt-14">
               <h3 className="text-2xl font-black tracking-tight text-black mb-6 flex items-center gap-2">
@@ -354,12 +355,37 @@ export function BlogPostContent({
                     href={`/blog/${rp.slug}`}
                     className="group block bg-white border-2 border-black rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(220,38,38,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
                   >
-                    <div className={cn("relative h-24 p-4 flex items-end", rp.accent)}>
-                      <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,rgba(0,0,0,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.3)_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]" />
-                      <span className="relative px-2 py-0.5 bg-black text-white text-[9px] font-black uppercase tracking-wider rounded-full border border-white/30">
-                        {rp.category}
-                      </span>
+                    {/* Thumbnail — real image if available, coloured accent fallback */}
+                    <div className={cn("relative h-40 overflow-hidden", !rp.image && rp.accent)}>
+                      {rp.image ? (
+                        <Image
+                          src={rp.image}
+                          alt={rp.title}
+                          fill
+                          sizes="(max-width: 640px) 100vw, 33vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        // Fallback: coloured accent strip with grid pattern
+                        <>
+                          <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,rgba(0,0,0,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.3)_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]" />
+                          <div className="absolute bottom-3 left-3">
+                            <span className="px-2 py-0.5 bg-black text-white text-[9px] font-black uppercase tracking-wider rounded-full border border-white/30">
+                              {rp.category}
+                            </span>
+                          </div>
+                        </>
+                      )}
+                      {/* Category badge overlaid on the image */}
+                      {rp.image && (
+                        <div className="absolute bottom-3 left-3">
+                          <span className="px-2 py-0.5 bg-black/70 backdrop-blur-sm text-white text-[9px] font-black uppercase tracking-wider rounded-full">
+                            {rp.category}
+                          </span>
+                        </div>
+                      )}
                     </div>
+
                     <div className="p-4">
                       <div className="text-[11px] text-neutral-500 font-bold mb-1.5 flex items-center gap-1">
                         <Clock className="w-3 h-3" /> {rp.readTime}
@@ -367,6 +393,9 @@ export function BlogPostContent({
                       <h4 className="font-black text-sm leading-tight text-black group-hover:text-red-600 transition-colors line-clamp-2">
                         {rp.title}
                       </h4>
+                      <p className="text-xs text-neutral-500 mt-1.5 line-clamp-2 leading-relaxed">
+                        {rp.description}
+                      </p>
                     </div>
                   </Link>
                 ))}

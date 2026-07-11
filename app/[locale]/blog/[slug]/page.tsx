@@ -42,8 +42,6 @@ export default async function BlogPostPage({ params }: Params) {
     .map((b) => (b.type === "h2" ? { id: b.id, text: b.text } : null))
     .filter((x): x is { id: string; text: string } => x !== null);
 
-  // Pull FAQ-style H2s (questions) and the paragraph that follows as the answer,
-  // for FAQPage structured data.
   const faqBlocks: { q: string; a: string }[] = [];
   for (let i = 0; i < post.blocks.length; i++) {
     const b = post.blocks[i];
@@ -66,6 +64,8 @@ export default async function BlogPostPage({ params }: Params) {
     keywords: post.keywords,
     blocks: post.blocks,
   };
+
+  // ✅ FIX: include `image` so the "Keep reading" cards render the actual thumbnail
   const relatedSerializable = related.map((rp) => ({
     slug: rp.slug,
     title: rp.title,
@@ -74,6 +74,7 @@ export default async function BlogPostPage({ params }: Params) {
     readTime: rp.readTime,
     date: rp.date,
     accent: rp.accent,
+    image: rp.image,
   }));
 
   const jsonLd: object[] = [
