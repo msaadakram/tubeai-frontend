@@ -70,63 +70,44 @@ export function useAuth() {
 }
 
 /**
- * API base URL — reads NEXT_PUBLIC_API_URL at build time.
- * Falls back to the deployed Vercel backend URL so the app
- * works even when the env var is not explicitly set on Vercel.
+ * API base URL.
  *
- * To override locally, add to .env.local:
+ * Priority order:
+ * 1. NEXT_PUBLIC_API_URL env var (set in Vercel dashboard or .env.local)
+ * 2. Hardcoded fallback to YOUR backend on Vercel
+ *
+ * NOTE: This value is baked in at BUILD TIME by Next.js for NEXT_PUBLIC_ vars.
+ * If you change it in Vercel, you must redeploy.
+ *
+ * For local dev: create .env.local with:
  *   NEXT_PUBLIC_API_URL=http://localhost:3001
  */
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "https://vu-web-backend.vercel.app";
-
-if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    console.warn(
-      "[auth] NEXT_PUBLIC_API_URL is not set. " +
-      "Falling back to https://vu-web-backend.vercel.app. " +
-      "Add NEXT_PUBLIC_API_URL to your .env.local for local development."
-    );
-  }
-}
-
-const API_BASE = BASE_URL.replace(/\/$/, ""); // strip trailing slash
+const API_BASE = (
+  process.env.NEXT_PUBLIC_API_URL || "https://vu-web-backend.vercel.app"
+).replace(/\/+$/, ""); // strip trailing slash
 
 const TOKEN_KEY = "ytforge.token";
-const USER_KEY = "ytforge.user";
+const USER_KEY  = "ytforge.user";
 
 function avatarFor(name: string) {
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=dc2626&color=fff&bold=true&size=128`;
 }
 
 function readToken(): string | null {
-  try {
-    return localStorage.getItem(TOKEN_KEY);
-  } catch {
-    return null;
-  }
+  try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
 }
-
 function writeToken(token: string) {
-  try {
-    localStorage.setItem(TOKEN_KEY, token);
-  } catch {}
+  try { localStorage.setItem(TOKEN_KEY, token); } catch {}
 }
-
 function clearToken() {
   try {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
   } catch {}
 }
-
 function cacheUser(u: User) {
-  try {
-    localStorage.setItem(USER_KEY, JSON.stringify(u));
-  } catch {}
+  try { localStorage.setItem(USER_KEY, JSON.stringify(u)); } catch {}
 }
-
 function readCachedUser(): User | null {
   try {
     const raw = localStorage.getItem(USER_KEY);
@@ -134,16 +115,11 @@ function readCachedUser(): User | null {
     const u = JSON.parse(raw);
     if (!u || typeof u.email !== "string") return null;
     return u;
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 }
 
 /** Fetch wrapper that auto-attaches the bearer token. Throws on non-2xx. */
-export async function authFetch<T>(
-  path: string,
-  opts: RequestInit = {}
-): Promise<T> {
+export async function authFetch<T>(path: string, opts: RequestInit = {}): Promise<T> {
   const token = readToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -156,10 +132,9 @@ export async function authFetch<T>(
   try {
     res = await fetch(url, { ...opts, headers });
   } catch (networkErr: any) {
-    // Provide a clear error instead of a raw TypeError
     throw new Error(
       `Cannot reach the server at ${API_BASE}. ` +
-      `Check your internet connection or the NEXT_PUBLIC_API_URL setting. ` +
+      `Check your internet connection or the NEXT_PUBLIC_API_URL Vercel env var. ` +
       `(${networkErr?.message || "Network error"})`
     );
   }
@@ -167,11 +142,7 @@ export async function authFetch<T>(
   const text = await res.text();
   let data: any = null;
   if (text) {
-    try {
-      data = JSON.parse(text);
-    } catch {
-      data = text;
-    }
+    try { data = JSON.parse(text); } catch { data = text; }
   }
 
   if (!res.ok) {
@@ -190,11 +161,7 @@ export async function authFetch<T>(
 }
 
 function todayIso() {
-  try {
-    return new Date().toISOString().slice(0, 10);
-  } catch {
-    return "";
-  }
+  try { return new Date().toISOString().slice(0, 10); } catch { return ""; }
 }
 
 function normalizeUser(u: any): User {
@@ -218,7 +185,7 @@ function normalizeUser(u: any): User {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser]     = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -227,10 +194,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (cached) setUser(cached);
 
     const token = readToken();
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+    if (!token) { setLoading(false); return; }
 
     authFetch<{ user: any }>("/api/auth/me")
       .then((res) => {
@@ -244,13 +208,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clearToken();
         setUser(null);
       })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
+      .finally(() => { if (!cancelled) setLoading(false); });
 
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   const persist = useCallback((u: User, token?: string) => {
@@ -260,60 +220,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signUp = useCallback(
-    async (
-      name: string,
-      email: string,
-      password: string,
-      referralCode?: string,
-      turnstileToken?: string
-    ): Promise<AuthResult> => {
+    async (name: string, email: string, password: string, referralCode?: string, turnstileToken?: string): Promise<AuthResult> => {
       try {
         const body: Record<string, string> = { name, email, password };
-        if (referralCode) body.referralCode = referralCode;
+        if (referralCode)   body.referralCode = referralCode;
         if (turnstileToken) body["cf-turnstile-response"] = turnstileToken;
-        const res = await authFetch<{ user: any; token: string }>(
-          "/api/auth/signup",
-          { method: "POST", body: JSON.stringify(body) }
-        );
+        const res = await authFetch<{ user: any; token: string }>("/api/auth/signup", { method: "POST", body: JSON.stringify(body) });
         const u = normalizeUser(res.user);
         persist(u, res.token);
         return { ok: true, user: u };
       } catch (err: any) {
         return { ok: false, error: err?.message || "Sign up failed" };
       }
-    },
-    [persist]
-  );
+    }, [persist]);
 
   const signIn = useCallback(
-    async (
-      email: string,
-      password: string,
-      turnstileToken?: string
-    ): Promise<AuthResult> => {
+    async (email: string, password: string, turnstileToken?: string): Promise<AuthResult> => {
       try {
         const body: Record<string, string> = { email, password };
         if (turnstileToken) body["cf-turnstile-response"] = turnstileToken;
-        const res = await authFetch<{ user: any; token: string }>(
-          "/api/auth/signin",
-          { method: "POST", body: JSON.stringify(body) }
-        );
+        const res = await authFetch<{ user: any; token: string }>("/api/auth/signin", { method: "POST", body: JSON.stringify(body) });
         const u = normalizeUser(res.user);
         persist(u, res.token);
         return { ok: true, user: u };
       } catch (err: any) {
-        if (err?.status === 401 || err?.status === 403) {
+        if (err?.status === 401 || err?.status === 403)
           return { ok: false, error: "Invalid email or password" };
-        }
         return { ok: false, error: err?.message || "Sign in failed" };
       }
-    },
-    [persist]
-  );
+    }, [persist]);
 
   /**
-   * Authenticate with a Google ID-token obtained by the frontend via
-   * @react-oauth/google `useGoogleLogin` / `GoogleLogin`.
+   * Google sign-in — passes the ID-token Google issued in the browser
+   * to YOUR backend (/api/auth/google) for server-side verification.
+   * Never calls api.ytforge.app or any third-party backend.
    */
   const signInWithGoogle = useCallback(
     async (idToken: string, referralCode?: string): Promise<AuthResult> => {
@@ -328,55 +268,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         persist(u, res.token);
         return { ok: true, user: u };
       } catch (err: any) {
-        if (err?.code === "SERVER_CONFIG") {
+        if (err?.code === "SERVER_CONFIG")
           return { ok: false, error: "Google login is not configured. Please use email/password." };
-        }
         return { ok: false, error: err?.message || "Google sign-in failed" };
       }
-    },
-    [persist]
-  );
+    }, [persist]);
 
-  const signOut = useCallback(() => {
-    clearToken();
-    setUser(null);
-  }, []);
+  const signOut = useCallback(() => { clearToken(); setUser(null); }, []);
 
   const updateProfile = useCallback(
     async (patch: Partial<Pick<User, "name" | "email" | "avatar">>) => {
       if (!user) return;
       try {
-        const res = await authFetch<{ user: any }>("/api/auth/me", {
-          method: "PATCH",
-          body: JSON.stringify(patch),
-        });
-        const u = normalizeUser(res.user);
-        persist(u);
+        const res = await authFetch<{ user: any }>("/api/auth/me", { method: "PATCH", body: JSON.stringify(patch) });
+        persist(normalizeUser(res.user));
       } catch {
         const next = { ...user, ...patch };
         if (patch.name && !patch.avatar) next.avatar = avatarFor(patch.name);
         persist(next);
       }
-    },
-    [user, persist]
-  );
+    }, [user, persist]);
 
   const upgrade = useCallback(
     async (plan: Plan) => {
       if (!user) return;
       try {
-        const res = await authFetch<{ user: any }>("/api/auth/me", {
-          method: "PATCH",
-          body: JSON.stringify({ plan }),
-        });
-        const u = normalizeUser(res.user);
-        persist(u);
+        const res = await authFetch<{ user: any }>("/api/auth/me", { method: "PATCH", body: JSON.stringify({ plan }) });
+        persist(normalizeUser(res.user));
       } catch {
         persist({ ...user, plan });
       }
-    },
-    [user, persist]
-  );
+    }, [user, persist]);
 
   const deleteAccount = useCallback(async (): Promise<{ ok: boolean; error?: string }> => {
     try {
@@ -393,23 +315,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (goal: Goal) => {
       if (!user) return;
       try {
-        const res = await authFetch<{ user: any }>("/api/auth/me", {
-          method: "PATCH",
-          body: JSON.stringify({ goal }),
-        });
-        const u = normalizeUser(res.user);
-        persist(u);
+        const res = await authFetch<{ user: any }>("/api/auth/me", { method: "PATCH", body: JSON.stringify({ goal }) });
+        persist(normalizeUser(res.user));
       } catch {
         persist({ ...user, goal });
       }
-    },
-    [user, persist]
-  );
+    }, [user, persist]);
 
   return (
-    <Ctx.Provider
-      value={{ user, loading, signIn, signUp, signInWithGoogle, signOut, upgrade, updateProfile, setGoal, deleteAccount }}
-    >
+    <Ctx.Provider value={{ user, loading, signIn, signUp, signInWithGoogle, signOut, upgrade, updateProfile, setGoal, deleteAccount }}>
       {children}
     </Ctx.Provider>
   );
