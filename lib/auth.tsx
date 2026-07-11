@@ -69,8 +69,24 @@ export function useAuth() {
   return useContext(Ctx);
 }
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app";
+/**
+ * API base URL — MUST be set via NEXT_PUBLIC_API_URL environment variable.
+ * Remove fallback to prevent accidentally hitting the production backend
+ * from development or staging environments.
+ */
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+if (!BASE_URL) {
+  // Warn loudly in development; fail silently in production (network calls will just fail with a clear error).
+  if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+    console.error(
+      "[auth] NEXT_PUBLIC_API_URL is not set. " +
+      "Add it to your .env.local (e.g. NEXT_PUBLIC_API_URL=http://localhost:3001) " +
+      "or to your Vercel environment variables."
+    );
+  }
+}
+
+const API_BASE = BASE_URL || "";
 
 const TOKEN_KEY = "ytforge.token";
 const USER_KEY = "ytforge.user";
@@ -123,6 +139,9 @@ export async function authFetch<T>(
   path: string,
   opts: RequestInit = {}
 ): Promise<T> {
+  if (!API_BASE) {
+    throw new Error("API is not configured. Please set NEXT_PUBLIC_API_URL.");
+  }
   const token = readToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -130,7 +149,7 @@ export async function authFetch<T>(
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const res = await fetch(`${BASE_URL}${path}`, { ...opts, headers });
+  const res = await fetch(`${API_BASE}${path}`, { ...opts, headers });
   const text = await res.text();
   let data: any = null;
   if (text) {

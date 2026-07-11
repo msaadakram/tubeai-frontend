@@ -221,7 +221,7 @@ export default function SignInPage() {
                 )}
               </div>
             ) : (
-              <div className="space-y-3 mb-6">
+              <div className="space-y-1 mb-6">
                 <button
                   type="button"
                   disabled
@@ -236,6 +236,10 @@ export default function SignInPage() {
                   </svg>
                   Continue with Google
                 </button>
+                <p className="text-center text-xs text-neutral-400 font-medium">
+                  Google sign-in is not configured.
+                  Set <code className="bg-neutral-100 px-1 rounded text-[10px]">NEXT_PUBLIC_GOOGLE_CLIENT_ID</code> to enable it.
+                </p>
               </div>
             )}
 
