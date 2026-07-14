@@ -1,21 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
-  Play,
-  Home,
-  Sparkles,
-  TrendingUp,
-  PenTool,
-  Download,
-  LineChart,
-  FileText,
-  Hash,
-  ArrowRight,
-  Wifi,
-  WifiOff,
-  Zap,
+  Play, Home, Sparkles, TrendingUp, PenTool,
+  Download, LineChart, FileText, Hash, ArrowRight,
+  Wifi, WifiOff, Zap,
 } from "lucide-react";
 
 /* ─── Quick links ─────────────────────────────────────────────────────────── */
@@ -28,7 +18,7 @@ const quickLinks = [
   { label: "Hashtag Generator",     href: "/tools/hashtag-generator",      icon: Hash      },
 ];
 
-/* ─── Particle definitions (stable — computed at module load, not per render) */
+/* ─── Stable particles (module-level, no per-render recompute) ────────────── */
 const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
   id: i,
   size: 4 + (i % 5) * 3,
@@ -38,51 +28,68 @@ const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
   duration: 3 + (i % 3),
 }));
 
-/* ─── AnimatedCounter ─────────────────────────────────────────────────────
-   FIX #3: Added `mounted` guard so server and first client render both
-   output "0", eliminating the React hydration text-content mismatch.
-*/
+/* ─── AnimatedCounter ─────────────────────────────────────────────────────── */
 function AnimatedCounter() {
-  const [count, setCount] = useState(0);
+  const [count, setCount]   = useState(0);
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
     setMounted(true);
     let frame: number;
-    const start = performance.now();
+    const start    = performance.now();
     const duration = 1400;
-    const target = 404;
-    const animate = (now: number) => {
+    const target   = 404;
+    const animate  = (now: number) => {
       const elapsed = Math.min((now - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - elapsed, 4);
+      const ease    = 1 - Math.pow(1 - elapsed, 4);
       setCount(Math.round(ease * target));
       if (elapsed < 1) frame = requestAnimationFrame(animate);
     };
     frame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frame);
   }, []);
-
-  // Render stable "0" on server + first paint to avoid hydration mismatch
   if (!mounted) return <>0</>;
   return <>{count}</>;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    404 Page
-   ═══════════════════════════════════════════════════════════════════════════ */
-export default function NotFound() {
-  const [glitchActive, setGlitchActive] = useState(false);
+   ═══════════════════════════════════════════════════════════════════════════
 
-  /* Random glitch trigger every 4–8 s */
+   CRITICAL: This file lives at app/not-found.tsx — OUTSIDE the [locale]/layout.tsx
+   wrapper. That means it NEVER receives the .dark class from RouteShell/ThemeProvider.
+   Fix: detect system preference ourselves and apply data-theme on our own wrapper div.
+   All CSS tokens are redeclared inline so the page is fully self-contained.
+*/
+export default function NotFound() {
+  const wrapperRef                  = useRef<HTMLDivElement>(null);
+  const [glitchActive, setGlitchActive] = useState(false);
+  const [mounted, setMounted]           = useState(false);
+
+  /* Apply theme as soon as we're on the client */
+  useEffect(() => {
+    setMounted(true);
+    const apply = (dark: boolean) => {
+      wrapperRef.current?.setAttribute("data-nf-theme", dark ? "dark" : "light");
+    };
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    apply(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => apply(e.matches);
+    mq.addEventListener("change", onChange);
+    /* Also check if parent already has .dark (when RouteShell IS present) */
+    if (document.documentElement.classList.contains("dark") ||
+        document.body.classList.contains("dark")) {
+      apply(true);
+    }
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  /* Glitch trigger */
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
     const schedule = () => {
       timer = setTimeout(() => {
         setGlitchActive(true);
-        setTimeout(() => {
-          setGlitchActive(false);
-          schedule();
-        }, 380);
+        setTimeout(() => { setGlitchActive(false); schedule(); }, 380);
       }, 4000 + Math.random() * 4000);
     };
     schedule();
@@ -90,395 +97,587 @@ export default function NotFound() {
   }, []);
 
   return (
-    /*
-     * FIX #1 — Dark mode
-     * Removed hardcoded `bg-white text-neutral-900`.
-     * `bg-background` and `text-foreground` pick up the CSS variables
-     * set by the `.dark` class (see globals.css).
-     */
-    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-red-600/20 selection:text-red-900 overflow-x-hidden">
+    <>
+      {/* ── Self-contained styles ─────────────────────────────────────────
+          Placed BEFORE the markup so keyframes & vars are ready on first paint.
+          data-nf-theme="dark" on the wrapper div toggles the dark palette.
+      */}
+      <style suppressHydrationWarning>{`
+        /* Light palette */
+        [data-nf-root] {
+          --nf-bg:          #ffffff;
+          --nf-surface:     #ffffff;
+          --nf-fg:          #0a0a0a;
+          --nf-muted-fg:    #717182;
+          --nf-border:      rgba(0,0,0,0.12);
+          --nf-muted-bg:    #ececf0;
+          --nf-shadow:      rgba(0,0,0,1);
+          --nf-red:         #dc2626;
+          color-scheme: light;
+        }
+        /* Dark palette — applied when data-nf-theme="dark" */
+        [data-nf-root][data-nf-theme="dark"] {
+          --nf-bg:          oklch(0.145 0 0);
+          --nf-surface:     oklch(0.145 0 0);
+          --nf-fg:          oklch(0.985 0 0);
+          --nf-muted-fg:    oklch(0.708 0 0);
+          --nf-border:      oklch(0.269 0 0);
+          --nf-muted-bg:    oklch(0.269 0 0);
+          --nf-shadow:      rgba(0,0,0,0.9);
+          --nf-red:         #ef4444;
+          color-scheme: dark;
+        }
+        /* System dark fallback (before JS runs) */
+        @media (prefers-color-scheme: dark) {
+          [data-nf-root]:not([data-nf-theme="light"]) {
+            --nf-bg:          oklch(0.145 0 0);
+            --nf-surface:     oklch(0.145 0 0);
+            --nf-fg:          oklch(0.985 0 0);
+            --nf-muted-fg:    oklch(0.708 0 0);
+            --nf-border:      oklch(0.269 0 0);
+            --nf-muted-bg:    oklch(0.269 0 0);
+            --nf-shadow:      rgba(0,0,0,0.9);
+            --nf-red:         #ef4444;
+            color-scheme: dark;
+          }
+        }
 
-      {/* ══ HERO SECTION ═══════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden border-b-2 border-border pt-24 pb-20 sm:pt-32 sm:pb-28">
+        /* Base resets scoped to 404 */
+        [data-nf-root] * { box-sizing: border-box; }
+        [data-nf-root] {
+          background-color: var(--nf-bg);
+          color: var(--nf-fg);
+          min-height: 100vh;
+          overflow-x: hidden;
+          font-synthesis: none;
+          -webkit-font-smoothing: antialiased;
+        }
 
-        {/* Grid background */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
+        /* ── Keyframes ─────────────────────────────────────────────────── */
+        @keyframes nfBounce {
+          0%,100% { transform: translateY(0) rotate(0deg); }
+          25%     { transform: translateY(-10px) rotate(-4deg); }
+          75%     { transform: translateY(5px) rotate(3deg); }
+        }
+        @keyframes nfPulse {
+          0%,100% { opacity: 1; }
+          50%     { opacity: 0.7; }
+        }
+        @keyframes nfGlitch {
+          0%  { opacity:1;   transform:scaleX(1)   translateX(0);   }
+          20% { opacity:0;   transform:scaleX(0.5) translateX(6px); }
+          40% { opacity:1;   transform:scaleX(1)   translateX(-3px);}
+          60% { opacity:0;   transform:scaleX(0.7) translateX(4px); }
+          80% { opacity:0.8; transform:scaleX(1)   translateX(0);   }
+          100%{ opacity:0; }
+        }
+        @keyframes nfScan {
+          0%   { transform: translateY(0); }
+          100% { transform: translateY(8px); }
+        }
+        @keyframes nfFloat {
+          0%   { transform: translateY(0) scale(1); }
+          100% { transform: translateY(-18px) scale(1.2); }
+        }
+        @keyframes nfPing {
+          75%,100% { transform: scale(1.6); opacity: 0; }
+        }
+
+        /* ── Animation classes ─────────────────────────────────────────── */
+        .nf-bounce         { animation: nfBounce 2.6s ease-in-out infinite; }
+        .nf-bounce-delayed { animation: nfBounce 3s   ease-in-out infinite 0.8s; }
+        .nf-bounce-slow    { animation: nfBounce 3.5s ease-in-out infinite 1s; }
+        .nf-pulse          { animation: nfPulse  3.2s ease-in-out infinite; }
+        .nf-pulse-d        { animation: nfPulse  3.2s ease-in-out infinite 0.5s; }
+        .nf-glitch         { animation: nfGlitch 1.6s step-end infinite; }
+        .nf-scan           { animation: nfScan   8s   linear infinite; }
+        .nf-float          { animation: nfFloat  3s   ease-in-out infinite alternate; }
+        .nf-ping           { animation: nfPing   2s   cubic-bezier(0,0,0.2,1) infinite; }
+
+        /* ── Reduced-motion: kill every animation ───────────────────────── */
+        @media (prefers-reduced-motion: reduce) {
+          .nf-bounce, .nf-bounce-delayed, .nf-bounce-slow,
+          .nf-pulse, .nf-pulse-d, .nf-glitch, .nf-scan,
+          .nf-float, .nf-ping { animation: none !important; }
+        }
+
+        /* ── Depth card layers ──────────────────────────────────────────── */
+        .nf-card-depth-1 {
+          position: absolute;
+          inset: 0;
+          bottom: -12px;
+          right: -12px;
+          border-radius: 1rem;
+          background-color: var(--nf-muted-bg);
+          border: 2px solid var(--nf-border);
+          z-index: 1;
+        }
+        .nf-card-depth-2 {
+          position: absolute;
+          inset: 0;
+          bottom: -6px;
+          right: -6px;
+          border-radius: 1rem;
+          background-color: var(--nf-muted-bg);
+          opacity: 0.6;
+          border: 2px solid var(--nf-border);
+          z-index: 2;
+        }
+        .nf-card-main {
+          position: relative;
+          z-index: 3;
+          background-color: var(--nf-surface);
+          border: 2px solid var(--nf-border);
+          border-radius: 1rem;
+          overflow: hidden;
+          box-shadow: 6px 6px 0px 0px var(--nf-shadow);
+        }
+
+        /* ── Utility classes using CSS vars ─────────────────────────────── */
+        .nf-border  { border-color: var(--nf-border) !important; }
+        .nf-surface { background-color: var(--nf-surface) !important; }
+        .nf-muted   { background-color: var(--nf-muted-bg) !important; }
+        .nf-fg      { color: var(--nf-fg) !important; }
+        .nf-muted-fg{ color: var(--nf-muted-fg) !important; }
+      `}</style>
+
+      {/* ── Page wrapper — this div owns the theme ────────────────────── */}
+      <div
+        ref={wrapperRef}
+        data-nf-root
+        className="font-sans selection:bg-red-600/20"
+      >
+
+        {/* ══ HERO ══════════════════════════════════════════════════════ */}
+        <section
           style={{
-            backgroundImage:
-              "linear-gradient(rgba(128,128,128,0.07) 1px,transparent 1px)," +
-              "linear-gradient(90deg,rgba(128,128,128,0.07) 1px,transparent 1px)",
-            backgroundSize: "32px 32px",
+            borderBottom: "2px solid var(--nf-border)",
+            paddingTop: "6rem",
+            paddingBottom: "5rem",
+            position: "relative",
+            overflow: "hidden",
           }}
-        />
-
-        {/* Floating particles — hidden for reduced-motion users */}
-        {PARTICLES.map((p) => (
+        >
+          {/* Grid bg */}
           <div
-            key={p.id}
             aria-hidden
-            className="motion-safe:block hidden pointer-events-none absolute rounded-full bg-red-600 nf-float"
             style={{
-              width:  p.size,
-              height: p.size,
-              left:   `${p.x}%`,
-              top:    `${p.y}%`,
-              opacity: 0.08 + (p.id % 4) * 0.03,
-              animationDuration:  `${p.duration}s`,
-              animationDelay:     `${p.delay}s`,
+              position: "absolute", inset: 0, pointerEvents: "none",
+              backgroundImage:
+                "linear-gradient(rgba(128,128,128,0.07) 1px,transparent 1px)," +
+                "linear-gradient(90deg,rgba(128,128,128,0.07) 1px,transparent 1px)",
+              backgroundSize: "32px 32px",
             }}
           />
-        ))}
 
-        {/* Glow orbs */}
-        <div aria-hidden className="pointer-events-none absolute -top-28 -right-28 w-[480px] h-[480px] rounded-full bg-red-600 opacity-[0.055] blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -bottom-20 -left-20 w-[360px] h-[360px] rounded-full bg-red-600 opacity-[0.04] blur-3xl" />
+          {/* Particles */}
+          {mounted && PARTICLES.map((p) => (
+            <div
+              key={p.id}
+              aria-hidden
+              className="nf-float"
+              style={{
+                position: "absolute",
+                width: p.size, height: p.size,
+                left: `${p.x}%`, top: `${p.y}%`,
+                borderRadius: "50%",
+                backgroundColor: "var(--nf-red)",
+                opacity: 0.08 + (p.id % 4) * 0.03,
+                animationDuration: `${p.duration}s`,
+                animationDelay: `${p.delay}s`,
+                pointerEvents: "none",
+              }}
+            />
+          ))}
 
-        <div className="container mx-auto px-4 sm:px-6 max-w-5xl relative">
-          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-20">
+          {/* Glow orbs */}
+          <div aria-hidden style={{ position:"absolute", top:"-7rem", right:"-7rem", width:"30rem", height:"30rem", borderRadius:"50%", backgroundColor:"var(--nf-red)", opacity:0.055, filter:"blur(80px)", pointerEvents:"none" }} />
+          <div aria-hidden style={{ position:"absolute", bottom:"-5rem", left:"-5rem",  width:"22rem", height:"22rem", borderRadius:"50%", backgroundColor:"var(--nf-red)", opacity:0.04,  filter:"blur(80px)", pointerEvents:"none" }} />
 
-            {/* ─── LEFT: TEXT ─────────────────────────────────────────── */}
-            <div className="flex-1 min-w-0 text-center md:text-left">
+          <div style={{ maxWidth:"64rem", margin:"0 auto", padding:"0 1.5rem", position:"relative" }}>
+            <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:"3rem" }}
+                 className="md:flex-row md:items-center md:gap-16">
 
-              {/* Status badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 text-white text-[10px] font-black tracking-widest uppercase rounded-full border-2 border-border shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] mb-6">
-                <WifiOff className="w-3 h-3" />
-                Error 404 · Page Not Found
-              </div>
+              {/* LEFT: TEXT */}
+              <div style={{ flex:1, minWidth:0, textAlign:"center" }} className="md:text-left">
 
-              {/*
-               * FIX #4 — Mobile overflow
-               * Smaller base size on tiny screens (5.5rem), grows at sm (10rem).
-               * `min-w-0` on the flex parent allows the row to shrink.
-               */}
-              <div
-                className="flex items-center justify-center md:justify-start mb-5 select-none min-w-0"
-                aria-label="404"
-              >
-                <span
-                  className={`
-                    text-[5.5rem] sm:text-[10rem]
-                    font-black leading-none tracking-tighter text-foreground
-                    nf-pulse transition-all
-                    ${glitchActive ? "translate-x-[3px] opacity-80" : ""}
-                  `}
+                {/* Badge */}
+                <div style={{
+                  display:"inline-flex", alignItems:"center", gap:"0.5rem",
+                  padding:"0.375rem 0.75rem",
+                  backgroundColor:"var(--nf-red)", color:"#fff",
+                  fontSize:"0.625rem", fontWeight:900, letterSpacing:"0.15em",
+                  textTransform:"uppercase", borderRadius:"9999px",
+                  border:"2px solid var(--nf-border)",
+                  boxShadow:"3px 3px 0px 0px var(--nf-shadow)",
+                  marginBottom:"1.5rem",
+                }}>
+                  <WifiOff style={{ width:"0.75rem", height:"0.75rem" }} />
+                  Error 404 · Page Not Found
+                </div>
+
+                {/* 4 🔴 4 digits */}
+                <div
+                  aria-label="404"
+                  style={{
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                    marginBottom:"1.25rem", userSelect:"none", minWidth:0,
+                  }}
+                  className="md:justify-start"
                 >
-                  4
-                </span>
-
-                {/* Bouncing Play button as middle "0" */}
-                <span
-                  aria-hidden
-                  className="relative mx-2 sm:mx-3 flex items-center justify-center shrink-0"
-                  style={{ width: "5.5rem", height: "6.5rem" }}
-                >
-                  {/* Ping ring — class-driven so reduced-motion CSS can mute it */}
-                  <span className="absolute inset-0 rounded-[1.5rem] bg-red-600 opacity-20 motion-safe:nf-ping" />
-                  {/* Main bouncing button */}
                   <span
-                    className="absolute inset-0 rounded-[1.5rem] bg-red-600 border-[3px] border-border flex items-center justify-center motion-safe:nf-bounce"
-                    style={{ boxShadow: "6px 6px 0px 0px rgba(0,0,0,1)" }}
+                    className={`nf-pulse${glitchActive ? " nf-glitch-digit" : ""}`}
+                    style={{
+                      fontSize:"clamp(5rem,13vw,10rem)",
+                      fontWeight:900,
+                      lineHeight:1,
+                      letterSpacing:"-0.05em",
+                      color:"var(--nf-fg)",
+                      transition:"transform 0.1s, opacity 0.1s",
+                      transform: glitchActive ? "translateX(3px)" : "none",
+                      opacity:   glitchActive ? 0.8 : 1,
+                    }}
+                  >4</span>
+
+                  {/* Centre play-button "0" */}
+                  <span
+                    aria-hidden
+                    style={{
+                      position:"relative", margin:"0 0.5rem",
+                      flexShrink:0,
+                      width:"clamp(4.5rem,11vw,8rem)",
+                      height:"clamp(5.5rem,13vw,10rem)",
+                      display:"flex", alignItems:"center", justifyContent:"center",
+                    }}
                   >
-                    <Play className="w-10 sm:w-12 h-10 sm:h-12 text-white fill-white drop-shadow-sm" />
-                  </span>
-                </span>
-
-                <span
-                  className={`
-                    text-[5.5rem] sm:text-[10rem]
-                    font-black leading-none tracking-tighter text-foreground
-                    nf-pulse-delayed transition-all
-                    ${glitchActive ? "-translate-x-[3px] opacity-80" : ""}
-                  `}
-                >
-                  4
-                </span>
-              </div>
-
-              {/* Counter */}
-              <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.25em] mb-4">
-                Error code: <span className="text-red-600"><AnimatedCounter /></span>
-              </p>
-
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-foreground mb-3 leading-tight">
-                This page doesn&apos;t exist
-              </h1>
-              <p className="text-muted-foreground text-sm sm:text-base mb-8 max-w-sm mx-auto md:mx-0 leading-relaxed">
-                The page you&apos;re looking for was deleted, moved, or never existed.
-                Your YouTube growth journey continues — pick a tool below.
-              </p>
-
-              {/* CTA buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3">
-                <Link
-                  href="/"
-                  className="group inline-flex items-center gap-2 px-6 py-3.5 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 transition-all uppercase tracking-wide"
-                >
-                  <Home className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  Go Back Home
-                </Link>
-                <Link
-                  href="/tools/viral-title-generator"
-                  className="group inline-flex items-center gap-2 px-6 py-3.5 text-sm font-black text-foreground bg-card rounded-xl border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 transition-all uppercase tracking-wide"
-                >
-                  <Sparkles className="w-4 h-4 text-red-600 group-hover:rotate-12 transition-transform" />
-                  Browse AI Tools
-                </Link>
-              </div>
-            </div>
-
-            {/* ─── RIGHT: BROKEN VIDEO CARD ──────────────────────────── */}
-            {/*
-             * FIX #2 — z-index depth layers
-             * Old: -z-10 put depth layers behind the page background → invisible.
-             * New: wrap in `relative isolate` to create a self-contained stacking
-             *      context. Depth layers use z-0, main card uses z-10.
-             */}
-            <div className="shrink-0 w-full max-w-xs md:max-w-sm" aria-hidden>
-              <div className="relative isolate">
-
-                {/* Depth shadow layers */}
-                <div className="absolute -bottom-3 -right-3 z-0 w-full h-full rounded-2xl bg-muted border-2 border-border" />
-                <div className="absolute -bottom-1.5 -right-1.5 z-0 w-full h-full rounded-2xl bg-muted/60 border-2 border-border" />
-
-                {/* Main card */}
-                <div className="relative z-10 bg-card border-2 border-border rounded-2xl overflow-hidden shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-
-                  {/* Fake thumbnail */}
-                  <div className="relative bg-muted border-b-2 border-border aspect-video flex items-center justify-center overflow-hidden">
-                    {/* Scanline overlay */}
-                    <div
-                      className="absolute inset-0 pointer-events-none z-10 opacity-30 motion-safe:nf-scan"
+                    {/* Ping ring */}
+                    <span className="nf-ping" style={{
+                      position:"absolute", inset:0,
+                      borderRadius:"1.25rem",
+                      backgroundColor:"var(--nf-red)",
+                      opacity:0.2,
+                    }} />
+                    {/* Bouncing button */}
+                    <span
+                      className="nf-bounce"
                       style={{
-                        backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px)",
+                        position:"absolute", inset:0,
+                        borderRadius:"1.25rem",
+                        backgroundColor:"var(--nf-red)",
+                        border:"3px solid var(--nf-border)",
+                        display:"flex", alignItems:"center", justifyContent:"center",
+                        boxShadow:"6px 6px 0px 0px var(--nf-shadow)",
+                      }}
+                    >
+                      <Play style={{ width:"40%", height:"40%", color:"#fff", fill:"#fff" }} />
+                    </span>
+                  </span>
+
+                  <span
+                    className="nf-pulse-d"
+                    style={{
+                      fontSize:"clamp(5rem,13vw,10rem)",
+                      fontWeight:900,
+                      lineHeight:1,
+                      letterSpacing:"-0.05em",
+                      color:"var(--nf-fg)",
+                      transition:"transform 0.1s, opacity 0.1s",
+                      transform: glitchActive ? "translateX(-3px)" : "none",
+                      opacity:   glitchActive ? 0.8 : 1,
+                    }}
+                  >4</span>
+                </div>
+
+                {/* Counter */}
+                <p style={{ fontSize:"0.75rem", fontWeight:900, color:"var(--nf-muted-fg)", textTransform:"uppercase", letterSpacing:"0.25em", marginBottom:"1rem" }}>
+                  Error code: <span style={{ color:"var(--nf-red)" }}><AnimatedCounter /></span>
+                </p>
+
+                <h1 style={{ fontSize:"clamp(1.5rem,4vw,2.5rem)", fontWeight:900, letterSpacing:"-0.03em", color:"var(--nf-fg)", marginBottom:"0.75rem", lineHeight:1.2 }}>
+                  This page doesn&apos;t exist
+                </h1>
+                <p style={{ color:"var(--nf-muted-fg)", fontSize:"clamp(0.875rem,2vw,1rem)", marginBottom:"2rem", maxWidth:"28rem", lineHeight:1.6 }}>
+                  The page you&apos;re looking for was deleted, moved, or never existed.
+                  Your YouTube growth journey continues — pick a tool below.
+                </p>
+
+                {/* CTAs */}
+                <div style={{ display:"flex", flexWrap:"wrap", gap:"0.75rem", justifyContent:"center" }} className="md:justify-start">
+                  <Link
+                    href="/"
+                    style={{
+                      display:"inline-flex", alignItems:"center", gap:"0.5rem",
+                      padding:"0.875rem 1.5rem",
+                      fontSize:"0.8125rem", fontWeight:900, color:"#fff",
+                      backgroundColor:"var(--nf-red)",
+                      borderRadius:"0.75rem",
+                      border:"2px solid var(--nf-border)",
+                      boxShadow:"4px 4px 0px 0px var(--nf-shadow)",
+                      textTransform:"uppercase", letterSpacing:"0.05em",
+                      textDecoration:"none",
+                      transition:"box-shadow 0.15s, transform 0.15s",
+                    }}
+                    onMouseEnter={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="6px 6px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="translate(-2px,-2px)"; }}
+                    onMouseLeave={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="4px 4px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="none"; }}
+                  >
+                    <Home style={{ width:"1rem", height:"1rem" }} />
+                    Go Back Home
+                  </Link>
+                  <Link
+                    href="/tools/viral-title-generator"
+                    style={{
+                      display:"inline-flex", alignItems:"center", gap:"0.5rem",
+                      padding:"0.875rem 1.5rem",
+                      fontSize:"0.8125rem", fontWeight:900, color:"var(--nf-fg)",
+                      backgroundColor:"var(--nf-surface)",
+                      borderRadius:"0.75rem",
+                      border:"2px solid var(--nf-border)",
+                      boxShadow:"4px 4px 0px 0px var(--nf-shadow)",
+                      textTransform:"uppercase", letterSpacing:"0.05em",
+                      textDecoration:"none",
+                      transition:"box-shadow 0.15s, transform 0.15s",
+                    }}
+                    onMouseEnter={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="6px 6px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="translate(-2px,-2px)"; }}
+                    onMouseLeave={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="4px 4px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="none"; }}
+                  >
+                    <Sparkles style={{ width:"1rem", height:"1rem", color:"var(--nf-red)" }} />
+                    Browse AI Tools
+                  </Link>
+                </div>
+              </div>
+
+              {/* RIGHT: BROKEN VIDEO CARD */}
+              <div
+                aria-hidden
+                style={{ flexShrink:0, width:"100%", maxWidth:"22rem", position:"relative" }}
+              >
+                {/* depth layers  */}
+                <div className="nf-card-depth-1" />
+                <div className="nf-card-depth-2" />
+
+                {/* main card */}
+                <div className="nf-card-main">
+                  {/* Fake thumbnail */}
+                  <div style={{
+                    position:"relative",
+                    backgroundColor:"var(--nf-muted-bg)",
+                    borderBottom:"2px solid var(--nf-border)",
+                    aspectRatio:"16/9",
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                    overflow:"hidden",
+                  }}>
+                    {/* Scanlines */}
+                    <div
+                      className="nf-scan"
+                      style={{
+                        position:"absolute", inset:0, zIndex:10, opacity:0.3,
+                        backgroundImage:"repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px)",
+                        pointerEvents:"none",
                       }}
                     />
                     {/* Glitch stripes */}
                     {Array.from({ length: 8 }).map((_, i) => (
                       <div
                         key={i}
-                        className="absolute left-0 right-0 bg-red-600/15 z-10 motion-safe:nf-glitch"
+                        className="nf-glitch"
                         style={{
-                          top: `${8 + i * 11}%`,
-                          height: "5%",
-                          animationDuration: `${1.6 + i * 0.28}s`,
-                          animationDelay: `${i * 0.18}s`,
+                          position:"absolute", left:0, right:0,
+                          backgroundColor:"rgba(220,38,38,0.15)",
+                          zIndex:10,
+                          top:`${8 + i * 11}%`, height:"5%",
+                          animationDuration:`${1.6 + i * 0.28}s`,
+                          animationDelay:`${i * 0.18}s`,
+                          pointerEvents:"none",
                         }}
                       />
                     ))}
-                    {/* Static noise */}
-                    <div
-                      className="absolute inset-0 opacity-[0.035]"
-                      style={{
-                        backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-                        backgroundSize: "100px 100px",
-                      }}
-                    />
-                    {/* Centre play button */}
-                    <div className="relative z-20 flex flex-col items-center gap-3">
+                    {/* Centre play */}
+                    <div style={{ position:"relative", zIndex:20, display:"flex", flexDirection:"column", alignItems:"center", gap:"0.75rem" }}>
                       <div
-                        className="w-16 h-16 rounded-2xl bg-red-600 border-2 border-border flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] motion-safe:nf-bounce-delayed"
+                        className="nf-bounce-delayed"
+                        style={{
+                          width:"4rem", height:"4rem", borderRadius:"1rem",
+                          backgroundColor:"var(--nf-red)",
+                          border:"2px solid var(--nf-border)",
+                          display:"flex", alignItems:"center", justifyContent:"center",
+                          boxShadow:"4px 4px 0px 0px var(--nf-shadow)",
+                        }}
                       >
-                        <Play className="w-8 h-8 text-white fill-white" />
+                        <Play style={{ width:"2rem", height:"2rem", color:"#fff", fill:"#fff" }} />
                       </div>
-                      <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Signal Lost</span>
+                      <span style={{ fontSize:"0.625rem", fontWeight:900, color:"var(--nf-muted-fg)", textTransform:"uppercase", letterSpacing:"0.15em" }}>Signal Lost</span>
                     </div>
                     {/* Duration badge */}
-                    <div className="absolute bottom-2 right-2 z-20 bg-black text-white text-[10px] font-black px-1.5 py-0.5 rounded-sm">
-                      4:04
-                    </div>
+                    <div style={{ position:"absolute", bottom:"0.5rem", right:"0.5rem", zIndex:20, backgroundColor:"#000", color:"#fff", fontSize:"0.625rem", fontWeight:900, padding:"0.125rem 0.375rem", borderRadius:"0.25rem" }}>4:04</div>
                     {/* HD badge */}
-                    <div className="absolute top-2 left-2 z-20 bg-red-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded border border-border">
-                      404p
-                    </div>
+                    <div style={{ position:"absolute", top:"0.5rem", left:"0.5rem", zIndex:20, backgroundColor:"var(--nf-red)", color:"#fff", fontSize:"0.5625rem", fontWeight:900, padding:"0.125rem 0.375rem", borderRadius:"0.25rem", border:"1px solid var(--nf-border)" }}>404p</div>
                   </div>
 
                   {/* Card body */}
-                  <div className="p-4">
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-xl bg-red-600 border-2 border-border flex items-center justify-center shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <Play className="w-4 h-4 text-white fill-white" />
+                  <div style={{ padding:"1rem", backgroundColor:"var(--nf-surface)" }}>
+                    <div style={{ display:"flex", alignItems:"flex-start", gap:"0.75rem", marginBottom:"0.75rem" }}>
+                      <div style={{ width:"2.5rem", height:"2.5rem", borderRadius:"0.75rem", backgroundColor:"var(--nf-red)", border:"2px solid var(--nf-border)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"2px 2px 0px 0px var(--nf-shadow)" }}>
+                        <Play style={{ width:"1rem", height:"1rem", color:"#fff", fill:"#fff" }} />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-black text-sm text-foreground leading-tight mb-0.5">404: The Missing Video</div>
-                        <div className="text-[11px] text-muted-foreground font-bold">YTForge &bull; 0 views &bull; Just now</div>
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ fontWeight:900, fontSize:"0.875rem", color:"var(--nf-fg)", lineHeight:1.3, marginBottom:"0.125rem" }}>404: The Missing Video</div>
+                        <div style={{ fontSize:"0.6875rem", color:"var(--nf-muted-fg)", fontWeight:700 }}>YTForge &bull; 0 views &bull; Just now</div>
                       </div>
                     </div>
-
                     {/* Tags */}
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-red-600 text-white text-[10px] font-black rounded-full border-2 border-border">
-                        <Zap className="w-2.5 h-2.5" /> Not Found
-                      </span>
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-card text-foreground text-[10px] font-black rounded-full border-2 border-border">
-                        <WifiOff className="w-2.5 h-2.5" /> Offline
-                      </span>
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-foreground text-background text-[10px] font-black rounded-full border-2 border-border">
-                        # error
-                      </span>
+                    <div style={{ display:"flex", flexWrap:"wrap", gap:"0.5rem" }}>
+                      {[
+                        { icon: <Zap style={{width:"0.625rem",height:"0.625rem"}} />, label:"Not Found",  bg:"var(--nf-red)", color:"#fff" },
+                        { icon: <WifiOff style={{width:"0.625rem",height:"0.625rem"}} />, label:"Offline",  bg:"var(--nf-surface)", color:"var(--nf-fg)" },
+                        { icon: null, label:"# error", bg:"var(--nf-fg)", color:"var(--nf-bg)" },
+                      ].map(({ icon, label, bg, color }) => (
+                        <span key={label} style={{ display:"inline-flex", alignItems:"center", gap:"0.25rem", padding:"0.25rem 0.625rem", backgroundColor:bg, color:color, fontSize:"0.625rem", fontWeight:900, borderRadius:"9999px", border:"2px solid var(--nf-border)" }}>
+                          {icon}{label}
+                        </span>
+                      ))}
                     </div>
-
-                    {/* FIX #7 — role="presentation" on decorative progress bar */}
-                    <div role="presentation" className="mt-3 relative h-1.5 bg-muted rounded-full border border-border overflow-hidden">
-                      <div className="absolute left-0 top-0 h-full w-0 bg-red-600 rounded-full" />
-                      <div className="absolute right-1 top-0 h-full flex items-center">
-                        <span className="text-[8px] font-black text-muted-foreground">0%</span>
-                      </div>
+                    {/* Progress bar */}
+                    <div role="presentation" style={{ marginTop:"0.75rem", position:"relative", height:"0.375rem", backgroundColor:"var(--nf-muted-bg)", borderRadius:"9999px", border:"1px solid var(--nf-border)", overflow:"hidden" }}>
+                      <div style={{ position:"absolute", left:0, top:0, height:"100%", width:0, backgroundColor:"var(--nf-red)", borderRadius:"9999px" }} />
+                      <span style={{ position:"absolute", right:"0.25rem", top:0, height:"100%", display:"flex", alignItems:"center", fontSize:"0.5rem", fontWeight:900, color:"var(--nf-muted-fg)" }}>0%</span>
                     </div>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ══ QUICK LINKS ════════════════════════════════════════════════════ */}
-      <section className="bg-background border-b-2 border-border py-14 sm:py-20">
-        <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-foreground text-background text-[10px] font-black tracking-widest uppercase rounded-full border-2 border-border shadow-[2px_2px_0px_0px_rgba(128,128,128,0.4)] mb-4">
-              <Wifi className="w-3 h-3 text-red-400" />
-              While you&apos;re here
+        {/* ══ QUICK LINKS ══════════════════════════════════════════════ */}
+        <section style={{ borderBottom:"2px solid var(--nf-border)", padding:"5rem 0", backgroundColor:"var(--nf-bg)" }}>
+          <div style={{ maxWidth:"64rem", margin:"0 auto", padding:"0 1.5rem" }}>
+            <div style={{ textAlign:"center", marginBottom:"2.5rem" }}>
+              <div style={{
+                display:"inline-flex", alignItems:"center", gap:"0.5rem",
+                padding:"0.375rem 0.75rem",
+                backgroundColor:"var(--nf-fg)", color:"var(--nf-bg)",
+                fontSize:"0.625rem", fontWeight:900, letterSpacing:"0.15em",
+                textTransform:"uppercase", borderRadius:"9999px",
+                border:"2px solid var(--nf-border)",
+                boxShadow:"2px 2px 0px 0px rgba(128,128,128,0.4)",
+                marginBottom:"1rem",
+              }}>
+                <Wifi style={{ width:"0.75rem", height:"0.75rem", color:"var(--nf-red)" }} />
+                While you&apos;re here
+              </div>
+              <h2 style={{ fontSize:"clamp(1.5rem,3vw,2rem)", fontWeight:900, letterSpacing:"-0.03em", color:"var(--nf-fg)" }}>
+                Try our most popular tools
+              </h2>
+              <p style={{ color:"var(--nf-muted-fg)", fontSize:"0.875rem", marginTop:"0.5rem" }}>16+ AI-powered tools built for serious YouTube creators</p>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
-              Try our most popular tools
-            </h2>
-            <p className="text-muted-foreground text-sm mt-2">16+ AI-powered tools built for serious YouTube creators</p>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {quickLinks.map(({ label, href, icon: Icon }, idx) => (
-              <Link
-                key={href}
-                href={href}
-                className="group relative flex items-center gap-4 p-4 bg-card border-2 border-border rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,0.5)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.5)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.5)] active:translate-x-0.5 active:translate-y-0.5 transition-all"
-                style={{ animationDelay: `${idx * 80}ms` }}
-              >
-                <div className="w-11 h-11 rounded-xl bg-red-600 text-white flex items-center justify-center border-2 border-border shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)] group-hover:rotate-6 group-hover:scale-110 transition-transform">
-                  <Icon className="w-5 h-5" />
-                </div>
-                <span className="font-black text-sm text-foreground flex-1 leading-tight">{label}</span>
-                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-red-600 group-hover:translate-x-1.5 transition-all shrink-0" />
-              </Link>
-            ))}
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(18rem,100%),1fr))", gap:"1rem" }}>
+              {quickLinks.map(({ label, href, icon: Icon }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  style={{
+                    display:"flex", alignItems:"center", gap:"1rem",
+                    padding:"1rem",
+                    backgroundColor:"var(--nf-surface)",
+                    border:"2px solid var(--nf-border)",
+                    borderRadius:"0.75rem",
+                    boxShadow:"3px 3px 0px 0px var(--nf-shadow)",
+                    textDecoration:"none",
+                    transition:"box-shadow 0.15s, transform 0.15s",
+                    color:"var(--nf-fg)",
+                  }}
+                  onMouseEnter={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="6px 6px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="translate(-2px,-2px)"; }}
+                  onMouseLeave={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="3px 3px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="none"; }}
+                >
+                  <div style={{ width:"2.75rem", height:"2.75rem", borderRadius:"0.75rem", backgroundColor:"var(--nf-red)", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", border:"2px solid var(--nf-border)", flexShrink:0, boxShadow:"2px 2px 0px 0px var(--nf-shadow)" }}>
+                    <Icon style={{ width:"1.25rem", height:"1.25rem" }} />
+                  </div>
+                  <span style={{ fontWeight:900, fontSize:"0.875rem", flex:1, lineHeight:1.3 }}>{label}</span>
+                  <ArrowRight style={{ width:"1rem", height:"1rem", color:"var(--nf-muted-fg)", flexShrink:0 }} />
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ══ BOTTOM CTA ═════════════════════════════════════════════════════ */}
-      <section className="relative bg-red-600 border-b-2 border-border py-14 sm:py-20 overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px)",
-            backgroundSize: "20px 20px",
-          }}
-        />
-        <div className="container mx-auto px-4 sm:px-6 max-w-3xl text-center relative">
+        {/* ══ BOTTOM CTA ═══════════════════════════════════════════════ */}
+        <section style={{ position:"relative", backgroundColor:"var(--nf-red)", borderBottom:"2px solid var(--nf-border)", padding:"5rem 0", overflow:"hidden" }}>
           <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-card border-2 border-border shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] mb-6 mx-auto motion-safe:nf-bounce-slow"
-          >
-            <Play className="w-8 h-8 text-red-600 fill-red-600" />
-          </div>
-
-          <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight mb-3 leading-tight">
-            Ready to grow your channel?
-          </h2>
-          <p className="text-red-100 text-sm sm:text-base mb-8 max-w-lg mx-auto leading-relaxed">
-            16+ AI-powered tools built for serious YouTube creators.
-            No subscription needed to start.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/"
-              className="group inline-flex items-center gap-2 px-7 py-3.5 text-sm font-black text-red-600 bg-card rounded-xl border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all uppercase tracking-wide"
+            aria-hidden
+            style={{ position:"absolute", inset:0, opacity:0.1, pointerEvents:"none",
+              backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.6) 1px,transparent 1px)",
+              backgroundSize:"20px 20px",
+            }}
+          />
+          <div style={{ maxWidth:"48rem", margin:"0 auto", padding:"0 1.5rem", position:"relative", textAlign:"center" }}>
+            <div
+              className="nf-bounce-slow"
+              style={{
+                display:"inline-flex", alignItems:"center", justifyContent:"center",
+                width:"4rem", height:"4rem", borderRadius:"1rem",
+                backgroundColor:"var(--nf-surface)",
+                border:"2px solid var(--nf-border)",
+                boxShadow:"5px 5px 0px 0px var(--nf-shadow)",
+                marginBottom:"1.5rem",
+              }}
             >
-              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-              Start for Free
-            </Link>
-            <Link
-              href="/tools/viral-title-generator"
-              className="group inline-flex items-center gap-2 px-7 py-3.5 text-sm font-black text-white bg-transparent rounded-xl border-2 border-white shadow-[4px_4px_0px_0px_rgba(255,255,255,0.4)] hover:bg-white/10 hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.4)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all uppercase tracking-wide"
-            >
-              <Zap className="w-4 h-4" />
-              Explore Tools
-            </Link>
+              <Play style={{ width:"2rem", height:"2rem", color:"var(--nf-red)", fill:"var(--nf-red)" }} />
+            </div>
+            <h2 style={{ fontSize:"clamp(1.5rem,4vw,2.5rem)", fontWeight:900, color:"#fff", letterSpacing:"-0.03em", marginBottom:"0.75rem", lineHeight:1.2 }}>
+              Ready to grow your channel?
+            </h2>
+            <p style={{ color:"rgba(255,255,255,0.85)", fontSize:"clamp(0.875rem,2vw,1rem)", marginBottom:"2rem", maxWidth:"32rem", margin:"0 auto 2rem", lineHeight:1.6 }}>
+              16+ AI-powered tools built for serious YouTube creators.
+              No subscription needed to start.
+            </p>
+            <div style={{ display:"flex", flexWrap:"wrap", gap:"0.75rem", justifyContent:"center" }}>
+              <Link
+                href="/"
+                style={{
+                  display:"inline-flex", alignItems:"center", gap:"0.5rem",
+                  padding:"0.875rem 1.75rem",
+                  fontSize:"0.8125rem", fontWeight:900,
+                  color:"var(--nf-red)", backgroundColor:"var(--nf-surface)",
+                  borderRadius:"0.75rem",
+                  border:"2px solid var(--nf-border)",
+                  boxShadow:"4px 4px 0px 0px var(--nf-shadow)",
+                  textTransform:"uppercase", letterSpacing:"0.05em",
+                  textDecoration:"none",
+                  transition:"box-shadow 0.15s, transform 0.15s",
+                }}
+                onMouseEnter={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="6px 6px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="translate(-2px,-2px)"; }}
+                onMouseLeave={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="4px 4px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="none"; }}
+              >
+                <Sparkles style={{ width:"1rem", height:"1rem" }} />
+                Start for Free
+              </Link>
+              <Link
+                href="/tools/viral-title-generator"
+                style={{
+                  display:"inline-flex", alignItems:"center", gap:"0.5rem",
+                  padding:"0.875rem 1.75rem",
+                  fontSize:"0.8125rem", fontWeight:900,
+                  color:"#fff", backgroundColor:"transparent",
+                  borderRadius:"0.75rem",
+                  border:"2px solid rgba(255,255,255,0.7)",
+                  boxShadow:"4px 4px 0px 0px rgba(255,255,255,0.3)",
+                  textTransform:"uppercase", letterSpacing:"0.05em",
+                  textDecoration:"none",
+                  transition:"box-shadow 0.15s, transform 0.15s, background 0.15s",
+                }}
+                onMouseEnter={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="6px 6px 0px 0px rgba(255,255,255,0.3)"; (e.currentTarget as HTMLElement).style.transform="translate(-2px,-2px)"; (e.currentTarget as HTMLElement).style.backgroundColor="rgba(255,255,255,0.1)"; }}
+                onMouseLeave={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="4px 4px 0px 0px rgba(255,255,255,0.3)"; (e.currentTarget as HTMLElement).style.transform="none"; (e.currentTarget as HTMLElement).style.backgroundColor="transparent"; }}
+              >
+                <Zap style={{ width:"1rem", height:"1rem" }} />
+                Explore Tools
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/*
-       * FIX #6 — Single <style> block with suppressHydrationWarning
-       * All keyframes live here. The `motion-safe:` Tailwind variant on
-       * animated elements means these animations only run when the user
-       * has NOT requested reduced motion, respecting globals.css rule.
-       *
-       * Class → keyframe mapping:
-       *   .nf-bounce        → notFoundBounce
-       *   .nf-bounce-delayed → notFoundBounce (0.8s delay)
-       *   .nf-bounce-slow   → notFoundBounce (3.5s, 1s delay)
-       *   .nf-pulse         → notFoundPulse
-       *   .nf-pulse-delayed → notFoundPulse (0.5s delay)
-       *   .nf-glitch        → glitchLine
-       *   .nf-scan          → scanLines
-       *   .nf-float         → floatParticle
-       *   .nf-ping          → pingRing
-       */}
-      <style suppressHydrationWarning>{`
-        @keyframes notFoundBounce {
-          0%,100% { transform: translateY(0)     rotate(0deg);  }
-          25%      { transform: translateY(-10px)  rotate(-4deg); }
-          75%      { transform: translateY(5px)   rotate(3deg);  }
-        }
-        @keyframes notFoundPulse {
-          0%,100% { opacity: 1;    }
-          50%      { opacity: 0.72; }
-        }
-        @keyframes glitchLine {
-          0%   { opacity: 1;   transform: scaleX(1)   translateX(0);    }
-          20%  { opacity: 0;   transform: scaleX(0.5) translateX(6px);  }
-          40%  { opacity: 1;   transform: scaleX(1)   translateX(-3px); }
-          60%  { opacity: 0;   transform: scaleX(0.7) translateX(4px);  }
-          80%  { opacity: 0.8; transform: scaleX(1)   translateX(0);    }
-          100% { opacity: 0;                                              }
-        }
-        @keyframes scanLines {
-          0%   { transform: translateY(0);   }
-          100% { transform: translateY(8px); }
-        }
-        @keyframes floatParticle {
-          0%   { transform: translateY(0)     scale(1);   }
-          100% { transform: translateY(-18px) scale(1.2); }
-        }
-        @keyframes pingRing {
-          75%,100% { transform: scale(1.6); opacity: 0; }
-        }
-
-        /* Animation utility classes (used with motion-safe: Tailwind variant) */
-        .nf-bounce        { animation: notFoundBounce 2.6s ease-in-out infinite; }
-        .nf-bounce-delayed{ animation: notFoundBounce 3s   ease-in-out infinite 0.8s; }
-        .nf-bounce-slow   { animation: notFoundBounce 3.5s ease-in-out infinite 1s; }
-        .nf-pulse         { animation: notFoundPulse  3.2s ease-in-out infinite; }
-        .nf-pulse-delayed { animation: notFoundPulse  3.2s ease-in-out infinite 0.5s; }
-        .nf-glitch        { animation: glitchLine     1.6s step-end infinite; }
-        .nf-scan          { animation: scanLines      8s   linear     infinite; }
-        .nf-float         { animation: floatParticle  3s   ease-in-out infinite alternate; }
-        .nf-ping          { animation: pingRing       2s   cubic-bezier(0,0,0.2,1) infinite; }
-
-        /* Respect prefers-reduced-motion for any animation class not handled
-           by the Tailwind motion-safe: variant (belt-and-suspenders). */
-        @media (prefers-reduced-motion: reduce) {
-          .nf-bounce, .nf-bounce-delayed, .nf-bounce-slow,
-          .nf-pulse, .nf-pulse-delayed,
-          .nf-glitch, .nf-scan, .nf-float, .nf-ping {
-            animation: none !important;
-          }
-        }
-      `}</style>
-    </div>
+      </div>
+    </>
   );
 }
