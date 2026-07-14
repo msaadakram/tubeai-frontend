@@ -30,8 +30,9 @@ const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
 
 /* ─── AnimatedCounter ─────────────────────────────────────────────────────── */
 function AnimatedCounter() {
-  const [count, setCount]   = useState(0);
+  const [count, setCount]     = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
     setMounted(true);
     let frame: number;
@@ -47,7 +48,9 @@ function AnimatedCounter() {
     frame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frame);
   }, []);
-  if (!mounted) return <>0</>;
+
+  /* Return null on server + first client paint to avoid hydration mismatch */
+  if (!mounted || count === null) return <>0</>;
   return <>{count}</>;
 }
 
@@ -57,11 +60,11 @@ function AnimatedCounter() {
 
    CRITICAL: This file lives at app/not-found.tsx — OUTSIDE the [locale]/layout.tsx
    wrapper. That means it NEVER receives the .dark class from RouteShell/ThemeProvider.
-   Fix: detect system preference ourselves and apply data-theme on our own wrapper div.
+   Fix: detect system preference ourselves and apply data-nf-theme on our own wrapper div.
    All CSS tokens are redeclared inline so the page is fully self-contained.
 */
 export default function NotFound() {
-  const wrapperRef                  = useRef<HTMLDivElement>(null);
+  const wrapperRef                      = useRef<HTMLDivElement>(null);
   const [glitchActive, setGlitchActive] = useState(false);
   const [mounted, setMounted]           = useState(false);
 
@@ -75,9 +78,11 @@ export default function NotFound() {
     apply(mq.matches);
     const onChange = (e: MediaQueryListEvent) => apply(e.matches);
     mq.addEventListener("change", onChange);
-    /* Also check if parent already has .dark (when RouteShell IS present) */
-    if (document.documentElement.classList.contains("dark") ||
-        document.body.classList.contains("dark")) {
+    /* Also honour parent .dark class when RouteShell IS present */
+    if (
+      document.documentElement.classList.contains("dark") ||
+      document.body.classList.contains("dark")
+    ) {
       apply(true);
     }
     return () => mq.removeEventListener("change", onChange);
@@ -89,7 +94,10 @@ export default function NotFound() {
     const schedule = () => {
       timer = setTimeout(() => {
         setGlitchActive(true);
-        setTimeout(() => { setGlitchActive(false); schedule(); }, 380);
+        setTimeout(() => {
+          setGlitchActive(false);
+          schedule();
+        }, 380);
       }, 4000 + Math.random() * 4000);
     };
     schedule();
@@ -111,11 +119,11 @@ export default function NotFound() {
           --nf-muted-fg:    #717182;
           --nf-border:      rgba(0,0,0,0.12);
           --nf-muted-bg:    #ececf0;
-          --nf-shadow:      rgba(0,0,0,1);
+          --nf-shadow:      rgba(0,0,0,0.85);
           --nf-red:         #dc2626;
           color-scheme: light;
         }
-        /* Dark palette — applied when data-nf-theme="dark" */
+        /* Dark palette */
         [data-nf-root][data-nf-theme="dark"] {
           --nf-bg:          oklch(0.145 0 0);
           --nf-surface:     oklch(0.145 0 0);
@@ -194,19 +202,33 @@ export default function NotFound() {
         .nf-float          { animation: nfFloat  3s   ease-in-out infinite alternate; }
         .nf-ping           { animation: nfPing   2s   cubic-bezier(0,0,0.2,1) infinite; }
 
+        /* Glitch effect for the digit spans — separate from stripe animation */
+        .nf-digit-glitch {
+          transition: transform 0.1s, opacity 0.1s;
+        }
+
         /* ── Reduced-motion: kill every animation ───────────────────────── */
         @media (prefers-reduced-motion: reduce) {
           .nf-bounce, .nf-bounce-delayed, .nf-bounce-slow,
           .nf-pulse, .nf-pulse-d, .nf-glitch, .nf-scan,
           .nf-float, .nf-ping { animation: none !important; }
+          .nf-digit-glitch { transition: none !important; }
         }
 
-        /* ── Depth card layers ──────────────────────────────────────────── */
+        /* ── Broken video card ──────────────────────────────────────────── */
+        /* Wrapper gives space for the depth layers to overflow into */
+        .nf-card-wrapper {
+          position: relative;
+          /* Extra space on bottom-right so depth layers are visible */
+          padding-bottom: 14px;
+          padding-right: 14px;
+        }
         .nf-card-depth-1 {
           position: absolute;
-          inset: 0;
-          bottom: -12px;
-          right: -12px;
+          top: 12px;
+          left: 12px;
+          right: 0;
+          bottom: 0;
           border-radius: 1rem;
           background-color: var(--nf-muted-bg);
           border: 2px solid var(--nf-border);
@@ -214,12 +236,13 @@ export default function NotFound() {
         }
         .nf-card-depth-2 {
           position: absolute;
-          inset: 0;
-          bottom: -6px;
-          right: -6px;
+          top: 6px;
+          left: 6px;
+          right: 0;
+          bottom: 0;
           border-radius: 1rem;
           background-color: var(--nf-muted-bg);
-          opacity: 0.6;
+          opacity: 0.7;
           border: 2px solid var(--nf-border);
           z-index: 2;
         }
@@ -231,6 +254,66 @@ export default function NotFound() {
           border-radius: 1rem;
           overflow: hidden;
           box-shadow: 6px 6px 0px 0px var(--nf-shadow);
+        }
+
+        /* ── Hero responsive layout ─────────────────────────────────────── */
+        .nf-hero-inner {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 3rem;
+          max-width: 64rem;
+          margin: 0 auto;
+          padding: 0 1.5rem;
+          position: relative;
+        }
+        @media (min-width: 768px) {
+          .nf-hero-inner {
+            flex-direction: row;
+            align-items: center;
+            gap: 4rem;
+          }
+        }
+        .nf-hero-text {
+          flex: 1;
+          min-width: 0;
+          text-align: center;
+        }
+        @media (min-width: 768px) {
+          .nf-hero-text {
+            text-align: left;
+          }
+        }
+        .nf-hero-ctas {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          justify-content: center;
+        }
+        @media (min-width: 768px) {
+          .nf-hero-ctas {
+            justify-content: flex-start;
+          }
+        }
+        .nf-digit-row {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 1.25rem;
+          user-select: none;
+          min-width: 0;
+        }
+        @media (min-width: 768px) {
+          .nf-digit-row {
+            justify-content: flex-start;
+          }
+        }
+
+        /* ── Quick-links grid ───────────────────────────────────────────── */
+        .nf-links-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+          gap: 1rem;
         }
 
         /* ── Utility classes using CSS vars ─────────────────────────────── */
@@ -294,164 +377,155 @@ export default function NotFound() {
           <div aria-hidden style={{ position:"absolute", top:"-7rem", right:"-7rem", width:"30rem", height:"30rem", borderRadius:"50%", backgroundColor:"var(--nf-red)", opacity:0.055, filter:"blur(80px)", pointerEvents:"none" }} />
           <div aria-hidden style={{ position:"absolute", bottom:"-5rem", left:"-5rem",  width:"22rem", height:"22rem", borderRadius:"50%", backgroundColor:"var(--nf-red)", opacity:0.04,  filter:"blur(80px)", pointerEvents:"none" }} />
 
-          <div style={{ maxWidth:"64rem", margin:"0 auto", padding:"0 1.5rem", position:"relative" }}>
-            <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:"3rem" }}
-                 className="md:flex-row md:items-center md:gap-16">
+          {/* ── Responsive hero row ── */}
+          <div className="nf-hero-inner">
 
-              {/* LEFT: TEXT */}
-              <div style={{ flex:1, minWidth:0, textAlign:"center" }} className="md:text-left">
+            {/* LEFT: TEXT */}
+            <div className="nf-hero-text">
 
-                {/* Badge */}
-                <div style={{
-                  display:"inline-flex", alignItems:"center", gap:"0.5rem",
-                  padding:"0.375rem 0.75rem",
-                  backgroundColor:"var(--nf-red)", color:"#fff",
-                  fontSize:"0.625rem", fontWeight:900, letterSpacing:"0.15em",
-                  textTransform:"uppercase", borderRadius:"9999px",
-                  border:"2px solid var(--nf-border)",
-                  boxShadow:"3px 3px 0px 0px var(--nf-shadow)",
-                  marginBottom:"1.5rem",
-                }}>
-                  <WifiOff style={{ width:"0.75rem", height:"0.75rem" }} />
-                  Error 404 · Page Not Found
-                </div>
+              {/* Badge */}
+              <div style={{
+                display:"inline-flex", alignItems:"center", gap:"0.5rem",
+                padding:"0.375rem 0.75rem",
+                backgroundColor:"var(--nf-red)", color:"#fff",
+                fontSize:"0.625rem", fontWeight:900, letterSpacing:"0.15em",
+                textTransform:"uppercase", borderRadius:"9999px",
+                border:"2px solid var(--nf-border)",
+                boxShadow:"3px 3px 0px 0px var(--nf-shadow)",
+                marginBottom:"1.5rem",
+              }}>
+                <WifiOff style={{ width:"0.75rem", height:"0.75rem" }} />
+                Error 404 · Page Not Found
+              </div>
 
-                {/* 4 🔴 4 digits */}
-                <div
-                  aria-label="404"
+              {/* 4 🔴 4 digits */}
+              <div aria-label="404" className="nf-digit-row">
+                <span
+                  className={`nf-pulse nf-digit-glitch`}
                   style={{
-                    display:"flex", alignItems:"center", justifyContent:"center",
-                    marginBottom:"1.25rem", userSelect:"none", minWidth:0,
+                    fontSize:"clamp(5rem,13vw,10rem)",
+                    fontWeight:900,
+                    lineHeight:1,
+                    letterSpacing:"-0.05em",
+                    color:"var(--nf-fg)",
+                    transform: glitchActive ? "translateX(3px)" : "none",
+                    opacity:   glitchActive ? 0.8 : 1,
                   }}
-                  className="md:justify-start"
-                >
-                  <span
-                    className={`nf-pulse${glitchActive ? " nf-glitch-digit" : ""}`}
-                    style={{
-                      fontSize:"clamp(5rem,13vw,10rem)",
-                      fontWeight:900,
-                      lineHeight:1,
-                      letterSpacing:"-0.05em",
-                      color:"var(--nf-fg)",
-                      transition:"transform 0.1s, opacity 0.1s",
-                      transform: glitchActive ? "translateX(3px)" : "none",
-                      opacity:   glitchActive ? 0.8 : 1,
-                    }}
-                  >4</span>
+                >4</span>
 
-                  {/* Centre play-button "0" */}
+                {/* Centre play-button "0" */}
+                <span
+                  aria-hidden
+                  style={{
+                    position:"relative", margin:"0 0.5rem",
+                    flexShrink:0,
+                    width:"clamp(4.5rem,11vw,8rem)",
+                    height:"clamp(5.5rem,13vw,10rem)",
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                  }}
+                >
+                  {/* Ping ring */}
+                  <span className="nf-ping" style={{
+                    position:"absolute", inset:0,
+                    borderRadius:"1.25rem",
+                    backgroundColor:"var(--nf-red)",
+                    opacity:0.2,
+                  }} />
+                  {/* Bouncing button */}
                   <span
-                    aria-hidden
+                    className="nf-bounce"
                     style={{
-                      position:"relative", margin:"0 0.5rem",
-                      flexShrink:0,
-                      width:"clamp(4.5rem,11vw,8rem)",
-                      height:"clamp(5.5rem,13vw,10rem)",
-                      display:"flex", alignItems:"center", justifyContent:"center",
-                    }}
-                  >
-                    {/* Ping ring */}
-                    <span className="nf-ping" style={{
                       position:"absolute", inset:0,
                       borderRadius:"1.25rem",
                       backgroundColor:"var(--nf-red)",
-                      opacity:0.2,
-                    }} />
-                    {/* Bouncing button */}
-                    <span
-                      className="nf-bounce"
-                      style={{
-                        position:"absolute", inset:0,
-                        borderRadius:"1.25rem",
-                        backgroundColor:"var(--nf-red)",
-                        border:"3px solid var(--nf-border)",
-                        display:"flex", alignItems:"center", justifyContent:"center",
-                        boxShadow:"6px 6px 0px 0px var(--nf-shadow)",
-                      }}
-                    >
-                      <Play style={{ width:"40%", height:"40%", color:"#fff", fill:"#fff" }} />
-                    </span>
+                      border:"3px solid var(--nf-border)",
+                      display:"flex", alignItems:"center", justifyContent:"center",
+                      boxShadow:"6px 6px 0px 0px var(--nf-shadow)",
+                    }}
+                  >
+                    <Play style={{ width:"40%", height:"40%", color:"#fff", fill:"#fff" }} />
                   </span>
+                </span>
 
-                  <span
-                    className="nf-pulse-d"
-                    style={{
-                      fontSize:"clamp(5rem,13vw,10rem)",
-                      fontWeight:900,
-                      lineHeight:1,
-                      letterSpacing:"-0.05em",
-                      color:"var(--nf-fg)",
-                      transition:"transform 0.1s, opacity 0.1s",
-                      transform: glitchActive ? "translateX(-3px)" : "none",
-                      opacity:   glitchActive ? 0.8 : 1,
-                    }}
-                  >4</span>
-                </div>
-
-                {/* Counter */}
-                <p style={{ fontSize:"0.75rem", fontWeight:900, color:"var(--nf-muted-fg)", textTransform:"uppercase", letterSpacing:"0.25em", marginBottom:"1rem" }}>
-                  Error code: <span style={{ color:"var(--nf-red)" }}><AnimatedCounter /></span>
-                </p>
-
-                <h1 style={{ fontSize:"clamp(1.5rem,4vw,2.5rem)", fontWeight:900, letterSpacing:"-0.03em", color:"var(--nf-fg)", marginBottom:"0.75rem", lineHeight:1.2 }}>
-                  This page doesn&apos;t exist
-                </h1>
-                <p style={{ color:"var(--nf-muted-fg)", fontSize:"clamp(0.875rem,2vw,1rem)", marginBottom:"2rem", maxWidth:"28rem", lineHeight:1.6 }}>
-                  The page you&apos;re looking for was deleted, moved, or never existed.
-                  Your YouTube growth journey continues — pick a tool below.
-                </p>
-
-                {/* CTAs */}
-                <div style={{ display:"flex", flexWrap:"wrap", gap:"0.75rem", justifyContent:"center" }} className="md:justify-start">
-                  <Link
-                    href="/"
-                    style={{
-                      display:"inline-flex", alignItems:"center", gap:"0.5rem",
-                      padding:"0.875rem 1.5rem",
-                      fontSize:"0.8125rem", fontWeight:900, color:"#fff",
-                      backgroundColor:"var(--nf-red)",
-                      borderRadius:"0.75rem",
-                      border:"2px solid var(--nf-border)",
-                      boxShadow:"4px 4px 0px 0px var(--nf-shadow)",
-                      textTransform:"uppercase", letterSpacing:"0.05em",
-                      textDecoration:"none",
-                      transition:"box-shadow 0.15s, transform 0.15s",
-                    }}
-                    onMouseEnter={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="6px 6px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="translate(-2px,-2px)"; }}
-                    onMouseLeave={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="4px 4px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="none"; }}
-                  >
-                    <Home style={{ width:"1rem", height:"1rem" }} />
-                    Go Back Home
-                  </Link>
-                  <Link
-                    href="/tools/viral-title-generator"
-                    style={{
-                      display:"inline-flex", alignItems:"center", gap:"0.5rem",
-                      padding:"0.875rem 1.5rem",
-                      fontSize:"0.8125rem", fontWeight:900, color:"var(--nf-fg)",
-                      backgroundColor:"var(--nf-surface)",
-                      borderRadius:"0.75rem",
-                      border:"2px solid var(--nf-border)",
-                      boxShadow:"4px 4px 0px 0px var(--nf-shadow)",
-                      textTransform:"uppercase", letterSpacing:"0.05em",
-                      textDecoration:"none",
-                      transition:"box-shadow 0.15s, transform 0.15s",
-                    }}
-                    onMouseEnter={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="6px 6px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="translate(-2px,-2px)"; }}
-                    onMouseLeave={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="4px 4px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="none"; }}
-                  >
-                    <Sparkles style={{ width:"1rem", height:"1rem", color:"var(--nf-red)" }} />
-                    Browse AI Tools
-                  </Link>
-                </div>
+                <span
+                  className={`nf-pulse-d nf-digit-glitch`}
+                  style={{
+                    fontSize:"clamp(5rem,13vw,10rem)",
+                    fontWeight:900,
+                    lineHeight:1,
+                    letterSpacing:"-0.05em",
+                    color:"var(--nf-fg)",
+                    transform: glitchActive ? "translateX(-3px)" : "none",
+                    opacity:   glitchActive ? 0.8 : 1,
+                  }}
+                >4</span>
               </div>
 
-              {/* RIGHT: BROKEN VIDEO CARD */}
-              <div
-                aria-hidden
-                style={{ flexShrink:0, width:"100%", maxWidth:"22rem", position:"relative" }}
-              >
-                {/* depth layers  */}
+              {/* Counter */}
+              <p style={{ fontSize:"0.75rem", fontWeight:900, color:"var(--nf-muted-fg)", textTransform:"uppercase", letterSpacing:"0.25em", marginBottom:"1rem" }}>
+                Error code: <span style={{ color:"var(--nf-red)" }}><AnimatedCounter /></span>
+              </p>
+
+              <h1 style={{ fontSize:"clamp(1.5rem,4vw,2.5rem)", fontWeight:900, letterSpacing:"-0.03em", color:"var(--nf-fg)", marginBottom:"0.75rem", lineHeight:1.2 }}>
+                This page doesn&apos;t exist
+              </h1>
+              <p style={{ color:"var(--nf-muted-fg)", fontSize:"clamp(0.875rem,2vw,1rem)", marginBottom:"2rem", maxWidth:"28rem", lineHeight:1.6 }}>
+                The page you&apos;re looking for was deleted, moved, or never existed.
+                Your YouTube growth journey continues — pick a tool below.
+              </p>
+
+              {/* CTAs */}
+              <div className="nf-hero-ctas">
+                <Link
+                  href="/"
+                  style={{
+                    display:"inline-flex", alignItems:"center", gap:"0.5rem",
+                    padding:"0.875rem 1.5rem",
+                    fontSize:"0.8125rem", fontWeight:900, color:"#fff",
+                    backgroundColor:"var(--nf-red)",
+                    borderRadius:"0.75rem",
+                    border:"2px solid var(--nf-border)",
+                    boxShadow:"4px 4px 0px 0px var(--nf-shadow)",
+                    textTransform:"uppercase", letterSpacing:"0.05em",
+                    textDecoration:"none",
+                    transition:"box-shadow 0.15s, transform 0.15s",
+                  }}
+                  onMouseEnter={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="6px 6px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="translate(-2px,-2px)"; }}
+                  onMouseLeave={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="4px 4px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="none"; }}
+                >
+                  <Home style={{ width:"1rem", height:"1rem" }} />
+                  Go Back Home
+                </Link>
+                <Link
+                  href="/tools/viral-title-generator"
+                  style={{
+                    display:"inline-flex", alignItems:"center", gap:"0.5rem",
+                    padding:"0.875rem 1.5rem",
+                    fontSize:"0.8125rem", fontWeight:900, color:"var(--nf-fg)",
+                    backgroundColor:"var(--nf-surface)",
+                    borderRadius:"0.75rem",
+                    border:"2px solid var(--nf-border)",
+                    boxShadow:"4px 4px 0px 0px var(--nf-shadow)",
+                    textTransform:"uppercase", letterSpacing:"0.05em",
+                    textDecoration:"none",
+                    transition:"box-shadow 0.15s, transform 0.15s",
+                  }}
+                  onMouseEnter={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="6px 6px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="translate(-2px,-2px)"; }}
+                  onMouseLeave={e=>{ (e.currentTarget as HTMLElement).style.boxShadow="4px 4px 0px 0px var(--nf-shadow)"; (e.currentTarget as HTMLElement).style.transform="none"; }}
+                >
+                  <Sparkles style={{ width:"1rem", height:"1rem", color:"var(--nf-red)" }} />
+                  Browse AI Tools
+                </Link>
+              </div>
+            </div>
+
+            {/* RIGHT: BROKEN VIDEO CARD */}
+            <div
+              aria-hidden
+              style={{ flexShrink:0, width:"100%", maxWidth:"22rem" }}
+            >
+              {/* Wrapper gives depth layers room to show */}
+              <div className="nf-card-wrapper">
                 <div className="nf-card-depth-1" />
                 <div className="nf-card-depth-2" />
 
@@ -544,8 +618,8 @@ export default function NotFound() {
                   </div>
                 </div>
               </div>
-
             </div>
+
           </div>
         </section>
 
@@ -572,7 +646,7 @@ export default function NotFound() {
               <p style={{ color:"var(--nf-muted-fg)", fontSize:"0.875rem", marginTop:"0.5rem" }}>16+ AI-powered tools built for serious YouTube creators</p>
             </div>
 
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(18rem,100%),1fr))", gap:"1rem" }}>
+            <div className="nf-links-grid">
               {quickLinks.map(({ label, href, icon: Icon }) => (
                 <Link
                   key={href}
@@ -628,7 +702,8 @@ export default function NotFound() {
             <h2 style={{ fontSize:"clamp(1.5rem,4vw,2.5rem)", fontWeight:900, color:"#fff", letterSpacing:"-0.03em", marginBottom:"0.75rem", lineHeight:1.2 }}>
               Ready to grow your channel?
             </h2>
-            <p style={{ color:"rgba(255,255,255,0.85)", fontSize:"clamp(0.875rem,2vw,1rem)", marginBottom:"2rem", maxWidth:"32rem", margin:"0 auto 2rem", lineHeight:1.6 }}>
+            {/* FIX: split margin shorthand to avoid marginBottom being overridden */}
+            <p style={{ color:"rgba(255,255,255,0.85)", fontSize:"clamp(0.875rem,2vw,1rem)", maxWidth:"32rem", marginLeft:"auto", marginRight:"auto", marginBottom:"2rem", lineHeight:1.6 }}>
               16+ AI-powered tools built for serious YouTube creators.
               No subscription needed to start.
             </p>
