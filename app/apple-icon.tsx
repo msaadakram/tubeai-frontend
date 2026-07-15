@@ -10,24 +10,38 @@ export default function AppleIcon() {
         style={{
           width: 180,
           height: 180,
-          borderRadius: 36,
-          background: 'linear-gradient(135deg, #ff0000 0%, #cc0000 100%)',
+          borderRadius: 40,
+          background: 'linear-gradient(135deg, #ff1a1a 0%, #cc0000 60%, #880000 100%)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        {/* YT-style play button */}
+        {/* White circle */}
         <div
           style={{
-            width: 0,
-            height: 0,
-            borderTop: '38px solid transparent',
-            borderBottom: '38px solid transparent',
-            borderLeft: '62px solid white',
-            marginLeft: 12,
+            width: 110,
+            height: 110,
+            borderRadius: '50%',
+            background: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
           }}
-        />
+        >
+          {/* Play triangle */}
+          <div
+            style={{
+              width: 0,
+              height: 0,
+              borderTop: '26px solid transparent',
+              borderBottom: '26px solid transparent',
+              borderLeft: '44px solid #cc0000',
+              marginLeft: 8,
+            }}
+          />
+        </div>
       </div>
     ),
     { ...size }

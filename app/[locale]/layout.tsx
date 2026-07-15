@@ -47,34 +47,20 @@ export async function generateMetadata({
     ...base,
     other: { lang: resolved, dir },
     icons: {
-      // Classic browser favicon (served from public/)
-      shortcut: [{ url: "/favicon.ico" }],
-      // PNG favicons for modern browsers
+      // Next.js dynamically generates these from app/icon.tsx and app/apple-icon.tsx
+      // These are the ONLY reliable sources — public/ PNG stubs were corrupt (< 250 bytes)
       icon: [
-        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-        // Next.js generated icon (app/icon.tsx) — most reliable fallback
         { url: "/icon", sizes: "32x32", type: "image/png" },
+        { url: "/icon", sizes: "16x16", type: "image/png" },
       ],
-      // iOS Safari home screen icon
+      shortcut: [{ url: "/icon", type: "image/png" }],
       apple: [
         { url: "/apple-icon", sizes: "180x180", type: "image/png" },
-        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
       ],
-      // Android Chrome / PWA manifest icons
+      // Android / PWA
       other: [
-        {
-          rel: "icon",
-          url: "/android-chrome-192x192.png",
-          sizes: "192x192",
-          type: "image/png",
-        },
-        {
-          rel: "icon",
-          url: "/android-chrome-512x512.png",
-          sizes: "512x512",
-          type: "image/png",
-        },
+        { rel: "icon", url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
+        { rel: "icon", url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
       ],
     },
   };
@@ -97,11 +83,12 @@ export default async function LocaleLayout({
   return (
     <html lang={resolved} dir={dir}>
       <head>
-        {/* Explicit favicon link tags as a bulletproof fallback for all browsers */}
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        {/* Primary favicon — served by Next.js app/icon.tsx (always works) */}
+        <link rel="icon" type="image/png" href="/icon" />
+        {/* Apple touch icon — served by Next.js app/apple-icon.tsx */}
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon" />
+        {/* Legacy .ico fallback for very old browsers */}
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
       </head>
       <body>
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
