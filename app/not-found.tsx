@@ -32,8 +32,10 @@ const quickLinks = [
   { label: "Hashtag Generator", href: "/tools/hashtag-generator", icon: Hash },
 ];
 
+const shadowBase = "4px 4px 0px 0px rgba(0,0,0,1)";
+const shadowSm = "3px 3px 0px 0px rgba(0,0,0,1)";
+
 export default function NotFound() {
-  const [dark, setDark] = useState(false);
   const [year] = useState(() => new Date().getFullYear());
 
   const locale = useMemo<Locale>(() => {
@@ -48,20 +50,16 @@ export default function NotFound() {
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    setDark(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setDark(e.matches);
+    const onChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      document.documentElement.classList.toggle("dark", e.matches);
+    };
+    onChange(mq);
     mq.addEventListener("change", onChange);
-    if (
-      document.documentElement.classList.contains("dark") ||
-      document.body.classList.contains("dark")
-    ) {
-      setDark(true);
-    }
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
   return (
-    <div className={`${dark ? "dark" : ""} min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans selection:bg-red-600/20`}>
+    <div className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans">
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
         <AuthProvider>
           <LocaleProvider locale={locale}>
@@ -70,11 +68,11 @@ export default function NotFound() {
               <section className="flex-1 flex items-center justify-center py-16 sm:py-24">
                 <div className="container mx-auto px-4 sm:px-6 text-center">
                   <div className="max-w-2xl mx-auto">
-                    <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-red-600 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.15)] mb-6 sm:mb-8">
+                    <div style={{ boxShadow: shadowBase }} className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-red-600 border-2 border-black mb-6 sm:mb-8">
                       <Play className="w-7 h-7 sm:w-9 sm:h-9 text-white fill-white" />
                     </div>
 
-                    <h1 className="text-[8rem] sm:text-[10rem] md:text-[14rem] font-black leading-none tracking-tighter text-black dark:text-white select-none">
+                    <h1 style={{ fontSize: "clamp(8rem, 12vw, 14rem)" }} className="font-black leading-none tracking-tighter text-black dark:text-white select-none">
                       404
                     </h1>
 
@@ -89,14 +87,16 @@ export default function NotFound() {
                     <div className="flex flex-wrap items-center justify-center gap-3 mt-8 sm:mt-10">
                       <Link
                         href="/"
-                        className="inline-flex items-center gap-2 px-6 py-3 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.15)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all uppercase tracking-wider"
+                        style={{ boxShadow: shadowBase }}
+                        className="inline-flex items-center gap-2 px-6 py-3 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-black hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all uppercase tracking-wider"
                       >
                         <Home className="w-4 h-4" />
                         Go Back Home
                       </Link>
                       <Link
                         href="/tools/viral-title-generator"
-                        className="inline-flex items-center gap-2 px-6 py-3 text-sm font-black text-black dark:text-white bg-white dark:bg-neutral-900 rounded-xl border-2 border-black dark:border-neutral-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all uppercase tracking-wider"
+                        style={{ boxShadow: shadowBase }}
+                        className="inline-flex items-center gap-2 px-6 py-3 text-sm font-black text-black dark:text-white bg-white dark:bg-neutral-900 rounded-xl border-2 border-black dark:border-neutral-700 hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all uppercase tracking-wider"
                       >
                         <Sparkles className="w-4 h-4 text-red-600" />
                         Browse AI Tools
@@ -109,7 +109,7 @@ export default function NotFound() {
               <section className="border-t-2 border-black dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 py-14 sm:py-16">
                 <div className="container mx-auto px-4 sm:px-6">
                   <div className="text-center mb-8 sm:mb-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-600 text-white text-[10px] font-black uppercase tracking-wider rounded-full mb-3">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-600 text-white text-xs font-black uppercase tracking-wider rounded-full mb-3">
                       <Sparkles className="w-3 h-3" />
                       While you&apos;re here
                     </div>
@@ -126,7 +126,8 @@ export default function NotFound() {
                       <Link
                         key={href}
                         href={href}
-                        className="flex items-center gap-4 p-4 bg-white dark:bg-neutral-950 border-2 border-black dark:border-neutral-700 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.08)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[5px_5px_0px_0px_rgba(255,255,255,0.08)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all group"
+                        style={{ boxShadow: shadowSm }}
+                        className="flex items-center gap-4 p-4 bg-white dark:bg-neutral-950 border-2 border-black dark:border-neutral-700 rounded-xl hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all group"
                       >
                         <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-red-600 flex items-center justify-center border-2 border-black shrink-0 group-hover:rotate-3 transition-transform">
                           <Icon className="w-5 h-5 text-white" />
