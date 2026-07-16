@@ -9,7 +9,6 @@ import { locales, defaultLocale, type Locale } from "@/lib/i18n/config";
 import { JsonLd, organizationJsonLd, websiteJsonLd, buildMetadata, SITE_DESCRIPTION } from "@/lib/seo";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-// Add RTL locale codes here when you support Arabic, Hebrew, etc.
 const RTL_LOCALES: string[] = [];
 
 export function generateStaticParams() {
@@ -47,8 +46,6 @@ export async function generateMetadata({
     ...base,
     other: { lang: resolved, dir },
     icons: {
-      // Next.js dynamically generates these from app/icon.tsx and app/apple-icon.tsx
-      // These are the ONLY reliable sources — public/ PNG stubs were corrupt (< 250 bytes)
       icon: [
         { url: "/icon", sizes: "32x32", type: "image/png" },
         { url: "/icon", sizes: "16x16", type: "image/png" },
@@ -57,7 +54,6 @@ export async function generateMetadata({
       apple: [
         { url: "/apple-icon", sizes: "180x180", type: "image/png" },
       ],
-      // Android / PWA
       other: [
         { rel: "icon", url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
         { rel: "icon", url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
@@ -81,27 +77,21 @@ export default async function LocaleLayout({
   const dir = RTL_LOCALES.includes(resolved) ? "rtl" : "ltr";
 
   return (
-    <html lang={resolved} dir={dir}>
-      <head>
-        {/* Primary favicon — served by Next.js app/icon.tsx (always works) */}
-        <link rel="icon" type="image/png" href="/icon" />
-        {/* Apple touch icon — served by Next.js app/apple-icon.tsx */}
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon" />
-        {/* Legacy .ico fallback for very old browsers */}
-        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-      </head>
-      <body>
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-          <AuthProvider>
-            {/* Pass resolved locale as prop so LocaleProvider syncs on every SSR navigation */}
-            <LocaleProvider locale={resolved}>
-              <RouteShell>{children}</RouteShell>
-              <Toaster position="bottom-right" richColors closeButton />
-            </LocaleProvider>
-          </AuthProvider>
-        </GoogleOAuthProvider>
-        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
-      </body>
-    </html>
+    <>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `document.documentElement.lang="${resolved}";document.documentElement.dir="${dir}";`,
+        }}
+      />
+      <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+        <AuthProvider>
+          <LocaleProvider locale={resolved}>
+            <RouteShell>{children}</RouteShell>
+            <Toaster position="bottom-right" richColors closeButton />
+          </LocaleProvider>
+        </AuthProvider>
+      </GoogleOAuthProvider>
+      <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
+    </>
   );
 }
