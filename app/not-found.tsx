@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   Play,
   Home,
@@ -34,15 +33,18 @@ const quickLinks = [
 ];
 
 export default function NotFound() {
-  const pathname = usePathname();
   const [dark, setDark] = useState(false);
   const [year] = useState(() => new Date().getFullYear());
 
-  const segments = pathname.split("/").filter(Boolean);
-  const locale: Locale =
-    segments.length > 0 && isLocale(segments[0])
-      ? (segments[0] as Locale)
-      : defaultLocale;
+  const locale = useMemo<Locale>(() => {
+    try {
+      const p = typeof window !== "undefined" ? window.location.pathname : "/";
+      const s = p.split("/").filter(Boolean);
+      return s.length > 0 && isLocale(s[0]) ? (s[0] as Locale) : defaultLocale;
+    } catch {
+      return defaultLocale;
+    }
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
