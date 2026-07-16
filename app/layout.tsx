@@ -15,9 +15,8 @@ export default function RootLayout({
   return (
     <html>
       <head>
-        <link rel="icon" type="image/png" href="/icon" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon" />
-        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" href="/faci.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/faci.png" />
       </head>
       <body>{children}</body>
     </html>
