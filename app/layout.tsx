@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "YTForge — Free YouTube Tools & AI Creator Toolkit",
   description:
     "16+ AI-powered YouTube tools for creators. Free tag generator, title generator, thumbnail downloader, SEO analyzer, and more.",
+  icons: {
+    icon: "/faci.png",
+    apple: "/faci.png",
+  },
 };
 
 export default function RootLayout({
@@ -14,10 +18,6 @@ export default function RootLayout({
 }) {
   return (
     <html>
-      <head>
-        <link rel="icon" type="image/png" href="/faci.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/faci.png" />
-      </head>
       <body>{children}</body>
     </html>
   );
