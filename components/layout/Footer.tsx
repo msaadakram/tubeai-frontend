@@ -74,7 +74,7 @@ export function Footer() {
     setStatus("loading");
     setMessage("");
 
-    const base = process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app";
+    const base = process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
     try {
       const res = await fetch(`${base}/api/subscribe`, {
         method: "POST",

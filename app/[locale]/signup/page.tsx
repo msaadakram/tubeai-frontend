@@ -107,7 +107,7 @@ function SignUpPageInner() {
     const code = searchParams.get("ref") || "";
     if (code) {
       setReferralCode(code);
-      const base = process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app";
+      const base = process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
       fetch(`${base}/api/referral/lookup?code=${encodeURIComponent(code)}`)
         .then((r) => (r.ok ? r.json() : null))
         .then((d) => d?.referral?.name && setReferrerName(d.referral.name))

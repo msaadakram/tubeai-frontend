@@ -7,7 +7,7 @@ import { Star, X, MessageSquare, Check, Sparkles, ThumbsUp, Loader2, AlertTriang
 import { ChatMarkdown } from "./ChatMarkdown";
 
 const STORAGE_KEY = "ytforge_page_ratings_v1";
-const BASE_URL = "https://tubeai-backend.vercel.app";
+const BASE_URL = "https://api.ytforge.app";
 
 type Ratings = Record<string, { rating: number; feedback?: string; at: number }>;
 

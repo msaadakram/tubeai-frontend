@@ -29,7 +29,7 @@ import {
 } from "@/components/tools/ToolSections";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app";
+  process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
 
 const TAG_LIMIT = 500; // YouTube's character cap for the tags field
 

@@ -83,7 +83,7 @@ export function useAuth() {
  *   NEXT_PUBLIC_API_URL=http://localhost:3001
  */
 const API_BASE = (
-  process.env.NEXT_PUBLIC_API_URL || "https://vu-web-backend.vercel.app"
+  process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app"
 ).replace(/\/+$/, ""); // strip trailing slash
 
 const TOKEN_KEY = "ytforge.token";

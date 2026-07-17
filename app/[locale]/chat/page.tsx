@@ -23,7 +23,7 @@ import { ChatMarkdown } from "@/components/ChatMarkdown";
 import { friendlyApiError } from "@/lib/apiError";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app";
+  process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
 
 type Role = "user" | "assistant";
 type Message = { id: string; role: Role; content: string };

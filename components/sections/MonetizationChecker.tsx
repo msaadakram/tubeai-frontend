@@ -6,7 +6,7 @@ import { Youtube, Search, DollarSign, TrendingUp, Users, Briefcase, Loader2, Ale
 import { friendlyApiError } from "@/lib/apiError";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app";
+  process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
 
 type Result = {
   channelId: string;

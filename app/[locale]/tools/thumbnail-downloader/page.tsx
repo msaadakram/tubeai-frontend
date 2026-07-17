@@ -20,7 +20,7 @@ import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } f
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
-  "https://tubeai-backend.vercel.app";
+  "https://api.ytforge.app";
 
 type Thumbnail = {
   quality: string;

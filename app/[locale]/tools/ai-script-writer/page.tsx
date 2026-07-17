@@ -51,7 +51,7 @@ const tones = [
 
 const audiences = ["Beginners", "Developers", "Students", "General", "Professionals"];
 
-const BASE_URL = "https://tubeai-backend.vercel.app";
+const BASE_URL = "https://api.ytforge.app";
 
 interface ScriptSection {
   section: string;
