@@ -2,53 +2,78 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Youtube, Search, DollarSign, TrendingUp, Users, Briefcase, Loader2 } from "lucide-react";
+import { Youtube, Search, DollarSign, TrendingUp, Users, Briefcase, Loader2, AlertCircle } from "lucide-react";
+import { friendlyApiError } from "@/lib/apiError";
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://tubeai-backend.vercel.app";
 
 type Result = {
-  channel: string;
-  subs: string;
-  monthlyMin: number;
-  monthlyMax: number;
-  rpm: string;
-  sponsorValue: string;
-  growthScore: number;
+  channelId: string;
+  title: string;
+  handle: string | null;
+  customUrl: string | null;
+  branding: { logo: { default?: string; medium?: string; high?: string } };
+  statistics: { subscriberCount: number; formattedSubs: string };
+  monetization: {
+    status: string;
+    estimatedEarnings: {
+      rpmEstimate: number;
+      estimatedMonthlyRange: { low: number; high: number };
+      estimatedMonthly: number;
+    } | null;
+  };
 };
 
-// NOTE: Replace this mock with a real YouTube Data API call.
-// Endpoint suggestion: GET https://www.googleapis.com/youtube/v3/channels?part=statistics&key=YOUR_API_KEY_HERE
-function generateMockResult(input: string): Result {
-  const cleaned = input.replace(/^@/, "").split("/").pop() || "channel";
-  const seed = cleaned.length * 137 + cleaned.charCodeAt(0);
-  const subsK = 50 + (seed % 950);
-  const rpm = 2 + ((seed % 70) / 10);
-  const monthlyMin = Math.round(subsK * rpm * 0.8);
-  const monthlyMax = Math.round(subsK * rpm * 2.4);
-  return {
-    channel: cleaned,
-    subs: subsK > 999 ? `${(subsK / 1000).toFixed(1)}M` : `${subsK}K`,
-    monthlyMin,
-    monthlyMax,
-    rpm: `$${rpm.toFixed(2)}`,
-    sponsorValue: `$${(subsK * 12).toLocaleString()}`,
-    growthScore: 60 + (seed % 38),
-  };
+function fmtMoney(n: number): string {
+  if (!Number.isFinite(n)) return "$0";
+  if (n >= 1_000_000) return "$" + (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (n >= 1_000) return "$" + (n / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+  return "$" + Math.round(n).toLocaleString();
+}
+
+function fmtHandle(r: Result): string {
+  const h = r.handle || r.customUrl || "";
+  return h.startsWith("@") ? h : h ? `@${h}` : r.title;
 }
 
 export function MonetizationChecker() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleCheck = (e: React.FormEvent) => {
+  const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    const v = input.trim();
+    if (!v || loading) return;
     setLoading(true);
     setResult(null);
-    setTimeout(() => {
-      setResult(generateMockResult(input.trim()));
+    setError(null);
+    try {
+      const res = await fetch(`${BASE_URL}/api/monetization`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: v }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !body?.success) {
+        throw new Error(friendlyApiError(body?.error || "", res.status));
+      }
+      setResult(body.data as Result);
+    } catch (err: any) {
+      setError(friendlyApiError(err?.message || "", 0));
+    } finally {
       setLoading(false);
-    }, 1200);
+    }
   };
+
+  const monthlyMin = result?.monetization?.estimatedEarnings?.estimatedMonthlyRange?.low ?? 0;
+  const monthlyMax = result?.monetization?.estimatedEarnings?.estimatedMonthlyRange?.high ?? 0;
+  const rpm = result?.monetization?.estimatedEarnings?.rpmEstimate;
+  const hasEarnings = result?.monetization?.estimatedEarnings && monthlyMax > 0;
+  const sponsorValue = result ? fmtMoney(Math.max(monthlyMax, monthlyMin || 0) * 12) : "$0";
+  const growthScore = result ? Math.min(100, Math.round((result.statistics.subscriberCount / 1_000_000) * 2) + 30) : 0;
 
   return (
     <motion.div
@@ -96,7 +121,7 @@ export function MonetizationChecker() {
       </form>
 
       {/* Suggestions */}
-      {!result && !loading && (
+      {!result && !loading && !error && (
         <div className="flex flex-wrap items-center gap-2 mt-3">
           <span className="text-white/50 text-xs">Try:</span>
           {["@MrBeast", "@MKBHD", "@veritasium"].map((s) => (
@@ -112,6 +137,21 @@ export function MonetizationChecker() {
         </div>
       )}
 
+      {/* Error */}
+      <AnimatePresence>
+        {error && !loading && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mt-4 flex items-start gap-2 bg-red-50 border-2 border-red-600 rounded-xl p-3 text-red-700 text-xs sm:text-sm"
+          >
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <span>{error}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Result Card */}
       <AnimatePresence>
         {result && (
@@ -124,13 +164,18 @@ export function MonetizationChecker() {
           >
             <div className="px-5 py-3 bg-black text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center font-black text-sm uppercase">
-                  {result.channel.charAt(0)}
+                <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center font-black text-sm uppercase overflow-hidden">
+                  {result.branding?.logo?.default ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={result.branding.logo.default} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    result.title.charAt(0)
+                  )}
                 </div>
                 <div>
-                  <div className="text-sm font-black">@{result.channel}</div>
+                  <div className="text-sm font-black">{fmtHandle(result)}</div>
                   <div className="text-[10px] text-neutral-400 flex items-center gap-1">
-                    <Users className="w-3 h-3" /> {result.subs} subscribers
+                    <Users className="w-3 h-3" /> {result.statistics.formattedSubs} subscribers
                   </div>
                 </div>
               </div>
@@ -144,32 +189,32 @@ export function MonetizationChecker() {
                 <DollarSign className="w-4 h-4 mb-1" />
                 <div className="text-[9px] font-bold uppercase tracking-wider opacity-90">Monthly</div>
                 <div className="text-base font-black tabular-nums leading-tight">
-                  ${result.monthlyMin.toLocaleString()}
+                  {hasEarnings ? fmtMoney(monthlyMin) : "—"}
                 </div>
-                <div className="text-[10px] font-bold opacity-80">to ${result.monthlyMax.toLocaleString()}</div>
+                <div className="text-[10px] font-bold opacity-80">{hasEarnings ? `to ${fmtMoney(monthlyMax)}` : "not monetized"}</div>
               </div>
 
               <div className="border-2 border-black rounded-xl p-3 bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <TrendingUp className="w-4 h-4 mb-1 text-red-600" />
                 <div className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">Avg RPM</div>
-                <div className="text-base font-black tabular-nums">{result.rpm}</div>
+                <div className="text-base font-black tabular-nums">{rpm ? `$${rpm.toFixed(2)}` : "—"}</div>
                 <div className="text-[10px] font-bold text-neutral-500">per 1K views</div>
               </div>
 
               <div className="border-2 border-black rounded-xl p-3 bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <Briefcase className="w-4 h-4 mb-1 text-red-600" />
                 <div className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">Sponsor /yr</div>
-                <div className="text-base font-black tabular-nums">{result.sponsorValue}</div>
+                <div className="text-base font-black tabular-nums">{hasEarnings ? sponsorValue : "—"}</div>
                 <div className="text-[10px] font-bold text-neutral-500">est. value</div>
               </div>
 
               <div className="border-2 border-black rounded-xl p-3 bg-black text-white shadow-[3px_3px_0px_0px_rgba(220,38,38,1)]">
                 <div className="text-[9px] font-bold uppercase tracking-wider text-neutral-400 mb-1">Growth Score</div>
-                <div className="text-base font-black tabular-nums">{result.growthScore}/100</div>
+                <div className="text-base font-black tabular-nums">{growthScore}/100</div>
                 <div className="h-1 bg-neutral-700 rounded-full mt-1.5 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
-                    animate={{ width: `${result.growthScore}%` }}
+                    animate={{ width: `${growthScore}%` }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                     className="h-full bg-red-600"
                   />

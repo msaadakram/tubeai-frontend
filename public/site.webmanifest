@@ -1,0 +1,14 @@
+{
+  "name": "YTForge — Free YouTube Tools & AI Creator Toolkit",
+  "short_name": "YTForge",
+  "description": "AI-powered YouTube creator toolkit — title generators, AI script writer, thumbnail tools, SEO analyzer, channel analytics, monetization checker, and earnings calculator.",
+  "icons": [
+    { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#dc2626",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+}

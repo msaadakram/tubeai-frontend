@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 import RouteShell from "@/components/RouteShell";
 import { LocaleProvider } from "@/lib/i18n/LocaleContext";
 import { locales, defaultLocale, type Locale } from "@/lib/i18n/config";
-import { JsonLd, organizationJsonLd, websiteJsonLd, buildMetadata, SITE_DESCRIPTION } from "@/lib/seo";
+import { buildMetadata, SITE_DESCRIPTION } from "@/lib/seo";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const RTL_LOCALES: string[] = [];
@@ -45,14 +45,19 @@ export async function generateMetadata({
   return {
     ...base,
     other: { lang: resolved, dir },
+    manifest: "/site.webmanifest",
     icons: {
       icon: [
+        { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
         { url: "/faci.png", sizes: "514x538", type: "image/png" },
       ],
-      shortcut: [{ url: "/faci.png", type: "image/png" }],
-      apple: [
-        { url: "/faci.png", sizes: "514x538", type: "image/png" },
+      shortcut: [
+        { url: "/favicon.ico", sizes: "48x48" },
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       ],
+      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     },
   };
 }
@@ -86,7 +91,6 @@ export default async function LocaleLayout({
           </LocaleProvider>
         </AuthProvider>
       </GoogleOAuthProvider>
-      <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
     </>
   );
 }
