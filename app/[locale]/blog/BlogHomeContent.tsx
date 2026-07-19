@@ -6,16 +6,36 @@ import Image from "next/image";
 import { motion } from "motion/react";
 import { ArrowRight, Clock, Sparkles, Search, TrendingUp } from "lucide-react";
 import { posts, categories } from "@/lib/blog/posts";
+import { postTranslations } from "@/lib/blog/translations";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { cn } from "@/lib/utils";
 
 export function BlogHomeContent() {
   const [activeCat, setActiveCat] = useState<string>("all");
   const [query, setQuery] = useState("");
+  const { locale } = useLocale();
+  const { t } = useTranslations();
 
-  const featured = posts.find((p) => p.featured) ?? posts[0];
+  // Resolve each post's localizable fields for the active locale, falling
+  // back to the English base when no translation exists yet.
+  const localizedPosts = useMemo(() => {
+    return posts.map((p) => {
+      const tr = postTranslations[p.slug]?.[locale];
+      return {
+        ...p,
+        title: tr?.title ?? p.title,
+        description: tr?.description ?? p.description,
+        readTime: tr?.readTime ?? p.readTime,
+        keywords: tr?.keywords ?? p.keywords,
+      };
+    });
+  }, [locale]);
+
+  const featured = localizedPosts.find((p) => p.featured) ?? localizedPosts[0];
 
   const filtered = useMemo(() => {
-    return posts.filter((p) => {
+    return localizedPosts.filter((p) => {
       const catMatch = activeCat === "all" || p.category === activeCat;
       const q = query.trim().toLowerCase();
       const queryMatch =
@@ -25,7 +45,7 @@ export function BlogHomeContent() {
         p.keywords.some((k) => k.toLowerCase().includes(q));
       return catMatch && queryMatch;
     });
-  }, [activeCat, query]);
+  }, [activeCat, query, localizedPosts]);
 
   return (
     <>
@@ -42,14 +62,13 @@ export function BlogHomeContent() {
             className="max-w-3xl mx-auto text-center"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black text-white text-xs font-black tracking-wider uppercase mb-6 border-2 border-black shadow-[3px_3px_0px_0px_rgba(255,255,255,0.4)]">
-              <Sparkles className="w-3.5 h-3.5 text-red-500" /> YTForge Blog
+              <Sparkles className="w-3.5 h-3.5 text-red-500" /> {t("blog.badge")}
             </div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white mb-4 [text-shadow:_3px_3px_0_rgb(0_0_0_/_30%)]">
-              Creator growth, decoded weekly
+              {t("blog.heroTitle")}
             </h1>
             <p className="text-base sm:text-lg text-red-50 leading-relaxed max-w-2xl mx-auto">
-              Viral case studies, algorithm updates, SEO playbooks, and monetization benchmarks — the
-              exact tactics top creators use, written by the YTForge team.
+              {t("blog.heroDesc")}
             </p>
           </motion.div>
         </div>
@@ -78,7 +97,7 @@ export function BlogHomeContent() {
                   )}
                   <div className="relative">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white text-[10px] font-black uppercase tracking-wider rounded-full border-2 border-white/30">
-                      <TrendingUp className="w-3 h-3 text-red-500" /> Featured
+                      <TrendingUp className="w-3 h-3 text-red-500" /> {t("blog.featured")}
                     </span>
                   </div>
                   <div className="relative">
@@ -104,7 +123,7 @@ export function BlogHomeContent() {
                     {featured.description}
                   </p>
                   <span className="inline-flex items-center gap-2 text-sm font-black text-black group-hover:text-red-600 transition-colors">
-                    Read article <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    {t("blog.readArticle")} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </div>
               </div>
@@ -128,7 +147,7 @@ export function BlogHomeContent() {
                       : "bg-white text-black hover:bg-red-50"
                   )}
                 >
-                  All
+                  {t("blog.all")}
                 </button>
                 {categories.map((c) => (
                   <button
@@ -151,7 +170,7 @@ export function BlogHomeContent() {
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search articles..."
+                  placeholder={t("blog.searchPlaceholder")}
                   className="w-full h-11 pl-10 pr-4 rounded-xl border-2 border-black bg-white text-sm font-bold placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-red-600/40"
                 />
               </div>
@@ -159,7 +178,7 @@ export function BlogHomeContent() {
 
             {filtered.length === 0 ? (
               <div className="text-center py-20 bg-white border-2 border-black rounded-2xl">
-                <p className="text-neutral-500 font-bold">No articles match your search.</p>
+                <p className="text-neutral-500 font-bold">{t("blog.noResults")}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -206,7 +225,7 @@ export function BlogHomeContent() {
                           {post.description}
                         </p>
                         <span className="inline-flex items-center gap-1.5 text-xs font-black text-black group-hover:text-red-600 transition-colors">
-                          Read more <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                          {t("blog.readMore")} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                         </span>
                       </div>
                     </Link>

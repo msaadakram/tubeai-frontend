@@ -428,4 +428,216 @@ export const tr: Messages = {
     desc: "Aradığınız sayfa mevcut değil veya taşınmış.",
     home: "Ana sayfaya dön",
   },
+  meta: {
+    home: {
+      title: "YTForge — Ücretsiz YouTube Araçları ve Yapay Zekâ İçerik Üreticisi Seti",
+      description:
+        "YTForge, yapay zekâ destekli bir YouTube içerik üreticisi setidir — başlık oluşturucular, yapay zekâ senaryo yazarı, küçük resim araçları, SEO analizi, kanal analizi, para kazanma denetleyicisi ve kazanç hesaplayıcısı tek bir yerde.",
+      keywords: [
+        "youtube araçları",
+        "youtube etiket çıkarıcı",
+        "youtube başlık oluşturucu",
+        "youtube seo",
+        "yapay zekâ senaryo yazarı",
+        "küçük resim indir",
+        "kanal analizi",
+        "para kazanma denetleyicisi",
+        "kazanç hesaplayıcısı",
+      ],
+    },
+    features: {
+      title: "2026'da her içerik üreticinin ihtiyaç duyduğu YouTube araçları ve yapay zekâ özellikleri",
+      description:
+        "30'dan fazla ücretsiz YouTube aracını ve yapay zekâ özelliğini keşfedin — başlık oluşturucular, senaryo yazarları, küçük resim oluşturucular, SEO analizi, kanal analizi ve 2026 içerik üreticileri için para kazanma araçları.",
+      keywords: ["youtube araçları", "youtube kanal arama", "youtube anahtar kelime çıkarıcı", "youtube meta verileri", "video başlığı", "youtube video açıklaması"],
+    },
+    pricing: {
+      title: "Ücretsiz ve Pro YouTube Araçları Fiyatlandırması — Bugün büyümeye başlayın",
+      description:
+        "Her YouTube içerik üreticisi için basit fiyatlandırma. Başlık oluşturucular, etiket araçları ve SEO analizi ile ücretsiz başlayın; yapay zekâ senaryoları, küçük resimler ve kanal analizi için yükseltin. Başlamak için kredi kartı gerekmez.",
+      keywords: ["youtube araçları", "youtube etiket çıkarıcı", "youtube etiketleri", "youtube anahtar kelimeleri", "youtube kanalı bul"],
+    },
+    demo: {
+      title: "YouTube araçları demosunu izleyin — Yapay zekâ başlıkları, senaryolar ve küçük resimler",
+      description:
+        "YTForge'in YouTube araçlarını iş başında görün — yapay zekâ başlık oluşturma, senaryo yazma, küçük resim tasarımı, SEO denetimleri ve kanal analizi. Tam demoyu izleyin ve dakikalar içinde ücretsiz başlayın.",
+      keywords: ["youtube araçları", "youtube short", "youtube videoları", "youtube etiketleri", "youtube küçük resim", "youtube video açıklaması"],
+    },
+    chat: {
+      title: "Yapay Zekâ YouTube Büyüme Koçu — Ücretsiz içerik üreticisi strateji sohbeti",
+      description:
+        "Ücretsiz bir yapay zekâ YouTube büyüme koçuyla sohbet edin. Başlıklar, küçük resimler, SEO, elde tutma ve para kazanma konusunda özel tavsiyeler alın — 2026 YouTube algoritmasına göre saniyeler içinde yanıtlar.",
+      keywords: ["youtube araçları", "youtube arama", "youtube içerik", "youtube anahtar kelimeleri", "youtube meta verileri", "youtube video arama"],
+    },
+    blog: {
+      title: "YTForge Blog — YouTube Büyüme, SEO ve Para Kazanma Rehberleri",
+      description:
+        "İçerik üreticileri için YouTube blogu: viral vaka çalışmaları, algoritma güncellemeleri, SEO rehberleri ve ülkeye göre CPM karşılaştırmaları. En iyi içerik üreticilerinin kullandığı tam taktikler, YTForge ekibi tarafından yazıldı.",
+      keywords: [
+        "youtube blog",
+        "youtube içerik",
+        "youtube meta verileri",
+        "youtube araçları",
+        "youtube seo",
+        "youtube büyüme",
+        "youtube cpm",
+        "youtube algoritması",
+        "içerik üreticisi taktikleri",
+      ],
+    },
+    aiPolicy: {
+      title: "Yapay Zekâ Politikası — YTForge yapay zekâyı ve verilerinizi nasıl kullanır",
+      description:
+        "YTForge yapay zekâ politikası: araçlarımızı hangi modeller destekliyor, promptlarınızı ve içeriğinizi nasıl işliyoruz, yapay zekâ tarafından üretilen içerik üzerindeki haklarınız ve güvenlik taahhütlerimiz.",
+      keywords: ["youtube araçları", "yapay zekâ politikası", "yapay zekâ transkripsiyon", "yapay zekâ senaryo yazarı", "yapay zekâ küçük resim oluşturucu", "youtube içerik"],
+    },
+    privacy: {
+      title: "Gizlilik Politikası — İçerik üreticisi verilerinizi nasıl koruyoruz",
+      description:
+        "YTForge gizlilik politikası: hangi verileri topluyoruz, nasıl kullanıyoruz, transit ve bekleyen halde şifreleme, yapay zekâ eğitimi taahhütleri, haklarınız ve DPO'muzla nasıl iletişime geçilir.",
+      keywords: ["youtube araçları", "gizlilik politikası", "içerik üreticisi verileri", "yapay zekâ politikası"],
+    },
+    terms: {
+      title: "Hizmet Şartları — YouTube İçerik Üreticisi Seti Kuralları",
+      description:
+        "YTForge hizmet şartları: hesap sorumlulukları, kabul edilebilir kullanım, yapay zekâ ile üretilen içerik hakları, abonelikler, iadeler ve YouTube içerik üreticisi setimizin sorumluluğu.",
+      keywords: ["youtube araçları", "hizmet şartları", "içerik üreticisi seti"],
+    },
+    disclaimer: {
+      title: "Sorumluluk reddi — Yapay zekâ YouTube araçları ve garanti verilmeyen politika",
+      description:
+        "YTForge sorumluluk reddi: yapay zekâ tarafından üretilen içeriğin doğruluğu, garanti edilmeyen YouTube sonuçları, kazanç tahminleri, analiz doğruluğu, üçüncü taraf içeriği ve YouTube uyumluluk notları.",
+      keywords: ["youtube araçları", "sorumluluk reddi", "yapay zekâ araçları", "youtube içerik"],
+    },
+    tools: {
+      seoAnalyzer: {
+        title: "YouTube SEO Analizi — Ücretsiz video ve kanal SEO denetimi",
+        description:
+          "Herhangi bir YouTube videosunu veya kanalını saniyeler içinde SEO için denetleyin — başlık, açıklama, etiketler, bölümler ve sıralama fırsatları. Ücretsiz YouTube SEO analiz ve kontrol aracı.",
+        keywords: ["youtube videoları için seo etiketleri", "youtube etiketleri", "youtube anahtar kelimeleri", "youtube anahtar kelime çıkarıcı", "sıralama etiketleri", "youtube meta verileri"],
+      },
+      viralTitleGenerator: {
+        title: "Viral YouTube Başlık Oluşturucu — Ücretsiz yapay zekâ başlık fikirleri",
+        description:
+          "Saniyeler içinde viral, SEO optimize edilmiş YouTube başlıkları oluşturun. Yerleşik CTR puanlaması ve anahtar kelime başa yerleştirme ile ücretsiz yapay zekâ başlık oluşturucu — her niş için tıklanmaya değer başlıklar alın.",
+        keywords: ["video başlığı", "youtube video başlığı", "youtube video başlık çıkarıcı", "dikkat çekici video başlıkları", "en iyi youtube başlıkları"],
+      },
+      aiScriptWriter: {
+        title: "Yapay Zekâ Senaryo Yazarı — Saniyeler içinde ücretsiz YouTube video senaryoları",
+        description:
+          "Yapay zekâ ile elde tutma optimize edilmiş YouTube senaryoları yazın — kanca, vaat, desen kesintileri ve tek bir CTA. Her ton, uzunluk ve dil için ücretsiz yapay zekâ senaryo yazarı.",
+        keywords: ["youtube video açıklaması", "youtube açıklaması", "youtube için video açıklaması", "yt video açıklaması", "youtube videosu açıklaması"],
+      },
+      aiThumbnailGenerator: {
+        title: "Yapay Zekâ YouTube Küçük Resim Oluşturucu — Ücretsiz yüksek CTR tasarımları",
+        description:
+          "Yapay zekâ ile tıklama mıknatısı YouTube küçük resimleri oluşturun — prompt başına 4 yüksek CTR varyantı, 1280x720'de HD PNG dışa aktarma. Stil aktarımı ve katmanlı dışa aktarma ile yapay zekâ küçük resim oluşturucu.",
+        keywords: ["youtube küçük resim", "youtube küçük resim", "youtube video küçük resmi", "küçük resim oluşturucu", "küçük resim yaratıcı", "yapay zekâ küçük resim"],
+      },
+      aiTranscript: {
+        title: "Yapay Zekâ YouTube Transkripsiyonu — Ücretsiz video transkripsiyonu ve çeviri",
+        description:
+          "YouTube video transkripsiyonlarını yapay zekâ doğruluğuyla 100'den fazla dile çıkarın, çevirin ve arayın. Ücretsiz yapay zekâ transkripsiyon aracı — bir bağlantı yapıştırın ve tüm transkripsiyonu anında alın.",
+        keywords: ["youtube video açıklaması", "youtube videosu açıklaması", "youtube için video açıklaması", "youtube meta verileri", "youtube içerik", "yt video açıklaması"],
+      },
+      channelAnalytics: {
+        title: "YouTube Kanal Analizi — Herhangi bir kanal için ücretsiz istatistikler",
+        description:
+          "Herhangi bir kanal URL'sinden canlı YouTube kanal analizi alın — aboneler, görüntülemeler, izleme süresi, en iyi videolar ve büyüme hızı. Ücretsiz kanal analizi aracı, kayıt yok.",
+        keywords: ["youtube kanal arama", "youtube kanalı bul", "youtube'da kanala göre ara", "youtube'da kanal ara", "youtube kanalı"],
+      },
+      channelIdFinder: {
+        title: "YouTube Kanal ID Bulucu — Ücretsiz ID, RSS ve URL sorgulama",
+        description:
+          "Video bağlantısı, @handle veya kanal URL'sinden herhangi bir YouTube kanal ID'si, RSS akışı ve standart URL'sini bulun. Ücretsiz kanal ID bulucu — saniyeler içinde kalıcı UC tanımlayıcısı.",
+        keywords: ["youtube kanalı bul", "youtube kanal arama", "youtube'da kanala göre ara", "youtube'da kanal ara", "youtube kanalı"],
+      },
+      earningsCalculator: {
+        title: "YouTube Kazanç Hesaplayıcısı — Ücretsiz AdSense gelir tahmini",
+        description:
+          "Görüntülemelerinizden, ülke dağılımınızdan, nişinizden ve RPM'nizden YouTube AdSense kazançlarınızı tahmin edin. Ücretsiz YouTube kazanç ve CPM hesaplayıcısı — anlık aylık ve yıllık gelir projeksiyonları.",
+        keywords: ["youtube kanalı", "youtube etiketleri", "youtube etiketleri", "youtube anahtar kelimeleri", "youtube kanal arama", "youtube kanalı bul"],
+      },
+      embedGenerator: {
+        title: "YouTube Gömme Oluşturucu — Ücretsiz duyarlı gömme kodları",
+        description:
+          "Özel boyutlar, başlangıç süreleri ve altyazılarla duyarlı, gizliği artırılmış YouTube gömme kodları oluşturun. Web siteleri ve bloglar için ücretsiz gömme kodu oluşturucu.",
+        keywords: ["youtube videoları", "video youtube videosu", "youtube videosu gömme", "youtube gömme kodu", "video gömme"],
+      },
+      hashtagGenerator: {
+        title: "YouTube Etiket Oluşturucu — Ücretsiz trend etiketler",
+        description:
+          "Herhangi bir konudan ilgili YouTube etiketleri oluşturun — spam veya tekrar olmadan erişim için optimize edildi. Çıkarıcı ve trend önerileri ile ücretsiz YouTube etiket oluşturucu.",
+        keywords: ["youtube etiketleri", "youtube etiket çıkarıcı", "youtube videolarında etiketler", "youtube etiket arama", "youtube short etiketleri"],
+      },
+      monetizationChecker: {
+        title: "YouTube Para Kazanma Denetleyicisi — Bir kanal para kazanıyor mu?",
+        description:
+          "Herhangi bir YouTube kanalının para kazanma durumunu, YPP uygunluğunu ve tahmini reklam geliri seviyesini saniyeler içinde kontrol edin. Ücretsiz YouTube para kazanma denetleyicisi — başlamak için bir kanal URL'si yapıştırın.",
+        keywords: ["youtube kanalı", "youtube kanal arama", "youtube kanalı bul", "youtube etiketleri", "youtube etiketleri"],
+      },
+      qrCodeGenerator: {
+        title: "YouTube QR Kodu Oluşturucu — Ücretsiz markalı QR kodları",
+        description:
+          "YouTube videolarınız, kanallarınız ve Short'larınız için markalı QR kodları oluşturun — logolar ve renkler ekleyin, HD olarak dışa aktarın. Ücretsiz YouTube QR kodu oluşturucu, kayıt gerekmez.",
+        keywords: ["youtube short", "youtube videoları", "youtube kanalı", "qr kodu youtube", "youtube qr"],
+      },
+      shortsIdeas: {
+        title: "YouTube Shorts Fikirleri — Ücretsiz yapay zekâ viral short konseptleri",
+        description:
+          "Viral YouTube Shorts fikirleri oluşturun — 2026'da Shorts algoritması için optimize edilmiş kancalar, formatlar ve döngüsel sonlar. Herhangi bir konu veya niş için ücretsiz Shorts fikirleri oluşturucu.",
+        keywords: ["youtube short", "youtube short etiketleri", "short etiket çıkarıcı", "short video etiketleri", "youtube short için etiketler"],
+      },
+      tagGenerator: {
+        title: "YouTube Etiket Oluşturucu — Her video için ücretsiz SEO etiketleri",
+        description:
+          "Herhangi bir konudan SEO optimize edilmiş YouTube etiketleri oluşturun — tam, geniş ve uzun kuyruklu, 500 karakterlik sınır içinde. Ücretsiz YouTube etiket oluşturucu ve çıkarıcı, kayıt yok.",
+        keywords: ["youtube etiketleri", "youtube etiket çıkarıcı", "etiket bulucu", "youtube etiket bulucu", "youtube videoları için etiketler", "yt etiketleri"],
+      },
+      thumbnailDownloader: {
+        title: "YouTube Küçük Resim İndirici — Ücretsiz HD görüntü yakalayıcı",
+        description:
+          "Herhangi bir YouTube video küçük resmini HD, tam veya standart çözünürlükte indirin — ücretsiz, kayıt yok, sınırsız. Bir video bağlantısı yapıştırın ve küçük resmi anında yakalayın.",
+        keywords: ["youtube küçük resim", "youtube küçük resim", "youtube video küçük resmi", "youtube küçük resmi indir", "yt küçük resim"],
+      },
+      thumbnailPreview: {
+        title: "YouTube Küçük Resim Önizlemesi — Yayınlamadan önce test edin",
+        description:
+          "YouTube küçük resminizin mobilde, masaüstünde, arama sonuçlarında ve Shorts rafında yayınlamadan önce nasıl görüneceğini önizleyin. Ücretsiz küçük resim önizleme ve kontrol aracı.",
+        keywords: ["youtube küçük resim", "youtube küçük resim", "youtube video küçük resmi", "küçük resim testi", "küçük resim denetleyicisi"],
+      },
+    },
+    blogPosts: {
+      "guide-to-yt-seo-grow": {
+        title: "2026'da YouTube SEO ve Büyüme Üzerine Tam Rehber",
+        description:
+          "2026'da YouTube SEO üzerine 1.500 kelimelik bir rehber — anahtar kelime araştırması, başlıklar, küçük resimler, elde tutma, etkileşim sinyalleri ve bu yıl önemli olan algoritma güncellemeleri.",
+        keywords: ["youtube seo", "youtube büyüme", "youtube algoritması 2026", "video optimizasyonu", "anahtar kelime araştırması", "ctr", "elde tutma"],
+      },
+      "youtube-cpm-rates-by-country": {
+        title: "Ülkeye göre YouTube CPM oranları (2026 Kıyaslama Raporu)",
+        description:
+          "2026 için YouTube CPM ve RPM oranlarının ülkeye göre ayrıntısı — en çok ödeme yapan pazarlardan (Norveç, ABD) gelişmekte olanlara (Hindistan, Brezilya) — niş kıyaslamaları ve RPM'nizi en üst düzeye çıkarma yolları.",
+        keywords: ["youtube cpm", "youtube rpm", "ülkeye göre cpm", "youtube para kazanma", "reklam geliri", "youtube kazançları"],
+      },
+      "ai-thumbnail-design-system": {
+        title: "En iyi içerik üreticilerinin 2026'da kullandığı yapay zekâ küçük resim tasarım sistemi",
+        description:
+          "Yapay zekâ ile tekrarlanabilir bir küçük resim sistemi nasıl kurulur — odak noktası, kontrast, metin hiyerarşisi ve her videoda CTR'yi artıran A/B testi.",
+        keywords: ["youtube küçük resimleri", "yapay zekâ küçük resim", "ctr", "küçük resim tasarımı"],
+      },
+      "youtube-algorithm-2026": {
+        title: "YouTube algoritması 2026'da gerçekte nasıl çalışıyor",
+        description:
+          "2026'da YouTube'un öneri ve sıralama sistemlerinin basit bir açıklaması — artık hangi sinyaller önemli, hangileri değil ve nasıl uyum sağlayacağınız.",
+        keywords: ["youtube algoritması", "öneri sistemi", "youtube sıralaması"],
+      },
+      "hashtag-strategy-2026": {
+        title: "Hâlâ işe yarayan 2026 YouTube etiket stratejisi",
+        description:
+          "YouTube etiketleri 2026'da hâlâ önemli mi? Evet — ama yalnızca bir spam kanalı olarak değil, bir kümeleme aracı olarak kullanırsanız. Keşfedilebilirliği artıran tam format işte.",
+        keywords: ["youtube etiketleri", "etiket stratejisi", "youtube keşfedilebilirlik"],
+      },
+    },
+  },
 };

@@ -428,4 +428,216 @@ export const zh: Messages = {
     desc: "您要找的页面不存在或已被移动。",
     home: "返回首页",
   },
+  meta: {
+    home: {
+      title: "YTForge — 免费 YouTube 工具与 AI 创作者工具包",
+      description:
+        "YTForge 是一个 AI 驱动的 YouTube 创作者工具包 — 标题生成器、AI 脚本写作、缩略图工具、SEO 分析器、频道分析、变现检查器和收入计算器，集于一处。",
+      keywords: [
+        "youtube 工具",
+        "youtube 标签提取器",
+        "youtube 标题生成器",
+        "youtube seo",
+        "ai 脚本写作",
+        "缩略图下载",
+        "频道分析",
+        "变现检查器",
+        "收入计算器",
+      ],
+    },
+    features: {
+      title: "2026 年每位创作者都需要的 YouTube 工具与 AI 功能",
+      description:
+        "探索 30 多种免费 YouTube 工具和 AI 功能 — 标题生成器、脚本写作、缩略图制作、SEO 分析器、频道分析以及为 2026 年创作者打造的变现工具。",
+      keywords: ["youtube 工具", "youtube 频道搜索", "youtube 关键词提取器", "youtube 元数据", "视频标题", "youtube 视频描述"],
+    },
+    pricing: {
+      title: "免费与 Pro 版 YouTube 工具定价 — 立即开始增长",
+      description:
+        "为每位 YouTube 创作者提供简单定价。使用标题生成器、标签工具和 SEO 分析器免费开始；升级以获取 AI 脚本、缩略图和频道分析。开始时无需信用卡。",
+      keywords: ["youtube 工具", "youtube 标签提取器", "youtube 话题标签", "youtube 关键词", "查找 youtube 频道"],
+    },
+    demo: {
+      title: "观看 YouTube 工具演示 — AI 标题、脚本与缩略图",
+      description:
+        "看看 YTForge 的 YouTube 工具如何实际运作 — AI 标题生成、脚本写作、缩略图设计、SEO 审计和频道分析。观看完整演示，几分钟内免费开始。",
+      keywords: ["youtube 工具", "youtube 短视频", "youtube 视频", "youtube 标签", "youtube 缩略图", "youtube 视频描述"],
+    },
+    chat: {
+      title: "AI YouTube 增长教练 — 免费创作者策略聊天",
+      description:
+        "免费与 AI YouTube 增长教练聊天。获取关于标题、缩略图、SEO、留存和变现的定制建议 — 几秒钟内获得针对 2026 年 YouTube 算法的回答。",
+      keywords: ["youtube 工具", "youtube 搜索", "youtube 内容", "youtube 关键词", "youtube 元数据", "youtube 视频搜索"],
+    },
+    blog: {
+      title: "YTForge 博客 — YouTube 增长、SEO 与变现指南",
+      description:
+        "面向创作者的 YouTube 博客：病毒式案例研究、算法更新、SEO 指南和各国 CPM 基准。顶级创作者使用的确切策略，由 YTForge 团队撰写。",
+      keywords: [
+        "youtube 博客",
+        "youtube 内容",
+        "youtube 元数据",
+        "youtube 工具",
+        "youtube seo",
+        "youtube 增长",
+        "youtube cpm",
+        "youtube 算法",
+        "创作者策略",
+      ],
+    },
+    aiPolicy: {
+      title: "AI 政策 — YTForge 如何使用 AI 和您的数据",
+      description:
+        "YTForge AI 政策：哪些模型支持我们的工具、我们如何处理您的提示和内容、您对 AI 生成内容的权利，以及我们的安全承诺。",
+      keywords: ["youtube 工具", "ai 政策", "ai 转录", "ai 脚本写作", "ai 缩略图生成器", "youtube 内容"],
+    },
+    privacy: {
+      title: "隐私政策 — 我们如何保护您的创作者数据",
+      description:
+        "YTForge 隐私政策：我们收集哪些数据、如何使用它们、传输中和静态时的加密、AI 训练承诺、您的权利，以及如何联系我们的数据保护官。",
+      keywords: ["youtube 工具", "隐私政策", "创作者数据", "ai 政策"],
+    },
+    terms: {
+      title: "服务条款 — YouTube 创作者工具包规则",
+      description:
+        "YTForge 服务条款：账户责任、可接受使用、AI 生成内容权利、订阅、退款，以及我们的 YouTube 创作者工具包的责任。",
+      keywords: ["youtube 工具", "服务条款", "创作者工具包"],
+    },
+    disclaimer: {
+      title: "免责声明 — AI YouTube 工具与无保证政策",
+      description:
+        "YTForge 免责声明：AI 生成输出的准确性、不保证 YouTube 结果、收入估算、分析准确性、第三方内容，以及 YouTube 合规说明。",
+      keywords: ["youtube 工具", "免责声明", "ai 工具", "youtube 内容"],
+    },
+    tools: {
+      seoAnalyzer: {
+        title: "YouTube SEO 分析器 — 免费的视频和频道 SEO 审计",
+        description:
+          "几秒钟内审计任何 YouTube 视频或频道的 SEO — 标题、描述、标签、章节和排名机会。免费的 YouTube SEO 分析器和检查工具。",
+        keywords: ["youtube 视频 seo 标签", "youtube 标签", "youtube 关键词", "youtube 关键词提取器", "排名标签", "youtube 元数据"],
+      },
+      viralTitleGenerator: {
+        title: "病毒式 YouTube 标题生成器 — 免费 AI 标题创意",
+        description:
+          "几秒钟内生成病毒式、SEO 优化的 YouTube 标题。带有内置 CTR 评分和关键词前置的免费 AI 标题生成器 — 为任何领域获取值得点击的标题。",
+        keywords: ["视频标题", "youtube 视频标题", "youtube 视频标题提取器", "吸引人的视频标题", "最佳 youtube 标题"],
+      },
+      aiScriptWriter: {
+        title: "AI 脚本写作 — 几秒钟内免费生成 YouTube 视频脚本",
+        description:
+          "使用 AI 编写留存优化的 YouTube 脚本 — 钩子、承诺、模式中断和单一 CTA。适用于任何语调、长度和语言的免费 AI 脚本写作。",
+        keywords: ["youtube 视频描述", "youtube 描述", "youtube 的视频描述", "yt 视频描述", "youtube 视频的描述"],
+      },
+      aiThumbnailGenerator: {
+        title: "AI YouTube 缩略图生成器 — 免费高点击率设计",
+        description:
+          "使用 AI 生成吸引点击的 YouTube 缩略图 — 每个提示 4 个高点击率变体，1280x720 HD PNG 导出。带有风格迁移和分层导出的 AI 缩略图生成器。",
+        keywords: ["youtube 缩略图", "youtube 缩略图", "youtube 视频缩略图", "缩略图制作器", "缩略图创建器", "ai 缩略图"],
+      },
+      aiTranscript: {
+        title: "AI YouTube 转录 — 免费视频转录和翻译",
+        description:
+          "以 AI 精度将 YouTube 视频转录提取、翻译和搜索为 100 多种语言。免费 AI 转录工具 — 粘贴链接即可立即获取完整转录。",
+        keywords: ["youtube 视频描述", "youtube 视频的描述", "youtube 的视频描述", "youtube 元数据", "youtube 内容", "yt 视频描述"],
+      },
+      channelAnalytics: {
+        title: "YouTube 频道分析 — 任何频道的免费统计数据",
+        description:
+          "从任何频道 URL 获取实时 YouTube 频道分析 — 订阅者、观看次数、观看时长、热门视频和增长速度。免费频道分析工具，无需注册。",
+        keywords: ["youtube 频道搜索", "查找 youtube 频道", "按频道搜索 youtube", "在 youtube 上搜索频道", "youtube 频道"],
+      },
+      channelIdFinder: {
+        title: "YouTube 频道 ID 查找器 — 免费 ID、RSS 和 URL 查询",
+        description:
+          "从视频链接、@用户名或频道 URL 查找任何 YouTube 频道 ID、RSS 订阅源和规范 URL。免费频道 ID 查找器 — 几秒钟内获取永久 UC 标识符。",
+        keywords: ["查找 youtube 频道", "youtube 频道搜索", "按频道搜索 youtube", "在 youtube 上搜索频道", "youtube 频道"],
+      },
+      earningsCalculator: {
+        title: "YouTube 收入计算器 — 免费 AdSense 收入估算",
+        description:
+          "根据您的观看次数、国家组合、领域和 RPM 估算 YouTube AdSense 收入。免费的 YouTube 收入和 CPM 计算器 — 即时月度和年度收入预测。",
+        keywords: ["youtube 频道", "youtube 标签", "youtube 话题标签", "youtube 关键词", "youtube 频道搜索", "查找 youtube 频道"],
+      },
+      embedGenerator: {
+        title: "YouTube 嵌入生成器 — 免费响应式嵌入代码",
+        description:
+          "生成带有自定义尺寸、开始时间和字幕的响应式、隐私增强的 YouTube 嵌入代码。用于网站和博客的免费嵌入代码生成器。",
+        keywords: ["youtube 视频", "视频 youtube 视频", "嵌入 youtube 视频", "youtube 嵌入代码", "嵌入视频"],
+      },
+      hashtagGenerator: {
+        title: "YouTube 话题标签生成器 — 免费热门话题标签",
+        description:
+          "从任何主题生成相关的 YouTube 话题标签 — 为覆盖范围优化，避免垃圾信息或重复。带有提取器和热门建议的免费 YouTube 话题标签生成器。",
+        keywords: ["youtube 话题标签", "youtube 话题标签提取器", "youtube 视频上的话题标签", "搜索 youtube 话题标签", "youtube 短视频标签"],
+      },
+      monetizationChecker: {
+        title: "YouTube 变现检查器 — 频道是否已变现？",
+        description:
+          "几秒钟内检查任何 YouTube 频道的变现状态、YPP 资格和估计的广告收入等级。免费 YouTube 变现检查器 — 粘贴频道 URL 即可开始。",
+        keywords: ["youtube 频道", "youtube 频道搜索", "查找 youtube 频道", "youtube 标签", "youtube 话题标签"],
+      },
+      qrCodeGenerator: {
+        title: "YouTube 二维码生成器 — 免费品牌二维码",
+        description:
+          "为您的 YouTube 视频、频道和短视频创建品牌二维码 — 添加徽标和颜色，HD 导出。免费 YouTube 二维码生成器，无需注册。",
+        keywords: ["youtube 短视频", "youtube 视频", "youtube 频道", "二维码 youtube", "youtube qr"],
+      },
+      shortsIdeas: {
+        title: "YouTube 短视频创意 — 免费 AI 病毒式短视频概念",
+        description:
+          "生成病毒式 YouTube 短视频创意 — 针对 2026 年短视频算法调优的钩子、格式和循环结尾。适用于任何主题或领域的免费短视频创意生成器。",
+        keywords: ["youtube 短视频", "youtube 短视频标签", "短视频标签提取器", "短视频视频标签", "youtube 短视频的标签"],
+      },
+      tagGenerator: {
+        title: "YouTube 标签生成器 — 每个视频的免费 SEO 标签",
+        description:
+          "从任何主题生成 SEO 优化的 YouTube 标签 — 精确、广泛和长尾，在 500 字符限制内。免费 YouTube 标签生成器和提取器，无需注册。",
+        keywords: ["youtube 标签", "youtube 标签提取器", "标签查找器", "youtube 标签查找器", "youtube 视频的标签", "yt 标签"],
+      },
+      thumbnailDownloader: {
+        title: "YouTube 缩略图下载器 — 免费 HD 图像抓取器",
+        description:
+          "以 HD、完整或标准分辨率下载任何 YouTube 视频缩略图 — 免费、无需注册、无限。粘贴视频链接并立即抓取缩略图图像。",
+        keywords: ["youtube 缩略图", "youtube 缩略图", "youtube 视频缩略图", "下载 youtube 缩略图", "yt 缩略图"],
+      },
+      thumbnailPreview: {
+        title: "YouTube 缩略图预览 — 发布前测试",
+        description:
+          "在发布前预览您的 YouTube 缩略图在移动设备、桌面、搜索结果和短视频架上的呈现效果。免费缩略图预览和检查工具。",
+        keywords: ["youtube 缩略图", "youtube 缩略图", "youtube 视频缩略图", "缩略图测试", "缩略图检查器"],
+      },
+    },
+    blogPosts: {
+      "guide-to-yt-seo-grow": {
+        title: "2026 年 YouTube SEO 与增长完整指南",
+        description:
+          "一份关于 2026 年 YouTube SEO 的 1500 字指南 — 关键词研究、标题、缩略图、留存、互动信号以及今年重要的算法更新。",
+        keywords: ["youtube seo", "youtube 增长", "youtube 算法 2026", "视频优化", "关键词研究", "ctr", "留存"],
+      },
+      "youtube-cpm-rates-by-country": {
+        title: "各国 YouTube CPM 费率（2026 基准报告）",
+        description:
+          "2026 年 YouTube CPM 和 RPM 费率的各国细分 — 从最高付费市场（挪威、美国）到新兴市场（印度、巴西）— 包含领域基准以及如何最大化您的 RPM。",
+        keywords: ["youtube cpm", "youtube rpm", "各国 cpm", "youtube 变现", "广告收入", "youtube 收入"],
+      },
+      "ai-thumbnail-design-system": {
+        title: "顶级创作者在 2026 年使用的 AI 缩略图设计系统",
+        description:
+          "如何使用 AI 构建可重复的缩略图系统 — 焦点、对比度、文本层级和 A/B 测试 — 提升每个视频的点击率。",
+        keywords: ["youtube 缩略图", "ai 缩略图", "ctr", "缩略图设计"],
+      },
+      "youtube-algorithm-2026": {
+        title: "2026 年 YouTube 算法实际如何运作",
+        description:
+          "用通俗易懂的语言解析 2026 年 YouTube 推荐和排名系统 — 现在哪些信号重要，哪些不重要，以及如何与之保持一致。",
+        keywords: ["youtube 算法", "推荐系统", "youtube 排名"],
+      },
+      "hashtag-strategy-2026": {
+        title: "仍然有效的 2026 年 YouTube 话题标签策略",
+        description:
+          "2026 年 YouTube 话题标签还重要吗？是的 — 但前提是您将它们用作聚类工具，而不是垃圾信息渠道。这里是提升可发现性的确切格式。",
+        keywords: ["youtube 话题标签", "话题标签策略", "youtube 可发现性"],
+      },
+    },
+  },
 };

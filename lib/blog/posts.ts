@@ -10,6 +10,8 @@ import {
   Hash,
   Sparkles,
 } from "lucide-react";
+import type { Locale } from "@/lib/i18n/config";
+import { postTranslations } from "./translations";
 
 export type Block =
   | { type: "p"; text: string }
@@ -19,6 +21,16 @@ export type Block =
   | { type: "ol"; items: string[] }
   | { type: "quote"; text: string }
   | { type: "table"; head: string[]; rows: string[][] };
+
+/** Per-locale overlay for the localizable fields of a Post. */
+export type PostTranslation = {
+  title: string;
+  description: string;
+  keywords: string[];
+  authorRole: string;
+  readTime: string;
+  blocks: Block[];
+};
 
 export type Post = {
   slug: string;
@@ -36,6 +48,14 @@ export type Post = {
   image?: string;
   keywords: string[];
   blocks: Block[];
+};
+
+/**
+ * A Post with all localizable fields resolved for a specific locale.
+ * Falls back to the English base fields when no translation exists.
+ */
+export type LocalizedPost = Post & {
+  locale: Locale;
 };
 
 export const categories = [
@@ -694,4 +714,46 @@ export function getRelatedPosts(slug: string, limit = 3): Post[] {
       return bMatch - aMatch;
     })
     .slice(0, limit);
+}
+
+/**
+ * Resolve a post for a specific locale. The English base fields are always
+ * present; localizable fields (title, description, keywords, authorRole,
+ * readTime, blocks) are overlaid from the per-locale translation when one
+ * exists, otherwise they fall back to English.
+ */
+export function getPostLocalized(slug: string, locale: Locale): LocalizedPost | undefined {
+  const base = getPost(slug);
+  if (!base) return undefined;
+  const tr = postTranslations[slug]?.[locale] as PostTranslation | undefined;
+  return {
+    ...base,
+    locale,
+    title: tr?.title ?? base.title,
+    description: tr?.description ?? base.description,
+    keywords: tr?.keywords ?? base.keywords,
+    authorRole: tr?.authorRole ?? base.authorRole,
+    readTime: tr?.readTime ?? base.readTime,
+    blocks: tr?.blocks ?? base.blocks,
+  };
+}
+
+/**
+ * Related posts, localized. Same category-first ordering as getRelatedPosts,
+ * but each returned post has its fields resolved for the requested locale.
+ */
+export function getRelatedPostsLocalized(slug: string, locale: Locale, limit = 3): LocalizedPost[] {
+  const current = getPost(slug);
+  const pool = current
+    ? posts.filter((p) => p.slug !== slug)
+    : posts.slice();
+  const ordered = pool
+    .sort((a, b) => {
+      if (!current) return 0;
+      const aMatch = a.category === current.category ? 1 : 0;
+      const bMatch = b.category === current.category ? 1 : 0;
+      return bMatch - aMatch;
+    })
+    .slice(0, limit);
+  return ordered.map((p) => getPostLocalized(p.slug, locale)!).filter(Boolean);
 }

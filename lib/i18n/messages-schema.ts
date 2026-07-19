@@ -184,4 +184,49 @@ export type Messages = {
     desc: string;
     home: string;
   };
+  /** Localized SEO metadata (title / description / keywords) for each route. */
+  meta: {
+    home: MetaRoute;
+    features: MetaRoute;
+    pricing: MetaRoute;
+    demo: MetaRoute;
+    chat: MetaRoute;
+    blog: MetaRoute;
+    aiPolicy: MetaRoute;
+    privacy: MetaRoute;
+    terms: MetaRoute;
+    disclaimer: MetaRoute;
+    tools: {
+      seoAnalyzer: MetaRoute;
+      viralTitleGenerator: MetaRoute;
+      aiScriptWriter: MetaRoute;
+      aiThumbnailGenerator: MetaRoute;
+      aiTranscript: MetaRoute;
+      channelAnalytics: MetaRoute;
+      channelIdFinder: MetaRoute;
+      earningsCalculator: MetaRoute;
+      embedGenerator: MetaRoute;
+      hashtagGenerator: MetaRoute;
+      monetizationChecker: MetaRoute;
+      qrCodeGenerator: MetaRoute;
+      shortsIdeas: MetaRoute;
+      tagGenerator: MetaRoute;
+      thumbnailDownloader: MetaRoute;
+      thumbnailPreview: MetaRoute;
+    };
+    /** Blog-post metadata keyed by slug. */
+    blogPosts: {
+      "guide-to-yt-seo-grow": MetaRoute;
+      "youtube-cpm-rates-by-country": MetaRoute;
+      "ai-thumbnail-design-system": MetaRoute;
+      "youtube-algorithm-2026": MetaRoute;
+      "hashtag-strategy-2026": MetaRoute;
+    };
+  };
+};
+
+type MetaRoute = {
+  title: string;
+  description: string;
+  keywords: string[];
 };

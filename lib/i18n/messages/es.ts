@@ -428,4 +428,216 @@ export const es: Messages = {
     desc: "La página que buscas no existe o ha sido movida.",
     home: "Volver al inicio",
   },
+  meta: {
+    home: {
+      title: "YTForge — Herramientas gratuitas de YouTube y kit de IA para creadores",
+      description:
+        "YTForge es un kit de herramientas con IA para creadores de YouTube — generadores de títulos, guionista con IA, herramientas de miniaturas, analizador SEO, analítica de canales, verificador de monetización y calculadora de ingresos en un solo lugar.",
+      keywords: [
+        "herramientas youtube",
+        "extractor de etiquetas youtube",
+        "generador de títulos youtube",
+        "seo youtube",
+        "guionista ia",
+        "descargar miniatura",
+        "analítica de canal",
+        "verificador de monetización",
+        "calculadora de ingresos",
+      ],
+    },
+    features: {
+      title: "Herramientas de YouTube y funciones de IA que todo creador necesita en 2026",
+      description:
+        "Explora más de 30 herramientas gratuitas de YouTube y funciones de IA — generadores de títulos, guionistas, creadores de miniaturas, analizador SEO, analítica de canales y herramientas de monetización para creadores de 2026.",
+      keywords: ["herramientas youtube", "buscar canal youtube", "extractor de palabras clave youtube", "metadatos youtube", "título de video", "descripción de video youtube"],
+    },
+    pricing: {
+      title: "Precios de herramientas de YouTube gratis y Pro — Empieza a crecer hoy",
+      description:
+        "Precios simples para todo creador de YouTube. Empieza gratis con generadores de títulos, herramientas de etiquetas y analizador SEO; mejora para guiones con IA, miniaturas y analítica de canales. Sin tarjeta de crédito para empezar.",
+      keywords: ["herramientas youtube", "extractor de etiquetas youtube", "hashtags youtube", "palabras clave youtube", "encontrar canal youtube"],
+    },
+    demo: {
+      title: "Mira la demo de las herramientas de YouTube — Títulos, guiones y miniaturas con IA",
+      description:
+        "Ve las herramientas de YouTube de YTForge en acción — generación de títulos con IA, escritura de guiones, diseño de miniaturas, auditorías SEO y analítica de canales. Mira la demo completa y empieza gratis en minutos.",
+      keywords: ["herramientas youtube", "shorts youtube", "videos youtube", "etiquetas youtube", "miniatura youtube", "descripción de video youtube"],
+    },
+    chat: {
+      title: "Coach de IA para crecimiento en YouTube — Chat gratuito de estrategia para creadores",
+      description:
+        "Chatea gratis con un coach de IA para crecimiento en YouTube. Recibe consejos personalizados sobre títulos, miniaturas, SEO, retención y monetización — respuestas ajustadas al algoritmo de YouTube de 2026 en segundos.",
+      keywords: ["herramientas youtube", "búsqueda youtube", "contenido youtube", "palabras clave youtube", "metadatos youtube", "búsqueda de videos youtube"],
+    },
+    blog: {
+      title: "Blog de YTForge — Guías de crecimiento, SEO y monetización en YouTube",
+      description:
+        "El blog de YouTube para creadores: estudios de caso virales, actualizaciones del algoritmo, guías de SEO y benchmarks de CPM por país. Las tácticas exactas que usan los mejores creadores, escritas por el equipo de YTForge.",
+      keywords: [
+        "blog youtube",
+        "contenido youtube",
+        "metadatos youtube",
+        "herramientas youtube",
+        "seo youtube",
+        "crecimiento youtube",
+        "cpm youtube",
+        "algoritmo youtube",
+        "tácticas creadores",
+      ],
+    },
+    aiPolicy: {
+      title: "Política de IA — Cómo YTForge usa la IA y tus datos",
+      description:
+        "Política de IA de YTForge: qué modelos impulsan nuestras herramientas, cómo manejamos tus prompts y contenido, tus derechos sobre el contenido generado por IA y nuestros compromisos de seguridad.",
+      keywords: ["herramientas youtube", "política ia", "transcripción ia", "guionista ia", "generador de miniaturas ia", "contenido youtube"],
+    },
+    privacy: {
+      title: "Política de privacidad — Cómo protegemos los datos de los creadores",
+      description:
+        "Política de privacidad de YTForge: qué datos recopilamos, cómo los usamos, cifrado en tránsito y en reposo, compromisos de entrenamiento de IA, tus derechos y cómo contactar a nuestro DPO.",
+      keywords: ["herramientas youtube", "política de privacidad", "datos de creadores", "política ia"],
+    },
+    terms: {
+      title: "Términos del servicio — Reglas del kit para creadores de YouTube",
+      description:
+        "Términos del servicio de YTForge: responsabilidades de la cuenta, uso aceptable, derechos del contenido generado por IA, suscripciones, reembolsos y responsabilidad de nuestro kit para creadores de YouTube.",
+      keywords: ["herramientas youtube", "términos del servicio", "kit para creadores"],
+    },
+    disclaimer: {
+      title: "Aviso legal — Herramientas de IA para YouTube y política sin garantías",
+      description:
+        "Aviso legal de YTForge: precisión del contenido generado por IA, sin resultados garantizados de YouTube, estimaciones de ingresos, precisión de analítica, contenido de terceros y notas de cumplimiento de YouTube.",
+      keywords: ["herramientas youtube", "aviso legal", "herramientas ia", "contenido youtube"],
+    },
+    tools: {
+      seoAnalyzer: {
+        title: "Analizador SEO de YouTube — Auditoría SEO gratuita de videos y canales",
+        description:
+          "Audita cualquier video o canal de YouTube para SEO en segundos — título, descripción, etiquetas, capítulos y oportunidades de ranking. Analizador y verificador SEO gratuito de YouTube.",
+        keywords: ["etiquetas seo para videos youtube", "etiquetas youtube", "palabras clave youtube", "extractor de palabras clave youtube", "etiquetas de ranking", "metadatos youtube"],
+      },
+      viralTitleGenerator: {
+        title: "Generador de títulos virales de YouTube — Ideas de títulos con IA gratis",
+        description:
+          "Genera títulos virales y optimizados para SEO de YouTube en segundos. Generador gratuito de títulos con IA con puntuación CTR integrada y palabras clave al inicio — obtén títulos atractivos para cualquier nicho.",
+        keywords: ["título de video", "título de video youtube", "extractor de títulos youtube", "títulos atractivos", "mejores títulos youtube"],
+      },
+      aiScriptWriter: {
+        title: "Guionista con IA — Guiones gratuitos de videos de YouTube en segundos",
+        description:
+          "Escribe guiones de YouTube optimizados para retención con IA — gancho, promesa, interrupciones de patrón y un solo CTA. Guionista con IA gratuito para cualquier tono, longitud e idioma.",
+        keywords: ["descripción de video youtube", "descripción youtube", "descripción de video para youtube", "descripción de video yt", "descripción de video de youtube"],
+      },
+      aiThumbnailGenerator: {
+        title: "Generador de miniaturas de YouTube con IA — Diseños de alto CTR gratis",
+        description:
+          "Genera miniaturas de YouTube irresistibles con IA — 4 variantes de alto CTR por prompt, exportación PNG en HD a 1280x720. Generador de miniaturas con IA con transferencia de estilo y exportación por capas.",
+        keywords: ["miniatura youtube", "miniatura youtube", "miniatura de video youtube", "creador de miniaturas", "generador de miniaturas", "miniatura ia"],
+      },
+      aiTranscript: {
+        title: "Transcripción de YouTube con IA — Transcripciones y traducción gratuitas",
+        description:
+          "Extrae, traduce y busca transcripciones de videos de YouTube a más de 100 idiomas con precisión de IA. Herramienta gratuita de transcripción con IA — pega un enlace y obtén la transcripción completa al instante.",
+        keywords: ["descripción de video youtube", "descripción de video de youtube", "descripción de video para youtube", "metadatos youtube", "contenido youtube", "descripción de video yt"],
+      },
+      channelAnalytics: {
+        title: "Analítica de canal de YouTube — Estadísticas gratuitas para cualquier canal",
+        description:
+          "Obtén analítica en vivo de cualquier canal de YouTube — suscriptores, vistas, tiempo de visualización, videos principales y velocidad de crecimiento — desde cualquier URL de canal. Herramienta gratuita de analítica de canales, sin registro.",
+        keywords: ["buscar canal youtube", "encontrar canal youtube", "buscar youtube por canal", "buscar un canal en youtube", "canal youtube"],
+      },
+      channelIdFinder: {
+        title: "Buscador de ID de canal de YouTube — Búsqueda gratuita de ID, RSS y URL",
+        description:
+          "Encuentra cualquier ID de canal de YouTube, feed RSS y URL canónica desde un enlace de video, @handle o URL de canal. Buscador gratuito de ID de canal — identificador UC permanente en segundos.",
+        keywords: ["encontrar canal youtube", "buscar canal youtube", "buscar youtube por canal", "buscar un canal en youtube", "canal youtube"],
+      },
+      earningsCalculator: {
+        title: "Calculadora de ingresos de YouTube — Estimación gratuita de ingresos de AdSense",
+        description:
+          "Estima los ingresos de AdSense de YouTube a partir de tus vistas, mix de países, nicho y RPM. Calculadora gratuita de ingresos y CPM de YouTube — proyecciones de ingresos mensuales y anuales al instante.",
+        keywords: ["canal youtube", "etiquetas youtube", "hashtags youtube", "palabras clave youtube", "buscar canal youtube", "encontrar canal youtube"],
+      },
+      embedGenerator: {
+        title: "Generador de embeds de YouTube — Códigos de embed responsivos gratis",
+        description:
+          "Genera códigos de embed de YouTube responsivos y con privacidad mejorada con dimensiones personalizadas, tiempos de inicio y subtítulos. Generador gratuito de códigos de embed para sitios web y blogs.",
+        keywords: ["videos youtube", "video youtube video", "insertar video youtube", "código embed youtube", "insertar video"],
+      },
+      hashtagGenerator: {
+        title: "Generador de hashtags de YouTube — Hashtags populares gratis",
+        description:
+          "Genera hashtags relevantes de YouTube a partir de cualquier tema — ajustados para alcance sin spam ni repetición. Generador gratuito de hashtags de YouTube con extractor y sugerencias populares.",
+        keywords: ["hashtags youtube", "extractor de hashtags youtube", "hashtags en videos youtube", "buscar hashtags youtube", "etiquetas shorts youtube"],
+      },
+      monetizationChecker: {
+        title: "Verificador de monetización de YouTube — ¿Está monetizado un canal?",
+        description:
+          "Verifica el estado de monetización, la elegibilidad para YPP y el nivel estimado de ingresos por anuncios de cualquier canal de YouTube en segundos. Verificador gratuito de monetización de YouTube — pega una URL de canal para empezar.",
+        keywords: ["canal youtube", "buscar canal youtube", "encontrar canal youtube", "etiquetas youtube", "hashtags youtube"],
+      },
+      qrCodeGenerator: {
+        title: "Generador de códigos QR de YouTube — Códigos QR de marca gratis",
+        description:
+          "Crea códigos QR de marca para tus videos, canales y Shorts de YouTube — añade logotipos y colores, exporta en HD. Generador gratuito de códigos QR de YouTube, sin registro.",
+        keywords: ["shorts youtube", "videos youtube", "canal youtube", "código qr youtube", "qr youtube"],
+      },
+      shortsIdeas: {
+        title: "Ideas para Shorts de YouTube — Conceptos virales gratuitos con IA",
+        description:
+          "Genera ideas virales para Shorts de YouTube — ganchos, formatos y finales en bucle ajustados al algoritmo de Shorts en 2026. Generador gratuito de ideas de Shorts para cualquier tema o nicho.",
+        keywords: ["shorts youtube", "etiquetas shorts youtube", "extractor de etiquetas shorts", "etiquetas de videos shorts", "etiquetas para shorts youtube"],
+      },
+      tagGenerator: {
+        title: "Generador de etiquetas de YouTube — Etiquetas SEO gratis para cada video",
+        description:
+          "Genera etiquetas de YouTube optimizadas para SEO a partir de cualquier tema — exactas, amplias y de cola larga, dentro del límite de 500 caracteres. Generador y extractor gratuito de etiquetas de YouTube, sin registro.",
+        keywords: ["etiquetas youtube", "extractor de etiquetas youtube", "buscador de etiquetas", "buscador de etiquetas youtube", "etiquetas para videos youtube", "etiquetas yt"],
+      },
+      thumbnailDownloader: {
+        title: "Descargador de miniaturas de YouTube — Descarga gratuita de imágenes HD",
+        description:
+          "Descarga cualquier miniatura de video de YouTube en resolución HD, completa o estándar — gratis, sin registro, ilimitado. Pega un enlace de video y descarga la miniatura al instante.",
+        keywords: ["miniatura youtube", "miniatura youtube", "miniatura de video youtube", "descargar miniatura youtube", "miniatura yt"],
+      },
+      thumbnailPreview: {
+        title: "Vista previa de miniaturas de YouTube — Prueba antes de publicar",
+        description:
+          "Previsualiza cómo se renderiza tu miniatura de YouTube en móvil, escritorio, resultados de búsqueda y la estantería de Shorts antes de publicar. Herramienta gratuita de vista previa y verificación de miniaturas.",
+        keywords: ["miniatura youtube", "miniatura youtube", "miniatura de video youtube", "prueba de miniatura", "verificador de miniaturas"],
+      },
+    },
+    blogPosts: {
+      "guide-to-yt-seo-grow": {
+        title: "La guía completa de SEO y crecimiento en YouTube en 2026",
+        description:
+          "Una guía de 1.500 palabras sobre SEO en YouTube en 2026 — investigación de palabras clave, títulos, miniaturas, retención, señales de engagement y las actualizaciones del algoritmo que importan este año.",
+        keywords: ["seo youtube", "crecimiento youtube", "algoritmo youtube 2026", "optimización de video", "investigación de palabras clave", "ctr", "retención"],
+      },
+      "youtube-cpm-rates-by-country": {
+        title: "Tasas de CPM de YouTube por país (Informe de referencia 2026)",
+        description:
+          "Un desglose por país de las tasas de CPM y RPM de YouTube para 2026 — desde los mercados mejor pagados (Noruega, EE. UU.) hasta los emergentes (India, Brasil) — con benchmarks por nicho y cómo maximizar tu RPM.",
+        keywords: ["cpm youtube", "rpm youtube", "cpm por país", "monetización youtube", "ingresos por anuncios", "ingresos youtube"],
+      },
+      "ai-thumbnail-design-system": {
+        title: "El sistema de diseño de miniaturas con IA que usan los mejores creadores en 2026",
+        description:
+          "Cómo construir un sistema de miniaturas repetible con IA — punto focal, contraste, jerarquía de texto y pruebas A/B — que aumenta el CTR en cada video.",
+        keywords: ["miniaturas youtube", "miniatura ia", "ctr", "diseño de miniaturas"],
+      },
+      "youtube-algorithm-2026": {
+        title: "Cómo funciona realmente el algoritmo de YouTube en 2026",
+        description:
+          "Una explicación sencilla de los sistemas de recomendación y ranking de YouTube en 2026 — qué señales importan ahora, cuáles no y cómo alinearte con ellas.",
+        keywords: ["algoritmo youtube", "sistema de recomendación", "ranking youtube"],
+      },
+      "hashtag-strategy-2026": {
+        title: "La estrategia de hashtags de YouTube 2026 que sigue funcionando",
+        description:
+          "¿Importan todavía los hashtags de YouTube en 2026? Sí — pero solo si los usas como herramienta de agrupación, no de spam. Aquí está el formato exacto que aumenta la descubribilidad.",
+        keywords: ["hashtags youtube", "estrategia de hashtags", "descubribilidad youtube"],
+      },
+    },
+  },
 };

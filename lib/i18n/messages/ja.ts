@@ -428,4 +428,216 @@ export const ja: Messages = {
     desc: "お探しのページは存在しないか、移動されました。",
     home: "ホームに戻る",
   },
+  meta: {
+    home: {
+      title: "YTForge — 無料YouTubeツール & AIクリエイターツールキット",
+      description:
+        "YTForgeはAI搭載のYouTubeクリエイターツールキット — タイトルジェネレーター、AIスクリプトライター、サムネイルツール、SEOアナライザー、チャンネル分析、収益化チェッカー、収益計算機をすべて一箇所に。",
+      keywords: [
+        "youtube ツール",
+        "youtube タグ抽出",
+        "youtube タイトル生成",
+        "youtube seo",
+        "ai スクリプトライター",
+        "youtube サムネイル ダウンロード",
+        "チャンネル分析",
+        "収益化チェッカー",
+        "収益計算機",
+      ],
+    },
+    features: {
+      title: "2026年のクリエイターに必要なYouTubeツール & AI機能",
+      description:
+        "30以上の無料YouTubeツールとAI機能を探索 — タイトルジェネレーター、スクリプトライター、サムネイルメーカー、SEOアナライザー、チャンネル分析、収益化ツール、2026年のクリエイター向けに構築。",
+      keywords: ["youtube ツール", "youtube チャンネル検索", "youtube キーワード抽出", "youtube メタ", "動画タイトル", "youtube 動画説明文"],
+    },
+    pricing: {
+      title: "無料 & Pro YouTubeツールの料金 — 今日から成長を始めよう",
+      description:
+        "すべてのYouTubeクリエイター向けのシンプルな料金体系。タイトルジェネレーター、タグツール、SEOアナライザーで無料で始めよう。AIスクリプト、サムネイル、チャンネル分析のためにアップグレード。開始にクレジットカードは不要。",
+      keywords: ["youtube ツール", "youtube タグ抽出", "youtube ハッシュタグ", "youtube キーワード", "youtube チャンネル検索"],
+    },
+    demo: {
+      title: "YouTubeツールのデモをご覧ください — AIタイトル、スクリプト & サムネイル",
+      description:
+        "YTForgeのYouTubeツールの動作をご覧ください — AIタイトル生成、スクリプト作成、サムネイルデザイン、SEO監査、チャンネル分析。フルデモを観て数分で無料で始めましょう。",
+      keywords: ["youtube ツール", "youtube short", "youtube 動画", "youtube タグ", "youtube サムネイル", "youtube 動画説明文"],
+    },
+    chat: {
+      title: "AI YouTube成長コーチ — 無料クリエイター戦略チャット",
+      description:
+        "AIのYouTube成長コーチと無料でチャット。タイトル、サムネイル、SEO、維持率、収益化に関するカスタマイズされたアドバイスを取得 — 2026年のYouTubeアルゴリズムに最適化された回答を数秒で。",
+      keywords: ["youtube ツール", "youtube 検索", "youtube コンテンツ", "youtube キーワード", "youtube メタ", "youtube 動画検索"],
+    },
+    blog: {
+      title: "YTForgeブログ — YouTube成長、SEO & 収益化ガイド",
+      description:
+        "クリエイターのためのYouTubeブログ：バイラル事例、アルゴリズムの更新、SEOプレイブック、国別CPMベンチマーク。トップクリエイターが使う具体的な戦術をYTForgeチームが執筆。",
+      keywords: [
+        "youtube ブログ",
+        "youtube コンテンツ",
+        "youtube メタ",
+        "youtube ツール",
+        "youtube seo",
+        "youtube 成長",
+        "youtube cpm",
+        "youtube アルゴリズム",
+        "クリエイター 戦術",
+      ],
+    },
+    aiPolicy: {
+      title: "AIポリシー — YTForgeがAIとあなたのデータをどう使うか",
+      description:
+        "YTForgeのAIポリシー：どのモデルがツールを動かしているか、プロンプトとコンテンツの取り扱い方法、AI生成出力に対するあなたの権利、そして安全性へのコミットメント。",
+      keywords: ["youtube ツール", "ai ポリシー", "ai 文字起こし", "ai スクリプトライター", "ai サムネイル生成", "youtube コンテンツ"],
+    },
+    privacy: {
+      title: "プライバシーポリシー — クリエイターデータの保護方法",
+      description:
+        "YTForgeプライバシーポリシー：収集するデータ、その利用方法、転送時と保存時の暗号化、AI訓練に対するコミットメント、あなたの権利、DPOへの連絡方法。",
+      keywords: ["youtube ツール", "プライバシーポリシー", "クリエイターデータ", "ai ポリシー"],
+    },
+    terms: {
+      title: "利用規約 — YouTubeクリエイターツールキットのルール",
+      description:
+        "YTForge利用規約：アカウントの責任、利用条件、AI生成コンテンツの権利、サブスクリプション、返金、YouTubeクリエイターツールキットの責任範囲。",
+      keywords: ["youtube ツール", "利用規約", "クリエイターツールキット"],
+    },
+    disclaimer: {
+      title: "免責事項 — AI YouTubeツール & 保証なしポリシー",
+      description:
+        "YTForge免責事項：AI生成出力の精度、YouTube結果の保証なし、収益推定、分析精度、サードパーティコンテンツ、YouTubeコンプライアンスに関する注意事項。",
+      keywords: ["youtube ツール", "免責事項", "ai ツール", "youtube コンテンツ"],
+    },
+    tools: {
+      seoAnalyzer: {
+        title: "YouTube SEOアナライザー — 無料動画 & チャンネルSEO監査",
+        description:
+          "任意のYouTube動画またはチャンネルのSEOを数秒で監査 — タイトル、説明文、タグ、チャプター、ランク付けの機会。無料YouTube SEOアナライザー & チェッカーツール。",
+        keywords: ["youtube 動画 seo タグ", "youtube タグ", "youtube キーワード", "youtube キーワード抽出", "ランキングタグ", "youtube メタ"],
+      },
+      viralTitleGenerator: {
+        title: "バイラルYouTubeタイトルジェネレーター — 無料AIタイトルアイデア",
+        description:
+          "バイラルでSEO最適化されたYouTubeタイトルを数秒で生成。CTRスコアリングとキーワード先頭配置を内蔵した無料AIタイトルジェネレーター — あらゆるニッチ向けのクリックworthyタイトルを取得。",
+        keywords: ["動画タイトル", "youtube 動画タイトル", "youtube 動画タイトル抽出", "キャッチーな動画タイトル", "youtube タイトル 作り方"],
+      },
+      aiScriptWriter: {
+        title: "AIスクリプトライター — 数秒で無料YouTube動画スクリプト",
+        description:
+          "AIで維持率最適化のYouTubeスクリプトを作成 — フック、プロミス、パターンインタラプト、そして単一のCTA。あらゆるトーン、長さ、言語向けの無料AIスクリプトライター。",
+        keywords: ["youtube 動画説明文", "youtube 説明文", "youtube 動画 説明文の書き方", "youtube 動画 説明文 例", "youtube 動画説明文 テンプレート"],
+      },
+      aiThumbnailGenerator: {
+        title: "AI YouTubeサムネイルジェネレーター — 無料高CTRデザイン",
+        description:
+          "AIでクリックを誘引するYouTubeサムネイルを生成 — プロンプトごとに4つの高CTRバリアント、HD PNG書き出し（1280x720）。スタイル転送とレイヤー書き出しを備えたAIサムネイルジェネレーター。",
+        keywords: ["youtube サムネイル", "youtube サムネイル 作成", "youtube 動画サムネイル", "サムネイルメーカー", "サムネイルクリエイター", "ai サムネイル"],
+      },
+      aiTranscript: {
+        title: "AI YouTube文字起こし — 無料動画トランスクリプト & 翻訳",
+        description:
+          "YouTube動画のトランスクリプトをAI精度で100以上の言語に抽出・翻訳・検索。無料AI文字起こしソール — リンクを貼るだけで即座に全文トランスクリプトを取得。",
+        keywords: ["youtube 動画説明文", "youtube 動画 説明文", "youtube 動画 説明文の書き方", "youtube メタ", "youtube コンテンツ", "youtube 動画説明文 例"],
+      },
+      channelAnalytics: {
+        title: "YouTubeチャンネル分析 — 任意のチャンネルの無料統計",
+        description:
+          "任意のチャンネルURLからライブのYouTubeチャンネル分析を取得 — 登録者、再生回数、視聴時間、トップ動画、成長速度。無料チャンネル分析ソール、登録不要。",
+        keywords: ["youtube チャンネル検索", "youtube チャンネル 探し方", "youtube チャンネル 検索方法", "youtube チャンネルを探す", "youtube チャンネル"],
+      },
+      channelIdFinder: {
+        title: "YouTubeチャンネルIDファインダー — 無料ID、RSS & URL検索",
+        description:
+          "動画リンク、@ハンドル、チャンネルURLから任意のYouTubeチャンネルID、RSSフィード、正規URLを検索。無料チャンネルIDファインダー — 数秒で永続的なUC識別子を取得。",
+        keywords: ["youtube チャンネル 探し方", "youtube チャンネル検索", "youtube チャンネル 検索方法", "youtube チャンネルを探す", "youtube チャンネル"],
+      },
+      earningsCalculator: {
+        title: "YouTube収益計算機 — 無料AdSense収益推定",
+        description:
+          "再生回数、国別ミックス、ニッチ、RPMからYouTube AdSense収益を推定。無料YouTube収益 & CPM計算機 — 即座に月間・年間収益予測を取得。",
+        keywords: ["youtube チャンネル", "youtube タグ", "youtube ハッシュタグ", "youtube キーワード", "youtube チャンネル検索", "youtube チャンネル 探し方"],
+      },
+      embedGenerator: {
+        title: "YouTube埋め込みジェネレーター — 無料レスポンシブ埋め込みコード",
+        description:
+          "カスタム寸法、開始時刻、キャプションを備えたレスポンシブでプライバシー強化されたYouTube埋め込みコードを生成。ウェブサイトやブログ向けの無料埋め込みコードジェネレーター。",
+        keywords: ["youtube 動画", "youtube 動画 埋め込み", "youtube 動画 埋め込み方", "youtube 埋め込みコード", "動画 埋め込み"],
+      },
+      hashtagGenerator: {
+        title: "YouTubeハッシュタグジェネレーター — 無料トレンドハッシュタグ",
+        description:
+          "任意のトピックから関連するYouTubeハッシュタグを生成 — スパムや重複なしにリーチを最大化。抽出器とトレンド提案を備えた無料YouTubeハッシュタグジェネレーター。",
+        keywords: ["youtube ハッシュタグ", "youtube ハッシュタグ 抽出", "youtube 動画 ハッシュタグ", "youtube ハッシュタグ 検索", "youtube short タグ"],
+      },
+      monetizationChecker: {
+        title: "YouTube収益化チェッカー — チャンネルは収益化されているか？",
+        description:
+          "任意のYouTubeチャンネルの収益化ステータス、YPP適格性、推定広告収益ティアを数秒でチェック。無料YouTube収益化チェッカー — チャンネルURLを貼り付けて開始。",
+        keywords: ["youtube チャンネル", "youtube チャンネル検索", "youtube チャンネル 探し方", "youtube タグ", "youtube ハッシュタグ"],
+      },
+      qrCodeGenerator: {
+        title: "YouTube QRコードジェネレーター — 無料ブランドQRコード",
+        description:
+          "YouTube動画、チャンネル、Shorts向けのブランドQRコードを作成 — ロゴやカラーを追加してHDで書き出し。無料YouTube QRコードジェネレーター、登録不要。",
+        keywords: ["youtube short", "youtube 動画", "youtube チャンネル", "qr コード youtube", "youtube qr"],
+      },
+      shortsIdeas: {
+        title: "YouTube Shortsアイデア — 無料AIバイラルショートコンセプト",
+        description:
+          "バイラルYouTube Shortsアイデアを生成 — 2026年のShortsアルゴリズム向けに調整されたフック、フォーマット、ループエンディング。あらゆるトピックやニッチ向けの無料Shortsアイデアジェネレーター。",
+        keywords: ["youtube short", "youtube short タグ", "shorts タグ抽出", "shorts 動画タグ", "youtube short タグの付け方"],
+      },
+      tagGenerator: {
+        title: "YouTubeタグジェネレーター — あらゆる動画の無料SEOタグ",
+        description:
+          "任意のトピックからSEO最適化されたYouTubeタグを生成 — 完全一致、広域、ロングテール、500文字制限内。無料YouTubeタグジェネレーター & 抽出ツール、登録不要。",
+        keywords: ["youtube タグ", "youtube タグ抽出", "タグ検索", "youtube タグ 探し方", "youtube 動画タグ", "youtube タグ 一覧"],
+      },
+      thumbnailDownloader: {
+        title: "YouTubeサムネイルダウンローダー — 無料HD画像取得",
+        description:
+          "任意のYouTube動画のサムネイルをHD、フル、標準解像度でダウンロード — 無料、登録不要、無制限。動画リンクを貼り付けてサムネイル画像を即座に取得。",
+        keywords: ["youtube サムネイル", "youtube サムネイル 保存", "youtube 動画サムネイル", "youtube サムネイル ダウンロード", "youtube サムネイル 画像"],
+      },
+      thumbnailPreview: {
+        title: "YouTubeサムネイルプレビュー — 公開前にテスト",
+        description:
+          "公開前にYouTubeサムネイルがモバイル、デスクトップ、検索結果、Shorts棚でどう表示されるかをプレビュー。無料サムネイルプレビュー & チェッカーツール。",
+        keywords: ["youtube サムネイル", "youtube サムネイル 確認", "youtube 動画サムネイル", "サムネイル テスト", "サムネイル チェッカー"],
+      },
+    },
+    blogPosts: {
+      "guide-to-yt-seo-grow": {
+        title: "2026年のYouTube SEO & 成長の完全ガイド",
+        description:
+          "2026年のYouTube SEOに関する1,500語のプレイブック — キーワード調査、タイトル、サムネイル、維持率、エンゲージメントシグナル、そして今年重要なアルゴリズム更新。",
+        keywords: ["youtube seo", "youtube 成長", "youtube アルゴリズム 2026", "動画最適化", "キーワード調査", "CTR", "維持率"],
+      },
+      "youtube-cpm-rates-by-country": {
+        title: "国別YouTube CPMレート（2026ベンチマークレポート）",
+        description:
+          "2026年の国別YouTube CPM・RPMレートの内訳 — 最高収益市場（ノルウェー、アメリカ）から新興市場（インド、ブラジル）まで — ニッチベンチマークとRPM最大化の方法。",
+        keywords: ["youtube cpm", "youtube rpm", "国別 cpm", "youtube 収益化", "広告収入", "youtube 収益"],
+      },
+      "ai-thumbnail-design-system": {
+        title: "2026年のトップクリエイターが使うAIサムネイルデザインシステム",
+        description:
+          "AIで再現可能なサムネイルシステムの構築方法 — 焦点、コントラスト、テキスト階層、A/Bテスト — すべての動画でCTRを向上させる。",
+        keywords: ["youtube サムネイル", "ai サムネイル", "CTR", "サムネイルデザイン"],
+      },
+      "youtube-algorithm-2026": {
+        title: "2026年のYouTubeアルゴリズムの仕組みを徹底解説",
+        description:
+          "2026年のYouTubeのレコメンドとランキングシステムを平易な言葉で解説 — 今何が重要で、何が重要でなく、どう戦略を合わせるか。",
+        keywords: ["youtube アルゴリズム", "レコメンドシステム", "youtube ランキング"],
+      },
+      "hashtag-strategy-2026": {
+        title: "2026年も機能するYouTubeハッシュタグ戦略",
+        description:
+          "2026年にYouTubeハッシュタグはまだ意味がある？はい — ただしスパムチャンネルではなくクラスタリングソールとして使う場合。発見を高める正確なフォーマットを解説。",
+        keywords: ["youtube ハッシュタグ", "ハッシュタグ戦略", "youtube 発見性"],
+      },
+    },
+  },
 };

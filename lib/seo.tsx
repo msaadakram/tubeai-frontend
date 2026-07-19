@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import { defaultLocale, locales, type Locale } from "@/lib/i18n/config";
+import { getMessages } from "@/lib/i18n/messages";
+
+/** One localized route's metadata: title + description + keyword list. */
+type MetaRoute = { title: string; description: string; keywords: string[] };
 
 export const SITE_NAME = "YTForge";
+export const SITE_ALTERNATE_NAME = "YTForge — YouTube Tools";
 export const SITE_URL = "https://ytforge.app";
 export const SITE_TAGLINE = "AI-Powered YouTube Creator Toolkit";
 export const SITE_DESCRIPTION =
   "YTForge is an AI-powered YouTube creator toolkit — title generators, AI script writer, thumbnail tools, SEO analyzer, channel analytics, monetization checker, and earnings calculator in one place.";
 
 export const ORG_LOGO = "/logo.png";
+export const ORG_LOGO_WIDTH = 512;
+export const ORG_LOGO_HEIGHT = 512;
 
 export type PageType = "website" | "article" | "product" | "app";
 
@@ -93,17 +100,114 @@ export function buildMetadata({
   };
 }
 
+/**
+ * Resolve a single route's localized metadata (title / description / keywords)
+ * from the messages catalog by dotted route key, e.g. "tools.seoAnalyzer" or
+ * "features" or "blogPosts.guide-to-yt-seo-grow". Falls back to English if a
+ * locale is missing the entry (defensive — schema guarantees presence).
+ */
+function resolveMetaRoute(locale: Locale, routeKey: string): MetaRoute {
+  const messages = getMessages(locale);
+  const meta = messages.meta as unknown as Record<string, unknown>;
+  const parts = routeKey.split(".");
+  let node: unknown = meta;
+  for (const p of parts) {
+    if (node && typeof node === "object" && p in (node as Record<string, unknown>)) {
+      node = (node as Record<string, unknown>)[p];
+    } else {
+      node = undefined;
+      break;
+    }
+  }
+  const found = node as MetaRoute | undefined;
+  if (found && found.title && found.description) return found;
+  // Fallback to English.
+  const enMeta = getMessages(defaultLocale).meta as unknown as Record<string, unknown>;
+  let enNode: unknown = enMeta;
+  for (const p of parts) {
+    enNode = (enNode as Record<string, unknown>)?.[p];
+  }
+  return enNode as MetaRoute;
+}
+
+export type BuildLocalizedMetadataInput = {
+  /** Locale code, e.g. "es", "ja", "en". */
+  locale: string;
+  /** Dotted path into the `meta` messages block, e.g. "tools.seoAnalyzer". */
+  routeKey: string;
+  /** Path without locale prefix, e.g. "/tools/seo-analyzer". Use "/" for home. */
+  path: string;
+  type?: PageType;
+  image?: string;
+  noindex?: boolean;
+  publishedTime?: string;
+  modifiedTime?: string;
+  authors?: string[];
+};
+
+/**
+ * Build locale-aware Metadata for a route. Reads the translated
+ * title / description / keywords from the messages catalog so each locale's
+ * <title>, <meta description>, <meta keywords>, og:* and hreflang are emitted
+ * in the right language.
+ */
+export function buildLocalizedMetadata({
+  locale,
+  routeKey,
+  path,
+  type,
+  image,
+  noindex,
+  publishedTime,
+  modifiedTime,
+  authors,
+}: BuildLocalizedMetadataInput): Metadata {
+  const resolvedLocale: Locale = (locales as readonly string[]).includes(locale)
+    ? (locale as Locale)
+    : defaultLocale;
+  const { title, description, keywords } = resolveMetaRoute(resolvedLocale, routeKey);
+  return buildMetadata({
+    title,
+    description,
+    keywords,
+    path,
+    type,
+    locale: resolvedLocale,
+    image,
+    noindex,
+    publishedTime,
+    modifiedTime,
+    authors,
+  });
+}
+
 // ---------------------------------------------------------------------------
 // JSON-LD builders
 // ---------------------------------------------------------------------------
+
+/**
+ * Full ImageObject for the Organization logo. Google's site-name / favicon
+ * pipelines prefer an explicit ImageObject with width & height over a bare URL.
+ */
+export function logoImageObject() {
+  return {
+    "@type": "ImageObject",
+    url: `${SITE_URL}${ORG_LOGO}`,
+    width: { "@type": "QuantitativeValue", value: ORG_LOGO_WIDTH },
+    height: { "@type": "QuantitativeValue", value: ORG_LOGO_HEIGHT },
+  };
+}
 
 export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
+    alternateName: SITE_ALTERNATE_NAME,
     url: SITE_URL,
-    logo: `${SITE_URL}${ORG_LOGO}`,
+    logo: logoImageObject(),
+    image: logoImageObject(),
     description: SITE_DESCRIPTION,
     sameAs: [
       "https://twitter.com/ytforge",
@@ -113,14 +217,37 @@ export function organizationJsonLd() {
   };
 }
 
-export function websiteJsonLd() {
+/** Map of locale codes to BCP-47 / schema.org inLanguage values. */
+const LOCALE_TO_BCP47: Record<string, string> = {
+  en: "en-US",
+  es: "es-ES",
+  de: "de-DE",
+  fr: "fr-FR",
+  it: "it-IT",
+  ja: "ja-JP",
+  ko: "ko-KR",
+  tr: "tr-TR",
+  zh: "zh-CN",
+};
+
+export function websiteJsonLd(locale?: string) {
+  const logo = logoImageObject();
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
+    alternateName: SITE_ALTERNATE_NAME,
     url: SITE_URL,
     description: SITE_TAGLINE,
-    publisher: { "@type": "Organization", name: SITE_NAME },
+    inLanguage: locale ? (LOCALE_TO_BCP47[locale] ?? locale) : "en-US",
+    publisher: {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo,
+    },
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -173,7 +300,7 @@ export function articleJsonLd(input: {
     datePublished: input.datePublished,
     dateModified: input.dateModified ?? input.datePublished,
     author: { "@type": "Organization", name: input.author ?? `${SITE_NAME} Team` },
-    publisher: { "@type": "Organization", name: SITE_NAME, logo: { "@type": "ImageObject", url: `${SITE_URL}${ORG_LOGO}` } },
+    publisher: { "@type": "Organization", name: SITE_NAME, logo: logoImageObject() },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     url,
   };

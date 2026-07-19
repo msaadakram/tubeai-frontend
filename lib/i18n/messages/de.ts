@@ -428,4 +428,216 @@ export const de: Messages = {
     desc: "Die gesuchte Seite existiert nicht oder wurde verschoben.",
     home: "Zurück zur Startseite",
   },
+  meta: {
+    home: {
+      title: "YTForge — Kostenlose YouTube-Tools & KI-Creator-Toolkit",
+      description:
+        "YTForge ist ein KI-gestütztes YouTube-Creator-Toolkit — Titel-Generatoren, KI-Drehbuchschreiber, Thumbnail-Tools, SEO-Analyzer, Kanal-Analytics, Monetarisierungs-Checker und Einnahmen-Rechner an einem Ort.",
+      keywords: [
+        "youtube tools",
+        "youtube tag extractor",
+        "youtube titel generator",
+        "youtube seo",
+        "ki drehbuchschreiber",
+        "thumbnail downloader",
+        "kanal analytics",
+        "monetarisierungs checker",
+        "einnahmen rechner",
+      ],
+    },
+    features: {
+      title: "YouTube-Tools & KI-Funktionen, die jeder Creator 2026 braucht",
+      description:
+        "Entdecke 30+ kostenlose YouTube-Tools und KI-Funktionen — Titel-Generatoren, Drehbuchschreiber, Thumbnail-Maker, SEO-Analyzer, Kanal-Analytics und Monetarisierungs-Tools für Creator 2026.",
+      keywords: ["youtube tools", "youtube kanal suche", "youtube keyword extraktor", "youtube meta", "video titel", "youtube video beschreibung"],
+    },
+    pricing: {
+      title: "Kostenlose & Pro YouTube-Tools Preise — Jetzt wachsen",
+      description:
+        "Einfache Preise für jeden YouTube-Creator. Starte kostenlos mit Titel-Generatoren, Tag-Tools und SEO-Analyzer; uprade für KI-Skripte, Thumbnails und Kanal-Analytics. Keine Kreditkarte zum Start.",
+      keywords: ["youtube tools", "youtube tag extractor", "youtube hashtags", "youtube keywords", "youtube kanal finden"],
+    },
+    demo: {
+      title: "Demo der YouTube-Tools ansehen — KI-Titel, Skripte & Thumbnails",
+      description:
+        "Sieh die YouTube-Tools von YTForge in Aktion — KI-Titel-Generierung, Drehbuchschreiben, Thumbnail-Design, SEO-Audits und Kanal-Analytics. Sieh die vollständige Demo und starte kostenlos in Minuten.",
+      keywords: ["youtube tools", "youtube short", "youtube videos", "youtube tags", "youtube thumbnail", "youtube video beschreibung"],
+    },
+    chat: {
+      title: "KI-YouTube-Wachstums-Coach — Kostenloser Creator-Strategie-Chat",
+      description:
+        "Chatte kostenlos mit einem KI-YouTube-Wachstums-Coach. Erhalte maßgeschneiderte Ratschläge zu Titeln, Thumbnails, SEO, Retention und Monetarisierung — Antworten abgestimmt auf den 2026er YouTube-Algorithmus in Sekunden.",
+      keywords: ["youtube tools", "youtube suche", "youtube content", "youtube keywords", "youtube meta", "youtube video suche"],
+    },
+    blog: {
+      title: "YTForge Blog — YouTube-Wachstum, SEO & Monetarisierungs-Guides",
+      description:
+        "Der YouTube-Blog für Creators: virale Fallstudien, Algorithmus-Updates, SEO-Playbooks und länderweise CPM-Benchmarks. Die genauen Taktiken, die Top-Creators nutzen, geschrieben vom YTForge-Team.",
+      keywords: [
+        "youtube blog",
+        "youtube content",
+        "youtube meta",
+        "youtube tools",
+        "youtube seo",
+        "youtube wachstum",
+        "youtube cpm",
+        "youtube algorithmus",
+        "creator taktiken",
+      ],
+    },
+    aiPolicy: {
+      title: "KI-Richtlinie — Wie YTForge KI & deine Daten nutzt",
+      description:
+        "Die KI-Richtlinie von YTForge: welche Modelle unsere Tools antreiben, wie wir deine Prompts und Inhalte behandeln, deine Rechte an KI-generierten Inhalten und unsere Sicherheitszusagen.",
+      keywords: ["youtube tools", "ki richtlinie", "ki transkription", "ki drehbuchschreiber", "ki thumbnail generator", "youtube content"],
+    },
+    privacy: {
+      title: "Datenschutzrichtlinie — Wie wir deine Creator-Daten schützen",
+      description:
+        "YTForge-Datenschutzrichtlinie: welche Daten wir erheben, wie wir sie nutzen, Verschlüsselung bei der Übertragung und im Ruhezustand, KI-Trainings-Zusagen, deine Rechte und wie du unseren DSB kontaktierst.",
+      keywords: ["youtube tools", "datenschutzrichtlinie", "creator daten", "ki richtlinie"],
+    },
+    terms: {
+      title: "Nutzungsbedingungen — Regeln für das YouTube-Creator-Toolkit",
+      description:
+        "YTForge-Nutzungsbedingungen: Kontoverantwortlichkeiten, zulässige Nutzung, Rechte an KI-generierten Inhalten, Abonnements, Rückerstattungen und Haftung für unser YouTube-Creator-Toolkit.",
+      keywords: ["youtube tools", "nutzungsbedingungen", "creator toolkit"],
+    },
+    disclaimer: {
+      title: "Haftungsausschluss — KI-YouTube-Tools & Keine-Garantie-Richtlinie",
+      description:
+        "YTForge-Haftungsausschluss: Genauigkeit KI-generierter Inhalte, keine garantierten YouTube-Ergebnisse, Einnahmeschätzungen, Analytics-Genauigkeit, Drittanbieter-Inhalte und YouTube-Compliance-Hinweise.",
+      keywords: ["youtube tools", "haftungsausschluss", "ki tools", "youtube content"],
+    },
+    tools: {
+      seoAnalyzer: {
+        title: "YouTube-SEO-Analyzer — Kostenlose Video- & Kanal-SEO-Prüfung",
+        description:
+          "Prüfe jedes YouTube-Video oder jeden Kanal in Sekunden auf SEO — Titel, Beschreibung, Tags, Kapitel und Ranking-Chancen. Kostenloser YouTube-SEO-Analyzer und Prüf-Tool.",
+        keywords: ["seo tags für youtube videos", "youtube tags", "youtube keywords", "youtube keyword extraktor", "ranking tags", "youtube meta"],
+      },
+      viralTitleGenerator: {
+        title: "Viraler YouTube-Titel-Generator — Kostenlose KI-Titel-Ideen",
+        description:
+          "Generiere virale, SEO-optimierte YouTube-Titel in Sekunden. Kostenloser KI-Titel-Generator mit integrierter CTR-Bewertung und Keyword-Frontloading — erhalte klickwürdige Titel für jede Nische.",
+        keywords: ["video titel", "youtube video titel", "youtube video titel extraktor", "auffällige video titel", "beste youtube titel"],
+      },
+      aiScriptWriter: {
+        title: "KI-Drehbuchschreiber — Kostenlose YouTube-Video-Skripte in Sekunden",
+        description:
+          "Schreibe retentionsoptimierte YouTube-Skripte mit KI — Hook, Versprechen, Pattern Interrupts und eine einzige CTA. Kostenloser KI-Drehbuchschreiber für jeden Ton, jede Länge und jede Sprache.",
+        keywords: ["youtube video beschreibung", "youtube beschreibung", "video beschreibung für youtube", "yt video beschreibung", "beschreibung des youtube videos"],
+      },
+      aiThumbnailGenerator: {
+        title: "KI-YouTube-Thumbnail-Generator — Kostenlose High-CTR-Designs",
+        description:
+          "Generiere klickstarke YouTube-Thumbnails mit KI — 4 High-CTR-Varianten pro Prompt, HD-PNG-Export bei 1280x720. KI-Thumbnail-Generator mit Stiltransfer und geschichteten Exporten.",
+        keywords: ["youtube thumbnail", "youtube vorschaubild", "youtube video thumbnail", "thumbnail maker", "thumbnail creator", "ki thumbnail"],
+      },
+      aiTranscript: {
+        title: "KI-YouTube-Transkription — Kostenlose Video-Transkripte & Übersetzung",
+        description:
+          "Extrahiere, übersetze und durchsuche YouTube-Video-Transkripte in 100+ Sprachen mit KI-Genauigkeit. Kostenloses KI-Transkript-Tool — Link einfügen und sofort das volle Transkript erhalten.",
+        keywords: ["youtube video beschreibung", "beschreibung des youtube videos", "video beschreibung für youtube", "youtube meta", "youtube content", "yt video beschreibung"],
+      },
+      channelAnalytics: {
+        title: "YouTube-Kanal-Analytics — Kostenlose Statistiken für jeden Kanal",
+        description:
+          "Lade Live-YouTube-Kanal-Analytics — Abonnenten, Aufrufe, Wiedergabezeit, Top-Videos und Wachstumstempo — von jeder Kanal-URL. Kostenloses Kanal-Analytics-Tool, keine Registrierung.",
+        keywords: ["youtube kanal suche", "youtube kanal finden", "youtube nach kanal suchen", "kanal auf youtube suchen", "youtube kanal"],
+      },
+      channelIdFinder: {
+        title: "YouTube-Kanal-ID-Finder — Kostenlose ID-, RSS- & URL-Suche",
+        description:
+          "Finde jede YouTube-Kanal-ID, jeden RSS-Feed und jede kanonische URL aus einem Video-Link, @handle oder einer Kanal-URL. Kostenloser Kanal-ID-Finder — permanente UC-Kennung in Sekunden.",
+        keywords: ["youtube kanal finden", "youtube kanal suche", "youtube nach kanal suchen", "kanal auf youtube suchen", "youtube kanal"],
+      },
+      earningsCalculator: {
+        title: "YouTube-Einnahmen-Rechner — Kostenlose AdSense-Einnahmen-Schätzung",
+        description:
+          "Schätze YouTube-AdSense-Einnahmen aus deinen Aufrufen, Länder-Mix, Nische und RPM. Kostenloser YouTube-Einnahmen- und CPM-Rechner — sofortige monatliche und jährliche Umsatzprognosen.",
+        keywords: ["youtube kanal", "youtube tags", "youtube hashtags", "youtube keywords", "youtube kanal suche", "youtube kanal finden"],
+      },
+      embedGenerator: {
+        title: "YouTube-Embed-Generator — Kostenlose responsive Embed-Codes",
+        description:
+          "Generiere responsive, datenschutzfreundliche YouTube-Embed-Codes mit benutzerdefinierten Abmessungen, Startzeiten und Untertiteln. Kostenloser Embed-Code-Generator für Websites und Blogs.",
+        keywords: ["youtube videos", "youtube video", "youtube video einbetten", "youtube embed code", "video einbetten"],
+      },
+      hashtagGenerator: {
+        title: "YouTube-Hashtag-Generator — Kostenlose trendige Hashtags",
+        description:
+          "Generiere relevante YouTube-Hashtags aus jedem Thema — abgestimmt auf Reichweite ohne Spam oder Wiederholung. Kostenloser YouTube-Hashtag-Generator mit Extraktor und trendigen Vorschlägen.",
+        keywords: ["youtube hashtags", "youtube hashtags extraktor", "hashtags für youtube videos", "youtube hashtags suchen", "youtube short tags"],
+      },
+      monetizationChecker: {
+        title: "YouTube-Monetarisierungs-Checker — Ist ein Kanal monetarisiert?",
+        description:
+          "Prüfe den Monetarisierungsstatus jedes YouTube-Kanals, die YPP-Berechtigung und die geschätzte Werbeeinnahmen-Stufe in Sekunden. Kostenloser YouTube-Monetarisierungs-Checker — Kanal-URL einfügen und loslegen.",
+        keywords: ["youtube kanal", "youtube kanal suche", "youtube kanal finden", "youtube tags", "youtube hashtags"],
+      },
+      qrCodeGenerator: {
+        title: "YouTube-QR-Code-Generator — Kostenlose Marken-QR-Codes",
+        description:
+          "Erstelle Marken-QR-Codes für deine YouTube-Videos, Kanäle und Shorts — füge Logos und Farben hinzu, exportiere in HD. Kostenloser YouTube-QR-Code-Generator, keine Registrierung erforderlich.",
+        keywords: ["youtube short", "youtube videos", "youtube kanal", "qr code youtube", "youtube qr"],
+      },
+      shortsIdeas: {
+        title: "YouTube-Shorts-Ideen — Kostenlose KI-virale Short-Konzepte",
+        description:
+          "Generiere virale YouTube-Shorts-Ideen — Hooks, Formate und geloopte Enden, abgestimmt auf den Shorts-Algorithmus 2026. Kostenloser Shorts-Ideen-Generator für jedes Thema oder jede Nische.",
+        keywords: ["youtube short", "youtube short tags", "shorts tag extraktor", "shorts video tags", "tags für youtube short"],
+      },
+      tagGenerator: {
+        title: "YouTube-Tag-Generator — Kostenlose SEO-Tags für jedes Video",
+        description:
+          "Generiere SEO-optimierte YouTube-Tags aus jedem Thema — exakt, breit und Long-Tail, innerhalb des 500-Zeichen-Limits. Kostenloser YouTube-Tag-Generator und Extraktor, keine Registrierung.",
+        keywords: ["youtube tags", "youtube tag extractor", "tag finder", "youtube tag finder", "tags für youtube videos", "yt tags"],
+      },
+      thumbnailDownloader: {
+        title: "YouTube-Thumbnail-Downloader — Kostenloser HD-Bild-Grabber",
+        description:
+          "Lade jedes YouTube-Video-Thumbnail in HD-, Full- oder Standardauflösung herunter — kostenlos, ohne Registrierung, unbegrenzt. Video-Link einfügen und das Thumbnail-Bild sofort greifen.",
+        keywords: ["youtube thumbnail", "youtube vorschaubild", "youtube video thumbnail", "youtube thumbnail herunterladen", "yt thumbnail"],
+      },
+      thumbnailPreview: {
+        title: "YouTube-Thumbnail-Vorschau — Teste vor der Veröffentlichung",
+        description:
+          "Sieh in der Vorschau, wie dein YouTube-Thumbnail auf Handy, Desktop, Suchergebnissen und dem Shorts-Shelf rendert, bevor du veröffentlichst. Kostenloses Thumbnail-Vorschau- und Prüf-Tool.",
+        keywords: ["youtube thumbnail", "youtube vorschaubild", "youtube video thumbnail", "thumbnail test", "thumbnail checker"],
+      },
+    },
+    blogPosts: {
+      "guide-to-yt-seo-grow": {
+        title: "Der komplette Leitfaden zu YouTube-SEO & Wachstum 2026",
+        description:
+          "Ein 1.500-Wörter-Playbook zu YouTube-SEO 2026 — Keyword-Recherche, Titel, Thumbnails, Retention, Engagement-Signale und die Algorithmus-Updates, die dieses Jahr zählen.",
+        keywords: ["YouTube SEO", "YouTube Wachstum", "YouTube Algorithmus 2026", "video optimierung", "keyword recherche", "CTR", "retention"],
+      },
+      "youtube-cpm-rates-by-country": {
+        title: "YouTube-CPM-Raten nach Land (2026 Benchmark-Bericht)",
+        description:
+          "Eine länderweise Aufschlüsselung der YouTube-CPM- und RPM-Raten für 2026 — von den bestzahlenden Märkten (Norwegen, USA) bis zu aufstrebenden (Indien, Brasilien) — mit Nischen-Benchmarks und wie du deinen RPM maximierst.",
+        keywords: ["YouTube CPM", "YouTube RPM", "CPM nach Land", "YouTube Monetarisierung", "werbeeinnahmen", "YouTube einnahmen"],
+      },
+      "ai-thumbnail-design-system": {
+        title: "Das KI-Thumbnail-Design-System, das Top-Creators 2026 nutzen",
+        description:
+          "Wie du ein wiederholbares Thumbnail-System mit KI aufbaust — Brennpunkt, Kontrast, Text-Hierarchie und A/B-Tests — das die CTR bei jedem Video hebt.",
+        keywords: ["YouTube thumbnails", "KI thumbnail", "CTR", "thumbnail design"],
+      },
+      "youtube-algorithm-2026": {
+        title: "Wie der YouTube-Algorithmus 2026 wirklich funktioniert",
+        description:
+          "Eine Klartext-Aufschlüsselung des YouTube-Empfehlungs- und Ranking-Systems 2026 — welche Signale jetzt zählen, welche nicht und wie du dich daran ausrichtest.",
+        keywords: ["YouTube Algorithmus", "empfehlungssystem", "YouTube ranking"],
+      },
+      "hashtag-strategy-2026": {
+        title: "Die 2026 YouTube-Hashtag-Strategie, die noch funktioniert",
+        description:
+          "Zählen YouTube-Hashtags 2026 noch? Ja — aber nur, wenn du sie als Clustering-Tool nutzt, nicht als Spam-Kanal. Hier ist das genaue Format, das die Sichtbarkeit erhöht.",
+        keywords: ["YouTube hashtags", "hashtag strategie", "YouTube sichtbarkeit"],
+      },
+    },
+  },
 };

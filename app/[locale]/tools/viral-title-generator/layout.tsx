@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { buildMetadata } from "@/lib/seo";
+import { buildLocalizedMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Viral YouTube Title Generator \u2014 Free AI Title Ideas",
-  description: "Generate viral, SEO-optimized YouTube titles in seconds. Free AI title generator with built-in CTR scoring and keyword front-loading \u2014 get click-worthy titles for any niche.",
-  path: "/tools/viral-title-generator",
-  keywords: ["video title", "youtube video title", "youtube video title extractor", "catchy video titles", "best youtube titles"],
-});
+type P = { params: Promise<{ locale: string }> };
+export async function generateMetadata({ params }: P): Promise<Metadata> {
+  const { locale } = await params;
+  return buildLocalizedMetadata({ locale, routeKey: "tools.viralTitleGenerator", path: "/tools/viral-title-generator" });
+}
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
