@@ -27,7 +27,7 @@ function CountUp({ value, className }: { value: string; className?: string }) {
   const decimals = match && match[1].includes(".") ? match[1].split(".")[1].length : 0;
 
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15%" });
+  const inView = useInView(ref, { once: true, amount: "some" });
   const [display, setDisplay] = useState(0);
 
   useEffect(() => {
