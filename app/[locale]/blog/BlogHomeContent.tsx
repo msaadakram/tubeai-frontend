@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { ArrowRight, Clock, Sparkles, Search, TrendingUp } from "lucide-react";
@@ -9,6 +8,7 @@ import { posts, categories } from "@/lib/blog/posts";
 import { postTranslations } from "@/lib/blog/translations";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+import { LocaleLink } from "@/lib/i18n/LocaleLink";
 import { cn } from "@/lib/utils";
 
 export function BlogHomeContent() {
@@ -78,7 +78,7 @@ export function BlogHomeContent() {
       <section className="bg-white border-b-2 border-black py-10 sm:py-14">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
-            <Link
+            <LocaleLink
               href={`/blog/${featured.slug}`}
               className="group block bg-white border-2 border-black rounded-2xl sm:rounded-3xl overflow-hidden shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(220,38,38,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
             >
@@ -127,7 +127,7 @@ export function BlogHomeContent() {
                   </span>
                 </div>
               </div>
-            </Link>
+            </LocaleLink>
           </div>
         </div>
       </section>
@@ -190,7 +190,7 @@ export function BlogHomeContent() {
                     viewport={{ once: true }}
                     transition={{ delay: Math.min(i * 0.05, 0.3) }}
                   >
-                    <Link
+                    <LocaleLink
                       href={`/blog/${post.slug}`}
                       className="group block h-full bg-white border-2 border-black rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(220,38,38,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
                     >
@@ -228,7 +228,7 @@ export function BlogHomeContent() {
                           {t("blog.readMore")} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                         </span>
                       </div>
-                    </Link>
+                    </LocaleLink>
                   </motion.div>
                 ))}
               </div>

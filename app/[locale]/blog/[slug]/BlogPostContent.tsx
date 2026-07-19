@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "motion/react";
 import {
@@ -26,6 +25,8 @@ import {
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import type { Block } from "@/lib/blog/posts";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { LocaleLink } from "@/lib/i18n/LocaleLink";
 import { cn } from "@/lib/utils";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -184,12 +185,12 @@ export function BlogPostContent({
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl mx-auto"
           >
-            <Link
+            <LocaleLink
               href="/blog"
               className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-white/90 hover:text-white mb-6"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> All Articles
-            </Link>
+            </LocaleLink>
 
             <div className="flex items-center gap-3 mb-4 text-white">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white text-[10px] font-black uppercase tracking-wider rounded-full border-2 border-white/30">
@@ -332,12 +333,12 @@ export function BlogPostContent({
                   <div className="font-black text-lg text-white mb-1">Try these tactics with YTForge</div>
                   <p className="text-sm text-red-100">AI titles, SEO audits, thumbnails, and channel analytics — all in one place.</p>
                 </div>
-                <Link
+                <LocaleLink
                   href="/signup"
                   className="inline-flex items-center gap-2 px-5 py-3 bg-white text-black font-black rounded-xl border-2 border-black hover:-translate-y-0.5 transition-transform text-sm uppercase tracking-wider whitespace-nowrap"
                 >
                   Start Free <ArrowRight className="w-4 h-4" />
-                </Link>
+                </LocaleLink>
               </div>
             </article>
           </div>
@@ -350,7 +351,7 @@ export function BlogPostContent({
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 {related.map((rp) => (
-                  <Link
+                  <LocaleLink
                     key={rp.slug}
                     href={`/blog/${rp.slug}`}
                     className="group block bg-white border-2 border-black rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(220,38,38,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
@@ -397,7 +398,7 @@ export function BlogPostContent({
                         {rp.description}
                       </p>
                     </div>
-                  </Link>
+                  </LocaleLink>
                 ))}
               </div>
             </div>
