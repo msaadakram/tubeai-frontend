@@ -13,16 +13,23 @@ type Resolve<T, P extends string> = P extends `${infer K}.${infer R}`
 
 export function createTranslator(locale: Locale) {
   const m = getMessages(locale);
-  return function t<P extends string>(path: P): Resolve<Messages, P> {
-    const parts = path.split(".");
-    let cur: unknown = m;
+  const fallback = locale !== "en" ? getMessages("en") : null;
+
+  function resolve(root: unknown, parts: string[]): unknown {
+    let cur: unknown = root;
     for (const p of parts) {
       if (cur && typeof cur === "object" && p in (cur as Record<string, unknown>)) {
         cur = (cur as Record<string, unknown>)[p];
       } else {
-        return undefined as unknown as Resolve<Messages, P>;
+        return undefined;
       }
     }
-    return cur as Resolve<Messages, P>;
+    return cur;
+  }
+
+  return function t<P extends string>(path: P): Resolve<Messages, P> {
+    const parts = path.split(".");
+    const result = resolve(m, parts) ?? (fallback ? resolve(fallback, parts) : undefined);
+    return result as Resolve<Messages, P>;
   };
 }
