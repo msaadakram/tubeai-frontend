@@ -4,11 +4,11 @@ import { getMessages, type Messages } from "./messages";
 export { locales, defaultLocale, isLocale, getMessages, type Locale, type Messages };
 
 type Resolve<T, P extends string> = P extends `${infer K}.${infer R}`
-  ? K extends keyof T
-    ? Resolve<T[K], R>
-    : never
-  : P extends keyof T
-  ? T[P]
+  ? K extends keyof NonNullable<T>
+  ? Resolve<NonNullable<T>[K], R>
+  : never
+  : P extends keyof NonNullable<T>
+  ? NonNullable<T>[P]
   : never;
 
 export function createTranslator(locale: Locale) {
