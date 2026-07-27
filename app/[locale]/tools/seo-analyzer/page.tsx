@@ -4,6 +4,7 @@ import { copyToClipboard } from "@/lib/clipboard";
 import { friendlyApiError } from "@/lib/apiError";
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import {
   LineChart,
   Loader2,
@@ -78,37 +79,6 @@ type SeoResult = {
 const LANGUAGES = ["English", "Spanish", "Hindi", "French", "German", "Portuguese", "Arabic", "Japanese", "Korean", "Indonesian"];
 const AUDIENCES = ["General", "Beginners", "Intermediate", "Advanced", "Developers", "Students", "Professionals", "Kids", "Teens", "Entrepreneurs"];
 
-const SEO_LOADING_STEPS = [
-  "Scanning title length & keyword placement...",
-  "Checking power words & readability...",
-  "Auditing description depth, CTAs & timestamps...",
-  "Scoring against 20+ ranking signals...",
-  "Writing AI-improved title & description...",
-];
-
-const stats = [
-  { value: "Live", label: "AI Powered" },
-  { value: "100", label: "Score Range" },
-  { value: "<3s", label: "Analysis Time" },
-  { value: "100%", label: "Free Forever" },
-];
-
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Front-load keywords", desc: "Place your primary keyword in the first 60 characters of the title for max CTR." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Use power words", desc: "Words like 'Ultimate', 'Secret', 'Proven' boost click-through by 30%+." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Add CTAs in description", desc: "Subscribe, Like, Comment prompts in the first 150 chars lift engagement." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't keyword stuff", desc: "Repeating the same keyword 5+ times triggers spam filters." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't write 10-word descriptions", desc: "Aim for 200+ words with timestamps, links, and hashtags." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Refresh old metadata", desc: "Re-optimizing titles & descriptions can lift impressions 30–60%." },
-];
-
-const faqs = [
-  { q: "How does this analyzer score my video?", a: "We send your title, description, language, and audience to our AI which scores against 20+ proven SEO ranking signals — title length, keyword placement, power words, description depth, CTAs, hashtags, and more." },
-  { q: "Will my video rank #1 if I score 100?", a: "A perfect SEO score gives you the strongest foundation, but watch time, CTR, and audience retention also drive ranking. SEO gets you discovered — content keeps you ranked." },
-  { q: "Can I use the improved title and description directly?", a: "Yes — copy them directly into YouTube Studio. They're tuned for your selected language and audience." },
-  { q: "Is the audience selection important?", a: "Critical. The same topic written for Beginners vs Developers needs entirely different keywords, hooks, and tone. Pick precisely." },
-];
-
 function ScoreRing({ score }: { score: number }) {
   const r = 52;
   const c = 2 * Math.PI * r;
@@ -158,6 +128,20 @@ function CopyBtn({ text }: { text: string }) {
 }
 
 export default function SeoAnalyzerPage() {
+  const { t } = useTranslations();
+  const content = t("toolPages.seoAnalyzer");
+
+  if (!content) return null;
+
+  const guides = [
+    { icon: CheckCircle2, color: "text-green-600 bg-green-100", ...content.guides[0] },
+    { icon: CheckCircle2, color: "text-green-600 bg-green-100", ...content.guides[1] },
+    { icon: CheckCircle2, color: "text-green-600 bg-green-100", ...content.guides[2] },
+    { icon: XCircle, color: "text-red-600 bg-red-100", ...content.guides[3] },
+    { icon: XCircle, color: "text-red-600 bg-red-100", ...content.guides[4] },
+    { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", ...content.guides[5] },
+  ];
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [language, setLanguage] = useState("English");
@@ -175,7 +159,7 @@ export default function SeoAnalyzerPage() {
       return;
     }
     const id = setInterval(() => {
-      setSeoStep((s) => (s + 1) % SEO_LOADING_STEPS.length);
+      setSeoStep((s) => (s + 1) % content.loadingSteps.length);
     }, 1100);
     return () => clearInterval(id);
   }, [loading]);
@@ -226,46 +210,46 @@ export default function SeoAnalyzerPage() {
 
   return (
     <ToolLayout
-      title="SEO Analyzer"
-      description="Score your YouTube title and description against 20+ ranking signals — and get an AI-rewritten version optimized for your audience."
+      title={content.title}
+      description={content.description}
       icon={LineChart}
-      badge="AI Powered · Title + Description Audit"
+      badge={content.badge}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={content.stats} />
 
       <ToolCard className="mb-6">
         <div className="space-y-4">
           <div>
             <label className="text-[11px] font-black uppercase tracking-wider text-neutral-600 flex items-center gap-1.5 mb-2">
-              <Type className="w-3.5 h-3.5 text-red-600" /> Video Title
+              <Type className="w-3.5 h-3.5 text-red-600" /> {content.configTitle}
             </label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. 7 React Hooks That Changed How I Code Forever"
+              placeholder={content.configTitlePlaceholder}
               className="w-full px-3 py-3 border-2 border-black rounded-xl outline-none text-sm font-medium bg-white"
             />
-            <div className="text-[10px] font-bold text-neutral-500 mt-1">{title.length} chars · YouTube limit 100</div>
+            <div className="text-[10px] font-bold text-neutral-500 mt-1">{title.length} {content.charsLimit100}</div>
           </div>
 
           <div>
             <label className="text-[11px] font-black uppercase tracking-wider text-neutral-600 flex items-center gap-1.5 mb-2">
-              <FileText className="w-3.5 h-3.5 text-red-600" /> Video Description
+              <FileText className="w-3.5 h-3.5 text-red-600" /> {content.configDesc}
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={6}
-              placeholder="Paste your full video description here including timestamps, links, hashtags..."
+              placeholder={content.configDescPlaceholder}
               className="w-full px-3 py-3 border-2 border-black rounded-xl outline-none text-sm font-medium bg-white resize-y"
             />
-            <div className="text-[10px] font-bold text-neutral-500 mt-1">{description.length} chars · YouTube limit 5000</div>
+            <div className="text-[10px] font-bold text-neutral-500 mt-1">{description.length} {content.charsLimit5000}</div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-[11px] font-black uppercase tracking-wider text-neutral-600 flex items-center gap-1.5 mb-2">
-                <Languages className="w-3.5 h-3.5 text-red-600" /> Language
+                <Languages className="w-3.5 h-3.5 text-red-600" /> {content.configLang}
               </label>
               <select
                 value={language}
@@ -277,7 +261,7 @@ export default function SeoAnalyzerPage() {
             </div>
             <div>
               <label className="text-[11px] font-black uppercase tracking-wider text-neutral-600 flex items-center gap-1.5 mb-2">
-                <Users className="w-3.5 h-3.5 text-red-600" /> Target Audience
+                <Users className="w-3.5 h-3.5 text-red-600" /> {content.configAudience}
               </label>
               <select
                 value={audience}
@@ -291,7 +275,7 @@ export default function SeoAnalyzerPage() {
 
           <PrimaryButton onClick={run} disabled={loading || !title.trim() || !description.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {loading ? "Analyzing..." : "Analyze SEO"}
+            {loading ? content.analyzingBtn : content.analyzeBtn}
           </PrimaryButton>
         </div>
       </ToolCard>
@@ -319,15 +303,15 @@ export default function SeoAnalyzerPage() {
                   <Search className="w-9 h-9 text-white" />
                 </div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-3 rounded-full bg-red-100 border-2 border-black text-[10px] font-black uppercase tracking-wider text-red-700">
-                  <AlertCircle className="w-3 h-3" /> Analysis Failed
+                  <AlertCircle className="w-3 h-3" /> {content.analysisFailed}
                 </div>
-                <h3 className="font-black text-2xl tracking-tight mb-2">We couldn't analyze that</h3>
+                <h3 className="font-black text-2xl tracking-tight mb-2">{content.errorTitle}</h3>
                 <p className="text-sm text-neutral-600 font-medium max-w-md">{error}</p>
                 <button
                   onClick={() => setError(null)}
                   className="mt-5 inline-flex items-center gap-1.5 px-4 py-2.5 bg-black text-white text-xs font-black rounded-xl border-2 border-black hover:bg-red-600 transition shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                 >
-                  <Search className="w-3.5 h-3.5" /> Try again
+                  <Search className="w-3.5 h-3.5" /> {content.tryAgainBtn}
                 </button>
               </div>
             </div>
@@ -416,10 +400,10 @@ export default function SeoAnalyzerPage() {
                       transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
                       className="font-black text-base sm:text-lg"
                     >
-                      Analyzing SEO...
+                      {content.loadingTitle}
                     </motion.div>
                     <div className="overflow-hidden h-5 mt-1.5 relative">
-                      {SEO_LOADING_STEPS.map((step, i) => (
+                      {content.loadingSteps.map((step: string, i: number) => (
                         <motion.div
                           key={step}
                           className="absolute inset-0 text-xs text-neutral-500 font-bold flex items-center justify-center"
@@ -439,8 +423,8 @@ export default function SeoAnalyzerPage() {
                   {/* Skeleton preview cards */}
                   <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
                     {[
-                      { icon: Type, label: "Title Analysis", w: "w-2/3" },
-                      { icon: FileText, label: "Description Analysis", w: "w-3/4" },
+                      { icon: Type, label: content.titleAnalysisLabel, w: "w-2/3" },
+                      { icon: FileText, label: content.descAnalysisLabel, w: "w-3/4" },
                     ].map((c, i) => (
                       <motion.div
                         key={i}
@@ -499,10 +483,10 @@ export default function SeoAnalyzerPage() {
                   </div>
                   <div className="flex-1 min-w-0 text-center sm:text-left text-white">
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 mb-2 bg-black text-white text-[10px] font-black rounded-full">
-                      <Sparkles className="w-3 h-3" /> Overall SEO Score
+                      <Sparkles className="w-3 h-3" /> {content.overallScoreLabel}
                     </div>
                     <h2 className="font-black text-xl sm:text-2xl tracking-tight">
-                      {data.currentScore >= 85 ? "Excellent — ready to publish" : data.currentScore >= 70 ? "Good — small tweaks will help" : data.currentScore >= 55 ? "Average — apply the rewrites below" : "Needs work — use the improved version"}
+                      {data.currentScore >= 85 ? content.scoreFeedback.excellent : data.currentScore >= 70 ? content.scoreFeedback.good : data.currentScore >= 55 ? content.scoreFeedback.average : content.scoreFeedback.poor}
                     </h2>
                     <p className="text-sm font-medium mt-1 text-white/90">{data.overallFeedback}</p>
                   </div>
@@ -516,16 +500,16 @@ export default function SeoAnalyzerPage() {
               <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden flex flex-col">
                 <div className="px-4 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                   <Type className="w-4 h-4 text-red-600" />
-                  <div className="font-black text-sm">Title Analysis</div>
+                  <div className="font-black text-sm">{content.titleAnalysisLabel}</div>
                   <div className="ml-auto px-2 py-0.5 bg-black text-white text-[10px] font-black rounded-full">{data.titleAnalysis.score}/100</div>
                 </div>
                 <div className="p-4 space-y-3 flex-1">
                   <div className="flex flex-wrap gap-1.5">
-                    <Pill ok={data.titleAnalysis.hasNumber} label="Number" />
-                    <Pill ok={data.titleAnalysis.hasPowerWord} label="Power Word" />
-                    <Pill ok={data.titleAnalysis.hasKeyword} label="Keyword" />
+                    <Pill ok={data.titleAnalysis.hasNumber} label={content.pillLabels.number} />
+                    <Pill ok={data.titleAnalysis.hasPowerWord} label={content.pillLabels.powerWord} />
+                    <Pill ok={data.titleAnalysis.hasKeyword} label={content.pillLabels.keyword} />
                     <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border-2 border-black text-[10px] font-black bg-blue-100 text-blue-700">
-                      {data.titleAnalysis.length} chars
+                      {data.titleAnalysis.length} {content.pillLabels.chars}
                     </div>
                     <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border-2 border-black text-[10px] font-black bg-purple-100 text-purple-700">
                       {data.titleAnalysis.readability}
@@ -537,7 +521,7 @@ export default function SeoAnalyzerPage() {
 
                   {data.titleAnalysis.strengths.length > 0 && (
                     <div className="space-y-1.5">
-                      <div className="text-[10px] font-black uppercase tracking-wider text-green-700">Strengths</div>
+                      <div className="text-[10px] font-black uppercase tracking-wider text-green-700">{content.strengthsLabel}</div>
                       {data.titleAnalysis.strengths.map((s, i) => (
                         <div key={i} className="flex items-start gap-2 p-2 bg-green-50 border-2 border-green-200 rounded-lg">
                           <CheckCircle2 className="w-3.5 h-3.5 text-green-600 shrink-0 mt-0.5" />
@@ -549,7 +533,7 @@ export default function SeoAnalyzerPage() {
 
                   {data.titleAnalysis.weaknesses.length > 0 && (
                     <div className="space-y-1.5">
-                      <div className="text-[10px] font-black uppercase tracking-wider text-red-700">Weaknesses</div>
+                      <div className="text-[10px] font-black uppercase tracking-wider text-red-700">{content.weaknessesLabel}</div>
                       {data.titleAnalysis.weaknesses.map((s, i) => (
                         <div key={i} className="flex items-start gap-2 p-2 bg-red-50 border-2 border-red-200 rounded-lg">
                           <XCircle className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
@@ -565,26 +549,26 @@ export default function SeoAnalyzerPage() {
               <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden flex flex-col">
                 <div className="px-4 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                   <FileText className="w-4 h-4 text-red-600" />
-                  <div className="font-black text-sm">Description Analysis</div>
+                  <div className="font-black text-sm">{content.descAnalysisLabel}</div>
                   <div className="ml-auto px-2 py-0.5 bg-black text-white text-[10px] font-black rounded-full">{data.descriptionAnalysis.score}/100</div>
                 </div>
                 <div className="p-4 space-y-3 flex-1">
                   <div className="flex flex-wrap gap-1.5">
-                    <Pill ok={data.descriptionAnalysis.hasKeywords} label="Keywords" />
-                    <Pill ok={data.descriptionAnalysis.hasCTA} label="CTA" />
-                    <Pill ok={data.descriptionAnalysis.hasTimestamps} label="Timestamps" />
-                    <Pill ok={data.descriptionAnalysis.hasLinks} label="Links" />
+                    <Pill ok={data.descriptionAnalysis.hasKeywords} label={content.pillLabels.keywords} />
+                    <Pill ok={data.descriptionAnalysis.hasCTA} label={content.pillLabels.cta} />
+                    <Pill ok={data.descriptionAnalysis.hasTimestamps} label={content.pillLabels.timestamps} />
+                    <Pill ok={data.descriptionAnalysis.hasLinks} label={content.pillLabels.links} />
                     <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border-2 border-black text-[10px] font-black bg-blue-100 text-blue-700">
-                      {data.descriptionAnalysis.length} chars
+                      {data.descriptionAnalysis.length} {content.pillLabels.chars}
                     </div>
                     <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border-2 border-black text-[10px] font-black bg-purple-100 text-purple-700">
-                      Density: {data.descriptionAnalysis.keywordDensity}
+                      {content.pillLabels.density} {data.descriptionAnalysis.keywordDensity}
                     </div>
                   </div>
 
                   {data.descriptionAnalysis.strengths.length > 0 && (
                     <div className="space-y-1.5">
-                      <div className="text-[10px] font-black uppercase tracking-wider text-green-700">Strengths</div>
+                      <div className="text-[10px] font-black uppercase tracking-wider text-green-700">{content.strengthsLabel}</div>
                       {data.descriptionAnalysis.strengths.map((s, i) => (
                         <div key={i} className="flex items-start gap-2 p-2 bg-green-50 border-2 border-green-200 rounded-lg">
                           <CheckCircle2 className="w-3.5 h-3.5 text-green-600 shrink-0 mt-0.5" />
@@ -613,18 +597,18 @@ export default function SeoAnalyzerPage() {
             <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
               <div className="px-4 py-3 border-b-2 border-black bg-gradient-to-r from-yellow-100 to-orange-100 flex items-center gap-2">
                 <Wand2 className="w-4 h-4 text-orange-600" />
-                <div className="font-black text-sm">AI-Improved Title</div>
+                <div className="font-black text-sm">{content.improvedTitleLabel}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 divide-y-2 md:divide-y-0 md:divide-x-2 divide-neutral-200">
                 <div className="p-4">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">Original</div>
+                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">{content.originalLabel}</div>
                   <div className="text-sm font-bold text-neutral-700 p-3 bg-neutral-50 border-2 border-neutral-200 rounded-lg">
                     {title}
                   </div>
                 </div>
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <div className="text-[10px] font-black uppercase tracking-wider text-green-700">Improved</div>
+                    <div className="text-[10px] font-black uppercase tracking-wider text-green-700">{content.improvedLabel}</div>
                     <CopyBtn text={data.suggestions.improvedTitle} />
                   </div>
                   <div className="text-sm font-bold text-neutral-900 p-3 bg-green-50 border-2 border-green-300 rounded-lg">
@@ -634,7 +618,7 @@ export default function SeoAnalyzerPage() {
               </div>
               {data.suggestions.titleImprovements.length > 0 && (
                 <div className="px-4 py-3 border-t-2 border-black bg-neutral-50">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">What changed</div>
+                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">{content.whatChangedLabel}</div>
                   <ul className="space-y-1">
                     {data.suggestions.titleImprovements.map((t, i) => (
                       <li key={i} className="flex items-start gap-2 text-[11px] font-medium text-neutral-700">
@@ -651,18 +635,18 @@ export default function SeoAnalyzerPage() {
             <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
               <div className="px-4 py-3 border-b-2 border-black bg-gradient-to-r from-yellow-100 to-orange-100 flex items-center gap-2">
                 <Wand2 className="w-4 h-4 text-orange-600" />
-                <div className="font-black text-sm">AI-Improved Description</div>
+                <div className="font-black text-sm">{content.improvedDescLabel}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 divide-y-2 md:divide-y-0 md:divide-x-2 divide-neutral-200">
                 <div className="p-4">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">Original</div>
+                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">{content.originalLabel}</div>
                   <div className="text-xs font-medium text-neutral-700 p-3 bg-neutral-50 border-2 border-neutral-200 rounded-lg whitespace-pre-line max-h-72 overflow-y-auto leading-relaxed">
                     {description}
                   </div>
                 </div>
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <div className="text-[10px] font-black uppercase tracking-wider text-green-700">Improved</div>
+                    <div className="text-[10px] font-black uppercase tracking-wider text-green-700">{content.improvedLabel}</div>
                     <CopyBtn text={data.suggestions.improvedDescription} />
                   </div>
                   <div className="text-xs font-medium text-neutral-900 p-3 bg-green-50 border-2 border-green-300 rounded-lg whitespace-pre-line max-h-72 overflow-y-auto leading-relaxed">
@@ -672,7 +656,7 @@ export default function SeoAnalyzerPage() {
               </div>
               {data.suggestions.descriptionImprovements.length > 0 && (
                 <div className="px-4 py-3 border-t-2 border-black bg-neutral-50">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">What changed</div>
+                  <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">{content.whatChangedLabel}</div>
                   <ul className="space-y-1">
                     {data.suggestions.descriptionImprovements.map((t, i) => (
                       <li key={i} className="flex items-start gap-2 text-[11px] font-medium text-neutral-700">
@@ -690,11 +674,11 @@ export default function SeoAnalyzerPage() {
               <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                 <div className="px-4 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                   <Search className="w-4 h-4 text-red-600" />
-                  <div className="font-black text-sm">Keyword Suggestions</div>
+                  <div className="font-black text-sm">{content.kwSuggestionsLabel}</div>
                 </div>
                 <div className="p-4 flex flex-wrap gap-1.5">
                   {data.suggestions.keywordSuggestions.length === 0 ? (
-                    <div className="text-xs text-neutral-500 font-bold">No keyword suggestions returned.</div>
+                    <div className="text-xs text-neutral-500 font-bold">{content.noKwSuggestions}</div>
                   ) : (
                     data.suggestions.keywordSuggestions.map((kw) => (
                       <span key={kw} className="px-2.5 py-1 bg-red-50 border-2 border-black text-[11px] font-bold rounded-full">
@@ -708,11 +692,11 @@ export default function SeoAnalyzerPage() {
               <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                 <div className="px-4 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                   <Hash className="w-4 h-4 text-red-600" />
-                  <div className="font-black text-sm">Hashtag Suggestions</div>
+                  <div className="font-black text-sm">{content.hashtagSuggestionsLabel}</div>
                 </div>
                 <div className="p-4 flex flex-wrap gap-1.5">
                   {data.suggestions.hashtagSuggestions.length === 0 ? (
-                    <div className="text-xs text-neutral-500 font-bold">No hashtag suggestions returned.</div>
+                    <div className="text-xs text-neutral-500 font-bold">{content.noHashtagSuggestions}</div>
                   ) : (
                     data.suggestions.hashtagSuggestions.map((tag) => (
                       <span key={tag} className="px-2.5 py-1 bg-blue-50 border-2 border-black text-[11px] font-bold rounded-full">
@@ -730,55 +714,50 @@ export default function SeoAnalyzerPage() {
       </AnimatePresence>
 
       <GuideGrid
-        badge="SEO Rules"
-        title="Six rules to dominate YouTube video SEO"
-        intro="Apply these and watch your video impressions climb across search and Browse."
+        badge={content.rulesBadge}
+        title={content.rulesTitle}
+        intro={content.rulesIntro}
         cards={guides}
       />
 
       <Workflow
-        title="Your 4-step video SEO workflow"
-        steps={[
-          { n: "01", t: "Paste your title & description", d: "Drop in the metadata you're about to publish — or one already live." },
-          { n: "02", t: "Set language and audience", d: "AI tunes the rewrite to your exact viewer — beginners need different keywords than pros." },
-          { n: "03", t: "Apply the rewrites", d: "Copy the improved title and description directly into YouTube Studio." },
-          { n: "04", t: "Re-analyze after edits", d: "Run again to confirm your score climbed. Aim for 85+ before publishing." },
-        ]}
+        title={content.workflowTitle}
+        steps={content.workflows}
       />
 
-      <SeoContent badge="Complete YouTube SEO Guide" title="The complete guide to YouTube video SEO in 2026">
-        <p>YouTube is the second-largest search engine in the world, processing more than 3 billion searches per month. Your video's title and description are the two highest-impact SEO levers you control. Optimizing them with the right keywords, length, and structure can lift impressions 30-60% on the same content.</p>
-        <h3>How YouTube ranking actually works</h3>
-        <p>YouTube weighs three signals: <strong>relevance</strong> (does your title/description match the query?), <strong>engagement</strong> (CTR + watch time + likes), and <strong>authority</strong> (channel-level trust). The Title and Description are where you control relevance directly.</p>
-        <h3>Title SEO: front-load keywords, use power words, add numbers</h3>
-        <p>The first 60 characters of your title get the most weight in YouTube's index. Lead with your primary keyword, follow with a power word ("Ultimate", "Proven", "Secret"), and include a number when possible — numbered lists get 2x the CTR of unnumbered titles.</p>
-        <h3>Description SEO: 200+ words, CTAs, timestamps, hashtags</h3>
-        <p>The first 150 characters appear in search snippets — make them count. Below the fold, include 200+ words of context, 3-5 timestamps, social/affiliate links, and 1-3 hashtags at the bottom. YouTube uses your description to understand topical depth.</p>
-        <h3>Match your audience precisely</h3>
-        <p>The same React tutorial written for Beginners vs Senior Engineers needs entirely different vocabulary. Beginners search "how to use react hooks" — pros search "useReducer vs zustand performance". Pick your audience first, then write to it.</p>
-        <h3>Pair video SEO with great titles, scripts, and thumbnails</h3>
-        <p>SEO gets you discovered — content keeps you ranked. Use our <a href="/tools/viral-title-generator">Viral Title Generator</a> for click-magnet titles, our <a href="/tools/ai-script-writer">AI Script Writer</a> for retention-optimized scripts, and our <a href="/tools/ai-thumbnail-generator">AI Thumbnail Generator</a> for thumbnails that earn the click.</p>
+      <SeoContent badge={content.seoContent.badge} title={content.seoContent.title}>
+        <p>{content.seoContent.p1}</p>
+        <h3>{content.seoContent.h3_1}</h3>
+        <p>{content.seoContent.p2_1}</p>
+        <h3>{content.seoContent.h3_2}</h3>
+        <p>{content.seoContent.p2_2}</p>
+        <h3>{content.seoContent.h3_3}</h3>
+        <p>{content.seoContent.p2_3}</p>
+        <h3>{content.seoContent.h3_4}</h3>
+        <p>{content.seoContent.p2_4}</p>
+        <h3>{content.seoContent.h3_5}</h3>
+        <p>{content.seoContent.p2_5}</p>
       </SeoContent>
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={content.faqs} />
 
       <CrossCTA
-        title="Rank #1 in YouTube search"
-        desc="Pair perfect video SEO with viral titles and click-magnet thumbnails."
-        primary={{ label: "Generate Title", href: "/tools/viral-title-generator", icon: TrendingUp }}
-        secondary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: PenTool }}
+        title={content.ctaTitle}
+        desc={content.ctaDesc}
+        primary={{ label: content.ctaBtn1, href: "/tools/viral-title-generator", icon: TrendingUp }}
+        secondary={{ label: content.ctaBtn2, href: "/tools/ai-script-writer", icon: PenTool }}
       />
-          <ToolSeoJsonLd
-        name="YouTube SEO Analyzer"
-        description={"Audit any YouTube video or channel for SEO — title, description, tags, chapters, and ranking opportunities — in seconds."}
+      <ToolSeoJsonLd
+        name={content.title}
+        description={content.seoJsonDesc}
         slug="seo-analyzer"
-        faqs={faqs}
+        faqs={content.faqs}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "YouTube SEO Analyzer", slug: "/tools/seo-analyzer" },
+          { name: content.title, slug: "/tools/seo-analyzer" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }
