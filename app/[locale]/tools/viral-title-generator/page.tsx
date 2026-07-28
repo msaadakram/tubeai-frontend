@@ -111,12 +111,32 @@ function GenerationLoader({
   loadingTimerRemaining,
   loadingProgress,
   loadingWarning,
+  generatorLabel,
+  working,
+  streamingPreviewTitle,
+  resultsSeoScore,
+  resultsClickability,
+  whyThisRank,
+  strengthsLabel,
+  weaknessesLabel,
+  keySeoKeywords,
+  stepLabel,
 }: {
   loadingSteps: { label: string; detail: string }[];
   loadingTimerSecs: string;
   loadingTimerRemaining: string;
   loadingProgress: string;
   loadingWarning: string;
+  generatorLabel: string;
+  working: string;
+  streamingPreviewTitle: string;
+  resultsSeoScore: string;
+  resultsClickability: string;
+  whyThisRank: string;
+  strengthsLabel: string;
+  weaknessesLabel: string;
+  keySeoKeywords: string;
+  stepLabel: string;
 }) {
   const DURATION = 20; // seconds
   const steps = [
@@ -235,9 +255,9 @@ function GenerationLoader({
             </motion.div>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full border-2 border-white mb-3">
-            <Loader2 className="w-3 h-3 animate-spin" /> AI Working
-          </div>
+<div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full border-2 border-white mb-3">
+              <Loader2 className="w-3 h-3 animate-spin" /> {working}
+            </div>
 
           {/* Countdown timer */}
           <div className="inline-flex items-center gap-2 mb-3">
@@ -536,7 +556,7 @@ export default function ViralTitleGeneratorPage() {
       <ToolCard className="mb-8 sm:mb-10">
         <div className="flex items-center gap-2 mb-4 sm:mb-6">
           <Sparkles className="w-5 h-5 text-red-600" />
-          <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">Generator</h2>
+          <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">{toolContent.generator || "Generator"}</h2>
         </div>
 
         {/* Keyword */}
@@ -630,12 +650,21 @@ export default function ViralTitleGeneratorPage() {
         open={loading || !!streamText}
         text={streamText}
         onCancel={loading ? cancel : undefined}
-        title="Streaming titles"
+        title={toolContent.streamingTitle || "Streaming titles"}
       />
 
       {/* Loading State */}
       <AnimatePresence>
-        {loading && !streamText && <GenerationLoader {...(toolContent.loadingScreen as any)} />}
+        {loading && !streamText && (
+        <GenerationLoader
+          loadingSteps={toolContent.loadingSteps}
+          loadingTimerSecs={toolContent.loadingTimerSecs}
+          loadingTimerRemaining={toolContent.loadingTimerRemaining}
+          loadingProgress={toolContent.loadingProgress}
+          loadingWarning={toolContent.loadingWarning}
+          {...toolContent.loadingScreen}
+        />
+      )}
       </AnimatePresence>
 
       {/* Results */}
@@ -793,8 +822,8 @@ export default function ViralTitleGeneratorPage() {
                       {/* Scores */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-5">
                         {[
-                          { label: "SEO Score", value: t.seoScore, icon: Target },
-                          { label: "Clickability", value: t.clickability, icon: TrendingUp },
+                          { label: toolContent.resultsSeoScoreLabel || "SEO Score", value: t.seoScore, icon: Target },
+                          { label: toolContent.resultsClickabilityLabel || "Clickability", value: t.clickability, icon: TrendingUp },
                         ].map((m) => {
                           const Icon = m.icon;
                           const color =
@@ -837,12 +866,12 @@ export default function ViralTitleGeneratorPage() {
                       <div className="mb-5 p-3.5 bg-gradient-to-br from-neutral-50 to-white rounded-xl border-l-4 border-red-600 border-t-2 border-r-2 border-b-2 border-t-neutral-200 border-r-neutral-200 border-b-neutral-200">
                         <div className="flex items-start gap-2">
                           <Sparkles className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
-                          <p className="text-xs text-neutral-700 leading-relaxed">
-                            <strong className="text-black font-black uppercase tracking-wider text-[10px]">
-                              Why this rank:
-                            </strong>{" "}
-                            <span className="block mt-0.5">{t.explanation}</span>
-                          </p>
+<p className="text-xs text-neutral-700 leading-relaxed">
+                              <strong className="text-black font-black uppercase tracking-wider text-[10px]">
+                                {toolContent.resultsWhyRank || "Why this rank:"}
+                              </strong>{" "}
+                              <span className="block mt-0.5">{t.explanation}</span>
+                            </p>
                         </div>
                       </div>
 
@@ -855,7 +884,7 @@ export default function ViralTitleGeneratorPage() {
                                 <CheckCircle2 className="w-3 h-3 text-white" />
                               </div>
                               <span className="text-[10px] font-black uppercase tracking-wider text-green-800">
-                                Strengths
+                                {toolContent.resultsStrengthsLabel || "Strengths"}
                               </span>
                             </div>
                             <div className="flex flex-wrap gap-1.5">
@@ -877,7 +906,7 @@ export default function ViralTitleGeneratorPage() {
                                 <XCircle className="w-3 h-3 text-white" />
                               </div>
                               <span className="text-[10px] font-black uppercase tracking-wider text-red-800">
-                                Weaknesses
+                                {toolContent.resultsWeaknessesLabel || "Weaknesses"}
                               </span>
                             </div>
                             <div className="flex flex-wrap gap-1.5">
@@ -902,7 +931,7 @@ export default function ViralTitleGeneratorPage() {
                               <Hash className="w-3 h-3 text-red-500" />
                             </div>
                             <span className="text-[10px] font-black uppercase tracking-wider text-black">
-                              Key SEO Keywords
+                              {toolContent.resultsKeywordsLabel || "Key SEO Keywords"}
                             </span>
                           </div>
                           <div className="flex flex-wrap gap-1.5">
@@ -1006,7 +1035,7 @@ export default function ViralTitleGeneratorPage() {
                 {step.n}
               </div>
               <div className="relative">
-                <div className="text-[10px] font-black text-red-500 tracking-widest mb-2">STEP {step.n}</div>
+                <div className="text-[10px] font-black text-red-500 tracking-widest mb-2">{toolContent.stepPrefix || "STEP "} {step.n}</div>
                 <h3 className="font-black text-base mb-2">{step.t}</h3>
                 <p className="text-xs text-neutral-300 leading-relaxed">{step.d}</p>
               </div>

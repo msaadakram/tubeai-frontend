@@ -417,6 +417,19 @@ export type Messages = {
       resultsAdjust: string;
       resultsViewFull: string;
       resultsHideDetails: string;
+      generator: string;
+      loadingScreen: {
+        working: string;
+        generatorLabel: string;
+        streamingPreviewTitle: string;
+        resultsSeoScore: string;
+        resultsClickability: string;
+        whyThisRank: string;
+        strengthsLabel: string;
+        weaknessesLabel: string;
+        keySeoKeywords: string;
+        stepLabel: string;
+      };
       rulesBadge: string;
       rulesTitle: string;
       rulesIntro: string;

@@ -757,11 +757,24 @@ export const zh: Messages = {
         { q: "为什么不同风格的预测 CTR 会有差异？", a: "不同的标题风格根据受众的不同会有不同表现。悬念好奇类型的标题更吸引新观众，而教程类标题则在吸引老订阅者方面更有效率。" },
         { q: "我每天可以生成多少个标题？", a: "免费用户每天有 50 次免费额度。Pro 会员可以无限次生成，并可访问更高级的专属分析模型。" }
       ],
-      ctaTitle: "准备好让点击率爆发了吗？",
+ctaTitle: "准备好让点击率爆发了吗？",
       ctaDesc: "将完美标题与我们的缩略图生成器和脚本编写器结合，获取完整的流量密码。",
       ctaBtn1: "生成缩略图",
       ctaBtn2: "编写文案",
-      seoJsonDesc: "通过 AI 生成高转换率、优化 SEO 并且极具诱惑力点击预期的 YouTube 爆款视频标题。"
+      seoJsonDesc: "通过 AI 生成高转换率、优化 SEO 并且极具诱惑力点击预期的 YouTube 爆款视频标题。",
+      generator: "生成器",
+      loadingScreen: {
+        generatorLabel: "生成器",
+        working: "AI 运算中",
+        streamingPreviewTitle: "流式标题",
+        resultsSeoScore: "SEO 得分",
+        resultsClickability: "点击潜力",
+        whyThisRank: "为何获得此排名：",
+        strengthsLabel: "优势",
+        weaknessesLabel: "劣势",
+        keySeoKeywords: "主要 SEO 关键词",
+        stepLabel: "步骤 {n}"
+      },
     },
     aiThumbnailGenerator: {
       title: "AI 缩略图生成器",

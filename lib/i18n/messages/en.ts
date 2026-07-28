@@ -994,6 +994,19 @@ export const en: Messages = {
       ctaBtn1: "Generate Thumbnails",
       ctaBtn2: "Write Script",
       seoJsonDesc: "Generate viral, SEO-optimized YouTube titles with built-in CTR scoring and keyword front-loading.",
+      generator: "Generator",
+      loadingScreen: {
+        generatorLabel: "Generator",
+        working: "AI Working",
+        streamingPreviewTitle: "Streaming titles",
+        resultsSeoScore: "SEO Score",
+        resultsClickability: "Clickability",
+        whyThisRank: "Why this rank:",
+        strengthsLabel: "Strengths",
+        weaknessesLabel: "Weaknesses",
+        keySeoKeywords: "Key SEO Keywords",
+        stepLabel: "STEP "
+      },
     },
     aiThumbnailGenerator: {
       title: "AI Thumbnail Generator",
