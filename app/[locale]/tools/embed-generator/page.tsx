@@ -39,6 +39,8 @@ import {
   FaqAccordion,
   CrossCTA,
 } from "@/components/tools/ToolSections";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import Link from "next/link";
 
 // ─── Types ───
 type AspectRatio = "16:9" | "4:3" | "1:1" | "9:16" | "custom";
@@ -149,8 +151,8 @@ function ratioToPadding(opts: EmbedOptions): string {
   }
   const map: Record<Exclude<AspectRatio, "custom">, string> = {
     "16:9": "56.25%",
-    "4:3":  "75%",
-    "1:1":  "100%",
+    "4:3": "75%",
+    "1:1": "100%",
     "9:16": "177.7778%",
   };
   return map[opts.aspectRatio];
@@ -160,27 +162,27 @@ function buildEmbedSrc(videoId: string, opts: EmbedOptions): string {
   const host = opts.privacyEnhanced ? "https://www.youtube-nocookie.com" : "https://www.youtube.com";
   const params = new URLSearchParams();
 
-  if (opts.autoplay)            params.set("autoplay", "1");
+  if (opts.autoplay) params.set("autoplay", "1");
   if (opts.mute || opts.autoplay) params.set("mute", "1"); // browsers require mute for autoplay
   if (opts.loop) {
     params.set("loop", "1");
     if (!opts.playlistId) params.set("playlist", videoId); // loop requires playlist
   }
-  if (!opts.controls)           params.set("controls", "0");
-  if (!opts.fullscreen)         params.set("fs", "0");
-  if (opts.modestBranding)      params.set("modestbranding", "1");
-  if (opts.disableKeyboard)     params.set("disablekb", "1");
-  if (opts.startTime > 0)       params.set("start", String(Math.floor(opts.startTime)));
-  if (opts.endTime > 0)         params.set("end", String(Math.floor(opts.endTime)));
-  if (!opts.showRelated)        params.set("rel", "0");
+  if (!opts.controls) params.set("controls", "0");
+  if (!opts.fullscreen) params.set("fs", "0");
+  if (opts.modestBranding) params.set("modestbranding", "1");
+  if (opts.disableKeyboard) params.set("disablekb", "1");
+  if (opts.startTime > 0) params.set("start", String(Math.floor(opts.startTime)));
+  if (opts.endTime > 0) params.set("end", String(Math.floor(opts.endTime)));
+  if (!opts.showRelated) params.set("rel", "0");
   if (opts.closedCaptions) {
     params.set("cc_load_policy", "1");
-    if (opts.captionLanguage)   params.set("cc_lang_pref", opts.captionLanguage);
+    if (opts.captionLanguage) params.set("cc_lang_pref", opts.captionLanguage);
   }
-  if (opts.enableJsApi)         params.set("enablejsapi", "1");
+  if (opts.enableJsApi) params.set("enablejsapi", "1");
   if (opts.originDomain.trim()) params.set("origin", opts.originDomain.trim());
   if (opts.colorTheme === "white") params.set("color", "white");
-  if (opts.playlistId.trim())   params.set("list", opts.playlistId.trim());
+  if (opts.playlistId.trim()) params.set("list", opts.playlistId.trim());
   if (opts.playlistId.trim() && opts.playlistLoop) params.set("loop", "1");
 
   const qs = params.toString();
@@ -257,32 +259,25 @@ function highlightHtml(code: string): React.ReactNode {
   return parts;
 }
 
-const stats = [
-  { value: "20+", label: "Customization Options" },
-  { value: "5",  label: "Aspect Ratios" },
-  { value: "3",  label: "Device Previews" },
-  { value: "100%", label: "Free Forever" },
-];
-
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Use responsive mode", desc: "Responsive iframes adapt to any screen — critical for mobile-first sites and blog posts." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Enable privacy mode for compliance", desc: "youtube-nocookie.com blocks YouTube tracking cookies until playback — friendlier for GDPR/CCPA." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Add loading=\"lazy\"", desc: "Lazy-loaded iframes only load when scrolled into view, dramatically improving page speed scores." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't autoplay with sound", desc: "Browsers block autoplay unless the video is muted. Always pair autoplay with mute." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't strip the title attribute", desc: "The title attribute is required for accessibility — screen readers depend on it." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Loop needs a playlist", desc: "The loop param only works when paired with a playlist param — we add it automatically for you." },
-];
-
-const faqs = [
-  { q: "What's the difference between responsive and fixed embeds?", a: "A responsive embed scales to fill its container at any screen size, preserving the chosen aspect ratio. A fixed embed uses the exact width and height you specify. For blog posts and websites, responsive is almost always the right choice." },
-  { q: "Why does YouTube ignore my autoplay setting?", a: "Modern browsers block autoplay with sound. We automatically add mute=1 when autoplay is enabled so the video can actually start playing — this is a browser requirement, not a YouTube one." },
-  { q: "What does Privacy Enhanced Mode do?", a: "It uses youtube-nocookie.com instead of youtube.com, which prevents YouTube from setting tracking cookies until the user clicks play. Recommended for GDPR/CCPA-conscious sites." },
-  { q: "Why doesn't loop work for a single video?", a: "YouTube's loop param only works in combination with a playlist param. We automatically set playlist=VIDEO_ID for you when you enable loop on a single video." },
-  { q: "Is this tool free?", a: "100% free, no signup, no watermark, unlimited generations forever." },
+const guidesColorsAndIcons = [
+  { icon: CheckCircle2, color: "text-green-600 bg-green-100" },
+  { icon: CheckCircle2, color: "text-green-600 bg-green-100" },
+  { icon: CheckCircle2, color: "text-green-600 bg-green-100" },
+  { icon: XCircle, color: "text-red-600 bg-red-100" },
+  { icon: XCircle, color: "text-red-600 bg-red-100" },
+  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100" },
 ];
 
 // ─── Page ───
 export default function EmbedGeneratorPage() {
+  const { t } = useTranslations();
+  const tc = t("toolPages.embedGenerator") as NonNullable<ReturnType<typeof t<"toolPages.embedGenerator">>>;
+  const guides = tc.guides.map((g: { title: string; desc: string }, i: number) => ({
+    ...g,
+    icon: guidesColorsAndIcons[i % guidesColorsAndIcons.length].icon,
+    color: guidesColorsAndIcons[i % guidesColorsAndIcons.length].color,
+  }));
+
   const [input, setInput] = useState("");
   const [videoId, setVideoId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -315,7 +310,7 @@ export default function EmbedGeneratorPage() {
     setTimeout(() => {
       const id = extractVideoId(raw);
       if (!id) {
-        setError("That doesn't look like a valid YouTube URL or video ID. Try a full link or the 11-character ID.");
+        setError(tc.errorInvalid);
         setVideoId(null);
       } else {
         setVideoId(id);
@@ -330,7 +325,7 @@ export default function EmbedGeneratorPage() {
     setError(null);
     setOpts(DEFAULTS);
     inputRef.current?.focus();
-    toast.success("Reset to defaults");
+    toast.success(tc.toastReset);
   };
 
   const embedHtml = useMemo(() => (videoId ? buildEmbedHtml(videoId, opts) : ""), [videoId, opts]);
@@ -342,9 +337,9 @@ export default function EmbedGeneratorPage() {
       await copyToClipboard(embedHtml);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-      toast.success("Embed code copied to clipboard");
+      toast.success(tc.toastCopied);
     } catch {
-      toast.error("Couldn't copy to clipboard");
+      toast.error(tc.toastCopyFailed);
     }
   };
 
@@ -371,7 +366,7 @@ ${embedHtml}
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1500);
-    toast.success("HTML file downloaded");
+    toast.success(tc.toastHtmlDownloaded);
   };
 
   const handleShare = async () => {
@@ -382,26 +377,26 @@ ${embedHtml}
     } else {
       try {
         await copyToClipboard(url);
-        toast.success("Video link copied");
+        toast.success(tc.toastLinkCopied);
       } catch {
-        toast.error("Couldn't copy");
+        toast.error(tc.toastLinkFailed);
       }
     }
   };
 
   const previewMaxWidth =
     device === "mobile" ? 360 :
-    device === "tablet" ? 720 :
-    1080;
+      device === "tablet" ? 720 :
+        1080;
 
   return (
     <ToolLayout
-      title="YouTube Embed Generator"
-      description="Generate responsive YouTube embed code with custom player settings — autoplay, loop, captions, privacy mode, and more — with a live preview."
+      title={tc.title}
+      description={tc.description}
       icon={Code2}
-      badge="Free Tool · 20+ Customization Options"
+      badge={tc.badge}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={tc.stats} />
 
       {/* ─── URL INPUT ─── */}
       <ToolCard className="mb-6">
@@ -413,8 +408,8 @@ ${embedHtml}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
-              placeholder="Video URL or 11-char ID…"
-              aria-label="YouTube video URL or video ID"
+              placeholder={tc.inputPlaceholder}
+              aria-label={tc.inputAriaLabel}
               className="flex-1 py-3 outline-none text-sm font-medium bg-transparent min-w-0"
             />
             {input && !loading && (
@@ -429,7 +424,7 @@ ${embedHtml}
           </div>
           <PrimaryButton onClick={() => handleGenerate()} disabled={loading || !input.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {loading ? "Generating..." : "Generate Embed"}
+            {loading ? tc.btnGenerating : tc.btnGenerate}
           </PrimaryButton>
         </div>
 
@@ -470,21 +465,21 @@ ${embedHtml}
           {/* ─── ACTION BAR ─── */}
           <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-3 p-4 bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <div className="text-xs font-bold text-neutral-600 truncate min-w-0">
-              Video ID: <span className="text-black font-black font-mono">{videoId}</span>
+              {tc.videoIdPrefix} <span className="text-black font-black font-mono">{videoId}</span>
             </div>
             <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full sm:w-auto">
               <button onClick={copyCode} className="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-lg bg-black text-white border-2 border-black hover:bg-red-600 transition">
                 {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                {copied ? "Copied" : "Copy Code"}
+                {copied ? tc.btnCopied : tc.btnCopy}
               </button>
               <button onClick={downloadHtml} className="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-lg bg-white border-2 border-black hover:bg-red-50 transition">
-                <Download className="w-3.5 h-3.5" /> Download
+                <Download className="w-3.5 h-3.5" /> {tc.btnDownload}
               </button>
               <button onClick={handleShare} className="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-lg bg-white border-2 border-black hover:bg-red-50 transition">
-                <Share2 className="w-3.5 h-3.5" /> Share
+                <Share2 className="w-3.5 h-3.5" /> {tc.btnShare}
               </button>
               <button onClick={reset} className="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-lg bg-white border-2 border-black hover:bg-red-50 transition">
-                <RotateCcw className="w-3.5 h-3.5" /> Reset
+                <RotateCcw className="w-3.5 h-3.5" /> {tc.btnReset}
               </button>
             </div>
           </div>
@@ -494,77 +489,71 @@ ${embedHtml}
             <section aria-label="Embed customization" className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden min-w-0">
               <div className="px-5 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                 <Sliders className="w-4 h-4 text-red-600" />
-                <h2 className="font-black text-sm">Customization</h2>
+                <h2 className="font-black text-sm">{tc.customizationTitle}</h2>
               </div>
 
               <div className="p-4 sm:p-5 space-y-6 max-h-[640px] sm:max-h-[760px] lg:max-h-[820px] overflow-y-auto">
                 {/* SIZING */}
-                <FieldGroup title="Sizing">
-                  <ToggleField label="Responsive iframe" value={opts.responsive} onChange={(v) => update("responsive", v)} desc="Scales to fill any container width" />
+                <FieldGroup title={tc.sizingTitle}>
+                  <ToggleField label={tc.responsiveLabel} value={opts.responsive} onChange={(v) => update("responsive", v)} desc={tc.responsiveDesc} />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <SelectField label="Aspect Ratio" value={opts.aspectRatio} onChange={(v) => update("aspectRatio", v as AspectRatio)} options={[
-                      { value: "16:9", label: "16:9 (Standard)" },
-                      { value: "4:3", label: "4:3 (Classic)" },
-                      { value: "1:1", label: "1:1 (Square)" },
-                      { value: "9:16", label: "9:16 (Vertical)" },
-                      { value: "custom", label: "Custom…" },
-                    ]} disabled={!opts.responsive} />
+                    <SelectField label={tc.aspectRatioLabel} value={opts.aspectRatio} onChange={(v) => update("aspectRatio", v as AspectRatio)} options={tc.aspectRatioOptions} disabled={!opts.responsive} />
                     {opts.aspectRatio === "custom" && opts.responsive && (
-                      <TextField label="Custom Ratio" value={opts.customRatio} onChange={(v) => update("customRatio", v)} placeholder="21:9" />
+                      <TextField label={tc.customRatioLabel} value={opts.customRatio} onChange={(v) => update("customRatio", v)} placeholder="21:9" />
                     )}
                   </div>
                   {!opts.responsive && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <NumberField label="Width (px)" value={opts.width} onChange={(v) => update("width", v)} min={120} max={3840} />
-                      <NumberField label="Height (px)" value={opts.height} onChange={(v) => update("height", v)} min={90} max={2160} />
+                      <NumberField label={tc.widthLabel} value={opts.width} onChange={(v) => update("width", v)} min={120} max={3840} />
+                      <NumberField label={tc.heightLabel} value={opts.height} onChange={(v) => update("height", v)} min={90} max={2160} />
                     </div>
                   )}
                 </FieldGroup>
 
                 {/* PLAYBACK */}
-                <FieldGroup title="Playback">
+                <FieldGroup title={tc.playbackTitle}>
                   <div className="grid grid-cols-2 gap-x-3 gap-y-2">
-                    <ToggleField compact label="Autoplay" value={opts.autoplay} onChange={(v) => update("autoplay", v)} />
-                    <ToggleField compact label="Mute" value={opts.mute || opts.autoplay} onChange={(v) => update("mute", v)} disabled={opts.autoplay} />
-                    <ToggleField compact label="Loop" value={opts.loop} onChange={(v) => update("loop", v)} />
-                    <ToggleField compact label="Show Controls" value={opts.controls} onChange={(v) => update("controls", v)} />
-                    <ToggleField compact label="Fullscreen" value={opts.fullscreen} onChange={(v) => update("fullscreen", v)} />
-                    <ToggleField compact label="Modest Branding" value={opts.modestBranding} onChange={(v) => update("modestBranding", v)} />
-                    <ToggleField compact label="Disable Keyboard" value={opts.disableKeyboard} onChange={(v) => update("disableKeyboard", v)} />
-                    <ToggleField compact label="Show Related" value={opts.showRelated} onChange={(v) => update("showRelated", v)} />
+                    <ToggleField compact label={tc.autoplayLabel} value={opts.autoplay} onChange={(v) => update("autoplay", v)} />
+                    <ToggleField compact label={tc.muteLabel} value={opts.mute || opts.autoplay} onChange={(v) => update("mute", v)} disabled={opts.autoplay} />
+                    <ToggleField compact label={tc.loopLabel} value={opts.loop} onChange={(v) => update("loop", v)} />
+                    <ToggleField compact label={tc.controlsLabel} value={opts.controls} onChange={(v) => update("controls", v)} />
+                    <ToggleField compact label={tc.fullscreenLabel} value={opts.fullscreen} onChange={(v) => update("fullscreen", v)} />
+                    <ToggleField compact label={tc.modestBrandingLabel} value={opts.modestBranding} onChange={(v) => update("modestBranding", v)} />
+                    <ToggleField compact label={tc.disableKbLabel} value={opts.disableKeyboard} onChange={(v) => update("disableKeyboard", v)} />
+                    <ToggleField compact label={tc.showRelatedLabel} value={opts.showRelated} onChange={(v) => update("showRelated", v)} />
                   </div>
                 </FieldGroup>
 
                 {/* TIMING */}
-                <FieldGroup title="Timing">
+                <FieldGroup title={tc.timingTitle}>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <NumberField label="Start time (s)" value={opts.startTime} onChange={(v) => update("startTime", v)} min={0} />
-                    <NumberField label="End time (s)" value={opts.endTime} onChange={(v) => update("endTime", v)} min={0} />
+                    <NumberField label={tc.startTimeLabel} value={opts.startTime} onChange={(v) => update("startTime", v)} min={0} />
+                    <NumberField label={tc.endTimeLabel} value={opts.endTime} onChange={(v) => update("endTime", v)} min={0} />
                   </div>
                 </FieldGroup>
 
                 {/* CAPTIONS */}
-                <FieldGroup title="Captions">
-                  <ToggleField label="Closed captions on by default" value={opts.closedCaptions} onChange={(v) => update("closedCaptions", v)} />
+                <FieldGroup title={tc.captionsTitle}>
+                  <ToggleField label={tc.closedCaptionsLabel} value={opts.closedCaptions} onChange={(v) => update("closedCaptions", v)} />
                   {opts.closedCaptions && (
-                    <TextField label="Caption Language (ISO code)" value={opts.captionLanguage} onChange={(v) => update("captionLanguage", v)} placeholder="en, es, fr…" />
+                    <TextField label={tc.captionLanguageLabel} value={opts.captionLanguage} onChange={(v) => update("captionLanguage", v)} placeholder={tc.captionLanguagePlaceholder} />
                   )}
                 </FieldGroup>
 
                 {/* PRIVACY & API */}
-                <FieldGroup title="Privacy & API">
-                  <ToggleField label="Privacy Enhanced Mode (youtube-nocookie)" value={opts.privacyEnhanced} onChange={(v) => update("privacyEnhanced", v)} desc="Blocks tracking cookies until play" />
-                  <ToggleField label="Enable JS API (postMessage)" value={opts.enableJsApi} onChange={(v) => update("enableJsApi", v)} />
+                <FieldGroup title={tc.privacyTitle}>
+                  <ToggleField label={tc.privacyEnhancedLabel} value={opts.privacyEnhanced} onChange={(v) => update("privacyEnhanced", v)} desc={tc.privacyEnhancedDesc} />
+                  <ToggleField label={tc.enableJsApiLabel} value={opts.enableJsApi} onChange={(v) => update("enableJsApi", v)} />
                   {opts.enableJsApi && (
-                    <TextField label="Origin domain" value={opts.originDomain} onChange={(v) => update("originDomain", v)} placeholder="https://yoursite.com" />
+                    <TextField label={tc.originDomainLabel} value={opts.originDomain} onChange={(v) => update("originDomain", v)} placeholder={tc.originDomainPlaceholder} />
                   )}
                 </FieldGroup>
 
                 {/* PLAYLIST */}
-                <FieldGroup title="Playlist">
-                  <TextField label="Playlist ID (optional)" value={opts.playlistId} onChange={(v) => update("playlistId", v)} placeholder="PL…" />
+                <FieldGroup title={tc.playlistTitle}>
+                  <TextField label={tc.playlistIdLabel} value={opts.playlistId} onChange={(v) => update("playlistId", v)} placeholder={tc.playlistIdPlaceholder} />
                   {opts.playlistId && (
-                    <ToggleField compact label="Loop playlist" value={opts.playlistLoop} onChange={(v) => update("playlistLoop", v)} />
+                    <ToggleField compact label={tc.playlistLoopLabel} value={opts.playlistLoop} onChange={(v) => update("playlistLoop", v)} />
                   )}
                 </FieldGroup>
 
@@ -578,18 +567,16 @@ ${embedHtml}
                     <button
                       onClick={() => update("previewTheme", "light")}
                       aria-pressed={opts.previewTheme === "light"}
-                      className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black rounded-lg border-2 transition ${
-                        opts.previewTheme === "light" ? "bg-white text-black border-black shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]" : "bg-white text-neutral-600 border-neutral-300 hover:border-black"
-                      }`}
+                      className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black rounded-lg border-2 transition ${opts.previewTheme === "light" ? "bg-white text-black border-black shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]" : "bg-white text-neutral-600 border-neutral-300 hover:border-black"
+                        }`}
                     >
                       <Sun className="w-3.5 h-3.5" /> Light Preview
                     </button>
                     <button
                       onClick={() => update("previewTheme", "dark")}
                       aria-pressed={opts.previewTheme === "dark"}
-                      className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black rounded-lg border-2 transition ${
-                        opts.previewTheme === "dark" ? "bg-black text-white border-black shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]" : "bg-white text-neutral-600 border-neutral-300 hover:border-black"
-                      }`}
+                      className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black rounded-lg border-2 transition ${opts.previewTheme === "dark" ? "bg-black text-white border-black shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]" : "bg-white text-neutral-600 border-neutral-300 hover:border-black"
+                        }`}
                     >
                       <Moon className="w-3.5 h-3.5" /> Dark Preview
                     </button>
@@ -597,16 +584,9 @@ ${embedHtml}
                 </FieldGroup>
 
                 {/* PLAYBACK SPEED (note) */}
-                <FieldGroup title="Playback Speed">
-                  <SelectField label="Default playback speed (hint only)" value={String(opts.playbackSpeed)} onChange={(v) => update("playbackSpeed", parseFloat(v))} options={[
-                    { value: "0.5", label: "0.5×" },
-                    { value: "0.75", label: "0.75×" },
-                    { value: "1", label: "1× (normal)" },
-                    { value: "1.25", label: "1.25×" },
-                    { value: "1.5", label: "1.5×" },
-                    { value: "2", label: "2×" },
-                  ]} />
-                  <p className="text-[10px] font-bold text-neutral-400 -mt-1">YouTube ignores this in iframes — viewers can change it from the player menu.</p>
+                <FieldGroup title={tc.speedTitle}>
+                  <SelectField label={tc.speedLabel} value={String(opts.playbackSpeed)} onChange={(v) => update("playbackSpeed", parseFloat(v))} options={tc.speedOptions} />
+                  <p className="text-[10px] font-bold text-neutral-400 -mt-1">{tc.speedNotice}</p>
                 </FieldGroup>
               </div>
             </section>
@@ -617,13 +597,13 @@ ${embedHtml}
               <div className={`border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden ${opts.previewTheme === "dark" ? "bg-neutral-900" : "bg-white"}`}>
                 <div className={`px-4 sm:px-5 py-3 border-b-2 border-black flex flex-wrap items-center justify-between gap-3 ${opts.previewTheme === "dark" ? "bg-black text-white" : "bg-neutral-50 text-black"}`}>
                   <h2 className="font-black text-sm flex items-center gap-2">
-                    <Play className="w-4 h-4 text-red-500" /> Live Preview
+                    <Play className="w-4 h-4 text-red-500" /> {tc.previewTitle}
                   </h2>
                   <div role="tablist" aria-label="Device" className="flex flex-wrap gap-1">
                     {([
-                      { id: "desktop", label: "Desktop", icon: Monitor },
-                      { id: "tablet", label: "Tablet", icon: Tablet },
-                      { id: "mobile", label: "Mobile", icon: Smartphone },
+                      { id: "desktop", label: tc.previewDesktop, icon: Monitor },
+                      { id: "tablet", label: tc.previewTablet, icon: Tablet },
+                      { id: "mobile", label: tc.previewMobile, icon: Smartphone },
                     ] as { id: DevicePreview; label: string; icon: typeof Monitor }[]).map((d) => {
                       const active = device === d.id;
                       return (
@@ -632,13 +612,12 @@ ${embedHtml}
                           role="tab"
                           aria-selected={active}
                           onClick={() => setDevice(d.id)}
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-black rounded-lg border-2 transition shrink-0 ${
-                            active
-                              ? "bg-red-600 text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-                              : opts.previewTheme === "dark"
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-black rounded-lg border-2 transition shrink-0 ${active
+                            ? "bg-red-600 text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                            : opts.previewTheme === "dark"
                               ? "bg-white/5 text-neutral-300 border-white/10 hover:border-white/40"
                               : "bg-white text-neutral-700 border-neutral-300 hover:border-black"
-                          }`}
+                            }`}
                         >
                           <d.icon className="w-3.5 h-3.5" /> {d.label}
                         </button>
@@ -674,7 +653,7 @@ ${embedHtml}
                           />
                         </div>
                         <div className={`mt-2 text-center text-[10px] font-black ${opts.previewTheme === "dark" ? "text-neutral-400" : "text-neutral-500"}`}>
-                          Fixed {opts.width}×{opts.height} (scaled to fit container)
+                          {tc.previewFixedNotice.replace("{width}", String(opts.width)).replace("{height}", String(opts.height))}
                         </div>
                       </div>
                     )}
@@ -684,6 +663,7 @@ ${embedHtml}
 
               {/* CODE BLOCK */}
               <CodeBlock
+                tc={tc}
                 code={embedHtml}
                 onCopy={copyCode}
                 copied={copied}
@@ -696,43 +676,38 @@ ${embedHtml}
       )}
 
       <GuideGrid
-        badge="Embed Rules"
-        title="How to embed YouTube videos the right way"
-        intro="Six rules for shipping fast, accessible, privacy-friendly YouTube embeds."
+        badge={tc.guideBadge}
+        title={tc.guideTitle}
+        intro={tc.guideIntro}
         cards={guides}
       />
 
       <Workflow
-        title="Your 4-step embed workflow"
-        steps={[
-          { n: "01", t: "Paste a YouTube link", d: "Drop any YouTube URL, Shorts link, embed URL, or 11-char video ID into the input." },
-          { n: "02", t: "Tune the options", d: "Toggle autoplay, mute, loop, captions, privacy mode — every change updates the live preview." },
-          { n: "03", t: "Preview on any device", d: "Switch between desktop, tablet, and mobile to verify the embed looks right everywhere." },
-          { n: "04", t: "Copy or download", d: "Copy the embed code to your clipboard, or download a ready-to-open HTML file." },
-        ]}
+        title={tc.workflowTitle}
+        steps={tc.workflows}
       />
 
-      <SeoContent badge="Complete Embed Guide" title="How to embed YouTube videos in 2026">
-        <p>YouTube embeds are still the easiest way to add video to a website, but the default <em>Share → Embed</em> markup leaves a lot of performance and privacy on the table. This generator builds production-ready iframes with sensible defaults — <strong>responsive sizing</strong>, <strong>lazy loading</strong>, <strong>strict referrer policy</strong>, and an <strong>accessibility title</strong> — out of the box.</p>
-        <h3>Responsive vs fixed embeds</h3>
-        <p>Responsive embeds use a wrapper div with <code>padding-bottom</code> set to the inverse aspect ratio (56.25% for 16:9), letting the iframe stretch to any container width while preserving its shape. This is the right choice for almost every website. Fixed embeds use a hardcoded width and height — useful when you need a precise size.</p>
-        <h3>Privacy Enhanced Mode (youtube-nocookie)</h3>
-        <p>Switching from <code>youtube.com</code> to <code>youtube-nocookie.com</code> prevents YouTube from setting tracking cookies until the user actually plays the video. It's the same player, the same features — but more friendly to GDPR and CCPA compliance.</p>
-        <h3>Autoplay quirks</h3>
-        <p>Browsers will block autoplay with sound. We automatically pair <code>autoplay=1</code> with <code>mute=1</code> so your video actually starts. Viewers can unmute manually with one click.</p>
-        <h3>Loop, captions, and the JS API</h3>
-        <p>YouTube's <code>loop</code> parameter only works when paired with a <code>playlist</code> param — we set <code>playlist=VIDEO_ID</code> for you so single-video loops just work. The JS API toggle adds <code>enablejsapi=1</code> so you can control the player with <code>postMessage</code>; pair it with your site's <code>origin</code> for security.</p>
-        <h3>Pair with our other thumbnail tools</h3>
-        <p>Need to preview the thumbnail too? Use our <a href="/tools/thumbnail-preview">Thumbnail Preview</a> for all sizes, or our <a href="/tools/thumbnail-downloader">Thumbnail Downloader</a> for direct downloads.</p>
+      <SeoContent badge={tc.seoContent.badge} title={tc.seoContent.title}>
+        <p>{tc.seoContent.p1}</p>
+        <h3>{tc.seoContent.h3_1}</h3>
+        <p>{tc.seoContent.p2_1}</p>
+        <h3>{tc.seoContent.h3_2}</h3>
+        <p>{tc.seoContent.p2_2}</p>
+        <h3>{tc.seoContent.h3_3}</h3>
+        <p>{tc.seoContent.p2_3}</p>
+        <h3>{tc.seoContent.h3_4}</h3>
+        <p>{tc.seoContent.p2_4}</p>
+        <h3>{tc.seoContent.h3_5}</h3>
+        <p>{tc.seoContent.p2_5} <Link href="/tools/thumbnail-preview">Thumbnail Preview</Link> {tc.crossCta.desc} <Link href="/tools/thumbnail-downloader">Thumbnail Downloader</Link>.</p>
       </SeoContent>
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={tc.faqs} />
 
       <CrossCTA
-        title="Now finish your video page"
-        desc="Pair your embed with thumbnail previews and downloadable HD thumbs."
-        primary={{ label: "Thumbnail Preview", href: "/tools/thumbnail-preview", icon: Monitor }}
-        secondary={{ label: "Thumbnail Downloader", href: "/tools/thumbnail-downloader", icon: Download }}
+        title={tc.crossCta.title}
+        desc={tc.crossCta.desc}
+        primary={{ label: tc.crossCta.btn1, href: "/tools/thumbnail-preview", icon: Monitor }}
+        secondary={{ label: tc.crossCta.btn2, href: "/tools/thumbnail-downloader", icon: Download }}
       />
 
       {/* ─── CODE FULLSCREEN MODAL ─── */}
@@ -746,7 +721,7 @@ ${embedHtml}
             className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm p-4 sm:p-8 flex items-center justify-center"
             role="dialog"
             aria-modal="true"
-            aria-label="Fullscreen embed code"
+            aria-label={tc.uiFullscreen}
           >
             <motion.div
               initial={{ scale: 0.95, y: 10 }}
@@ -757,14 +732,14 @@ ${embedHtml}
             >
               <div className="flex items-center justify-between gap-3 p-4 border-b-2 border-black bg-black text-white shrink-0">
                 <h3 className="font-black text-base flex items-center gap-2">
-                  <Code2 className="w-4 h-4 text-red-500" /> Embed code
+                  <Code2 className="w-4 h-4 text-red-500" /> {tc.codeTitle}
                 </h3>
                 <div className="flex items-center gap-2">
                   <button onClick={copyCode} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-lg bg-red-600 hover:bg-red-700 transition">
                     {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                    {copied ? "Copied" : "Copy"}
+                    {copied ? tc.btnCopied : tc.btnCopy}
                   </button>
-                  <button onClick={() => setCodeFullscreen(false)} aria-label="Close" className="p-1.5 rounded-md bg-white/10 hover:bg-white/20 transition">
+                  <button onClick={() => setCodeFullscreen(false)} aria-label={tc.uiClose} className="p-1.5 rounded-md bg-white/10 hover:bg-white/20 transition">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
@@ -774,18 +749,18 @@ ${embedHtml}
           </motion.div>
         )}
       </AnimatePresence>
-          <ToolSeoJsonLd
-        name="YouTube Embed Generator"
-        description={"Generate responsive, privacy-enhanced YouTube embed codes with custom dimensions, start times, and captions."}
+      <ToolSeoJsonLd
+        name={tc.title}
+        description={tc.seoJsonDesc}
         slug="embed-generator"
-        faqs={faqs}
+        faqs={tc.faqs}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "YouTube Embed Generator", slug: "/tools/embed-generator" },
+          { name: tc.title, slug: "/tools/embed-generator" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }
 
@@ -871,24 +846,24 @@ function SelectField({ label, value, onChange, options, disabled }: {
   );
 }
 
-function CodeBlock({ code, onCopy, copied, onDownload, onFullscreen }: {
-  code: string; onCopy: () => void; copied: boolean; onDownload: () => void; onFullscreen: () => void;
+function CodeBlock({ tc, code, onCopy, copied, onDownload, onFullscreen }: {
+  tc: any; code: string; onCopy: () => void; copied: boolean; onDownload: () => void; onFullscreen: () => void;
 }) {
   return (
     <div className="bg-neutral-950 border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
       <div className="flex items-center justify-between gap-2 sm:gap-3 px-4 sm:px-5 py-3 border-b-2 border-black bg-black text-white">
         <h2 className="font-black text-sm flex items-center gap-2 min-w-0">
-          <Code2 className="w-4 h-4 text-red-500 shrink-0" /> <span className="truncate">Generated Code</span>
+          <Code2 className="w-4 h-4 text-red-500 shrink-0" /> <span className="truncate">{tc.codeTitle}</span>
         </h2>
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          <button onClick={onCopy} aria-label="Copy code" className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-black rounded-lg bg-red-600 hover:bg-red-700 transition">
+          <button onClick={onCopy} aria-label={tc.btnCopy} className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-black rounded-lg bg-red-600 hover:bg-red-700 transition">
             {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-            <span className="hidden sm:inline">{copied ? "Copied" : "Copy"}</span>
+            <span className="hidden sm:inline">{copied ? tc.btnCopied : tc.btnCopy}</span>
           </button>
-          <button onClick={onDownload} aria-label="Download HTML" className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1.5 text-xs font-black rounded-lg bg-white/10 hover:bg-white/20 transition">
+          <button onClick={onDownload} aria-label={tc.uiDownload} className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1.5 text-xs font-black rounded-lg bg-white/10 hover:bg-white/20 transition">
             <Download className="w-3.5 h-3.5" />
           </button>
-          <button onClick={onFullscreen} aria-label="Fullscreen code" className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1.5 text-xs font-black rounded-lg bg-white/10 hover:bg-white/20 transition">
+          <button onClick={onFullscreen} aria-label={tc.uiFullscreen} className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1.5 text-xs font-black rounded-lg bg-white/10 hover:bg-white/20 transition">
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
         </div>

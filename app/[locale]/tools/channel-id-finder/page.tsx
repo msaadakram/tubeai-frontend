@@ -24,6 +24,7 @@ import {
   ExternalLink,
   Play,
 } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
@@ -74,32 +75,12 @@ function flagEmoji(country?: string): string {
   return country.toUpperCase().replace(/./g, (c) => String.fromCodePoint(127397 + c.charCodeAt(0)));
 }
 
-const stats = [
-  { value: "Live", label: "YouTube API" },
-  { value: "<2s", label: "Lookup Speed" },
-  { value: "100%", label: "Free Forever" },
-  { value: "Any", label: "URL Format" },
-];
-
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Use for API integrations", desc: "Channel IDs are required for the YouTube Data API, RSS feeds, and most analytics integrations." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Save the canonical URL", desc: "The /channel/UC... URL never changes — handles can be rebranded but IDs are permanent." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Subscribe via RSS", desc: "Power users follow channels via RSS — paste the channel ID into any RSS reader for ad-free updates." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't confuse handle with ID", desc: "@handle is human-readable; the ID is a 24-character UC... string used by YouTube's backend." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't share IDs publicly without context", desc: "Channel IDs unlock automation. Be mindful when posting them in public scraper or bot configs." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Old custom URLs may differ", desc: "Pre-2022 /c/ and /user/ URLs sometimes resolve to a different ID than the new @handle. Verify both." },
-];
-
-const faqs = [
-  { q: "What is a YouTube Channel ID?", a: "A unique 24-character string starting with 'UC' that YouTube uses internally to identify every channel. Unlike @handles, channel IDs never change — even if the channel rebrands." },
-  { q: "Why do I need it?", a: "You'll need a channel ID for the YouTube Data API, third-party analytics tools, RSS feed subscriptions, embed widgets, and most automation workflows." },
-  { q: "How is this different from @handle?", a: "Handles are human-readable usernames (like @MrBeast) that owners can change. Channel IDs are permanent backend identifiers — apps and APIs use IDs, humans use handles." },
-  { q: "Is this tool free?", a: "Yes — 100% free, no signup, unlimited lookups. Paste any URL or handle and get the ID, RSS feed, and canonical channel URL instantly." },
-];
-
 const suggestions = ["@MrBeast", "@MarquesBrownlee", "@AliAbdaal", "@Veritasium", "@TheVerge"];
 
 export default function ChannelIdFinderPage() {
+  const { t } = useTranslations();
+  const toolContent = t("toolPages.channelIdFinder") as NonNullable<ReturnType<typeof t<"toolPages.channelIdFinder">>>;
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -152,12 +133,12 @@ export default function ChannelIdFinderPage() {
 
   return (
     <ToolLayout
-      title="YouTube Channel ID Finder"
-      description="Paste any YouTube link — video, short, channel URL, or @handle — to get live channel info, the permanent UC... ID, RSS feed, and canonical URLs."
+      title={toolContent.title}
+      description={toolContent.description}
       icon={Hash}
-      badge="Free Tool · Live YouTube Data"
+      badge={toolContent.badge}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={toolContent.stats} />
 
       <ToolCard className="mb-6">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -167,18 +148,18 @@ export default function ChannelIdFinderPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && run()}
-              placeholder="Paste any YouTube URL, @handle, or video link..."
+              placeholder={toolContent.inputPlaceholder}
               className="flex-1 py-3 outline-none text-sm font-medium"
             />
           </div>
           <PrimaryButton onClick={() => run()} disabled={loading || !input.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-            {loading ? "Fetching..." : "Find Channel"}
+            {loading ? toolContent.btnFetching : toolContent.btnFind}
           </PrimaryButton>
         </div>
         <div className="flex flex-wrap items-center gap-2 mt-4">
-          <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">Try:</span>
-          {suggestions.map((s) => (
+          <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">{toolContent.tryPrefix}</span>
+          {toolContent.suggestions.map((s) => (
             <button
               key={s}
               onClick={() => run(s)}
@@ -222,11 +203,11 @@ export default function ChannelIdFinderPage() {
                 </div>
 
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-3 rounded-full bg-red-100 border-2 border-black text-[10px] font-black uppercase tracking-wider text-red-700">
-                  <AlertCircle className="w-3 h-3" /> Channel Not Found
+                  <AlertCircle className="w-3 h-3" /> {toolContent.errorNotFound}
                 </div>
 
                 <h3 className="font-black text-2xl sm:text-3xl tracking-tight mb-2">
-                  We couldn't find that channel
+                  {toolContent.errorTitle}
                 </h3>
                 <p className="text-sm sm:text-base text-neutral-600 font-medium max-w-md leading-relaxed">
                   {error}
@@ -234,16 +215,12 @@ export default function ChannelIdFinderPage() {
 
                 {/* Helpful tips */}
                 <div className="mt-6 w-full max-w-lg grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left">
-                  {[
-                    { icon: CheckCircle2, label: "Use a full URL", hint: "youtube.com/@handle" },
-                    { icon: CheckCircle2, label: "Or paste a video", hint: "youtu.be/abc123" },
-                    { icon: CheckCircle2, label: "Or just the handle", hint: "@MrBeast" },
-                  ].map((tip) => (
+                  {toolContent.errorTips.map((tip: any) => (
                     <div
                       key={tip.label}
                       className="flex items-start gap-2 p-2.5 rounded-xl border-2 border-black bg-neutral-50"
                     >
-                      <tip.icon className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
                       <div className="min-w-0">
                         <div className="font-black text-[11px] truncate">{tip.label}</div>
                         <div className="text-[10px] text-neutral-500 font-bold truncate">{tip.hint}</div>
@@ -261,11 +238,11 @@ export default function ChannelIdFinderPage() {
                     }}
                     className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-black text-white text-xs font-black rounded-xl border-2 border-black hover:bg-red-600 transition shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                   >
-                    <Search className="w-3.5 h-3.5" /> Try another link
+                    <Search className="w-3.5 h-3.5" /> {toolContent.errorRetryBtn}
                   </button>
                   <div className="flex flex-wrap items-center justify-center gap-1.5">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Or try:</span>
-                    {suggestions.slice(0, 3).map((s) => (
+                    <span className="text-[10px] font-black uppercase tracking-wider text-neutral-500">{toolContent.errorOrTry}</span>
+                    {toolContent.suggestions.slice(0, 3).map((s: string) => (
                       <button
                         key={s}
                         onClick={() => run(s)}
@@ -296,8 +273,8 @@ export default function ChannelIdFinderPage() {
                 <Search className="w-7 h-7 text-white" />
               </div>
               <div className="text-center">
-                <div className="font-black text-base">Looking up channel...</div>
-                <div className="text-xs text-neutral-500 font-bold mt-1">Pulling live data from the YouTube API</div>
+                <div className="font-black text-base">{toolContent.loadingTitle}</div>
+                <div className="text-xs text-neutral-500 font-bold mt-1">{toolContent.loadingDesc}</div>
               </div>
             </div>
           </motion.div>
@@ -370,7 +347,7 @@ export default function ChannelIdFinderPage() {
                         {data.title}
                       </h2>
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-black text-white text-[10px] font-black rounded-full">
-                        <CheckCircle2 className="w-3 h-3" /> Live
+                        <CheckCircle2 className="w-3 h-3" /> {toolContent.resultLiveBadge}
                       </span>
                     </div>
                     <div className="text-xs sm:text-sm text-neutral-600 font-bold mt-1 flex items-center gap-x-3 gap-y-1 flex-wrap">
@@ -382,7 +359,7 @@ export default function ChannelIdFinderPage() {
                         </span>
                       )}
                       <span className="inline-flex items-center gap-1">
-                        <Calendar className="w-3 h-3" /> Joined {formatJoined(data.publishedAt)}
+                        <Calendar className="w-3 h-3" /> {toolContent.resultJoinedPrefix} {formatJoined(data.publishedAt)}
                       </span>
                     </div>
                   </div>
@@ -393,7 +370,7 @@ export default function ChannelIdFinderPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-red-600 text-white text-xs font-black rounded-xl border-2 border-black hover:bg-red-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition shrink-0 self-stretch sm:self-auto"
                   >
-                    Open Channel <ExternalLink className="w-3.5 h-3.5" />
+                    {toolContent.resultOpenChannel} <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>
 
@@ -402,13 +379,13 @@ export default function ChannelIdFinderPage() {
                   {[
                     {
                       icon: Users,
-                      label: "Subscribers",
+                      label: toolContent.resultStatSubs,
                       value: data.statistics.hiddenSubscriberCount
-                        ? "Hidden"
+                        ? toolContent.resultStatSubsHidden
                         : formatCount(data.statistics.subscriberCount),
                     },
-                    { icon: Eye, label: "Total Views", value: formatCount(data.statistics.viewCount) },
-                    { icon: VideoIcon, label: "Videos", value: formatCount(data.statistics.videoCount) },
+                    { icon: Eye, label: toolContent.resultStatViews, value: formatCount(data.statistics.viewCount) },
+                    { icon: VideoIcon, label: toolContent.resultStatVideos, value: formatCount(data.statistics.videoCount) },
                   ].map((s) => (
                     <div
                       key={s.label}
@@ -427,7 +404,7 @@ export default function ChannelIdFinderPage() {
                 {data.description && (
                   <div className="mt-5 sm:mt-6 pt-5 border-t-2 border-dashed border-neutral-200">
                     <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">
-                      About
+                      {toolContent.resultAbout}
                     </div>
                     <div className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line">
                       {showFullDesc || !needsTruncation ? data.description : descriptionShort + "..."}
@@ -436,7 +413,7 @@ export default function ChannelIdFinderPage() {
                           onClick={() => setShowFullDesc((s) => !s)}
                           className="ml-1 text-red-600 font-black hover:underline text-xs"
                         >
-                          {showFullDesc ? "Show less" : "Show more"}
+                          {showFullDesc ? toolContent.resultAboutShowLess : toolContent.resultAboutShowMore}
                         </button>
                       )}
                     </div>
@@ -445,18 +422,17 @@ export default function ChannelIdFinderPage() {
               </div>
             </div>
 
-            {/* COPY ROWS */}
             <div className="mt-5 sm:mt-6 bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
               <div className="px-4 sm:px-5 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                 <Hash className="w-4 h-4 text-red-600" />
-                <div className="font-black text-sm">Identifiers &amp; Links</div>
+                <div className="font-black text-sm">{toolContent.resultIdentifiersTitle}</div>
               </div>
               <div className="divide-y-2 divide-neutral-100">
                 {[
-                  { label: "Channel ID", value: data.channelId, hint: "Permanent UC... identifier" },
-                  { label: "Channel URL", value: channelUrl, hint: "Canonical /channel/ link" },
-                  ...(handleUrl ? [{ label: "Handle URL", value: handleUrl, hint: "Human-friendly @handle link" }] : []),
-                  { label: "RSS Feed", value: rssUrl, hint: "Subscribe in any RSS reader" },
+                  { label: toolContent.resultIdentifiers[0].label, value: data.channelId, hint: toolContent.resultIdentifiers[0].hint },
+                  { label: toolContent.resultIdentifiers[1].label, value: channelUrl, hint: toolContent.resultIdentifiers[1].hint },
+                  ...(handleUrl ? [{ label: toolContent.resultIdentifiers[2].label, value: handleUrl, hint: toolContent.resultIdentifiers[2].hint }] : []),
+                  { label: toolContent.resultIdentifiers[3].label, value: rssUrl, hint: toolContent.resultIdentifiers[3].hint },
                 ].map((row) => (
                   <div
                     key={row.label}
@@ -471,14 +447,13 @@ export default function ChannelIdFinderPage() {
                     </code>
                     <button
                       onClick={() => copy(row.label, row.value)}
-                      className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black rounded-lg border-2 border-black shrink-0 transition ${
-                        copied === row.label
-                          ? "bg-green-500 text-white"
-                          : "bg-black text-white hover:bg-red-600"
-                      }`}
+                      className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black rounded-lg border-2 border-black shrink-0 transition ${copied === row.label
+                        ? "bg-green-500 text-white"
+                        : "bg-black text-white hover:bg-red-600"
+                        }`}
                     >
                       {copied === row.label ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                      {copied === row.label ? "Copied" : "Copy"}
+                      {copied === row.label ? toolContent.resultCopied : toolContent.resultCopy}
                     </button>
                   </div>
                 ))}
@@ -491,55 +466,65 @@ export default function ChannelIdFinderPage() {
       </AnimatePresence>
 
       <GuideGrid
-        badge="Lookup Rules"
-        title="When and how to use channel IDs"
-        intro="Six rules for using YouTube channel IDs in API workflows, automation, and research."
-        cards={guides}
+        badge={toolContent.guideBadge}
+        title={toolContent.guideTitle}
+        intro={toolContent.guideIntro}
+        cards={toolContent.guides.map((g: any, i: number) => {
+          const icons = [CheckCircle2, CheckCircle2, CheckCircle2, XCircle, XCircle, AlertTriangle];
+          const colors = [
+            "text-green-600 bg-green-100",
+            "text-green-600 bg-green-100",
+            "text-green-600 bg-green-100",
+            "text-red-600 bg-red-100",
+            "text-red-600 bg-red-100",
+            "text-yellow-600 bg-yellow-100",
+          ];
+          return {
+            ...g,
+            icon: icons[i % icons.length],
+            color: colors[i % colors.length],
+          };
+        })}
       />
 
       <Workflow
-        title="Your 4-step lookup workflow"
-        steps={[
-          { n: "01", t: "Copy any YouTube link", d: "Channel URL, @handle, video link, or short — any format works." },
-          { n: "02", t: "Paste & fetch", d: "We resolve it through the YouTube Data API and pull live channel data." },
-          { n: "03", t: "Copy what you need", d: "Channel ID, /channel/ URL, @handle URL, or RSS feed — all one click." },
-          { n: "04", t: "Plug into your tools", d: "Use the ID in YouTube Data API requests, RSS readers, or analytics dashboards." },
-        ]}
+        title={toolContent.workflowTitle}
+        steps={toolContent.workflows}
       />
 
-      <SeoContent badge="Complete Channel ID Guide" title="How to find any YouTube channel ID in 2026">
-        <p>YouTube uses two parallel identifier systems. The <strong>@handle</strong> is the human-readable username creators chose during the 2022 rollout — short, brandable, and easy to share. The <strong>channel ID</strong> is the permanent 24-character backend identifier (always starting with "UC") that powers every API request, RSS feed, and embed widget on the platform. If you're integrating with the YouTube Data API or building any kind of automation, you need the ID, not the handle.</p>
-        <h3>Why channel IDs matter for creators and developers</h3>
-        <p>Handles can be changed. IDs cannot. When a creator rebrands from @OldName to @NewName, every link using the handle eventually breaks — but every link using <code>/channel/UC...</code> keeps working. That's why third-party analytics platforms, scheduling tools, and the YouTube Data API all index channels by ID, not handle.</p>
-        <h3>Where you'll need it</h3>
-        <p><strong>YouTube Data API:</strong> every channel-level endpoint (<code>channels.list</code>, <code>search.list</code>, <code>playlistItems.list</code>) accepts a channel ID as the primary key. <strong>RSS subscriptions:</strong> the URL <code>youtube.com/feeds/videos.xml?channel_id=UC...</code> delivers a live feed of every new upload, no API key required. <strong>Analytics dashboards:</strong> tools like Social Blade, vidIQ, and TubeBuddy all expect a channel ID for tracking.</p>
-        <h3>Common pitfalls</h3>
-        <p>Pre-2022 channels used three URL formats: <code>/c/CustomName</code>, <code>/user/LegacyName</code>, and <code>/channel/UC...</code>. Some legacy <code>/c/</code> links still resolve to a different ID than the modern @handle for the same creator. Always verify by visiting the channel page and checking the canonical <code>/channel/</code> URL in YouTube's "Share" menu.</p>
-        <h3>How our tool works</h3>
-        <p>We accept any channel URL format — full link, @handle, /c/, /user/, or /channel/ — and return all four canonical formats: the channel ID, the /channel/ URL, the @handle URL, and the live RSS feed URL. Everything is pulled from YouTube's public metadata; no API key or signup required.</p>
-        <h3>From channel ID to deeper insights</h3>
-        <p>Once you've got the ID, plug it into our <a href="/tools/channel-analytics">Channel Analytics</a> for a full performance breakdown, or run a monetization eligibility check via our <a href="/tools/monetization-checker">Monetization Checker</a>.</p>
+      <SeoContent badge={toolContent.seoContent.badge} title={toolContent.seoContent.title}>
+        <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent.p1 }} />
+        <h3>{toolContent.seoContent.h3_1}</h3>
+        <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent.p2_1 }} />
+        <h3>{toolContent.seoContent.h3_2}</h3>
+        <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent.p2_2 }} />
+        <h3>{toolContent.seoContent.h3_3}</h3>
+        <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent.p2_3 }} />
+        <h3>{toolContent.seoContent.h3_4}</h3>
+        <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent.p2_4 }} />
+        <h3>{toolContent.seoContent.h3_5}</h3>
+        <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent.p2_5 }} />
       </SeoContent>
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={toolContent.faqs} />
 
       <CrossCTA
-        title="Now go deeper on any channel"
-        desc="Got the ID? Run a full analytics report or monetization audit in seconds."
-        primary={{ label: "Analyze Channel", href: "/tools/channel-analytics", icon: BarChart3 }}
-        secondary={{ label: "Check Monetization", href: "/tools/monetization-checker", icon: DollarSign }}
+        title={toolContent.crossCta.title}
+        desc={toolContent.crossCta.desc}
+        primary={{ label: toolContent.crossCta.btn1, href: "/tools/channel-analytics", icon: BarChart3 }}
+        secondary={{ label: toolContent.crossCta.btn2, href: "/tools/monetization-checker", icon: DollarSign }}
       />
-          <ToolSeoJsonLd
-        name="YouTube Channel ID Finder"
-        description={"Find any YouTube channel ID, RSS feed, and canonical URL from a video link, @handle, or channel URL."}
+      <ToolSeoJsonLd
+        name={toolContent.title}
+        description={toolContent.seoJsonDesc}
         slug="channel-id-finder"
-        faqs={faqs}
+        faqs={toolContent.faqs}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "YouTube Channel ID Finder", slug: "/tools/channel-id-finder" },
+          { name: toolContent.title, slug: "/tools/channel-id-finder" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }

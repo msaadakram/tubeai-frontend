@@ -38,6 +38,7 @@ import {
   FaqAccordion,
   CrossCTA,
 } from "@/components/tools/ToolSections";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 // ─── Types ───
 type ThumbKey = "default" | "mqdefault" | "hqdefault" | "sddefault" | "maxresdefault";
@@ -51,35 +52,11 @@ type ThumbSize = {
 };
 
 const SIZES: ThumbSize[] = [
-  { key: "default",       label: "Default",            width: 120,  height: 90,  description: "Tiny preview frame" },
-  { key: "mqdefault",     label: "Medium",             width: 320,  height: 180, description: "Mobile feed preview" },
-  { key: "hqdefault",     label: "High",               width: 480,  height: 360, description: "Default fallback" },
-  { key: "sddefault",     label: "Standard",           width: 640,  height: 480, description: "4:3 standard def" },
+  { key: "default", label: "Default", width: 120, height: 90, description: "Tiny preview frame" },
+  { key: "mqdefault", label: "Medium", width: 320, height: 180, description: "Mobile feed preview" },
+  { key: "hqdefault", label: "High", width: 480, height: 360, description: "Default fallback" },
+  { key: "sddefault", label: "Standard", width: 640, height: 480, description: "4:3 standard def" },
   { key: "maxresdefault", label: "Maximum Resolution", width: 1280, height: 720, description: "HD master file" },
-];
-
-const stats = [
-  { value: "5",   label: "Resolutions" },
-  { value: "4",   label: "Device Previews" },
-  { value: "100%",label: "Free Forever" },
-  { value: "<1s", label: "Fetch Time" },
-];
-
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Use max for design work", desc: "Pull 1280×720 when you need a crisp reference for thumbnail design or print." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Preview on real devices", desc: "Check how your thumbnail reads on mobile, tablet, desktop, and TV before publishing." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Compare HQ vs Max", desc: "Some uploads never get a maxres variant — use the side-by-side compare to know what to expect." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't republish as-is", desc: "Other creators' thumbnails are copyrighted. Use them for study and inspiration only." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't use private videos", desc: "Private, unlisted-to-you, and members-only thumbnails won't load. Use public links." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Max isn't always there", desc: "Older or low-res uploads cap at sddefault or hqdefault. We label Max as unavailable when needed." },
-];
-
-const faqs = [
-  { q: "What thumbnail sizes does YouTube provide?", a: "Every public video ships with five auto-generated thumbnails: 120×90 (default), 320×180 (medium), 480×360 (high), 640×480 (standard), and 1280×720 (maxres). Older or low-resolution uploads may not have all five." },
-  { q: "Why is the max resolution unavailable for some videos?", a: "YouTube only generates maxres (1280×720) when the original source video is at least HD. Older uploads or low-resolution recordings cap at sddefault (640×480) or hqdefault (480×360)." },
-  { q: "How do I download a thumbnail?", a: "Click any quality's Download button. The image saves as a JPG to your device with a clean filename." },
-  { q: "Does this work for YouTube Shorts?", a: "Yes — paste any Shorts URL and you'll get the same five resolutions, including the vertical-feed preview frame." },
-  { q: "Is this tool free?", a: "100% free, no signup, no watermark, unlimited previews forever." },
 ];
 
 // ─── URL parser ───
@@ -175,9 +152,9 @@ type DeviceId = "desktop" | "tablet" | "mobile" | "tv";
 
 const DEVICES: { id: DeviceId; label: string; icon: typeof Monitor }[] = [
   { id: "desktop", label: "Desktop", icon: Monitor },
-  { id: "tablet",  label: "Tablet",  icon: Tablet  },
-  { id: "mobile",  label: "Mobile",  icon: Smartphone },
-  { id: "tv",      label: "TV",      icon: Tv      },
+  { id: "tablet", label: "Tablet", icon: Tablet },
+  { id: "mobile", label: "Mobile", icon: Smartphone },
+  { id: "tv", label: "TV", icon: Tv },
 ];
 
 function DeviceFrame({ device, src, alt }: { device: DeviceId; src: string; alt: string }) {
@@ -242,6 +219,9 @@ function DeviceFrame({ device, src, alt }: { device: DeviceId; src: string; alt:
 
 // ─── Page ───
 export default function ThumbnailPreviewPage() {
+  const { t } = useTranslations();
+  const tc = t("toolPages.thumbnailPreview") as any;
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -281,7 +261,7 @@ export default function ThumbnailPreviewPage() {
 
     const id = extractVideoId(raw);
     if (!id) {
-      setError("That doesn't look like a valid YouTube URL or video ID. Try a full link or the 11-character ID.");
+      setError(tc.errorInvalid);
       setVideoId(null);
       return;
     }
@@ -333,18 +313,21 @@ export default function ThumbnailPreviewPage() {
     ? availability.maxresdefault
       ? maxUrl
       : availability.sddefault
-      ? thumbUrl(videoId, "sddefault")
-      : hqUrl
+        ? thumbUrl(videoId, "sddefault")
+        : hqUrl
     : "";
+
+  const guideIcons = [CheckCircle2, CheckCircle2, CheckCircle2, XCircle, XCircle, AlertTriangle];
+  const guideColors = ["text-green-600 bg-green-100", "text-green-600 bg-green-100", "text-green-600 bg-green-100", "text-red-600 bg-red-100", "text-red-600 bg-red-100", "text-yellow-600 bg-yellow-100"];
 
   return (
     <ToolLayout
-      title="YouTube Thumbnail Preview (All Sizes)"
-      description="Paste any YouTube video, Short, or video ID to instantly preview every thumbnail resolution — and see how it looks on desktop, tablet, mobile, and TV. 100% free."
+      title={tc.title}
+      description={tc.description}
       icon={ImageIcon}
-      badge="Free Tool · 5 Resolutions · 4 Devices"
+      badge={tc.badge}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={tc.stats} />
 
       {/* Input */}
       <ToolCard className="mb-6">
@@ -356,7 +339,7 @@ export default function ThumbnailPreviewPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handlePreview()}
-              placeholder="Video URL, Shorts URL, or 11-character video ID…"
+              placeholder={tc.inputPlaceholder}
               aria-label="YouTube video URL, Shorts URL, or video ID"
               className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
             />
@@ -372,7 +355,7 @@ export default function ThumbnailPreviewPage() {
           </div>
           <PrimaryButton onClick={() => handlePreview()} disabled={loading || !input.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {loading ? "Loading..." : "Preview Thumbnails"}
+            {loading ? tc.loadingBtn : tc.previewBtn}
           </PrimaryButton>
         </div>
 
@@ -392,7 +375,7 @@ export default function ThumbnailPreviewPage() {
         </AnimatePresence>
 
         <div className="mt-3 text-[11px] text-neutral-400 font-medium">
-          Supports: <code className="font-mono">youtube.com/watch?v=…</code> · <code className="font-mono">youtu.be/…</code> · <code className="font-mono">/shorts/…</code> · <code className="font-mono">/live/…</code> · <code className="font-mono">/embed/…</code> · <code className="font-mono">m.youtube.com</code> · bare 11-char IDs
+          {tc.supportsLabel}<code className="font-mono">youtube.com/watch?v=…</code> · <code className="font-mono">youtu.be/…</code> · <code className="font-mono">/shorts/…</code> · <code className="font-mono">/live/…</code> · <code className="font-mono">/embed/…</code> · <code className="font-mono">m.youtube.com</code> · bare 11-char IDs
         </div>
       </ToolCard>
 
@@ -436,13 +419,13 @@ export default function ThumbnailPreviewPage() {
                   onClick={() => setCompareOpen(true)}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-lg bg-white border-2 border-black hover:bg-red-50 transition"
                 >
-                  <ArrowLeftRight className="w-3.5 h-3.5" /> Compare HQ vs Max
+                  <ArrowLeftRight className="w-3.5 h-3.5" /> {tc.compareBtn}
                 </button>
                 <button
                   onClick={handleShare}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-lg bg-white border-2 border-black hover:bg-red-50 transition"
                 >
-                  <Share2 className="w-3.5 h-3.5" /> Share
+                  <Share2 className="w-3.5 h-3.5" /> {tc.shareBtn}
                 </button>
                 <a
                   href={shareUrl}
@@ -450,7 +433,7 @@ export default function ThumbnailPreviewPage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-lg bg-black text-white border-2 border-black hover:bg-red-600 transition"
                 >
-                  Open on YouTube <ExternalLink className="w-3 h-3" />
+                  {tc.openYT} <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
             </div>
@@ -458,7 +441,7 @@ export default function ThumbnailPreviewPage() {
             {/* THUMBNAIL GRID */}
             <section aria-label="Available thumbnail sizes">
               <h2 className="font-black text-lg mb-4 flex items-center gap-2">
-                <ImageIcon className="w-5 h-5 text-red-600" /> All Thumbnail Sizes
+                <ImageIcon className="w-5 h-5 text-red-600" /> {tc.allSizes}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {SIZES.map((s, idx) => {
@@ -511,7 +494,7 @@ export default function ThumbnailPreviewPage() {
                             onClick={() => downloadAs(url, fname)}
                             className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-red-600 text-white text-xs font-black rounded-lg border-2 border-black hover:bg-red-700 transition"
                           >
-                            <Download className="w-3.5 h-3.5" /> Download
+                            <Download className="w-3.5 h-3.5" /> {tc.downloadBtn}
                           </button>
                           <button
                             onClick={() => {
@@ -520,9 +503,8 @@ export default function ThumbnailPreviewPage() {
                               setTimeout(() => setCopiedKey(null), 1200);
                             }}
                             aria-label="Copy image URL"
-                            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black rounded-lg border-2 border-black transition ${
-                              copiedKey === s.key ? "bg-green-500 text-white" : "bg-white hover:bg-neutral-50"
-                            }`}
+                            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black rounded-lg border-2 border-black transition ${copiedKey === s.key ? "bg-green-500 text-white" : "bg-white hover:bg-neutral-50"
+                              }`}
                           >
                             {copiedKey === s.key ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                           </button>
@@ -547,7 +529,7 @@ export default function ThumbnailPreviewPage() {
             <section aria-label="Device preview" className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
                 <h2 className="font-black text-lg flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-red-600" /> Device Preview
+                  <Zap className="w-5 h-5 text-red-600" /> {tc.devicePreview}
                 </h2>
                 <div role="tablist" aria-label="Choose device" className="flex flex-wrap gap-1.5">
                   {DEVICES.map((d) => {
@@ -558,11 +540,10 @@ export default function ThumbnailPreviewPage() {
                         role="tab"
                         aria-selected={active}
                         onClick={() => setDevice(d.id)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-lg border-2 transition ${
-                          active
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black rounded-lg border-2 transition ${active
                             ? "bg-black text-white border-black shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]"
                             : "bg-white text-neutral-700 border-neutral-300 hover:border-black"
-                        }`}
+                          }`}
                       >
                         <d.icon className="w-3.5 h-3.5" /> {d.label}
                       </button>
@@ -574,7 +555,7 @@ export default function ThumbnailPreviewPage() {
                 {previewSrc ? (
                   <DeviceFrame device={device} src={previewSrc} alt="Thumbnail preview" />
                 ) : (
-                  <div className="text-sm font-bold text-neutral-400">No preview available</div>
+                  <div className="text-sm font-bold text-neutral-400">{tc.noPreview}</div>
                 )}
               </div>
             </section>
@@ -583,41 +564,36 @@ export default function ThumbnailPreviewPage() {
       </AnimatePresence>
 
       <GuideGrid
-        badge="Preview Rules"
-        title="How to read your thumbnail across resolutions"
-        intro="Six rules for using YouTube's auto-generated thumbnails effectively — what to do, what to skip."
-        cards={guides}
+        badge={tc.guideBadge}
+        title={tc.guideTitle}
+        intro={tc.guideIntro}
+        cards={tc.guides.map((g: any, i: number) => ({ ...g, icon: guideIcons[i] || CheckCircle2, color: guideColors[i] || "text-green-600 bg-green-100" }))}
       />
 
       <Workflow
-        title="Your 4-step preview workflow"
-        steps={[
-          { n: "01", t: "Paste your link", d: "Drop a YouTube URL, Shorts link, or 11-char video ID into the box above." },
-          { n: "02", t: "Preview every size", d: "See all five YouTube thumbnail resolutions at once with file sizes labeled." },
-          { n: "03", t: "Check on real devices", d: "Switch between desktop, tablet, mobile, and TV mockups to verify readability." },
-          { n: "04", t: "Download or copy", d: "Save the resolution you need, or copy the direct image URL to your clipboard." },
-        ]}
+        title={tc.workflowTitle}
+        steps={tc.workflows}
       />
 
-      <SeoContent badge="Thumbnail Sizes Guide" title="YouTube thumbnail sizes & resolutions in 2026">
-        <p>Every public YouTube video automatically ships with five thumbnail resolutions, served straight from YouTube's CDN. Knowing which size to use — and where — is essential for designers studying high-CTR thumbnails, mobile-feed testers, and creators verifying that their uploads look sharp at every scale.</p>
-        <h3>The five YouTube thumbnail sizes explained</h3>
-        <p><strong>120×90 (default):</strong> Tiny preview used in legacy embeds and notifications. <strong>320×180 (mqdefault):</strong> Mobile-feed preview — use it to test how your design holds at small sizes. <strong>480×360 (hqdefault):</strong> The default fallback for most placements. <strong>640×480 (sddefault):</strong> Standard-def 4:3 with letterbox padding. <strong>1280×720 (maxresdefault):</strong> YouTube's HD master file — use it for design reference, swipe files, and prints.</p>
-        <h3>Why max resolution isn't always there</h3>
-        <p>YouTube only generates the <strong>1280×720</strong> variant when the source video is at least HD. Older uploads or low-bitrate recordings will cap at <strong>sddefault</strong> or <strong>hqdefault</strong>. This tool checks every resolution in parallel and clearly marks any that aren't available.</p>
-        <h3>Test on real devices before you publish</h3>
-        <p>A thumbnail that looks great at 1280×720 in Photoshop can collapse to a mush at 320×180 on a phone in the For You feed. Use the device previews to see your thumbnail at the exact size it'll appear on desktop, tablet, mobile, and TV.</p>
-        <h3>Pair with our other thumbnail tools</h3>
-        <p>Need the raw files? Use our <a href="/tools/thumbnail-downloader">Thumbnail Downloader</a>. Want to generate brand-new thumbnails with AI? Try the <a href="/tools/ai-thumbnail-generator">AI Thumbnail Generator</a>.</p>
+      <SeoContent badge={tc.seoContent.badge} title={tc.seoContent.title}>
+        <p>{tc.seoContent.p1}</p>
+        <h3>{tc.seoContent.h3_1}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_1 }} />
+        <h3>{tc.seoContent.h3_2}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_2 }} />
+        <h3>{tc.seoContent.h3_3}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_3 }} />
+        <h3>{tc.seoContent.h3_4}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_4 }} />
       </SeoContent>
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={tc.faqs} />
 
       <CrossCTA
-        title="From preview to download — and beyond"
-        desc="Now grab the file, or design a brand-new thumbnail with AI."
-        primary={{ label: "Thumbnail Downloader", href: "/tools/thumbnail-downloader", icon: Download }}
-        secondary={{ label: "AI Thumbnail Generator", href: "/tools/ai-thumbnail-generator", icon: Sparkles }}
+        title={tc.crossCta.title}
+        desc={tc.crossCta.desc}
+        primary={{ label: tc.crossCta.btn1, href: "/tools/thumbnail-downloader", icon: Download }}
+        secondary={{ label: tc.crossCta.btn2, href: "/tools/ai-thumbnail-generator", icon: Sparkles }}
       />
 
       {/* ─── ZOOM / FULLSCREEN MODAL ─── */}
@@ -676,7 +652,7 @@ export default function ThumbnailPreviewPage() {
             >
               <div className="flex items-center justify-between gap-3 p-4 border-b-2 border-black bg-black text-white">
                 <h3 className="font-black text-base flex items-center gap-2">
-                  <ArrowLeftRight className="w-4 h-4 text-red-500" /> HQ vs Max Resolution
+                  <ArrowLeftRight className="w-4 h-4 text-red-500" /> {tc.hqVsMax}
                 </h3>
                 <button
                   onClick={() => setCompareOpen(false)}
@@ -690,7 +666,7 @@ export default function ThumbnailPreviewPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="font-black text-sm">HQ <span className="text-neutral-500 font-bold">· 480×360</span></div>
-                    <span className="text-[10px] font-black uppercase tracking-wider bg-green-100 text-green-700 border-2 border-green-400 rounded-full px-2 py-0.5">Always available</span>
+                    <span className="text-[10px] font-black uppercase tracking-wider bg-green-100 text-green-700 border-2 border-green-400 rounded-full px-2 py-0.5">{tc.alwaysAvail}</span>
                   </div>
                   <div className="aspect-video bg-neutral-100 border-2 border-black rounded-xl overflow-hidden">
                     <img src={hqUrl} alt="HQ thumbnail" className="w-full h-full object-cover" />
@@ -699,12 +675,11 @@ export default function ThumbnailPreviewPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="font-black text-sm">Max <span className="text-neutral-500 font-bold">· 1280×720</span></div>
-                    <span className={`text-[10px] font-black uppercase tracking-wider rounded-full px-2 py-0.5 border-2 ${
-                      availability.maxresdefault
+                    <span className={`text-[10px] font-black uppercase tracking-wider rounded-full px-2 py-0.5 border-2 ${availability.maxresdefault
                         ? "bg-red-100 text-red-700 border-red-400"
                         : "bg-neutral-100 text-neutral-500 border-neutral-300"
-                    }`}>
-                      {availability.maxresdefault ? "HD available" : "Not available"}
+                      }`}>
+                      {availability.maxresdefault ? tc.hdAvail : tc.notAvail}
                     </span>
                   </div>
                   <div className="aspect-video bg-neutral-100 border-2 border-black rounded-xl overflow-hidden">
@@ -713,7 +688,7 @@ export default function ThumbnailPreviewPage() {
                     ) : (
                       <div className="w-full h-full flex flex-col items-center justify-center text-neutral-500 gap-1">
                         <XCircle className="w-8 h-8" />
-                        <div className="text-xs font-black uppercase tracking-wider">Not Available</div>
+                        <div className="text-xs font-black uppercase tracking-wider">{tc.notAvail}</div>
                       </div>
                     )}
                   </div>
@@ -723,17 +698,17 @@ export default function ThumbnailPreviewPage() {
           </motion.div>
         )}
       </AnimatePresence>
-          <ToolSeoJsonLd
-        name="YouTube Thumbnail Preview"
-        description={"Preview how your YouTube thumbnail renders across mobile, desktop, search, and the Shorts shelf before you publish."}
+      <ToolSeoJsonLd
+        name={tc.title}
+        description={tc.seoJsonDesc}
         slug="thumbnail-preview"
-        faqs={faqs}
+        faqs={tc.faqs}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "YouTube Thumbnail Preview", slug: "/tools/thumbnail-preview" },
+          { name: tc.title, slug: "/tools/thumbnail-preview" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }

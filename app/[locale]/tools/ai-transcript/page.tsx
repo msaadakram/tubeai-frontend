@@ -24,6 +24,7 @@ import {
   ListOrdered,
 } from "lucide-react";
 import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/tools/ToolLayout";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
@@ -63,28 +64,7 @@ type TranscriptData = {
   instructions?: string;
 };
 
-const stats = [
-  { value: "8.4M+", label: "Videos Transcribed" },
-  { value: "50+", label: "Languages" },
-  { value: "99.2%", label: "Accuracy" },
-  { value: "<60s", label: "Avg Processing" },
-];
-
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Use clean audio", desc: "Background noise drops accuracy by 15-20%. Record with a USB mic for best transcript quality." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Speak at natural pace", desc: "150-180 words per minute is optimal. Faster speech triggers more transcription errors." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Add SRT to your videos", desc: "Captions boost retention by 12% and unlock viewers who watch with sound off." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't auto-publish raw transcripts", desc: "AI transcripts need a 5-minute proofread for proper nouns, brand names, and technical terms." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't ignore translation context", desc: "Direct word-for-word translations miss idioms. Review translated transcripts before publishing." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Watch for homophones", desc: "\"There/their/they're\" and brand names are the most commonly mis-transcribed terms." },
-];
-
-const faqs = [
-  { q: "How accurate is the AI transcription?", a: "Manual captions average 99%+ accuracy; auto-generated captions average 92-95% on clean English audio. Accuracy drops slightly for accented speech, technical jargon, or noisy backgrounds." },
-  { q: "Which languages are supported?", a: "We support 50+ languages including English, Spanish, French, German, Mandarin, Hindi, Arabic, Portuguese, Japanese, and Korean. Translation between any pair is included." },
-  { q: "Can I download the transcript as SRT or TXT?", a: "Yes. Both .txt (clean text) and .srt (with timecodes for YouTube and most editors) are available as one-click downloads." },
-  { q: "Do transcripts help SEO?", a: "Massively. YouTube reads transcripts to understand your content, which improves search ranking. Captioned videos also rank higher because of accessibility signals." },
-];
+const unused = true; // placeholder for diff
 
 function pad(n: number, w = 2) {
   return String(Math.floor(n)).padStart(w, "0");
@@ -135,6 +115,9 @@ function friendlyError(raw: string, status: number): string {
 }
 
 export default function AITranscriptPage() {
+  const { t } = useTranslations();
+  const toolContent = t("toolPages.aiTranscript");
+
   const [url, setUrl] = useState("");
   const [lang, setLang] = useState("en");
   const [loading, setLoading] = useState(false);
@@ -279,14 +262,17 @@ export default function AITranscriptPage() {
   const hasTranscript = !!data?.transcript;
   const showLanguageToggle = !!data?.translatedText && data.captionLanguage !== lang;
 
+  // Add a non-null assertion or cast since we know it's in the English base
+  const tc = toolContent as NonNullable<typeof toolContent>;
+
   return (
     <ToolLayout
-      title="AI Transcript Generator"
-      description="Extract perfectly timed transcripts from any YouTube video and translate them into 50+ languages."
+      title={tc.title || ""}
+      description={tc.description || ""}
       icon={FileText}
-      badge="Transcribe AI · 99.2% Accuracy"
+      badge={tc.badge || ""}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={tc.stats || []} />
 
       <ToolCard className="mb-6">
         <div className="flex flex-col gap-3">
@@ -294,7 +280,7 @@ export default function AITranscriptPage() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && run()}
-            placeholder="https://youtube.com/watch?v=..."
+            placeholder={tc.inputPlaceholder}
           />
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1 min-w-0">
@@ -302,7 +288,7 @@ export default function AITranscriptPage() {
             </div>
             <PrimaryButton onClick={() => run()} disabled={loading || !url.trim()}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
-              {loading ? "Fetching transcript..." : "Generate Transcript"}
+              {loading ? tc.btnLoading : tc.btnGenerate}
             </PrimaryButton>
           </div>
         </div>
@@ -313,7 +299,7 @@ export default function AITranscriptPage() {
         <ToolCard className="mb-12 sm:mb-16">
           <div className="flex flex-col items-center justify-center py-10 gap-4">
             <Loader2 className="w-10 h-10 animate-spin text-red-600" />
-            <div className="text-xs font-black uppercase tracking-wider text-neutral-600">Fetching transcript...</div>
+            <div className="text-xs font-black uppercase tracking-wider text-neutral-600">{tc.btnLoading}</div>
             <div className="w-full max-w-md space-y-2">
               <div className="h-3 rounded-full bg-neutral-200 animate-pulse" />
               <div className="h-3 rounded-full bg-neutral-200 animate-pulse w-5/6" />
@@ -331,7 +317,7 @@ export default function AITranscriptPage() {
               <XCircle className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-black text-sm text-black">Couldn't generate transcript</div>
+              <div className="font-black text-sm text-black">{tc.errorTitle}</div>
               <div className="text-xs font-medium text-neutral-600 mt-1 break-words">{error}</div>
               <button
                 onClick={() => {
@@ -340,7 +326,7 @@ export default function AITranscriptPage() {
                 }}
                 className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-black bg-white text-black text-[11px] font-black hover:bg-red-600 hover:text-white transition-colors"
               >
-                Try another video
+                {tc.errorRetryBtn}
               </button>
             </div>
           </div>
@@ -404,9 +390,9 @@ export default function AITranscriptPage() {
                     <XCircle className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
-                    <div className="font-black text-sm text-black">No captions available</div>
+                    <div className="font-black text-sm text-black">{tc.resultNoCaptionsTitle}</div>
                     <div className="text-xs font-medium text-neutral-600 mt-1">
-                      {data.instructions || "This video doesn't have captions enabled. Try a different video."}
+                      {data.instructions || tc.resultNoCaptionsDesc}
                     </div>
                   </div>
                 </div>
@@ -421,9 +407,9 @@ export default function AITranscriptPage() {
                     <Languages className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
-                    <div className="font-black text-sm text-black">Pick a language to fetch the transcript</div>
+                    <div className="font-black text-sm text-black">{tc.resultPickLanguageTitle}</div>
                     <div className="text-xs font-medium text-neutral-600 mt-1">
-                      Captions are published in these languages. Click one to download and translate it to{" "}
+                      {tc.resultPickLanguageDesc}{" "}
                       <span className="font-black text-black">{getLanguage(lang).name}</span>.
                     </div>
                   </div>
@@ -450,7 +436,7 @@ export default function AITranscriptPage() {
             {hasTranscript && data.languages && data.languages.length > 1 && (
               <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6">
                 <div className="text-[10px] font-black text-neutral-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <Languages className="w-3.5 h-3.5" /> Available caption languages
+                  <Languages className="w-3.5 h-3.5" /> {tc.resultAvailableLanguages}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {data.languages.map((l, i) => {
@@ -464,9 +450,8 @@ export default function AITranscriptPage() {
                           else run(l.code);
                         }}
                         title={l.kind === "auto-generated" ? "Auto-generated" : "Manual captions"}
-                        className={`text-[11px] font-black px-2.5 py-1.5 rounded-full border-2 border-black flex items-center gap-1.5 transition-colors ${
-                          active ? "bg-red-600 text-white" : "bg-white text-black hover:bg-black hover:text-white"
-                        }`}
+                        className={`text-[11px] font-black px-2.5 py-1.5 rounded-full border-2 border-black flex items-center gap-1.5 transition-colors ${active ? "bg-red-600 text-white" : "bg-white text-black hover:bg-black hover:text-white"
+                          }`}
                       >
                         <span>{l.name}</span>
                         <span className="text-[9px] opacity-70 uppercase tracking-wider">{l.code}</span>
@@ -483,12 +468,12 @@ export default function AITranscriptPage() {
               <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 border-b-2 border-black bg-neutral-50">
                   <div className="flex flex-wrap gap-2">
-                    <ViewToggle active={view === "plain"} onClick={() => setView("plain")} icon={AlignLeft} label="Plain text" />
+                    <ViewToggle active={view === "plain"} onClick={() => setView("plain")} icon={AlignLeft} label={tc.viewPlainText || "Plain Text"} />
                     <ViewToggle
                       active={view === "segments"}
                       onClick={() => setView("segments")}
                       icon={ListOrdered}
-                      label="Timestamps"
+                      label={tc.viewTimestamps || "Timestamps"}
                       disabled={!data.segments?.length}
                     />
                     {showLanguageToggle && (
@@ -496,14 +481,14 @@ export default function AITranscriptPage() {
                         active={showOriginal}
                         onClick={() => setShowOriginal((v) => !v)}
                         icon={Languages}
-                        label={showOriginal ? "Show translation" : "Show original"}
+                        label={showOriginal ? tc.viewShowTranslation || "Translation" : tc.viewShowOriginal || "Original"}
                       />
                     )}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <ActionButton onClick={copy}>
                       {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                      {copied ? "Copied" : "Copy"}
+                      {copied ? tc.btnCopied : tc.btnCopy}
                     </ActionButton>
                     <ActionButton onClick={() => download(`${safeTitle}.txt`, transcriptText)}>
                       <Download className="w-3.5 h-3.5" /> .txt
@@ -549,54 +534,68 @@ export default function AITranscriptPage() {
       {!data && !loading && !error && <div className="mb-12 sm:mb-16" />}
 
       <GuideGrid
-        badge="Transcription Rules"
-        title="How to get perfect transcripts every time"
-        intro="Six rules from professionals who transcribe thousands of hours per month."
-        cards={guides}
+        badge={tc.guideBadge || ""}
+        title={tc.guideTitle || ""}
+        intro={tc.guideIntro || ""}
+        cards={(tc.guides || []).map((g: any, i: number) => {
+          const icons = [CheckCircle2, CheckCircle2, CheckCircle2, XCircle, XCircle, AlertTriangle];
+          const colors = [
+            "text-green-600 bg-green-100",
+            "text-green-600 bg-green-100",
+            "text-green-600 bg-green-100",
+            "text-red-600 bg-red-100",
+            "text-red-600 bg-red-100",
+            "text-yellow-600 bg-yellow-100"
+          ];
+          return {
+            ...g,
+            icon: icons[i] || CheckCircle2,
+            color: colors[i] || "text-gray-600 bg-gray-100"
+          };
+        })}
       />
 
       <Workflow
-        title="Your 4-step transcript workflow"
-        steps={[
-          { n: "01", t: "Paste video URL", d: "Drop in any YouTube link — public, unlisted, or your own uploads." },
-          { n: "02", t: "Pick language", d: "Generate in the original language or auto-translate to 50+ target languages." },
-          { n: "03", t: "Proofread quickly", d: "5-minute scan for proper nouns, brand names, and technical terminology." },
-          { n: "04", t: "Upload as captions", d: "Add SRT to YouTube Studio for accessibility, SEO, and a 12% retention lift." },
-        ]}
+        title={tc.workflowTitle || ""}
+        steps={tc.workflows || []}
       />
 
-      <SeoContent badge="Complete Transcript Guide" title="Why transcripts are the most underrated YouTube growth hack">
-        <p>Most creators see transcripts as an accessibility checkbox — something you upload to be polite. The reality is that transcripts and closed captions are one of the highest-ROI activities you can do on YouTube. They directly improve SEO, retention, and reach to non-native speakers, all in a single 10-minute upload.</p>
-        <h3>How transcripts boost YouTube SEO</h3>
-        <p>YouTube's algorithm reads your transcript to understand the topic, depth, and authority of your video. Without an uploaded transcript, YouTube relies on auto-generated captions — which average only 80-85% accuracy. By uploading a clean SRT file, you give the algorithm a perfect map of your content, which can lift your search rankings by 30-50%.</p>
-        <h3>Captions and the 12% retention lift</h3>
-        <p>Internal YouTube data shows videos with captions retain viewers 12% longer on average. The reason: <strong>40% of YouTube viewers watch with sound off</strong> (commute, classroom, late at night, open offices). Without captions, those viewers bounce. With captions, they stay and watch.</p>
-        <h3>Translation: unlocking global audiences</h3>
-        <p>Translating your transcript into Spanish, Portuguese, Hindi, or Japanese can multiply your view count by 3-5x with zero new content created. YouTube's "subtitles" feature lets you upload multiple translated SRTs to one video, and the algorithm will recommend it to viewers in those languages automatically.</p>
-        <h3>Pair transcripts with strong SEO and scripts</h3>
-        <p>Once you have a transcript, feed it into our <a href="/tools/seo-analyzer">SEO Analyzer</a> to extract long-tail keywords for your description, or use it as raw material for a follow-up video script in our <a href="/tools/ai-script-writer">AI Script Writer</a>.</p>
-      </SeoContent>
+      {tc.seoContent && (
+        <SeoContent badge={tc.seoContent.badge} title={tc.seoContent.title}>
+          <p dangerouslySetInnerHTML={{ __html: tc.seoContent.p1 }} />
+          <h3>{tc.seoContent.h3_1}</h3>
+          <p dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_1 }} />
+          <h3>{tc.seoContent.h3_2}</h3>
+          <p dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_2 }} />
+          <h3>{tc.seoContent.h3_3}</h3>
+          <p dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_3 }} />
+          <h3>{tc.seoContent.h3_4}</h3>
+          <p dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_4 }} />
+        </SeoContent>
+      )}
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={tc.faqs || []} />
 
-      <CrossCTA
-        title="Turn transcripts into more views"
-        desc="Use your transcripts to fuel SEO and write better follow-up scripts."
-        primary={{ label: "Analyze SEO", href: "/tools/seo-analyzer", icon: Sparkles }}
-        secondary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: PenTool }}
-      />
-          <ToolSeoJsonLd
-        name="AI Transcript"
-        description={"Extract, translate, and search YouTube video transcripts into 100+ languages with AI-powered accuracy."}
+      {tc.crossCta && (
+        <CrossCTA
+          title={tc.crossCta.title}
+          desc={tc.crossCta.desc}
+          primary={{ label: tc.crossCta.btn1, href: "/tools/seo-analyzer", icon: Sparkles }}
+          secondary={{ label: tc.crossCta.btn2, href: "/tools/ai-script-writer", icon: PenTool }}
+        />
+      )}
+      <ToolSeoJsonLd
+        name={tc.title || "AI Transcript"}
+        description={tc.seoJsonDesc || "Extract, translate, and search YouTube video transcripts into 100+ languages with AI-powered accuracy."}
         slug="ai-transcript"
-        faqs={faqs}
+        faqs={tc.faqs || []}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "AI Transcript", slug: "/tools/ai-transcript" },
+          { name: tc.title || "AI Transcript", slug: "/tools/ai-transcript" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }
 
@@ -641,13 +640,12 @@ function ViewToggle({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-black text-[11px] font-black transition-colors ${
-        disabled
-          ? "bg-neutral-100 text-neutral-400 cursor-not-allowed"
-          : active
+      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-black text-[11px] font-black transition-colors ${disabled
+        ? "bg-neutral-100 text-neutral-400 cursor-not-allowed"
+        : active
           ? "bg-black text-white"
           : "bg-white text-black hover:bg-neutral-100"
-      }`}
+        }`}
     >
       <Icon className="w-3.5 h-3.5" />
       {label}

@@ -641,6 +641,9 @@ export const it: Messages = {
     },
   },
   toolPages: {
+    channelAnalytics: {} as any,
+    channelIdFinder: {} as any,
+    earningsCalculator: {} as any,
     aiScriptWriter: {
       title: "Sceneggiatore IA",
       description: "Genera script virali e ottimizzati per YouTube con ganci di forte presa, modelli interrotti, loop aperti e un forte Call To Action, in pochissimi secondi.",
@@ -853,5 +856,477 @@ export const it: Messages = {
       ctaBtn2: "O Trova Titolo A Genaratore",
       seoJsonDesc: "Piattaforma e tool avanzato e Gratuito ai fini del conteggio sui Score analitici SEO sulle metadati in Youtube Server Tools su Video Platform globale. A base ed aiuto in Intelligenta Algoritmica per i Creators YT.",
     },
-  },
+    hashtagGenerator: {
+      title: "Generatore di Hashtag YouTube",
+      description: "Genera 60 hashtag ad alte prestazioni per qualsiasi argomento: ampi, di nicchia e di tendenza, classificati per popolarità.",
+      badge: "Strumento Gratuito · Tendenze in Diretta",
+      seoJsonDesc: "Genera hashtag rilevanti per YouTube per qualsiasi argomento — ottimizzato per la copertura senza spam.",
+      stats: [
+        { value: "60", label: "Hashtag Per Ricerca" },
+        { value: "Diretta", label: "Segnali di Tendenza" },
+        { value: "<3s", label: "Tempo di Generazione" },
+        { value: "100%", label: "Sempre Gratuito" }
+      ],
+      inputPlaceholder: "Inserisci il tuo argomento (es. strumenti IA, routine mattutina)...",
+      btnGenerate: "Genera Hashtag",
+      btnGenerating: "Generazione...",
+      tryPrefix: "Prova:",
+      suggestions: ["Strumenti IA 2026", "routine mattutina", "recensione iPhone 17", "studia con me", "news crypto"],
+      loadingTitle: "Estrazione delle tendenze...",
+      loadingDesc: "Analisi degli algoritmi di YouTube in diretta",
+      errorPrefix: "Errore di generazione",
+      generatedFor: "Generato per",
+      hashtagsSuffix: "hashtag",
+      btnCopyAll: "Copia tutto",
+      btnCopiedAll: "Copiato!",
+      sectionAllTitle: "Tutti gli hashtag",
+      loadingStreaming: "Creazione in corso...",
+      loadingMore: "altri hashtag in arrivo...",
+      strategyTitle: "Strategia degli hashtag",
+      groupTrending: "Tendenze del momento",
+      groupNiche: "Nicchia e coda lunga",
+      groupBroad: "Copertura ampia",
+      guideBadge: "Regole degli hashtag",
+      guideTitle: "Come utilizzare correttamente gli hashtag su YouTube",
+      guideIntro: "Sei regole per una strategia ottimale: cosa seguire e cosa evitare.",
+      guides: [
+        { title: "Misto ampio + nicchia", desc: "Combina 3-5 tag ad alto volume con 8-10 tag di nicchia per un equilibrio perfetto." },
+        { title: "Limitati a 15", desc: "YouTube considera solo i primi 15 hashtag nella descrizione." },
+        { title: "I 3 migliori nel titolo", desc: "Inserisci i 3 hashtag prioritari nel titolo in modo che vengano cliccati." },
+        { title: "Nessun fuori tema", desc: "Lo spam di hashtag è penalizzato dall'algoritmo." },
+        { title: "Evita i tag proibiti", desc: "I termini sensibili o non consentiti penalizzano la tua copertura." },
+        { title: "Aggiorna spesso", desc: "Rifai questo test ogni trimestre per seguire la tendenza." }
+      ],
+      workflowTitle: "Processo in 4 fasi",
+      workflows: [
+        { n: "01", t: "Inserimento dell'argomento", d: "Sii preciso: 'Recensione iPhone 17' è meglio di 'tech'." },
+        { n: "02", t: "Genera", d: "Ottieni +30 hashtag classificati." },
+        { n: "03", t: "Selezione", d: "Mantieni i tuoi 10-15 migliori (ampi e di nicchia)." },
+        { n: "04", t: "Incolla nella descrizione", d: "Metti i 3 migliori nel titolo, il resto in fondo alla descrizione." }
+      ],
+      seoContent: {
+        badge: "Guida Strategica",
+        title: "Gli hashtag di YouTube nel 2026",
+        p1: "Gli hashtag rendono il video scopribile informando l'algoritmo. Se usati bene, indirizzano i visitatori. Se usati male, diluiscono il SEO.",
+        h3_1: "Quanti usarne?",
+        p2_1: "Massimo quindici. Oltre, YouTube ignora o limita il video per spam.",
+        h3_2: "Titolo vs Descrizione",
+        p2_2: "Gli hashtag nel titolo si convertono in clic. Riservalo ai 3 pilastri essenziali del tuo contenuto.",
+        h3_3: "Vero Tag VS Hashtag",
+        p2_3: "Gli Hashtag (con #) sono pubblici e diversi dai meta 'tag'. Usa i nostri due strumenti per ottenere le massime prestazioni."
+      },
+      faqs: [
+        { q: "Come vengono generati questi hashtag?", a: "Tramite una ricerca semantica incrociata con le tendenze live di YouTube." },
+        { q: "Quanti usarne?", a: "Quindici (15) hashtag al massimo combinando corti e lunghi." },
+        { q: "È diverso dai tag di YouTube?", a: "Sì, i tag (strumenti di generazione) del canale sono nascosti, al contrario degli Hashtag (il cancelletto #) pubblici." },
+        { q: "È gratuito?", a: "Totalmente illimitato e 100% gratuito." }
+      ],
+      crossCta: { title: "Genera anche i Tag invisibili", desc: "Hashtag pubblici al top = Tag dei video in background!", btn1: "Ottieni Parole Chiave/Tag", btn2: "Genera un titolo virale" }
+    },
+    monetizationChecker: {
+      title: "Verificatore di Monetizzazione Canale YouTube",
+      description: "Incolla un link YouTube per verificare istantaneamente se il canale è monetizzato: idoneità YPP, CPM della nicchia e stima dei guadagni.",
+      badge: "Monetizzazione in diretta",
+      seoJsonDesc: "Controlla lo stato di monetizzazione YouTube di qualsiasi canale istantaneamente.",
+      stats: [
+        { value: "1.2M+", label: "Canali Verificati" },
+        { value: "98%", label: "Tasso di Precisione" },
+        { value: "190+", label: "Paesi" },
+        { value: "Diretta", label: "Dati YouTube" }
+      ],
+      inputLabel: "URL del Canale o @handle",
+      inputPlaceholder: "https://youtube.com/@MrBeast  oppure  @MrBeast",
+      btnCheck: "Verifica il Canale",
+      btnChecking: "Ispezione...",
+      tryPrefix: "Prova:",
+      suggestions: ["@MrBeast", "@MarquesBrownlee", "@AliAbdaal", "@PewDiePie", "@TheVerge"],
+      loadingMsg: "Estrazione dei dati e degli ultimi 50 video...",
+      errorTitle: "Impossibile verificare questo canale",
+      hero: { privateLabel: "Privato", publicLabel: "Pubblici", perVideo: "per video", avgMo: "media", statsSub: "Iscritti", statsViews: "Viste Totali", statsVideos: "Video", titleStats: "Statistiche" },
+      status: {
+        likelyLabel: "Molto Probabilmente Monetizzato",
+        likelyDesc: "Il canale rispetta tutti i criteri YPP e mostra asset pubblicitari.",
+        restrictedRegionLabel: "Regione Non Idonea",
+        restrictedRegionDesc: "Il Programma YPP non esiste in questo paese.",
+        restrictedLabel: "Uso Limitato",
+        restrictedDesc: "Contenuto limitato da YouTube o formato esclusivo per bambini.",
+        notMonetizedLabel: "Non Monetizzato",
+        notMonetizedDesc: "Questo canale non raggiunge ancora l'YPP (Programma Partner YouTube).",
+        confidenceLabel: "indice di fiducia", estMonthlyStr: "Mensile Est.", estYearlyStr: "anno", rejectionReasonsTitle: "Perché non è monetizzato?", progressSub: "Iscritti", progressWatchAuth: "Ore visualizzate"
+      },
+      score: { title: "Indice YPP" },
+      requirements: { title: "Criteri YPP", subLabel: "1.000+ Iscritti", watchLabel: "4.000+ Ore di Visualizzazione", contentLabel: "Contenuto Minimo", regionLabel: "Regione Valida", regionRestricted: "Rifiutata", audienceLabel: "Pubblico Normale", audienceMadeForKids: "Contenuto per Bambini", audienceOk: "Valido", videoText: "video" },
+      analysis: { title: "Analisi Profilo", nicheLabel: "Nicchia", uploadLabel: "Frequenza di Upload", ageLabel: "Anzianità", avgVideoLabel: "Media Video/Mese" },
+      region: { title: "Regione Pub.", cpmMultiplier: "Modulatore CPM", statusLabel: "Stato", statusRestricted: "Non Accettato", statusEligible: "Raggiunto" },
+      earnings: { title: "Stima Guadagni YouTube", monthlyRange: "Fascia Mensile", estMonthly: "Est. Mensile", estYearly: "Est. Annuale", niche: "Tema", cpmRange: "Stima RPM/CPM", rpmEstimate: "RPM Est.", titleChart: "Variabilità Stagionale", chartDesc: "Q4 (Fine anno) aumenta le entrate pubblicitarie del 30-40%.", chartMid: "Media", chartLow: "Basso" },
+      uploads: { title: "Rendimento degli Upload Recenti", desc: "Osservazioni sugli ultimi {count} video.", colTitle: "Titolo Video", colViews: "Viste", colLikes: "Mi piace", colComments: "Comm.", likesPerVideo: "Mi piace / Video" },
+      recommendations: { title: "Cosa Fare Dopo?" },
+      progressRow: { complete: "Validato" },
+      guideBadge: "Le Regole YPP",
+      guideTitle: "Le vere condizioni del programma partner 2026",
+      guideIntro: "Gli elementi precisi verificati da Google durante l'iscrizione.",
+      guides: [
+        { title: "1000 Iscritti o più", desc: "La base minima, fino all'ultimo centesimo di pubblico, prima di applicare." },
+        { title: "4.000 h. / 10 M. Shorts", desc: "Solo le metriche pubbliche (i video non in elenco e privati vengono eliminati)." },
+        { title: "Linea di buona condotta", desc: "Nessuno strike della community durante la recente applicazione." },
+        { title: "Niente compilation/robot", desc: "YouTube Studio rifiuta i video clonati, voci robotiche e contenuti 100% riutilizzati da terzi." },
+        { title: "Una Regione Valida", desc: "Il tuo indirizzo conta." },
+        { title: "Il Link Adsense", desc: "Account verificato sotto la tua identità obbligatoriamente." }
+      ],
+      workflowTitle: "Analisi dell'Account",
+      workflows: [
+        { n: "01", t: "Incolla il profilo", d: "Inserisci l'Handle o l'URL." },
+        { n: "02", t: "Leggi", d: "Nota di idoneità YPP." },
+        { n: "03", t: "Individua", d: "Guarda i criteri mancanti per il successo." },
+        { n: "04", t: "Lavora o Ritira", d: "Applica se l'YPP è valido, oppure correggi il pubblico." }
+      ],
+      seoContent: {
+        badge: "Consiglio YPP",
+        title: "Il vero potenziale monetario di YouTube.",
+        p1: "Raggiungere la monetizzazione di base è solo il primo passo, perché 2 milioni di visualizzazioni su un videogioco contro un sito di Borsa non daranno 200€ contro 4500€ rispettivamente.",
+        h3_1: "Cos'è la monetizzazione?",
+        p2_1: "Poter collegare i propri video ad annunci pubblicitari di Google mostrati su di essi; Super-Chat o iscrizioni Premium mensili.",
+        h3_2: "Il famoso limite YPP 2026",
+        p2_2: "Non arrenderti di fronte alle 4000 ore.. I tuoi Shorts possono convalidare la soglia anche tramite (10 milioni).",
+        h3_3: "Il tuo pubblico e il paese",
+        p2_3: "Lavorare sulla tematica US/Canada rende spesso 5X in più al clic rispetto ad un indirizzo locale di un piccolo paese per i CPM B2b/Finanza.",
+        h3_4: "Al di fuori di Adsense",
+        p2_4: "Impara a costruire la fidelizzazione tramite prodotti di affiliazione o posizionamenti nativi personali senza Google Ads!"
+      },
+      faqs: [
+        { q: "È sicuro al 100% che MrBeast o tale sia monetizzato?", a: "Il nostro algoritmo fa estrapolazioni su elementi accertati: se hanno l'età, iscritti sufficienti e mostrano contenuti standard, con il 98% di precisione." },
+        { q: "Gli YPP Shorts?", a: "Sì, un canale completamente Short può attivare la monetizzazione attraverso la seconda soglia (10 milioni)." },
+        { q: "Come funziona il calcolo finanziario?", a: "Modellando una mediana del CPM in base alla nicchia o alle visualizzazioni (Tech vs Intrattenimento o B2B)." },
+        { q: "Perché il mio, anche se attivato, risulta Non Monetizzato?", a: "Hai chiesto l'accesso formalmente tramite Studio? Se l'hai fatto, aspetta 30 giorni." }
+      ],
+      crossCta: { title: "Una volta monetizzato... cosa fare?", desc: "Crea i tuoi script per far esplodere il tempo di visualizzazione tramite l'AI!", btn1: "Guadagni", btn2: "I Tuoi Script" }
+    },
+    qrCodeGenerator: {
+      title: "Generatore di Codici QR YouTube",
+      description: "Crea fantastici codici QR personalizzati per qualsiasi video YouTube, Short, live o canale. Aggiungi il tuo logo e scarica in HD (100% gratis).",
+      badge: "Gratuito · Esportazione HD · Logo al Centro",
+      seoJsonDesc: "Genera codici QR personalizzati per i tuoi video e canali YouTube — con i tuoi colori, HD e logo integrato gratuitamente.",
+      stats: [
+        { value: "HD", label: "Fino a 2048px" },
+        { value: "Logo", label: "Al Centro" },
+        { value: "100%", label: "Totalmente Libero" },
+        { value: "4", label: "Formati di Uscita" }
+      ],
+      inputConfig: { placeholder: "Link canale o video YouTube...", generateBtn: "Genera CODICE QR", generatingBtn: "Caricamento...", errorInvalid: "Inserisci un link standard YT di video completo o un ID a 11 caratteri.", errorFail: "Riduci l'immagine Logo e riprova.", supportsLabel: "Compatibile: " },
+      livePreview: {
+        title: "Anteprima Diretta",
+        scanQuality: { atRisk: "Limite (Rischioso)", good: "Buono", excellent: "Eccellente / Top", scanSuffix: "di scansione" },
+        emptyTitle: "L'immagine del codice apparirà qui", emptyDesc: "Inserisci prima un link YT...",
+        exportBtnCopyImg: "Copia la Foto", exportBtnCopyUrl: "Copia URL", exportBtnCopied: "Copiato!", exportBtnShare: "Condividi", resetBtn: "Ripristina",
+        toastFailDownload: "Errore download locale.", toastCopiedUrl: "URL copiato negli appunti.", toastFailCopy: "Blocco di accesso (Browser)", toastCopiedImg: "Foto copiata negli appunti.", toastBlockedImg: "Immagine non salvabile (Sicurezza anti clic-destro)."
+      },
+      customize: {
+        title: "Resa e Personalizzazione (Custom)",
+        sizeLabel: "Dimensioni (in Px)",
+        errorLevelLabel: "Tolleranza / Correzione Errore",
+        errorLevels: { lHint: "~7% sovrapposizione", mHint: "~15%", qHint: "~25%", hHint: "~30% sovrapposizione — Ideale con Foto centrali" },
+        fgLabel: "Puntatori (In primo piano)", bgLabel: "Sfondo (Piatto)", transparentLabel: "Sfondo Invisibile Trasparente (SVG/PNG)", marginLabel: "Bordi e Margini Esterni",
+        logoLabel: "Inserisci Immagine / Logo", uploadBtn: "Invia Logo Cliente (.PNG)", removeBtn: "Rimuovi Logo", toastInvalidImg: "Formati Immagine Rifiutati.", logoSizeLabel: "Metro Zoom Logo", logoSizeTip: "Fissa la correzione su H non appena un'immagine grande intacca i margini."
+      },
+      history: { title: "Memoria / Recenti", clearBtn: "Svuota Cestino", toastCleared: "Registri di sessione svuotati." },
+      guideBadge: "Le regole QR Pro", guideTitle: "Come generare una scansione perfetta",
+      guideIntro: "Molti errori di contrasto e stampa distruggono i QR. Segui la guida.",
+      guides: [
+        { title: "Livello (H)", desc: "Per i loghi al centro assicurati la leggibilità agli iscritti con un livello di correzione impostato su Alto." },
+        { title: "Colori Opposti", desc: "Contenuto Scuro su fondo Bianco estremo dà un riflesso della fotocamera perfetto (Non mettere giallo su bianco)." },
+        { title: "Esportazioni Massimizzate 1024", desc: "Salva i banner e i vestiti per il tuo negozio Youtube e la tua agenzia in SVG puro o 2048." },
+        { title: "Lontano o Troppo Vicino", desc: "Gli smartphone indietreggiano non appena si fa buio, non forzarne le dimensioni a 0.5cm." },
+        { title: "Loghi Minuscoli", desc: "Se l'avatar supera la linea, è finita!" },
+        { title: "Controllo Personale di Prova", desc: "Anche dopo l'esportazione, punta l'iPhone, Android o Lens per il Test completo Finale." }
+      ],
+      workflowTitle: "Routine Rapida",
+      workflows: [
+        { n: "01", t: "Il Bersaglio / Target", d: "Inserimento del link puro e duro! (Idem @channel)." },
+        { n: "02", t: "Montaggio Live", d: "Colori conformi alle linee perfette dell'Identità Visiva YOUTUBE." },
+        { n: "03", t: "Controlla la Salute", d: "Gli indizi sono cruciali per non creare pixel errati." },
+        { n: "04", t: "Lancia in Produzione", d: "Premi Scarica HD!" }
+      ],
+      seoContent: {
+        badge: "Guida per Creatori Codice QR", title: "Perché usarlo e massimizzare 2026/Youtube",
+        p1: "La carta incontra il pixel, I codici per i canali consentono al merchandise (Vestiti, Banner, Taxi) di promuovere Youtube in ogni momento.",
+        h3_1: "Statico", p2_1: "Non scade mai. Codice grezzo impareggiabile e puro, che non richiede costi nascosti o abbonamenti a sorpresa dopo 5 mesi da parte di questi 'Tracker'.",
+        h3_2: "Il Codice vs La Foto", p2_2: "Grazie al 30% di errore (H), il tuo volto oscura la base e la matrice (la fotocamera dello smartphone) può ignorarlo e ricreare la matematica. Resta figo senza spezzare il video.",
+        h3_3: "Resa Vettoriale Perfetta 2048", p2_3: "Se pixella in tipografia, il tuo canale ci rimetterà! Scarica i nostri SVG perfetti per CorelDraw/PhotoShop.",
+        h3_4: "Sempre Con un Prodotto", p2_4: "Accompagna l'esperienza degli spettatori con una vera Copertina d'impatto (App AI Copertine)."
+      },
+      faqs: [
+        { q: "Quali destinazioni sono possibili? (Shorts/Playlist...)", a: "Direttamente nel cuore di tutto (Video, Liste, Canale Globale e /Shorts)." },
+        { q: "Ci sarà una scadenza a pagamento e dei tracciatori?", a: "No, si tratta delle formule in modalità Statica, i pixel contengono il tuo link matematicamente senza database esterno (Zero Tracciamento)." },
+        { q: "I loghi funzionano su tutti gli smartphone?", a: "Lens (Google), Samsung Camera, iOS (Apple), supportano queste matrici ridondanti 'H' (High Recovery)." },
+        { q: "Quale dimensione scegliere alla fine come immagine Png o Svg?", a: "Dal pixel di base per il web (512x) ai primi piani su T-Shirt 1024+. Gli SVG sono illimitati e vettoriali (Infiniti)." },
+        { q: "È un tranello Freemium?", a: "Assolutamente Gratis!" }
+      ],
+      crossCta: { title: "Una volta finito... il pacchetto dell'influenza", desc: "Metti il link da incorporare iframe web-HTML sulla tua Landing Page o crea un'Arte Grafica IA!", btn1: "Embed HTML", btn2: "Copertina IA" }
+    },
+    shortsIdeas: {
+      title: "Creatore di Idee per Shorts (Intelligenza Artificiale)",
+      description: "Trasforma i tuoi concetti vaghi in video Short di 60 secondi perfetti: Gancio (Hook), Corpo Visivo e una CTA integrata!",
+      badge: "Premium · Modello Pro YT",
+      seoJsonDesc: "Genera idee e script creativi e IA per YouTube Shorts - ganci, contenuti e conclusioni virali.",
+      stats: [
+        { value: "4.1M+", label: "Script Shorts Inviati" },
+        { value: "+340%", label: "Aumento degli Ascolti" },
+        { value: "11K", label: "Membri AI Utenti" },
+        { value: "60s", label: "Durata di Produzione" }
+      ],
+      inputPlaceholder: "Qual è l'idea per il tuo video... (Vivere su Marte, Finanza Crypto, Tech)?",
+      generateBtn: "Avvia IA (Short)",
+      generatingBtn: "Creazione Shorts...",
+      langLabel: "Lingua Audio/Script",
+      bodyLabel: "Grosso del Copione (Body)",
+      ctaLabel: "Fine (Incoraggiamento all'Azione / Loop)",
+      proBadge: "Riservato Sezione Pro",
+      proTitle: "Crea Shorts di Successo Immediato.",
+      proDesc: "Passa al nostro modello a pagamento Pro! Le tue creazioni non si baseranno più su tentativi vani, usa Hook matematici (IA) e script precisi.",
+      upgradeBtn: "Aderisci al Sistema Pro",
+      freeBtn: "Resta nella Versione Gratuita.",
+      guideBadge: "Consiglio dei Creatori Verticali",
+      guideTitle: "Il Successo su TikTok/Shorts: È Matematica",
+      guideIntro: "Raggiungere 1 Milione nei video Corti si basa sulle seguenti regole non scritte.",
+      guides: [
+        { title: "Swap a 1.5 Secondi! Hook Immediato.", desc: "Nessun saluto.. Un viso scioccato e un testo in alto sullo schermo per catturare l'attenzione!" },
+        { title: "Finale che si ricollega all'Inizio! Il Loop", desc: "I tuoi spettatori rivedranno il video non appena sentiranno la tua parola finale... aumentando il watch time del 140%" },
+        { title: "Verticalità 9:16 Invariabile", desc: "Il cinema è in 16:9.. QUI c'è il tuo Smartphone puro e semplice." },
+        { title: "Lascia Respirare!", desc: "Sovraccaricare e zoomare su ogni fotogramma come MrBeast non va bene per ogni tematica; rallenta." },
+        { title: "L'Intro è Vecchia (Dimenticala)", desc: "'Ciao, io sono Toto' --> Hai perso il 60% degli occhi pronti a fare Swipe-Up.. L'essere umano scorre senza fine." },
+        { title: "Trend Audio - Pop/HipHop", desc: "Solo se l'emozione dell'audio coincide con lo schermo!" }
+      ],
+      workflowTitle: "Il Piano delle Riprese Shorts",
+      workflows: [
+        { n: "01", t: "La Tua Tematica", d: "Inserisci un concetto molto richiesto con una parola chiave precisa." },
+        { n: "02", t: "Ottieni le Invenzioni (IA)", d: "L'Intelligenza produrrà 3 testi, mantieni il più viscerale." },
+        { n: "03", t: "Cattura Video.", d: "Non girare 'in orizzontale' - Modalità Ritratto su Smartphone 4K (9/16)." },
+        { n: "04", t: "Costanza Ogni Giorno.", d: "Gli Shorts adorano chi posta costantemente ogni giorno." }
+      ],
+      seoContent: {
+        badge: "Guida Ultime dell'App Shorts",
+        title: "YouTube e i Contenuti Short nel 2026",
+        p1: "Anche se ci si diverte... questi formati rubano dall'era di TikTok la gran parte del traffico internet globale. Un formato ben compreso può decuplicare gli iscritti ottenuti da un video tradizionale.",
+        h3_1: "L'Algoritmo (Scorrimenti vs Clic sulle Miniatura)",
+        p2_1: "Dimentica tutto: Il CTR della miniatura non conta più, l'algoritmo testa con gli Swipe (se ti fanno swipe il video è morto all'istante). Vieni valutato sull'attenzione del 1° Secondo. E sulla Velocità di Interazione!",
+        h3_2: "Il famoso GANCI (Hook)",
+        p2_2: "In un solo fotogramma... Il testo deve colpire, l'espressione del volto deve scioccare! Questo è ciò che viene definita Scienza Pulsiva, la questione 'Smetti di fare...', 'È Falso!'. E abbiamo creato questi script tramite IA per simulare tutto ciò.",
+        h3_3: "Il Loop (Ciclo in Ripetizione)",
+        p2_3: "Termina il video per ricominciare il ciclo 'Ed ecco perché..' --> e la frase iniziale era 'Il gatto ha mangiato...'",
+        h3_4: "Pubblica, Pubblica, Pubblica!",
+        p2_4: "Chi lo fa ogni singolo giorno batte in mesi i creatori della più alta qualità. È l'essenza stessa, e l'AI aiuta ad affrontare notevolmente questo enorme carico.",
+        h3_5: "Reindirizzamenti Mirati di Pubblico",
+        p2_5: "Utilizza questo flusso enorme di Shorts per spingere queste nuove facce a vedere il tuo Video Lungo Scriptato con il modello tradizionale."
+      },
+      faqs: [
+        { q: "Esiste una durata d'oro?", a: "Né 60 (Troppo pesante) né 12. Gira per colpire al massimo tra i 45 e i 55 SECONDI!" },
+        { q: "Mi tirerò la zappa sui piedi con i miei spettatori tradizionali?", a: "È storia vecchia degli algoritmi 2021.. il pubblico fedele per i formati lunghi oggi guarda molti formati corti... e i nuovi si sommano al gruppo!" },
+        { q: "Si guadagna da uno Short oggi?", a: "Con il fondo dei creatori YouTube Shorts.. Sì! Questo ripaga tramite la pubblicità di YouTube (A una frazione del costo: ~ 0.05 $ di CPM, ma farai decine di Millioni di visualizzazioni... I numeri ti sono favorevoli!)." },
+        { q: "Che Ritmi adoperare per Pubblicare?", a: "Gli Shorts presentano finestre di visibilità algoritmica differenti, conviene postare quotidianamente sia alla mattina sia alla sera." }
+      ],
+      crossCta: { title: "È giunta l'ora di costruire Ponti..", desc: "Generatore per YouTube (Bot AI) di Video Lunghi e Titoli Ottimizzati.. Affascinerai chi già ti segue!", btn1: "Crea Script di base", btn2: "Ottimizza il Titolo IA" }
+    },
+    tagGenerator: {
+      title: "Generatore di Tag Video (Dati Backend per Creatori)",
+      description: "Costruisci istantaneamente un repertorio SEO esplosivo per i tuoi video sfruttando ben 60 termini e chiavi SEO. (Lunghe o a focus elevato). Copiali su YT Studio.",
+      badge: "Inclusione SEO · Sfrutta al max 500 Caratteri",
+      seoJsonDesc: "Crea i migliori tag e meta tag per YouTube ottimizzati SEO, combinando parole chiave lunghe e mirate sotto al limite dei 500 caratteri.",
+      stats: [
+        { value: "60", label: "Tag pronti All'uso" },
+        { value: "500", label: "Letterine Max Supportato (YouTube)" },
+        { value: "<3s", label: "Tempo di Analisi IA" },
+        { value: "Sempre", label: "Gratis Totale." }
+      ],
+      inputPlaceholder: "L'Argomento Fondamentale... (Borsa, Finanza, Automobili, Trucco).",
+      generateBtn: "Estrai e Copia Mettendo ai TAGS!",
+      generatingBtn: "Generazione parole..",
+      tryLabel: "Esempio:",
+      suggestions: ["Outil Informatique IA", "Review MacPro", "Vlogs au pair", "Fitness At Home", "Bitcoin Crypto"],
+      loadingTitle: "Composizione e formulazione algoritmi del Motore",
+      loadingSub: "Controllo Rapido dei concorrenti In Linea...",
+      errorTitle: "C'è stata un Interruzione...",
+      generatedFor: "Risultati Di Base Riguardo A: ",
+      copyAll: "Trascina Agli Appunti",
+      copiedAll: "Tutto Memorizzato! (Copiato)",
+      allTags: "Visualizza i risultati:",
+      streaming: "Data in fase di Erogazione..",
+      more: "In continuo Sviluppo...",
+      guideBadge: "Linee Guida (Keywords YouTube/2026)",
+      guideTitle: "Le Leggi che governano i Tags in questo Secolo, tra Miti ed Errori comuni",
+      guideIntro: "Diverse teorie aleatorie affossano chi carica Video al fine di farsi trovare - capisci come dominare le Ricognizioni.",
+      guides: [
+        { title: "Priorizzazione Centrale", desc: "Non inserire parole sprovviste di un preciso filo conduttore. Il Suddito Primario andrebbe collocato ai primi 2 Slots." },
+        { title: "Mai tralasciare spazio invano!", desc: "Utilizza tutte le Lettere Possibili, e inserisci infinite virgole e variazioni grammaticali, sino all'ultima riga dei 500." },
+        { title: "Mix Tra La Lunga Coda & Quella Mirata", desc: "Se vendi 'Abbigliamento a Milano Estivo' , scrivi pure per Tag mirate: 'Vestito', 'Estivo'." },
+        { title: "Eccessive Ripetizioni a Nastro!", desc: "Inserendo Macchina della corsa Corsa della Macchina... l'A.l YT avvertirà l'attività illecita / Spam decurtando a Zero il Tuo Punteggio." },
+        { title: "Includere Nomignoli Esterni/Mentitori", desc: "Impossibile. Scrivere il nome 'Logan Paul' solo perchè famoso è vietato; la CTR collassarebbe poiche l'utenza vuole Logan." },
+        { title: "Comprendere che... non è l'Oro Finale", desc: "I Tags non portano Clic da soli (Sfruttate I Nostri Tool Dei Thumbnails o Title)... Offrono Unicamente contesto Sviluppato Per l'ai di Google!" }
+      ],
+      workflowTitle: "Fasi Operative Del Content Creator (Top 4)",
+      workflows: [
+        { n: "01", t: "Tematica Base", d: "Scegli L'Epicentro Logico." },
+        { n: "02", t: "Ammassa con l'AI.", d: "L'IA andrà a trovare corrispondenze correlate dal Macro a Microcosmi." },
+        { n: "03", t: "Limita Al 500.", d: "Se eccedi sfoltisci per i sinonimi in eccesso (Meno sensati)." },
+        { n: "04", t: "Invia E Detona All'Upload.", d: "Nella sezione YouTube Creador / Tags Nascosti -> INCOLLA." }
+      ],
+      seoContent: {
+        badge: "Linee Guida a Segreto della Macchina SEO",
+        title: "I Tag per il Formato Video (Nel 2026) Continuano ad avere Peso?",
+        p1: "Sebbene nessuno spettatore li leggerà col proprio occhio organico.. queste Parole Chiave rimangono lo sbloccante numero 1. Emettono Segnaletica e Contestualizzazioni perfette affinché l'Algoritmo decida a quali suggeriti o Playlist Autoplay farti comparire.. Disambiguando le terminologie",
+        h3_1: "Richiesta Essenziale # 1",
+        p2_1: "Assicurati per forza, che ci sia simmetria assoluta. Tutti i Tag primissimi all'Inizio DEVONO ESSER GIA, Parola per Parola Ricalcati all'Inizio del TUO TITOLO! (Zero Bugiardie).",
+        h3_2: "Ottimizzazione Assoluta de 500 Limiti",
+        p2_2: "Le virgole creano un intervallo SEO, spremi ed esplodi le tue menti per occupare tutti quei minimi Spazi vuoti della barra Form YouTube.",
+        h3_3: "Tags Pubblici o Tags Occulti ?",
+        p2_3: "Le parole Chiave di questa App (Il TAG del Creatore) restano a puro e segreto dominio tuo... (Nascosto Al Pubblico). Usi quelli con il cancelletto (# Hashtags) in descrizioni (Disponibili da un'altra nostra Suite IA) con fine d'Esibizioni Mondiali."
+      },
+      faqs: [
+        { q: "La Valenza di Questi Tags verso l'Algoritmo Avanzato (Rete Neaurale Recente)?", a: "Fungono da Bussola d'Assetto o d'Olio Lubrificante; Spiegano a Google, che un Termine a doppiosenso, come Apple (Mela O Smartphone), indica chiaramente una direzione Specifica! Evitando Suggerimenti o Esibizioni fallimentari a Target errati." },
+        { q: "Numero massimo Ideale Da Creare (E Trasporre sul CMS YT?)", a: "Tutto ciò di possibile, un muro pieno sino all'errore di Limite YT 500 Caratteristiche.. = Equivalente circa (30/40)." },
+        { q: "Un Uso Incrociato de Hashtags vs Tags è Auspicato?", a: "Sì, possenti e Letali.. Distingueranno i Novizi dagli Amatori Coscienti (In Usa, la Normativa 2023 Youtube Suggerisce Uso Misto)." },
+        { q: "Abbonamenti Previsti?", a: "Completamente Nessuno (Risposta in Piacere Gratis)." }
+      ],
+      crossCta: { title: "L'Evoluzione ai Hashtags (Pubblici) e Ai Titoli! (Oltre Alla Bussola Nascosta).", desc: "La Visibilità Pubblica (Sui Titoli Mostrati / Generatori AI Iper Virali)... Si associa agli Hashtags.", btn1: "Scrutina Hash/Tag Aperti", btn2: "Title IA Creativi" }
+    },
+    thumbnailDownloader: {
+      title: "Scaricatore Estrazione Immagini - Miniature e Qualità 4K/UHD (YT)",
+      description: "Rapido Estrattore Assoluto: Acquisizione, Senza Attese per Originali da Ogni Creators Youtube, a Formato Gigante e Ultra 1280X/MAX (Su Piatteforme Cloud Private).",
+      badge: "Isolato CND DataBase",
+      seoJsonDesc: "Scarica miniature YouTube di qualsiasi dimensione, inclusa la risoluzione completa MAX HD tramite un semplice link, gratis.",
+      stats: [
+        { value: "6.7M+", label: "Database Estrazioni Origini" },
+        { value: "100%", label: "Versione Eterna No-Access" },
+        { value: "5", label: "Tutte le Varianti Masterizzabili" },
+        { value: "<1s", label: "M.Sec Recupero Databse Cdn" }
+      ],
+      inputPlaceholder: "Link YT Video/ Short.. Es: ( https://... ) - oppure il Valore D'ID",
+      fetchBtn: "Richiedi Immagini Source.",
+      fetchingBtn: "Scraping Attivo Cloud...",
+      fetchingTitle: "Intercettazione Su I server Google CDN..",
+      fetchingSub: "Connessione Agli Apparati in Fase Recupero..",
+      openVideo: "Ouvrir au Visionnage Vidéo",
+      savingBtn: "Télécharge local...",
+      unavailableBtn: "Res-Inedita/Filtro Bloc",
+      downloadBtn: "Salvataggio File PC/Device",
+      imgUnavail: "Asset Indisponibile Per Questa Qualita",
+      imgUnavailSub: "La base (Original) Fornita era Vetusta (2018) O il Formato Esteso HD non è autorizzato per la presente Miniatura (Viene Onessata lato YouTube).",
+      guideBadge: "L'Uso D'Estrazione e Consigli Creativi Agenzia.",
+      guideTitle: "Lezioni Sul Furto, Apprendimento Del Colore O Sulla Composizione Grafica delle Thumbnail Virali",
+      guideIntro: "Per possedere e padroneggiare il Click-Through bisogna formare Cartelle Locali! Si prega di Seguire a norma.",
+      guides: [
+        { title: "Creazione Dello 'Swipe-File'", desc: "Cartelle Segrete (Riservate). Tutti i grafici mantengono sul proprio SSD le 100 Portadas da Miglior 50 Milioni di visite... Con Analisi Dei Tonalità a Base Costante (Fallo per tua Nichia). " },
+        { title: "Privilegio MAX (1280 Resol).", desc: "Si sfrutta In Programmi di Rosteraggio/Psd." },
+        { title: "I Colori E I Toni (L'Espressione Emozionale).", desc: "Un viso sorpreso in Cyan contro Un Fuoco giallo - Crea click magnetici... Analizzare gli Estratti." },
+        { title: "Il Rischio Del Clone Copia-Incolla (STRIKES).", desc: "Youtube Colpisce duro al 2026 i Re-Uploader Spudorati... Imparare Ispirandosi... Ma Mai rubar le lettere Dello Stesso Asset Image e Uploadarli 1 A 1!" },
+        { title: "Furti di Viso (Copyright/Rischi-ClickBait)", desc: "Metter Personaggi Famosi per Mentire sul Contenuto o Click-Bait, Oltre ad azioni Legali esterne è represso brutalmente via Algoritmo Youtubiano Post-Views." },
+        { title: "Formati D'Upload (Mancanti / Nulizzati).", desc: "Non pretendere IperHD/Fhd (1280X). Qualora Il Creator lo caricò Al Max d'Esportazione Dei '320' Da Suo Cellulare Vecchissimo, Noi diamo Solo Cio Che è presente originariamente, YouTube Nega la Restante (Segnalata Da Noi In Rossa/Unavailable)." }
+      ],
+      workflowTitle: "Estrazione 4Fasi/Rapidi.",
+      workflows: [
+        { n: "01", t: "URL E ID di Partenza", d: "Individuando le Cover Migliori Dalle Search..." },
+        { n: "02", t: "Mandanola Nell'Outil.", d: "L'Algortimo Setta CND.. Restituisce i Pixel." },
+        { n: "03", t: "Selezioni & Verifica HD", d: "Sceglie la Pura Originale (1280)." },
+        { n: "04", t: "Salva A Locale Folder..", d: "Tienila a portata." }
+      ],
+      seoContent: {
+        badge: "Tools per Artisti Creadores & Agenzie (Studia Il Clic).",
+        title: "Sviluppare Strategie Visive Estrapolando E Analizzando l'Identità dei Grandi Competitor.",
+        p1: "Non c'è ispirazione Divina, se un Creatore genera Milioni di iscritti da zero, è per l'Altezza Di quel Click-Trough Ratio (CTR); Se la copertina di MrBeast attrae - scaricandola ed Estrando a Master Dettaglio potete Studiare e Masticarne la Scienza: Il Font Gigante Giallo A 3 Parole, Gli Ochi Dilatati, O Questo rosso in evidenza, La Saturazione Esagerata! Parliamo Di Business, Fate Questo Tool per Studiarle sul vostro Tablet Con Un Pen-Drive.",
+        h3_1: "La Cartella Dei Tesori (Swipe Files - USA):",
+        p2_1: "In america L'Editor ha a fianco il Libro D'Idee, Un raccoglitore locale PC <strong>delle Massime ed Esili portadas mai salvate per tema/nicchia</strong>. (Con Quest Tool fatevi le Collezioni).",
+        h3_2: "Interpretazione Delle Sizes / Risoluzioni Native CDN :",
+        p2_2: "<strong>'MAX-Res / Le FHD ' : </strong> Utilizzatissima nel recesso Psd Grafico (1280 720). E l'Origin-Base !   <strong> 'hqdefault - E Standard':</strong> Le medie... <strong> MQ / e altri Mini Sd'</strong> I Rimanenti.",
+        h3_3: "Normative Uso (Fair USE e Rischio DMCA - Copyrighting).",
+        p2_3: "<strong>Scaricata, e Valutata/Masticata è L'Unica Approvazione Legale YouTube E Diritto USA.  </strong>, Mettendo nei vostri File Una Copia Carbone al Pixel rubato per clickBait.. <strong>Il Takedown via Segnalazioni Creator e Strikes sarà il vostro Ban. </strong> ",
+        h3_4: "Sezione Aurea & Analisi",
+        p2_4: "Dividi Immagini su Righelli in terzi.. Guardate i professionisti estratti .. Lasciano Due a sinistra per Soggetto e Terzo Ultimo A Testino Gigante.",
+        h3_5: "Creazioni AI & Autore (Con l'Isola Ecosistemica)",
+        p2_5: "Creati e Ispirati con A.I Generatore Portadas ( <a href='/it/tools/ai-thumbnail-generator'>App IA Images</a> ) o Strumenti Del Test App!"
+      },
+      faqs: [
+        { q: "Perchè Gratuita ed Esente A Qualsiasi Quota/Fremium?", a: "Pura Risorsa Eterna Di Utility Ecosistemica Creatori Nube." },
+        { q: "Massimale di Risoluzione Originaria ?", a: "Per Qualunque Server CND Il Max Assoluto Corrisponde Al FHD! Se vi darà 1280 (Quella che i Monitor enormi TV Leggono)." },
+        { q: "Posso usufruire URL (SHORTS Youtube)?", a: "Fungerà come Da Tradizionale Video (Estrapolazione verticale pura Id)." },
+        { q: "Qual è Pesa E Ritorsioni (Al Copia 1 : 1).", a: "Blocco della Moneta E Avvertimenti o Banning (Strike) da Creatore/Copia Violata." }
+      ],
+      crossCta: {
+        title: "Sviluppa Adesso il Testo Che Combacerà Con Quelle Immagini (CTR + A.I) !",
+        desc: "Hai analizzato Tonalità ed Espressioni Face ai top Livelli. Affitta la L'Ai Scrittura Titolo per Fondere testo all'immagine.",
+        btn1: "Title Virali/Macchina AI",
+        btn2: "Avvia L'Analizzatore IA Script Bot"
+      }
+    },
+    thumbnailPreview: {
+      title: "Simulatore di Anteprima Copertine (Mockup per Test Device CND)",
+      description: "Inserisci Url Video YouTube / Shorts / E la piattaforma valuterà e mostrerà le dimensioni e formati d'anteprima su iPad, Dispositivi Mobile, Apple IOS E PC Fissi (Nativo Da Origini CND).",
+      badge: "Previsione Gratis al 100% · Proiezioni Mobile Tv · Per Creator Aggressivi (Tool CTR)",
+      seoJsonDesc: "Test, Simulatore 100% Cnd, Evaluatore di risoluzioni, e previsorre visivo di Portadas Thumbnail e Shorts da Mobiles, TV.",
+      stats: [
+        { value: "5", label: "Resoluzioni Analizzate API Nube" },
+        { value: "4", label: "Mockup Apparecchiature Simulate (PC, Telefonia)" },
+        { value: "100%", label: "Servizio A Costo Libero (Zero)" },
+        { value: "0ms", label: "Elaborazione Rapida Ping" }
+      ],
+      inputPlaceholder: "Id Esteso YouTube o Intero URL d'Uso (Shorts ammessi)...",
+      previewBtn: "Manda Al Bancodiprove (Simulatore)...",
+      loadingBtn: "Chiamata al Database YT CND...",
+      errorInvalid: "Il Riferimento Testo non quadra - Devi Fornire ID a Sintassi Esatta 11 Chars!.",
+      supportsLabel: "Compatibilmente Supportate Estensioni: ",
+      compareBtn: "Sovra-Analisi Qualità MAX-HD vs Base/Scarsa 480Px. (Confronti)",
+      shareBtn: "Esporta Condivisione/Link..",
+      openYT: "Rivola All'Origin app YT / Play",
+      allSizes: "Campionatura Piena D'Ognii File Esatto Salvato Nel CND: ",
+      devicePreview: "Simulatori Client (Casi D'uso Reali su Macchine Dell'Audience - Verifica per i Click).",
+      noPreview: "Nessuno Storico Visualizzato Per L'Estraffione (Formato Mancante \/ Delete).",
+      downloadBtn: "Avvia IL Download .Jpg (Estrazione Locale Fotografica)",
+      alwaysAvail: "Versione Inferiore e Base Standard Garantita.",
+      hdAvail: "Versione Principale (HD-MAX) Res-Alte Confermata 100%",
+      notAvail: "Versione Estinta / (Eliminazione e Non Esistenza Dai Cluster YT)",
+      hqVsMax: "Confronti - Degrado Apportato Tra Bassa HD/480 ed Esecuzione FHD Origin.",
+      guideBadge: "Requisiti d'Armamento Creador E Valutazioni T. Previews",
+      guideTitle: "Le Procedure di Laboratorio Agenzia e Mockups a Verifiche Thumbnail Aumentare Il Clic",
+      guideIntro: "Omissione mortale n: 1 = Pubblicarla Ad Occhi Chiusi! Usa Il Laboratorio Test.",
+      guides: [
+        { title: "IL MAX = Lunga Vita Al FHD", desc: "La 1280.. E la Risoluzione su Schermo Domestico o Televisivi. Dovrà Restare Inviolata! Senza Errori Di Testo, Qualora Ci siano, Sistematela Di Origine Ed Eseguite Upload Finale!" },
+        { title: "La Distruzione Di IOS \/ iPad :", desc: "Crei Sul Computer A Font Grandezza Massiva... ma sul piccolo Feed Di Telefono o SmartPhone la frase 'TI SFIDO!' E del Tutto Illeggibile!. La Sims e fondamentale. Fate Prove di Lettura Per evitare lo Zero di Retension Click!" },
+        { title: "Downgrade Apparenti(HD-480 / Master Cnd!)", desc: "YouTube puó per caricamenti fallaci svalutare l'immagine A (Hq). Usare il Compare HD - Eseguire Re-Uploading da Studio!" },
+        { title: "Diritti Legittimi e Costruzione del Banco Prove.", desc: "Per la tua si applica a prove... In merito di test di Concorrenti in Studio si puó operare legalmente il Fair Uses Visivo E Analitico (Studio Personale E Migliorie In Clic-Through.)." },
+        { title: "Gli Errori Del Modello (Blocked / Unavailable!).", desc: "Youtube Se Privato o Chiuso Membri VIP non CND-Condividera a Terzi! Vi Banna l'esposizione Del Simulator." },
+        { title: "Assenze MAX : Storie Di Upload Bassi.", desc: "Spesso Youtube Stesso Annulla la Creazione Del MAX per clip sotto Il 480 Caricate al Origin! O Di Canali Nel 2008!." }
+      ],
+      workflowTitle: "Messa Alla Prova (Quattro Scenari Ctr).",
+      workflows: [
+        { n: "01", t: "Acquisizione ID /Url", d: "Sintassi Esatta Copia E Incolla." },
+        { n: "02", t: "Sforzo delle Macchine E Test delle 5 versioni CND.", d: "YoutTube ha Validato la MAX Full O Ha Sminuito il Rendering!?" },
+        { n: "03", t: "Spremitura Su iPad / IOS Mockups. (Viste Realistiche!)", d: "Apri L'Occhio. Chiedi se è Stravagante E Pienamente Leggibile a Mobile Feed (Da Cui Proviene Un click Rate Del 85% Globale). Sali Nel Pc... Ridimensionala Se Sbagli!" },
+        { n: "04", t: "Messa In Pieno Locale O Final Upload.", d: "Applica Ad App." }
+      ],
+      seoContent: {
+        badge: "Spiegazioni Formato E Sizes 2026",
+        title: "Esaminare E Costruire Le Miniatura, Da Monitor A Smartphone: Regola Di Successo E Api",
+        p1: "Qualora l'Occhio sul Display da Polso dello Smartphone fallisce, anche il Click si azzera. Tutto muore in Test Di Previsualizzioni: Simulatori permettono Di Capire Errori CND-Mockup prima Di Eseguire Rilasci Formali ad Pubblico Dal Creator Studio YT! Test Previa Di Qualunque cosa E non subirai Calo del Rate Click Through (Sims Cnd).",
+        h3_1: "Quei Misterosi Nomi Di Versioni - Come Le Rileggo E Interpreto (I 5 CDN)?",
+        p2_1: "<strong>120 * Base Mini (Es.. Notifiche email D'iscritti e Vecchie Embeds)</strong> ... <strong>320 Appross/ Mq: E LA PIU VITAL (Mobiles E Piena Retina).</strong>... Iniziando poi da <strong>480, le Standards Hq. E Sdd.</strong> <strong>Per Conludere Con Il GigaMaster = FHD-MAX La Origine da Agenzia PSD / Mac.</strong>",
+        h3_2: "Inesistenza E Fallo Della MAX/ (Omissione API)?",
+        p2_2: "Al caricamento (Creator YT Studio) Youtube Sminuisce ed OMETTE Dal database Il File gigante SE Rileva Danni Alla clip video Di base O se era Una Registrazione scadente 480Px ! NOSTRO TOOL Comunichera MAncanza/Assente.  <strong> Soluzione: Refate Edit in Esportazione Vera a Maggiore Rate Fhd Su Editor Clip (Adobe), Re Up, e l'Algoritmo Sistemera Automaticamente Anche L'Immagine MAX CND. </strong> ",
+        h3_3: "Laboratorio Reale Contro 'Impulsi Del momento'.",
+        p2_3: "Tu menti in PSD Guardandoti l'Eroe Del PC Fullhd Zoom, Non Testarlo Sull'App Tablet Sims E Mentirsi In Quanto L'88 % Naviga in Trenino O Metro su Un Minuscolo Vetrino Da Mobile. L'impossibilità nel Riconoscere I Colori / Lettere fa perdere iscritti ... Eseguite Assolutamente Simulation Per Raggiungere il Clic Perfetto! <strong> Il Clic Sincero è Denaro Pubblicitario Diretto!</strong>",
+        h3_4: "Connettere Lo Sforzo Ad Altre Suite Creador IA",
+        p2_4: "Si Pone la Mancanza ? Estraibile Dal CND Origin: ( <a href='/it/tools/thumbnail-downloader'>Applicativo Extrazione 4k Origine Download</a>) - Oppure In Lavori Total IA Ad ( <a href='/it/tools/ai-thumbnail-generator'>AI Creation Image YT Portada</a> )."
+      },
+      faqs: [
+        { q: "Quante Ne Estrae L'App Ufficiale Da YouTube (Nube)?", a: "Fino a 5 Varianti Regolari E Precise! (Master In FHD 1280X Sino alla Minuscola Da Email da 120)." },
+        { q: "Mancanza Sulla 'HD-MAX', Cosa Si Segnala?", a: "Che Da YouTube l'Origine Video È O Troppo Corta, Malcodificata O Sotto Gli Parametri Di FHD Upload. YTB Rifiuta E La Rende (Null) - Il TOOL vi Informa E Blocca Del Fatto!" },
+        { q: "Lo Usero per SCARICARE ?", a: "Per Certo! Bottoni Salva / E JPG è vostro in Cartella Locale. Pieno Diritto!" },
+        { q: "In Simulazioni Televisive E Verticals... Gli Shorts (IOS E FEED)?", a: "Ottimamente ! Un'URL di App Shorts fornità Simulazioni Dello Stesso Formato Mockups a 5 Modulazioni Con Validità d'Essai CTR mobile perfetta." },
+        { q: "Crediti (A Pagamenti)?", a: "Utilizzato Dal Mondo Intero Senza Pagamento O Iscrizione Obbligatoria (Struttura Utilitaria)!." }
+      ],
+      crossCta: {
+        title: "Fatte Tutte Le Verifiche A Mobiles... Avanti Con le Frasi E I Titoli Che Esplodono",
+        desc: "L'Utente Vede e Poi... LEGGE ! Scrivi Con intelligenza A.I il Tuo Messaggio o L'Esatto Titolo di Massimizzazione!.",
+        btn1: "Ritorno A Link Download (Original Files HD CND)",
+        btn2: "Robot I.A Dei Titolari/Titoli Ad Clic"
+      }
+    }
+  }
 };

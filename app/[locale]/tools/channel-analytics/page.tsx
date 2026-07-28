@@ -179,32 +179,14 @@ function calculateEstimatedEarnings(totalViews: number, videoCount: number) {
   };
 }
 
-const stats = [
-  { value: "Live", label: "YouTube API" },
-  { value: "10", label: "Recent Uploads" },
-  { value: "<3s", label: "Pull Speed" },
-  { value: "100%", label: "Free Forever" },
-];
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Track engagement rate", desc: "Channels with >5% engagement consistently outperform those at 1-2% — even with smaller subscriber counts." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Watch upload cadence", desc: "Consistency beats volume. Channels uploading twice weekly grow 3x faster than sporadic ones." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Compare top videos", desc: "Look at the recent uploads to find what resonates. Then double down on that format." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't obsess over subs", desc: "Subscriber count is a vanity metric. Average views per video matters far more for revenue and reach." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't ignore growth velocity", desc: "A 100k channel growing 5%/month beats a 1M channel growing 0.1%/month for sponsors and partnerships." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Watch the trend, not the snapshot", desc: "Look at the last 10 uploads as a moving sample to reveal what one video's data hides." },
-];
-
-const faqs = [
-  { q: "How accurate is this analytics tool?", a: "We pull live public stats from the YouTube Data API — subscribers, total views, video count, and channel age are exact. Engagement metrics come from the most recent 10 uploads." },
-  { q: "Can I see private analytics from other channels?", a: "No — and no tool can. YouTube Studio analytics (impressions, CTR, AVD, revenue) are private to the channel owner. We show only what's publicly visible." },
-  { q: "What URLs can I paste?", a: "Any YouTube link works — channel page, @handle, video URL, short link, or even a bare @handle. We resolve to the parent channel automatically." },
-  { q: "How often is the data updated?", a: "Every request hits the YouTube API live, so you get fresh numbers on every check." },
-];
-
-const suggestions = ["@MrBeast", "@MarquesBrownlee", "@AliAbdaal", "@Veritasium", "@TheVerge"];
+const unused = true; // placeholder for diff
 
 export default function ChannelAnalyticsPage() {
+  const { t } = useTranslations();
+  const toolContent = t("toolPages.channelAnalytics") as NonNullable<ReturnType<typeof t<"toolPages.channelAnalytics">>>;
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -243,23 +225,23 @@ export default function ChannelAnalyticsPage() {
   const engagementRate =
     data && data.engagementMetrics.averageViews > 0
       ? ((data.engagementMetrics.averageLikes + data.engagementMetrics.averageComments) /
-          data.engagementMetrics.averageViews) *
-        100
+        data.engagementMetrics.averageViews) *
+      100
       : 0;
   const earnings = data ? calculateEstimatedEarnings(data.statistics.totalViews, data.statistics.videoCount) : null;
 
   return (
     <ToolLayout
-      title="YouTube Channel Analytics"
-      description="Paste any YouTube link — channel, video, short, or @handle — to get live channel analytics: subscribers, views, recent uploads, and engagement metrics."
+      title={toolContent.title}
+      description={toolContent.description}
       icon={BarChart3}
-      badge="Live YouTube Data · Channel Analytics"
+      badge={toolContent.badge}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={toolContent.stats} />
 
       <ToolCard className="mb-6">
         <label className="flex items-center gap-2 text-xs font-black uppercase tracking-wider mb-3">
-          <Youtube className="w-4 h-4 text-red-600" /> YouTube URL or @handle
+          <Youtube className="w-4 h-4 text-red-600" /> {toolContent.inputLabel}
         </label>
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] transition-shadow">
@@ -268,18 +250,18 @@ export default function ChannelAnalyticsPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && run()}
-              placeholder="https://youtube.com/@MrBeast or any video link"
+              placeholder={toolContent.inputPlaceholder}
               className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
             />
           </div>
           <PrimaryButton onClick={() => run()} disabled={loading || !input.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <BarChart3 className="w-4 h-4" />}
-            {loading ? "Analyzing..." : "Analyze Channel"}
+            {loading ? toolContent.btnAnalyzing : toolContent.btnAnalyze}
           </PrimaryButton>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider">Try:</span>
-          {suggestions.map((s) => (
+          <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider">{toolContent.tryPrefix}</span>
+          {toolContent.suggestions.map((s) => (
             <button
               key={s}
               onClick={() => run(s)}
@@ -307,9 +289,9 @@ export default function ChannelAnalyticsPage() {
                   <Search className="w-9 h-9 text-white" />
                 </div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-3 rounded-full bg-red-100 border-2 border-black text-[10px] font-black uppercase tracking-wider text-red-700">
-                  <AlertCircle className="w-3 h-3" /> Channel Not Found
+                  <AlertCircle className="w-3 h-3" /> {toolContent.errorNotFound}
                 </div>
-                <h3 className="font-black text-2xl tracking-tight mb-2">We couldn't analyze that channel</h3>
+                <h3 className="font-black text-2xl tracking-tight mb-2">{toolContent.errorTitle}</h3>
                 <p className="text-sm text-neutral-600 font-medium max-w-md">{error}</p>
                 <button
                   onClick={() => {
@@ -318,7 +300,7 @@ export default function ChannelAnalyticsPage() {
                   }}
                   className="mt-5 inline-flex items-center gap-1.5 px-4 py-2.5 bg-black text-white text-xs font-black rounded-xl border-2 border-black hover:bg-red-600 transition shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                 >
-                  <Search className="w-3.5 h-3.5" /> Try another link
+                  <Search className="w-3.5 h-3.5" /> {toolContent.errorRetryBtn}
                 </button>
               </div>
             </div>
@@ -330,8 +312,8 @@ export default function ChannelAnalyticsPage() {
         <ToolCard className="mb-12 sm:mb-16">
           <div className="flex flex-col items-center justify-center py-12 gap-3 text-neutral-500">
             <Loader2 className="w-8 h-8 animate-spin text-red-600" />
-            <div className="text-xs font-black uppercase tracking-wider">Pulling live channel analytics...</div>
-            <div className="text-[11px] font-bold text-neutral-400">YouTube API · 1–3 seconds</div>
+            <div className="text-xs font-black uppercase tracking-wider">{toolContent.loadingTitle}</div>
+            <div className="text-[11px] font-bold text-neutral-400">{toolContent.loadingDesc}</div>
           </div>
         </ToolCard>
       )}
@@ -418,16 +400,16 @@ export default function ChannelAnalyticsPage() {
                       <h2 className="font-black text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-tight break-words">{data.title}</h2>
                       <div className="flex items-center gap-1.5 flex-wrap justify-center sm:justify-start">
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-black text-white text-[10px] sm:text-[11px] font-black rounded-full border-2 border-black">
-                          <CheckCircle2 className="w-3 h-3" /> Live
+                          <CheckCircle2 className="w-3 h-3" /> {toolContent.profileLiveBadge}
                         </span>
                         {data.status.madeForKids && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-500 text-white text-[10px] sm:text-[11px] font-black rounded-full border-2 border-black">
-                            <Baby className="w-3 h-3" /> Kids
+                            <Baby className="w-3 h-3" /> {toolContent.profileKidsBadge}
                           </span>
                         )}
                         {data.status.isLinked && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-green-600 text-white text-[10px] sm:text-[11px] font-black rounded-full border-2 border-black">
-                            <ShieldCheck className="w-3 h-3" /> Verified
+                            <ShieldCheck className="w-3 h-3" /> {toolContent.profileVerifiedBadge}
                           </span>
                         )}
                       </div>
@@ -442,7 +424,7 @@ export default function ChannelAnalyticsPage() {
                       )}
                       <span className="inline-flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5 text-neutral-500" />
-                        Joined {formatJoined(data.publishedAt)}
+                        {toolContent.profileJoinedPrefix} {formatJoined(data.publishedAt)}
                       </span>
                     </div>
                   </div>
@@ -454,7 +436,7 @@ export default function ChannelAnalyticsPage() {
                     className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 bg-red-600 text-white text-xs sm:text-sm font-black rounded-xl border-2 border-black hover:bg-red-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all shrink-0 w-full sm:w-auto self-center sm:self-end"
                   >
                     <Youtube className="w-4 h-4" />
-                    Open Channel
+                    {toolContent.profileOpenChannel}
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -464,13 +446,13 @@ export default function ChannelAnalyticsPage() {
                   {[
                     {
                       icon: Users,
-                      label: "Subscribers",
-                      value: data.statistics.hiddenSubscriberCount ? "Hidden" : fmt(data.statistics.subscriberCount),
+                      label: toolContent.statSubscribers,
+                      value: data.statistics.hiddenSubscriberCount ? toolContent.statSubscribersHidden : fmt(data.statistics.subscriberCount),
                       color: "text-red-600",
                     },
-                    { icon: Eye, label: "Total Views", value: fmt(data.statistics.totalViews), color: "text-blue-600" },
-                    { icon: VideoIcon, label: "Videos", value: fmt(data.statistics.videoCount), color: "text-purple-600" },
-                    { icon: TrendingUp, label: "Avg Views/Video", value: fmt(data.estimatedMetrics.averageViewsPerVideo), color: "text-green-600" },
+                    { icon: Eye, label: toolContent.statTotalViews, value: fmt(data.statistics.totalViews), color: "text-blue-600" },
+                    { icon: VideoIcon, label: toolContent.statVideos, value: fmt(data.statistics.videoCount), color: "text-purple-600" },
+                    { icon: TrendingUp, label: toolContent.statAvgViews, value: fmt(data.estimatedMetrics.averageViewsPerVideo), color: "text-green-600" },
                   ].map((s) => (
                     <div
                       key={s.label}
@@ -487,12 +469,11 @@ export default function ChannelAnalyticsPage() {
                   <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t-2 border-dashed border-neutral-200 text-center sm:text-left">
                     <div className="flex items-center gap-2 mb-3 justify-center sm:justify-start">
                       <Globe className="w-4 h-4 text-neutral-500" />
-                      <div className="text-[11px] font-black uppercase tracking-wider text-neutral-500">About Channel</div>
+                      <div className="text-[11px] font-black uppercase tracking-wider text-neutral-500">{toolContent.aboutTitle}</div>
                     </div>
                     <div
-                      className={`text-sm sm:text-base text-neutral-700 leading-relaxed whitespace-pre-line break-words ${
-                        descExpanded ? "" : "line-clamp-3 sm:line-clamp-4"
-                      }`}
+                      className={`text-sm sm:text-base text-neutral-700 leading-relaxed whitespace-pre-line break-words ${descExpanded ? "" : "line-clamp-3 sm:line-clamp-4"
+                        }`}
                     >
                       {data.description}
                     </div>
@@ -502,11 +483,11 @@ export default function ChannelAnalyticsPage() {
                     >
                       {descExpanded ? (
                         <>
-                          <ChevronUp className="w-3.5 h-3.5" /> Show Less
+                          <ChevronUp className="w-3.5 h-3.5" /> {toolContent.aboutShowLess}
                         </>
                       ) : (
                         <>
-                          <ChevronDown className="w-3.5 h-3.5" /> Show More
+                          <ChevronDown className="w-3.5 h-3.5" /> {toolContent.aboutShowMore}
                         </>
                       )}
                     </button>
@@ -520,21 +501,21 @@ export default function ChannelAnalyticsPage() {
               <div className="px-4 py-3 sm:py-4 border-b-2 border-black bg-gradient-to-r from-neutral-50 to-neutral-100 flex items-center justify-between gap-3 flex-wrap">
                 <div className="flex items-center gap-2">
                   <Activity className="w-5 h-5 text-red-600" />
-                  <div className="font-black text-sm sm:text-base">Engagement (Last {data.engagementMetrics.recentVideosAnalyzed} Uploads)</div>
+                  <div className="font-black text-sm sm:text-base">{toolContent.engagementTitle.replace("{count}", String(data.engagementMetrics.recentVideosAnalyzed))}</div>
                 </div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600 text-white text-[11px] font-black rounded-full border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                   <Activity className="w-3.5 h-3.5" />
-                  {engagementRate.toFixed(1)}% Rate
+                  {engagementRate.toFixed(1)}{toolContent.engagementRateSuffix}
                 </div>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
                 {[
-                  { icon: Eye, label: "Avg Views", value: fmt(data.engagementMetrics.averageViews), color: "text-red-600", bg: "bg-red-50" },
-                  { icon: ThumbsUp, label: "Avg Likes", value: fmt(data.engagementMetrics.averageLikes), color: "text-pink-600", bg: "bg-pink-50" },
-                  { icon: MessageCircle, label: "Avg Comments", value: fmt(data.engagementMetrics.averageComments), color: "text-blue-600", bg: "bg-blue-50" },
-                  { icon: Eye, label: "Total Views", value: fmt(data.engagementMetrics.totalRecentViews), color: "text-neutral-700", bg: "bg-neutral-50" },
-                  { icon: Heart, label: "Total Likes", value: fmt(data.engagementMetrics.totalRecentLikes), color: "text-rose-600", bg: "bg-rose-50" },
-                  { icon: MessageCircle, label: "Total Comments", value: fmt(data.engagementMetrics.totalRecentComments), color: "text-indigo-600", bg: "bg-indigo-50" },
+                  { icon: Eye, label: toolContent.engageAvgViews, value: fmt(data.engagementMetrics.averageViews), color: "text-red-600", bg: "bg-red-50" },
+                  { icon: ThumbsUp, label: toolContent.engageAvgLikes, value: fmt(data.engagementMetrics.averageLikes), color: "text-pink-600", bg: "bg-pink-50" },
+                  { icon: MessageCircle, label: toolContent.engageAvgComments, value: fmt(data.engagementMetrics.averageComments), color: "text-blue-600", bg: "bg-blue-50" },
+                  { icon: Eye, label: toolContent.engageTotalViews, value: fmt(data.engagementMetrics.totalRecentViews), color: "text-neutral-700", bg: "bg-neutral-50" },
+                  { icon: Heart, label: toolContent.engageTotalLikes, value: fmt(data.engagementMetrics.totalRecentLikes), color: "text-rose-600", bg: "bg-rose-50" },
+                  { icon: MessageCircle, label: toolContent.engageTotalComments, value: fmt(data.engagementMetrics.totalRecentComments), color: "text-indigo-600", bg: "bg-indigo-50" },
                 ].map((m, idx) => (
                   <div
                     key={m.label}
@@ -549,11 +530,11 @@ export default function ChannelAnalyticsPage() {
               <div className="px-4 py-3 sm:py-4 border-t-2 border-neutral-200 bg-neutral-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs sm:text-sm font-bold text-neutral-600">
                 <span className="flex items-center gap-1.5">
                   <TrendingUp className="w-4 h-4 text-neutral-500" />
-                  Sub→View ratio: <span className="text-black font-black">{data.estimatedMetrics.subscriberToViewRatio}</span>
+                  {toolContent.engageSubViewRatio} <span className="text-black font-black">{data.estimatedMetrics.subscriberToViewRatio}</span>
                 </span>
                 <span className="flex items-center gap-1.5">
                   <BarChart3 className="w-4 h-4 text-neutral-500" />
-                  Avg views/video: <span className="text-black font-black">{fmt(data.estimatedMetrics.averageViewsPerVideo)}</span>
+                  {toolContent.engageAvgViewsVideo} <span className="text-black font-black">{fmt(data.estimatedMetrics.averageViewsPerVideo)}</span>
                 </span>
               </div>
             </div>
@@ -565,7 +546,7 @@ export default function ChannelAnalyticsPage() {
                 <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                   <div className="px-4 sm:px-5 py-3 sm:py-4 border-b-2 border-black bg-gradient-to-r from-red-50 to-orange-50 flex items-center gap-2">
                     <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
-                    <div className="font-black text-xs sm:text-sm md:text-base">Recent Video Performance</div>
+                    <div className="font-black text-xs sm:text-sm md:text-base">{toolContent.chartVideoPerformance}</div>
                   </div>
                   <div className="p-3 sm:p-4 md:p-6">
                     <ResponsiveContainer width="100%" height={250} className="sm:hidden">
@@ -661,16 +642,16 @@ export default function ChannelAnalyticsPage() {
                 <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                   <div className="px-4 sm:px-5 py-3 sm:py-4 border-b-2 border-black bg-gradient-to-r from-purple-50 to-pink-50 flex items-center gap-2">
                     <PieChart className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
-                    <div className="font-black text-xs sm:text-sm md:text-base">Engagement Distribution</div>
+                    <div className="font-black text-xs sm:text-sm md:text-base">{toolContent.chartEngagementDist}</div>
                   </div>
                   <div className="p-3 sm:p-4 md:p-6">
                     <ResponsiveContainer width="100%" height={250} className="sm:hidden">
                       <RechartsPieChart>
                         <Pie
                           data={[
-                            { name: "Views", value: data.engagementMetrics.totalRecentViews, color: "#dc2626" },
-                            { name: "Likes", value: data.engagementMetrics.totalRecentLikes * 50, color: "#ec4899" },
-                            { name: "Comments", value: data.engagementMetrics.totalRecentComments * 100, color: "#3b82f6" },
+                            { name: toolContent.chartDataViews, value: data.engagementMetrics.totalRecentViews, color: "#dc2626" },
+                            { name: toolContent.chartDataLikes, value: data.engagementMetrics.totalRecentLikes * 50, color: "#ec4899" },
+                            { name: toolContent.chartDataComments, value: data.engagementMetrics.totalRecentComments * 100, color: "#3b82f6" },
                           ]}
                           cx="50%"
                           cy="50%"
@@ -712,9 +693,9 @@ export default function ChannelAnalyticsPage() {
                       <RechartsPieChart>
                         <Pie
                           data={[
-                            { name: "Views", value: data.engagementMetrics.totalRecentViews, color: "#dc2626" },
-                            { name: "Likes", value: data.engagementMetrics.totalRecentLikes * 50, color: "#ec4899" },
-                            { name: "Comments", value: data.engagementMetrics.totalRecentComments * 100, color: "#3b82f6" },
+                            { name: toolContent.chartDataViews, value: data.engagementMetrics.totalRecentViews, color: "#dc2626" },
+                            { name: toolContent.chartDataLikes, value: data.engagementMetrics.totalRecentLikes * 50, color: "#ec4899" },
+                            { name: toolContent.chartDataComments, value: data.engagementMetrics.totalRecentComments * 100, color: "#3b82f6" },
                           ]}
                           cx="50%"
                           cy="50%"
@@ -727,9 +708,9 @@ export default function ChannelAnalyticsPage() {
                           strokeWidth={2}
                         >
                           {[
-                            { name: "Views", value: data.engagementMetrics.totalRecentViews, color: "#dc2626" },
-                            { name: "Likes", value: data.engagementMetrics.totalRecentLikes * 50, color: "#ec4899" },
-                            { name: "Comments", value: data.engagementMetrics.totalRecentComments * 100, color: "#3b82f6" },
+                            { name: toolContent.chartDataViews, value: data.engagementMetrics.totalRecentViews, color: "#dc2626" },
+                            { name: toolContent.chartDataLikes, value: data.engagementMetrics.totalRecentLikes * 50, color: "#ec4899" },
+                            { name: toolContent.chartDataComments, value: data.engagementMetrics.totalRecentComments * 100, color: "#3b82f6" },
                           ].map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.color} />
                           ))}
@@ -759,7 +740,7 @@ export default function ChannelAnalyticsPage() {
                 <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                   <div className="px-4 sm:px-5 py-3 sm:py-4 border-b-2 border-black bg-gradient-to-r from-blue-50 to-cyan-50 flex items-center gap-2">
                     <LineChart className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                    <div className="font-black text-xs sm:text-sm md:text-base">Views Trend Timeline</div>
+                    <div className="font-black text-xs sm:text-sm md:text-base">{toolContent.chartViewsTimeline}</div>
                   </div>
                   <div className="p-3 sm:p-4 md:p-6">
                     <ResponsiveContainer width="100%" height={250} className="sm:hidden">
@@ -899,14 +880,14 @@ export default function ChannelAnalyticsPage() {
                 <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                   <div className="px-4 sm:px-5 py-3 sm:py-4 border-b-2 border-black bg-gradient-to-r from-green-50 to-emerald-50 flex items-center gap-2">
                     <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                    <div className="font-black text-xs sm:text-sm md:text-base">Channel Engagement Metrics</div>
+                    <div className="font-black text-xs sm:text-sm md:text-base">{toolContent.chartRadarMetrics}</div>
                   </div>
                   <div className="p-3 sm:p-4 md:p-6">
                     <ResponsiveContainer width="100%" height={250} className="sm:hidden">
                       <RadarChart
                         data={[
                           {
-                            metric: "Views",
+                            metric: toolContent.chartDataViews,
                             value: Math.min((data.engagementMetrics.averageViews / data.estimatedMetrics.averageViewsPerVideo) * 100, 100),
                           },
                           {
@@ -918,11 +899,11 @@ export default function ChannelAnalyticsPage() {
                             value: Math.min((data.engagementMetrics.averageComments / (data.engagementMetrics.averageViews * 0.01)) * 100, 100),
                           },
                           {
-                            metric: "Engage",
+                            metric: toolContent.chartDataEngage,
                             value: Math.min(engagementRate * 20, 100),
                           },
                           {
-                            metric: "Consist",
+                            metric: toolContent.chartDataConsist,
                             value: Math.min((data.recentUploads.length / 10) * 100, 100),
                           },
                         ]}
@@ -968,23 +949,23 @@ export default function ChannelAnalyticsPage() {
                       <RadarChart
                         data={[
                           {
-                            metric: "Views",
+                            metric: toolContent.chartDataViews,
                             value: Math.min((data.engagementMetrics.averageViews / data.estimatedMetrics.averageViewsPerVideo) * 100, 100),
                           },
                           {
-                            metric: "Likes",
+                            metric: toolContent.chartDataLikes,
                             value: Math.min((data.engagementMetrics.averageLikes / (data.engagementMetrics.averageViews * 0.05)) * 100, 100),
                           },
                           {
-                            metric: "Comments",
+                            metric: toolContent.chartDataComments,
                             value: Math.min((data.engagementMetrics.averageComments / (data.engagementMetrics.averageViews * 0.01)) * 100, 100),
                           },
                           {
-                            metric: "Engagement",
+                            metric: toolContent.chartDataEngagement,
                             value: Math.min(engagementRate * 20, 100),
                           },
                           {
-                            metric: "Consistency",
+                            metric: toolContent.chartDataConsistency,
                             value: Math.min((data.recentUploads.length / 10) * 100, 100),
                           },
                         ]}
@@ -1037,10 +1018,10 @@ export default function ChannelAnalyticsPage() {
                 <div className="px-4 py-3 border-b-2 border-black bg-white flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
                     <DollarSign className="w-4 h-4 text-green-600" />
-                    <div className="font-black text-sm">Estimated Lifetime Earnings</div>
+                    <div className="font-black text-sm">{toolContent.earningsTitle}</div>
                   </div>
                   <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-yellow-400 text-black text-[10px] font-black rounded-full border-2 border-black">
-                    <AlertTriangle className="w-3 h-3" /> Estimate Only
+                    <AlertTriangle className="w-3 h-3" /> {toolContent.earningsEstimateOnly}
                   </div>
                 </div>
 
@@ -1048,7 +1029,7 @@ export default function ChannelAnalyticsPage() {
                   {/* Main earnings range */}
                   <div className="text-center mb-6">
                     <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">
-                      Total Estimated Revenue
+                      {toolContent.earningsTotalRev}
                     </div>
                     <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
                       <div className="font-black text-3xl sm:text-4xl md:text-5xl tracking-tight text-green-600">
@@ -1060,16 +1041,16 @@ export default function ChannelAnalyticsPage() {
                       </div>
                     </div>
                     <div className="mt-2 text-xs sm:text-sm font-bold text-neutral-600">
-                      Based on {fmt(data.statistics.totalViews)} total views across {fmt(data.statistics.videoCount)} videos
+                      {toolContent.earningsBasedOn1} {fmt(data.statistics.totalViews)} {toolContent.earningsBasedOn2} {fmt(data.statistics.videoCount)}
                     </div>
                   </div>
 
                   {/* Breakdown cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     {[
-                      { label: "Low Estimate", value: earnings.lifetime.low, desc: "$0.25 CPM", icon: TrendingDown, color: "from-orange-500 to-red-500" },
-                      { label: "Mid Estimate", value: earnings.lifetime.mid, desc: "$2.00 CPM", icon: DollarSign, color: "from-green-500 to-emerald-500" },
-                      { label: "High Estimate", value: earnings.lifetime.high, desc: "$5.00 CPM", icon: TrendingUp, color: "from-blue-500 to-purple-500" },
+                      { label: toolContent.earningsLowEst, value: earnings.lifetime.low, desc: toolContent.earningsLowEstDesc, icon: TrendingDown, color: "from-orange-500 to-red-500" },
+                      { label: toolContent.earningsMidEst, value: earnings.lifetime.mid, desc: toolContent.earningsMidEstDesc, icon: DollarSign, color: "from-green-500 to-emerald-500" },
+                      { label: toolContent.earningsHighEst, value: earnings.lifetime.high, desc: toolContent.earningsHighEstDesc, icon: TrendingUp, color: "from-blue-500 to-purple-500" },
                     ].map((item) => (
                       <div
                         key={item.label}
@@ -1096,7 +1077,7 @@ export default function ChannelAnalyticsPage() {
                     <div className="flex items-start gap-2 text-[11px] font-bold text-neutral-600 bg-white border-2 border-black rounded-lg p-3">
                       <AlertCircle className="w-4 h-4 text-yellow-600 shrink-0 mt-0.5" />
                       <div>
-                        <span className="font-black text-black">Disclaimer:</span> These are rough estimates based on industry-standard CPM ranges ($0.25–$5.00 per 1,000 views). Actual earnings vary widely based on niche, audience location, engagement, monetization status, brand deals, and AdSense rates. YouTube does not publicly share revenue data.
+                        <span className="font-black text-black">{toolContent.earningsDisclaimerTitle}</span> {toolContent.earningsDisclaimerDesc}
                       </div>
                     </div>
                   </div>
@@ -1109,7 +1090,7 @@ export default function ChannelAnalyticsPage() {
               <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                 <div className="px-4 sm:px-5 py-3 sm:py-4 border-b-2 border-black bg-gradient-to-r from-neutral-50 to-neutral-100 flex items-center gap-2">
                   <Award className="w-5 h-5 text-red-600" />
-                  <div className="font-black text-sm sm:text-base">Topic Categories</div>
+                  <div className="font-black text-sm sm:text-base">{toolContent.topicTitle}</div>
                   <div className="ml-auto inline-flex items-center gap-1 px-2 py-0.5 bg-black text-white text-[10px] font-black rounded-full">
                     {data.topicCategories.length}
                   </div>
@@ -1137,10 +1118,10 @@ export default function ChannelAnalyticsPage() {
                 <div className="px-4 sm:px-5 py-3 sm:py-4 border-b-2 border-black bg-gradient-to-r from-neutral-50 to-neutral-100 flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
                     <VideoIcon className="w-5 h-5 text-red-600" />
-                    <div className="font-black text-sm sm:text-base">Recent Uploads</div>
+                    <div className="font-black text-sm sm:text-base">{toolContent.recentUploadsTitle}</div>
                   </div>
                   <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-black text-white text-[10px] font-black rounded-full">
-                    {data.recentUploads.length} Videos
+                    {data.recentUploads.length} {toolContent.recentUploadsVideosSuffix}
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 p-4 sm:p-5">
@@ -1206,53 +1187,63 @@ export default function ChannelAnalyticsPage() {
       {!data && !loading && !error && <div className="mb-12 sm:mb-16" />}
 
       <GuideGrid
-        badge="Analytics Rules"
-        title="How to read YouTube channel analytics like a pro"
-        intro="Six rules that separate signal from vanity in any creator's public stats."
-        cards={guides}
+        badge={toolContent.guideBadge || ""}
+        title={toolContent.guideTitle || ""}
+        intro={toolContent.guideIntro || ""}
+        cards={(toolContent.guides || []).map((g: any, i: number) => {
+          const icons = [CheckCircle2, CheckCircle2, CheckCircle2, XCircle, XCircle, AlertTriangle];
+          const colors = [
+            "text-green-600 bg-green-100",
+            "text-green-600 bg-green-100",
+            "text-green-600 bg-green-100",
+            "text-red-600 bg-red-100",
+            "text-red-600 bg-red-100",
+            "text-yellow-600 bg-yellow-100",
+          ];
+          return {
+            ...g,
+            icon: icons[i % icons.length],
+            color: colors[i % colors.length],
+          };
+        })}
       />
 
       <Workflow
-        title="Your 4-step competitive analysis workflow"
-        steps={[
-          { n: "01", t: "Pick your competitors", d: "Choose 3-5 channels in your niche with similar subscriber counts to yours." },
-          { n: "02", t: "Run each through the analyzer", d: "Look at engagement rate, recent uploads, and avg views — not just subs." },
-          { n: "03", t: "Identify the patterns", d: "What format do their recent uploads share? What's their posting rhythm?" },
-          { n: "04", t: "Apply to your channel", d: "Replicate their winning patterns with your unique voice and topics." },
-        ]}
+        title={toolContent.workflowTitle || ""}
+        steps={toolContent.workflows || []}
       />
 
-      <SeoContent badge="Complete Channel Analytics Guide" title="The complete guide to YouTube channel analytics in 2026">
-        <p>YouTube channel analytics are the single most powerful research tool available to creators today. Whether you're benchmarking your own channel, sizing up a competitor, or evaluating a creator for sponsorship, the public stats tell a richer story than most people realize.</p>
-        <h3>Why public analytics matter</h3>
-        <p>YouTube Studio analytics — impressions, CTR, AVD, audience retention — are private to the channel owner. But the public-facing metrics (subscribers, views, video count, channel age, engagement on individual videos) reveal more than enough to reverse-engineer almost any successful channel. <strong>Sponsors evaluate creators on public stats first</strong>, then dig deeper.</p>
-        <h3>The metrics that actually matter</h3>
-        <p>Most creators obsess over subscriber count — the laziest possible benchmark. The real signals are: <strong>average views per video</strong> (revenue and reach proxy), <strong>engagement rate</strong> (likes + comments / views — the brand-deal kingmaker), and <strong>upload cadence</strong> (the algorithm rewards consistency).</p>
-        <h3>Engagement rate: the brand sponsor's holy grail</h3>
-        <p>A 50K-subscriber channel with 8% engagement is more valuable to sponsors than a 1M-subscriber channel with 0.5% engagement. Engagement rate is calculated as <strong>(likes + comments) / views × 100</strong>. Anything above 5% is excellent, 2-5% is healthy, 1-2% is average, and below 1% suggests bot or paid-traffic inflation.</p>
-        <h3>How to use channel analytics for competitive advantage</h3>
-        <p>The smartest creators run weekly competitor sweeps. Pick 5 channels in your niche, log their subscribers and avg views, and re-check every 30 days. Combine this with our <a href="/tools/seo-analyzer">SEO Analyzer</a> to extract their winning keywords, and our <a href="/tools/viral-title-generator">Viral Title Generator</a> to model their title structures.</p>
+      <SeoContent badge={toolContent.seoContent?.badge || ""} title={toolContent.seoContent?.title || ""}>
+        <p>{toolContent.seoContent?.p1}</p>
+        <h3>{toolContent.seoContent?.h3_1}</h3>
+        <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent?.p2_1 || "" }} />
+        <h3>{toolContent.seoContent?.h3_2}</h3>
+        <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent?.p2_2 || "" }} />
+        <h3>{toolContent.seoContent?.h3_3}</h3>
+        <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent?.p2_3 || "" }} />
+        <h3>{toolContent.seoContent?.h3_4}</h3>
+        <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent?.p2_4 || "" }} />
       </SeoContent>
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={toolContent.faqs || []} />
 
       <CrossCTA
-        title="Turn analytics into action"
-        desc="See a competitor's winning pattern? Generate your own version with our AI tools."
-        primary={{ label: "Generate Title", href: "/tools/viral-title-generator", icon: Sparkles }}
-        secondary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: PenTool }}
+        title={toolContent.crossCta?.title || ""}
+        desc={toolContent.crossCta?.desc || ""}
+        primary={{ label: toolContent.crossCta?.btn1 || "", href: "/tools/viral-title-generator", icon: Sparkles }}
+        secondary={{ label: toolContent.crossCta?.btn2 || "", href: "/tools/ai-script-writer", icon: PenTool }}
       />
-          <ToolSeoJsonLd
-        name="YouTube Channel Analytics"
-        description={"Pull live channel analytics — subscribers, views, watch time, top videos, and growth velocity — from any channel URL."}
+      <ToolSeoJsonLd
+        name={toolContent.title || ""}
+        description={toolContent.seoJsonDesc || ""}
         slug="channel-analytics"
-        faqs={faqs}
+        faqs={toolContent.faqs || []}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "YouTube Channel Analytics", slug: "/tools/channel-analytics" },
+          { name: toolContent.title || "", slug: "/tools/channel-analytics" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }

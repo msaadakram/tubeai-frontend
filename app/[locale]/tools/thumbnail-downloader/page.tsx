@@ -17,6 +17,7 @@ import {
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -42,30 +43,10 @@ type ThumbResponse = {
 
 const qualityOrder = ["maxresdefault", "sddefault", "hqdefault", "mqdefault", "default"];
 
-const stats = [
-  { value: "6.7M+", label: "Thumbnails Saved" },
-  { value: "100%", label: "Free Forever" },
-  { value: "5", label: "Resolutions" },
-  { value: "<1s", label: "Fetch Time" },
-];
-
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Use for inspiration", desc: "Study the top-performing thumbnails in your niche to reverse-engineer winning visual patterns." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Pick max resolution", desc: "Always download 1280×720 for crisp print, presentation, or design reference quality." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Build a swipe file", desc: "Save 50+ top thumbnails in your niche to create a reference library for your own designs." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't republish as-is", desc: "Other creators' thumbnails are copyrighted. Use them for study and inspiration only." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't use copyrighted faces", desc: "Faces of public figures or other creators in your own thumbnails can trigger DMCA strikes." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Resolution may vary", desc: "Older or low-quality videos may not have a max-resolution thumbnail. Fall back to HQ." },
-];
-
-const faqs = [
-  { q: "Is this tool free?", a: "100% free, forever, with unlimited downloads. No signup, no watermark, no daily cap." },
-  { q: "What's the highest resolution?", a: "1280×720 (HD) is YouTube's max thumbnail size. We pull directly from YouTube's CDN, so this is the highest quality available." },
-  { q: "Can I download Shorts thumbnails?", a: "Yes — paste any Shorts URL and we'll extract the same resolutions, including the vertical 9:16 frame." },
-  { q: "Is this legal?", a: "Downloading public YouTube thumbnails for personal use, study, or inspiration is allowed. Republishing them as your own thumbnail is not — that's copyright infringement." },
-];
-
 export default function ThumbnailDownloaderPage() {
+  const { t } = useTranslations();
+  const tc = t("toolPages.thumbnailDownloader") as any;
+
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -129,14 +110,17 @@ export default function ThumbnailDownloaderPage() {
     }
   };
 
+  const guideIcons = [CheckCircle2, CheckCircle2, CheckCircle2, XCircle, XCircle, AlertTriangle];
+  const guideColors = ["text-green-600 bg-green-100", "text-green-600 bg-green-100", "text-green-600 bg-green-100", "text-red-600 bg-red-100", "text-red-600 bg-red-100", "text-yellow-600 bg-yellow-100"];
+
   return (
     <ToolLayout
-      title="Thumbnail Downloader"
-      description="Paste any YouTube link to instantly grab the original thumbnail in every available resolution — 100% free."
+      title={tc.title}
+      description={tc.description}
       icon={Download}
-      badge="Free Tool · Unlimited Downloads"
+      badge={tc.badge}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={tc.stats} />
 
       <ToolCard className="mb-6">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -146,13 +130,13 @@ export default function ThumbnailDownloaderPage() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleFetch()}
-              placeholder="https://youtube.com/watch?v=..."
+              placeholder={tc.inputPlaceholder}
               className="flex-1 py-3 outline-none text-sm font-medium"
             />
           </div>
           <PrimaryButton onClick={handleFetch} disabled={loading || !url.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-            {loading ? "Fetching..." : "Get Thumbnails"}
+            {loading ? tc.fetchingBtn : tc.fetchBtn}
           </PrimaryButton>
         </div>
 
@@ -194,7 +178,7 @@ export default function ThumbnailDownloaderPage() {
                   </div>
                   <div>
                     <div className="font-black text-base flex items-center">
-                      Fetching thumbnails
+                      {tc.fetchingTitle}
                       <span className="inline-flex ml-0.5">
                         {[0, 1, 2].map((i) => (
                           <motion.span
@@ -207,7 +191,7 @@ export default function ThumbnailDownloaderPage() {
                         ))}
                       </span>
                     </div>
-                    <div className="text-xs text-neutral-500 font-bold mt-0.5">Pulling every resolution from YouTube's CDN</div>
+                    <div className="text-xs text-neutral-500 font-bold mt-0.5">{tc.fetchingSub}</div>
                   </div>
                 </div>
                 <div className="hidden sm:flex items-center gap-1.5">
@@ -291,7 +275,7 @@ export default function ThumbnailDownloaderPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs font-black text-red-600 hover:underline"
               >
-                Open video <ExternalLink className="w-3 h-3" />
+                {tc.openVideo} <ExternalLink className="w-3 h-3" />
               </a>
             </div>
 
@@ -332,10 +316,10 @@ export default function ThumbnailDownloaderPage() {
                           <XCircle className="w-5 h-5 text-red-600" />
                         </div>
                         <div className="text-[11px] font-black text-red-700 text-center px-3">
-                          Image unavailable
+                          {tc.imgUnavail}
                         </div>
                         <div className="text-[9px] font-bold text-neutral-500 text-center px-3 uppercase tracking-wide">
-                          This resolution isn't offered for this video
+                          {tc.imgUnavailSub}
                         </div>
                       </div>
                     )}
@@ -360,7 +344,7 @@ export default function ThumbnailDownloaderPage() {
                       ) : (
                         <Download className="w-3.5 h-3.5" />
                       )}
-                      {downloadingKey === t.quality ? "Saving..." : imgErrors[t.quality] ? "Unavailable" : "Download"}
+                      {downloadingKey === t.quality ? tc.savingBtn : imgErrors[t.quality] ? tc.unavailableBtn : tc.downloadBtn}
                     </button>
                   </div>
                 </motion.div>
@@ -375,55 +359,50 @@ export default function ThumbnailDownloaderPage() {
       </AnimatePresence>
 
       <GuideGrid
-        badge="Download Rules"
-        title="How to use thumbnails ethically and legally"
-        intro="Six rules for building a reference library without crossing copyright lines."
-        cards={guides}
+        badge={tc.guideBadge}
+        title={tc.guideTitle}
+        intro={tc.guideIntro}
+        cards={tc.guides.map((g: any, i: number) => ({ ...g, icon: guideIcons[i] || CheckCircle2, color: guideColors[i] || "text-green-600 bg-green-100" }))}
       />
 
       <Workflow
-        title="Your 4-step research workflow"
-        steps={[
-          { n: "01", t: "Find a viral video", d: "Search your niche on YouTube. Filter by views or upload date for fresh viral hits." },
-          { n: "02", t: "Paste the URL", d: "Copy the link from your browser, paste it here, click Get Thumbnails." },
-          { n: "03", t: "Pick a resolution", d: "Choose Max for full study, or smaller sizes for mobile preview testing." },
-          { n: "04", t: "Build a swipe file", d: "Organize 50+ winning thumbnails in your niche for reference when designing your own." },
-        ]}
+        title={tc.workflowTitle}
+        steps={tc.workflows}
       />
 
-      <SeoContent badge="Complete Download Guide" title="How to use the YouTube thumbnail downloader for creator research">
-        <p>YouTube's thumbnail downloader is one of the most underrated research tools available to creators. By systematically downloading and studying the highest-CTR thumbnails in your niche, you can reverse-engineer the visual patterns that drive clicks — and apply them to your own channel without guessing.</p>
-        <h3>Why creators download thumbnails</h3>
-        <p>Top creators don't design thumbnails in a vacuum. They build "swipe files" — collections of 50-100 high-performing thumbnails in their niche — and study them weekly for patterns. <strong>Color palettes</strong>, <strong>face placement</strong>, <strong>text size</strong>, and <strong>composition</strong> all reveal trends that AI models and your competitors are already exploiting.</p>
-        <h3>The five resolutions explained</h3>
-        <p><strong>maxresdefault (1280×720):</strong> YouTube's HD master file. Use this for full-quality study, design reference, or print mockups. <strong>sddefault (640×480):</strong> Standard definition with 4:3 letterbox padding. <strong>hqdefault (480×360):</strong> The default fallback for most videos. <strong>mqdefault (320×180):</strong> Mobile-feed preview size — useful for testing how your design holds up at small sizes. <strong>default (120×90):</strong> Tiny preview frame.</p>
-        <h3>Legal and ethical use</h3>
-        <p>Public YouTube thumbnails are legally accessible because they're served from YouTube's public CDN. Downloading them for <strong>personal study, education, or inspiration</strong> falls under fair use. <strong>Republishing them as your own</strong> — using a competitor's exact thumbnail or another creator's face — is copyright infringement and can trigger DMCA strikes on your channel.</p>
-        <h3>Building a competitive thumbnail swipe file</h3>
-        <p>Pick the top 10 channels in your niche. Download the thumbnails of their 5 highest-viewed videos each. That gives you 50 reference thumbnails — a statistically meaningful sample. Look for repeated patterns: dominant colors, expression types, text positioning, and visual hierarchy. These are the patterns proven to convert in your specific niche.</p>
-        <h3>From research to creation</h3>
-        <p>Once you've reverse-engineered the patterns, pair high-CTR titles from our <a href="/tools/viral-title-generator">Viral Title Generator</a> with retention-optimized scripts from our <a href="/tools/ai-script-writer">AI Script Writer</a>.</p>
+      <SeoContent badge={tc.seoContent.badge} title={tc.seoContent.title}>
+        <p>{tc.seoContent.p1}</p>
+        <h3>{tc.seoContent.h3_1}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_1 }} />
+        <h3>{tc.seoContent.h3_2}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_2 }} />
+        <h3>{tc.seoContent.h3_3}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_3 }} />
+        <h3>{tc.seoContent.h3_4}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_4 }} />
+        <h3>{tc.seoContent.h3_5}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_5 }} />
       </SeoContent>
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={tc.faqs} />
 
       <CrossCTA
-        title="From thumbnail research to your next viral video"
-        desc="Studied the winners? Now write a title and script that match the click."
-        primary={{ label: "Generate Title", href: "/tools/viral-title-generator", icon: Sparkles }}
-        secondary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: ImageIcon }}
+        title={tc.crossCta.title}
+        desc={tc.crossCta.desc}
+        primary={{ label: tc.crossCta.btn1, href: "/tools/viral-title-generator", icon: Sparkles }}
+        secondary={{ label: tc.crossCta.btn2, href: "/tools/ai-script-writer", icon: ImageIcon }}
       />
-          <ToolSeoJsonLd
-        name="YouTube Thumbnail Downloader"
-        description={"Download any YouTube video thumbnail in HD, full, or standard resolution — free, no signup, unlimited."}
+      <ToolSeoJsonLd
+        name={tc.title}
+        description={tc.seoJsonDesc}
         slug="thumbnail-downloader"
-        faqs={faqs}
+        faqs={tc.faqs}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "YouTube Thumbnail Downloader", slug: "/tools/thumbnail-downloader" },
+          { name: tc.title, slug: "/tools/thumbnail-downloader" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }

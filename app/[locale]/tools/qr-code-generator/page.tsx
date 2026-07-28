@@ -35,6 +35,7 @@ import {
   FaqAccordion,
   CrossCTA,
 } from "@/components/tools/ToolSections";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 // ─── Types ───
 type ErrorLevel = "L" | "M" | "Q" | "H";
@@ -58,36 +59,6 @@ type HistoryItem = {
 
 const HISTORY_KEY = "ytforge_qr_history_v1";
 const SIZES = [256, 512, 1024, 2048] as const;
-const ERROR_LEVELS: { value: ErrorLevel; label: string; hint: string }[] = [
-  { value: "L", label: "L", hint: "~7% recovery" },
-  { value: "M", label: "M", hint: "~15% recovery" },
-  { value: "Q", label: "Q", hint: "~25% recovery" },
-  { value: "H", label: "H", hint: "~30% recovery — best with logo" },
-];
-
-const stats = [
-  { value: "HD", label: "Up to 2048px" },
-  { value: "Logo", label: "Center Overlay" },
-  { value: "100%", label: "Free Forever" },
-  { value: "4", label: "Export Formats" },
-];
-
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Use high error correction with a logo", desc: "Pick level H so the QR still scans reliably even with your channel logo covering the center." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Keep strong contrast", desc: "Dark foreground on a light background scans best. Avoid light-on-light or busy gradients." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Print at 1024px+", desc: "For posters, thumbnails, and merch, export at 1024 or 2048px so it stays crisp when scaled." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't shrink too small", desc: "Below ~2cm printed, phones struggle to scan. Give your QR room to breathe." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't oversize the logo", desc: "A logo above ~30% of the QR blocks too many modules and breaks scannability." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Always test before publishing", desc: "Scan your final QR with a real phone camera before printing or uploading it anywhere." },
-];
-
-const faqs = [
-  { q: "What YouTube links can I turn into a QR code?", a: "Any of them — video URLs, Shorts, live streams, playlists, @handles, and channel URLs. Just paste the full link or a bare video ID." },
-  { q: "Will the QR code expire?", a: "No. These are static QR codes that encode your link directly, so they work forever with no tracking, no account, and no expiry." },
-  { q: "Can I add my channel logo?", a: "Yes — upload a PNG or SVG and it's placed in the center. Use error-correction level H so it still scans with the logo overlay." },
-  { q: "What size should I download?", a: "256px for on-screen use, 512px for social posts, and 1024–2048px for print, posters, and merch." },
-  { q: "Is it really free?", a: "100% free, unlimited QR codes, no signup, no watermark." },
-];
 
 // ─── URL parsing / validation ───
 function normalizeYouTube(input: string): { ok: boolean; url: string } {
@@ -132,6 +103,16 @@ function writeHistory(items: HistoryItem[]) {
 }
 
 export default function QrCodeGeneratorPage() {
+  const { t } = useTranslations();
+  const tc = t("toolPages.qrCodeGenerator");
+
+  const errorLevels: { value: ErrorLevel; label: string; hint: string }[] = [
+    { value: "L", label: "L", hint: tc.customize.errorLevels.lHint },
+    { value: "M", label: "M", hint: tc.customize.errorLevels.mHint },
+    { value: "Q", label: "Q", hint: tc.customize.errorLevels.qHint },
+    { value: "H", label: "H", hint: tc.customize.errorLevels.hHint },
+  ];
+
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -213,7 +194,7 @@ export default function QrCodeGeneratorPage() {
 
     const { ok, url } = normalizeYouTube(raw);
     if (!ok) {
-      setError("Enter a valid YouTube link (video, Short, live, playlist, @handle, or channel) or an 11-character video ID.");
+      setError(tc.inputConfig.errorInvalid);
       return;
     }
     setError(null);
@@ -229,7 +210,7 @@ export default function QrCodeGeneratorPage() {
       writeHistory(next);
       setHistory(next.slice(0, 8));
     } catch {
-      setError("Couldn't generate the QR code. Try a smaller logo or a different image.");
+      setError(tc.inputConfig.errorFail);
     } finally {
       setLoading(false);
     }
@@ -243,7 +224,7 @@ export default function QrCodeGeneratorPage() {
       try {
         const dataUrl = await renderCanvas(generatedUrl);
         if (!cancelled) setPngDataUrl(dataUrl);
-      } catch {/* ignore live errors */}
+      } catch {/* ignore live errors */ }
     })();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -253,7 +234,7 @@ export default function QrCodeGeneratorPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!/(png|svg\+xml|jpeg|jpg|webp)/.test(file.type)) {
-      toast.error("Use a PNG, SVG, JPG, or WEBP image");
+      toast.error(tc.customize.toastInvalidImg);
       return;
     }
     const reader = new FileReader();
@@ -273,7 +254,7 @@ export default function QrCodeGeneratorPage() {
           color: { dark: opts.fg, light: opts.transparent ? "#00000000" : opts.bg },
         });
         triggerBlob(new Blob([svg], { type: "image/svg+xml" }), `${base}.svg`);
-        toast.success("Downloaded SVG");
+        toast.success(tc.livePreview.exportBtnCopied);
         return;
       }
       // png / jpeg from canvas
@@ -293,10 +274,10 @@ export default function QrCodeGeneratorPage() {
       }
       src.toBlob((blob) => {
         if (blob) triggerBlob(blob, `${base}.${format === "jpeg" ? "jpg" : "png"}`);
-        toast.success(`Downloaded ${format.toUpperCase()}`);
+        toast.success(tc.livePreview.exportBtnCopied);
       }, mime, 0.95);
     } catch {
-      toast.error("Download failed — try again");
+      toast.error(tc.livePreview.toastFailDownload);
     }
   };
 
@@ -326,12 +307,12 @@ export default function QrCodeGeneratorPage() {
         const dataUrl = URL.createObjectURL(blob);
         await copyToClipboard(dataUrl);
         setTimeout(() => URL.revokeObjectURL(dataUrl), 2000);
-        toast.message("Image copied (as URL) — use Download for the file");
+        toast.message(tc.livePreview.toastCopiedImg);
         return;
       }
-      toast.success("QR image copied to clipboard");
+      toast.success(tc.livePreview.toastCopiedImg);
     } catch {
-      toast.error("Your browser blocked image copy — use Download instead");
+      toast.error(tc.livePreview.toastBlockedImg);
     }
   };
 
@@ -341,16 +322,16 @@ export default function QrCodeGeneratorPage() {
     if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1200);
-      toast.success("YouTube URL copied");
+      toast.success(tc.livePreview.toastCopiedUrl);
     } else {
-      toast.error("Couldn't copy");
+      toast.error(tc.livePreview.toastFailCopy);
     }
   };
 
   const share = async () => {
     if (!generatedUrl) return;
     if (navigator.share) {
-      try { await navigator.share({ title: "YouTube QR Code", url: generatedUrl }); } catch {/* canceled */}
+      try { await navigator.share({ title: "YouTube QR Code", url: generatedUrl }); } catch {/* canceled */ }
     } else {
       copyUrl();
     }
@@ -368,26 +349,26 @@ export default function QrCodeGeneratorPage() {
   const clearHistory = () => {
     writeHistory([]);
     setHistory([]);
-    toast.message("History cleared");
+    toast.message(tc.history.toastCleared);
   };
 
   const scanQuality = useMemo(() => {
     // rough heuristic based on contrast + error level + logo size
     const strong = opts.errorLevel === "H" || opts.errorLevel === "Q";
     const logoRisk = opts.logo && opts.logoSize > 28;
-    if (logoRisk && !strong) return { label: "At risk", color: "text-red-600 bg-red-100 border-red-300" };
-    if (strong) return { label: "Excellent", color: "text-green-700 bg-green-100 border-green-400" };
-    return { label: "Good", color: "text-emerald-700 bg-emerald-100 border-emerald-400" };
-  }, [opts]);
+    if (logoRisk && !strong) return { label: tc.livePreview.scanQuality.atRisk, color: "text-red-600 bg-red-100 border-red-300" };
+    if (strong) return { label: tc.livePreview.scanQuality.excellent, color: "text-green-700 bg-green-100 border-green-400" };
+    return { label: tc.livePreview.scanQuality.good, color: "text-emerald-700 bg-emerald-100 border-emerald-400" };
+  }, [opts, tc]);
 
   return (
     <ToolLayout
-      title="YouTube QR Code Generator"
-      description="Generate beautiful, customizable QR codes for any YouTube video, Short, live stream, playlist, or channel. Add your logo, pick your colors, and download in HD. 100% free."
+      title={tc.title}
+      description={tc.description}
       icon={QrCode}
-      badge="Free Tool · Logo + HD Export"
+      badge={tc.badge}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={tc.stats} />
 
       {/* Input */}
       <ToolCard className="mb-6">
@@ -399,7 +380,7 @@ export default function QrCodeGeneratorPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && generate()}
-              placeholder="YouTube video, Short, playlist, @handle, or channel URL…"
+              placeholder={tc.inputConfig.placeholder}
               aria-label="YouTube URL"
               className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
             />
@@ -411,7 +392,7 @@ export default function QrCodeGeneratorPage() {
           </div>
           <PrimaryButton onClick={() => generate()} disabled={loading || !input.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <QrCode className="w-4 h-4" />}
-            {loading ? "Generating..." : "Generate QR Code"}
+            {loading ? tc.inputConfig.generatingBtn : tc.inputConfig.generateBtn}
           </PrimaryButton>
         </div>
 
@@ -431,7 +412,7 @@ export default function QrCodeGeneratorPage() {
         </AnimatePresence>
 
         <div className="mt-3 text-[11px] text-neutral-400 font-medium">
-          Supports: <code className="font-mono">watch?v=</code> · <code className="font-mono">youtu.be</code> · <code className="font-mono">/shorts/</code> · <code className="font-mono">/live/</code> · <code className="font-mono">/playlist</code> · <code className="font-mono">@handle</code> · <code className="font-mono">/channel/</code>
+          {tc.inputConfig.supportsLabel} <code className="font-mono">watch?v=</code> · <code className="font-mono">youtu.be</code> · <code className="font-mono">/shorts/</code> · <code className="font-mono">/live/</code> · <code className="font-mono">/playlist</code> · <code className="font-mono">@handle</code> · <code className="font-mono">/channel/</code>
         </div>
       </ToolCard>
 
@@ -441,11 +422,11 @@ export default function QrCodeGeneratorPage() {
         <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6 flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-black text-base flex items-center gap-2">
-              <QrCode className="w-5 h-5 text-red-600" /> Live Preview
+              <QrCode className="w-5 h-5 text-red-600" /> {tc.livePreview.title}
             </h2>
             {generatedUrl && (
               <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border-2 ${scanQuality.color}`}>
-                {scanQuality.label} scan
+                {scanQuality.label} {tc.livePreview.scanQuality.scanSuffix}
               </span>
             )}
           </div>
@@ -483,8 +464,8 @@ export default function QrCodeGeneratorPage() {
             ) : (
               <div className="text-center text-neutral-400">
                 <QrCode className="w-12 h-12 mx-auto mb-2" />
-                <div className="text-sm font-bold">Your QR code will appear here</div>
-                <div className="text-xs">Paste a YouTube link and hit Generate</div>
+                <div className="text-sm font-bold">{tc.livePreview.emptyTitle}</div>
+                <div className="text-xs">{tc.livePreview.emptyDesc}</div>
               </div>
             )}
           </div>
@@ -508,17 +489,17 @@ export default function QrCodeGeneratorPage() {
                   <Download className="w-3.5 h-3.5" /> JPEG
                 </button>
                 <button onClick={copyImage} className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 bg-white text-xs font-black rounded-lg border-2 border-black hover:bg-neutral-50 transition">
-                  <ImageIcon className="w-3.5 h-3.5" /> Copy Image
+                  <ImageIcon className="w-3.5 h-3.5" /> {tc.livePreview.exportBtnCopyImg}
                 </button>
                 <button onClick={copyUrl} className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 bg-white text-xs font-black rounded-lg border-2 border-black hover:bg-neutral-50 transition">
-                  {copied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />} Copy URL
+                  {copied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />} {tc.livePreview.exportBtnCopyUrl}
                 </button>
                 <button onClick={share} className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 bg-white text-xs font-black rounded-lg border-2 border-black hover:bg-neutral-50 transition">
-                  <Share2 className="w-3.5 h-3.5" /> Share
+                  <Share2 className="w-3.5 h-3.5" /> {tc.livePreview.exportBtnShare}
                 </button>
               </div>
               <button onClick={reset} className="mt-2 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black text-neutral-500 hover:text-black transition">
-                <RotateCcw className="w-3.5 h-3.5" /> Reset
+                <RotateCcw className="w-3.5 h-3.5" /> {tc.livePreview.resetBtn}
               </button>
             </>
           )}
@@ -527,12 +508,12 @@ export default function QrCodeGeneratorPage() {
         {/* Controls */}
         <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6 space-y-5">
           <h2 className="font-black text-base flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-red-600" /> Customize
+            <Sparkles className="w-5 h-5 text-red-600" /> {tc.customize.title}
           </h2>
 
           {/* Size */}
           <div>
-            <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">Size</label>
+            <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">{tc.customize.sizeLabel}</label>
             <div className="grid grid-cols-4 gap-1.5">
               {SIZES.map((s) => (
                 <button
@@ -548,9 +529,9 @@ export default function QrCodeGeneratorPage() {
 
           {/* Error correction */}
           <div>
-            <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">Error Correction</label>
+            <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">{tc.customize.errorLevelLabel}</label>
             <div className="grid grid-cols-4 gap-1.5">
-              {ERROR_LEVELS.map((l) => (
+              {errorLevels.map((l) => (
                 <button
                   key={l.value}
                   onClick={() => update("errorLevel", l.value)}
@@ -561,20 +542,20 @@ export default function QrCodeGeneratorPage() {
                 </button>
               ))}
             </div>
-            <p className="text-[10px] text-neutral-400 font-bold mt-1.5">{ERROR_LEVELS.find((l) => l.value === opts.errorLevel)?.hint}</p>
+            <p className="text-[10px] text-neutral-400 font-bold mt-1.5">{errorLevels.find((l) => l.value === opts.errorLevel)?.hint}</p>
           </div>
 
           {/* Colors */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">Foreground</label>
+              <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">{tc.customize.fgLabel}</label>
               <div className="flex items-center gap-2 border-2 border-black rounded-lg px-2 py-1.5">
                 <input type="color" value={opts.fg} onChange={(e) => update("fg", e.target.value)} aria-label="Foreground color" className="w-7 h-7 rounded cursor-pointer border border-neutral-300" />
                 <span className="text-xs font-mono font-bold uppercase">{opts.fg}</span>
               </div>
             </div>
             <div>
-              <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">Background</label>
+              <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">{tc.customize.bgLabel}</label>
               <div className={`flex items-center gap-2 border-2 border-black rounded-lg px-2 py-1.5 ${opts.transparent ? "opacity-40 pointer-events-none" : ""}`}>
                 <input type="color" value={opts.bg} onChange={(e) => update("bg", e.target.value)} aria-label="Background color" className="w-7 h-7 rounded cursor-pointer border border-neutral-300" />
                 <span className="text-xs font-mono font-bold uppercase">{opts.bg}</span>
@@ -585,41 +566,41 @@ export default function QrCodeGeneratorPage() {
           {/* Transparent */}
           <label className="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked={opts.transparent} onChange={(e) => update("transparent", e.target.checked)} className="w-4 h-4 accent-red-600" />
-            <span className="text-xs font-bold">Transparent background (PNG/SVG)</span>
+            <span className="text-xs font-bold">{tc.customize.transparentLabel}</span>
           </label>
 
           {/* Margin */}
           <div>
             <label className="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">
-              <span>Margin</span><span className="text-neutral-400">{opts.margin}</span>
+              <span>{tc.customize.marginLabel}</span><span className="text-neutral-400">{opts.margin}</span>
             </label>
             <input type="range" min={0} max={8} value={opts.margin} onChange={(e) => update("margin", Number(e.target.value))} className="w-full accent-red-600" aria-label="Margin" />
           </div>
 
           {/* Logo */}
           <div>
-            <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">Center Logo</label>
+            <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">{tc.customize.logoLabel}</label>
             <input ref={logoInputRef} type="file" accept="image/png,image/svg+xml,image/jpeg,image/webp" onChange={onLogoUpload} className="hidden" />
             {opts.logo ? (
               <div className="flex items-center gap-2">
                 <img src={opts.logo} alt="Logo preview" className="w-9 h-9 rounded-lg border-2 border-black object-contain bg-white" />
                 <button onClick={() => update("logo", null)} className="inline-flex items-center gap-1 px-3 py-2 text-xs font-black rounded-lg border-2 border-black bg-white hover:bg-red-50 transition">
-                  <X className="w-3.5 h-3.5" /> Remove
+                  <X className="w-3.5 h-3.5" /> {tc.customize.removeBtn}
                 </button>
               </div>
             ) : (
               <button onClick={() => logoInputRef.current?.click()} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-black rounded-lg border-2 border-dashed border-black bg-white hover:bg-red-50 transition">
-                <Upload className="w-3.5 h-3.5" /> Upload PNG / SVG
+                <Upload className="w-3.5 h-3.5" /> {tc.customize.uploadBtn}
               </button>
             )}
             {opts.logo && (
               <div className="mt-3">
                 <label className="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-neutral-600 mb-1.5">
-                  <span>Logo Size</span><span className="text-neutral-400">{opts.logoSize}%</span>
+                  <span>{tc.customize.logoSizeLabel}</span><span className="text-neutral-400">{opts.logoSize}%</span>
                 </label>
                 <input type="range" min={10} max={35} value={opts.logoSize} onChange={(e) => update("logoSize", Number(e.target.value))} className="w-full accent-red-600" aria-label="Logo size" />
                 {opts.logoSize > 28 && opts.errorLevel !== "H" && (
-                  <p className="text-[10px] text-red-600 font-bold mt-1">Tip: switch Error Correction to H for large logos.</p>
+                  <p className="text-[10px] text-red-600 font-bold mt-1">{tc.customize.logoSizeTip}</p>
                 )}
               </div>
             )}
@@ -632,10 +613,10 @@ export default function QrCodeGeneratorPage() {
         <section className="mb-12 sm:mb-16">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-black text-base flex items-center gap-2">
-              <History className="w-5 h-5 text-red-600" /> Recent QR Codes
+              <History className="w-5 h-5 text-red-600" /> {tc.history.title}
             </h2>
             <button onClick={clearHistory} className="inline-flex items-center gap-1 text-xs font-black text-neutral-500 hover:text-red-600 transition">
-              <Trash2 className="w-3.5 h-3.5" /> Clear
+              <Trash2 className="w-3.5 h-3.5" /> {tc.history.clearBtn}
             </button>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
@@ -654,41 +635,36 @@ export default function QrCodeGeneratorPage() {
       )}
 
       <GuideGrid
-        badge="QR Best Practices"
-        title="How to make a QR code that always scans"
-        intro="Six rules for reliable, professional YouTube QR codes — on screen and in print."
-        cards={guides}
+        badge={tc.guideBadge}
+        title={tc.guideTitle}
+        intro={tc.guideIntro}
+        cards={tc.guides.map((g: any, i: number) => ({ ...g, color: ["text-green-600 bg-green-100", "text-green-600 bg-green-100", "text-green-600 bg-green-100", "text-red-600 bg-red-100", "text-red-600 bg-red-100", "text-yellow-600 bg-yellow-100"][i] || "text-green-600", icon: [CheckCircle2, CheckCircle2, CheckCircle2, XCircle, XCircle, AlertTriangle][i] || CheckCircle2 }))}
       />
 
       <Workflow
-        title="Your 4-step QR workflow"
-        steps={[
-          { n: "01", t: "Paste your link", d: "Any YouTube video, Short, live, playlist, @handle, or channel URL." },
-          { n: "02", t: "Customize", d: "Pick size, colors, margin, and add your channel logo in the center." },
-          { n: "03", t: "Check scan quality", d: "Watch the live scan-quality badge — use level H when adding a logo." },
-          { n: "04", t: "Download & share", d: "Export PNG, SVG, or JPEG in up to 2048px, or copy the image directly." },
-        ]}
+        title={tc.workflowTitle}
+        steps={tc.workflows}
       />
 
-      <SeoContent badge="YouTube QR Code Guide" title="Why every creator needs a YouTube QR code">
-        <p>A QR code is the fastest bridge between the offline world and your channel. Print it on merch, business cards, event banners, packaging, or drop it in a video's end screen — anyone with a phone camera lands on your video, Short, or channel in one tap. No typing, no searching, no lost viewers.</p>
-        <h3>Static vs dynamic QR codes</h3>
-        <p>This tool creates <strong>static</strong> QR codes: your YouTube link is encoded directly into the pattern, so it works forever with no account, no subscription, and no third-party tracking that can disappear. The trade-off is that the destination is fixed — generate a new code if your link changes.</p>
-        <h3>Adding your logo without breaking the scan</h3>
-        <p>QR codes have built-in error correction — they can still be read even when part of the pattern is covered. That's what lets you drop a logo in the center. Use <strong>error-correction level H</strong> (≈30% recovery) whenever you add a logo, and keep the logo under about 30% of the QR's width so enough modules remain scannable.</p>
-        <h3>Picking the right size</h3>
-        <p>Export <strong>256px</strong> for on-screen use, <strong>512px</strong> for social posts, and <strong>1024–2048px</strong> for anything printed. The larger the print, the larger the source file you want so it stays razor-sharp.</p>
-        <h3>Pair it with your other assets</h3>
-        <p>Design a click-magnet thumbnail with our <a href="/tools/ai-thumbnail-generator">AI Thumbnail Generator</a>, then embed the video anywhere with the <a href="/tools/embed-generator">Embed Generator</a>.</p>
+      <SeoContent badge={tc.seoContent.badge} title={tc.seoContent.title}>
+        <p>{tc.seoContent.p1}</p>
+        <h3>{tc.seoContent.h3_1}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_1 }} />
+        <h3>{tc.seoContent.h3_2}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_2 }} />
+        <h3>{tc.seoContent.h3_3}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_3 }} />
+        <h3>{tc.seoContent.h3_4}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_4 }} />
       </SeoContent>
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={tc.faqs} />
 
       <CrossCTA
-        title="Now make the rest of your launch kit"
-        desc="Embed the video on your site, or design a thumbnail that gets the click."
-        primary={{ label: "Embed Generator", href: "/tools/embed-generator", icon: QrCode }}
-        secondary={{ label: "AI Thumbnail Generator", href: "/tools/ai-thumbnail-generator", icon: Sparkles }}
+        title={tc.crossCta.title}
+        desc={tc.crossCta.desc}
+        primary={{ label: tc.crossCta.btn1, href: "/tools/embed-generator", icon: QrCode }}
+        secondary={{ label: tc.crossCta.btn2, href: "/tools/ai-thumbnail-generator", icon: Sparkles }}
       />
 
       {/* ZOOM MODAL */}
@@ -723,17 +699,17 @@ export default function QrCodeGeneratorPage() {
           </motion.div>
         )}
       </AnimatePresence>
-          <ToolSeoJsonLd
-        name="YouTube QR Code Generator"
-        description={"Generate branded QR codes for your YouTube videos, channels, and Shorts — with logos, colors, and HD export."}
+      <ToolSeoJsonLd
+        name={tc.title}
+        description={tc.seoJsonDesc}
         slug="qr-code-generator"
-        faqs={faqs}
+        faqs={tc.faqs}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "YouTube QR Code Generator", slug: "/tools/qr-code-generator" },
+          { name: tc.title, slug: "/tools/qr-code-generator" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }

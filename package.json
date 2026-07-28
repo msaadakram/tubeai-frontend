@@ -68,6 +68,7 @@
     "@types/react": "19.2.0",
     "@types/react-dom": "19.2.0",
     "tailwindcss": "4.1.12",
+    "translate-google-api": "^1.0.4",
     "typescript": "5.6.3"
   }
 }

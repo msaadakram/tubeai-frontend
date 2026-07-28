@@ -28,6 +28,7 @@ import {
   FaqAccordion,
   CrossCTA,
 } from "@/components/tools/ToolSections";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
@@ -50,30 +51,14 @@ type HashtagData = {
   strategy?: string;
 };
 
-const stats = [
-  { value: "60", label: "Hashtags Per Search" },
-  { value: "Live", label: "Trend Signals" },
-  { value: "<3s", label: "Generation Time" },
-  { value: "100%", label: "Free Forever" },
+const guidesColorsAndIcons = [
+  { icon: CheckCircle2, color: "text-green-600 bg-green-100" },
+  { icon: CheckCircle2, color: "text-green-600 bg-green-100" },
+  { icon: CheckCircle2, color: "text-green-600 bg-green-100" },
+  { icon: XCircle, color: "text-red-600 bg-red-100" },
+  { icon: XCircle, color: "text-red-600 bg-red-100" },
+  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100" },
 ];
-
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Mix broad + niche tags", desc: "Pair 3-5 high-volume hashtags with 8-10 niche tags for the strongest reach + relevance balance." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Cap at 15 per post", desc: "YouTube only honors the first 15 hashtags in your description — anything more is ignored." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Place top 3 in title", desc: "Hashtags in the title get clicked. Put your 3 strongest in the title, the rest in the description." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't spam unrelated tags", desc: "YouTube penalizes hashtag spam. Stick to tags that genuinely describe the video." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Skip banned hashtags", desc: "#shorts is fine but check community guidelines — sensitive hashtags can demote your video." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Refresh quarterly", desc: "Hashtag trends rotate fast. Re-run this tool every few months to keep tags current." },
-];
-
-const faqs = [
-  { q: "How are these hashtags generated?", a: "We combine real-time YouTube search trends with semantic analysis of your topic to surface tags creators in your niche are actually using right now." },
-  { q: "How many hashtags should I use?", a: "YouTube indexes the first 15 hashtags in your description. Use 10-15 — a mix of one broad, several mid-volume, and a few niche-specific tags." },
-  { q: "Are hashtags different from video tags?", a: "Yes — hashtags appear publicly in your title/description with a # symbol, while video tags are hidden metadata. Use both for maximum discoverability." },
-  { q: "Is this free?", a: "Yes — unlimited hashtag generations, no signup, forever free." },
-];
-
-const suggestions = ["AI tools 2026", "morning routine", "iPhone 17 review", "study with me", "crypto news"];
 
 function popBadge(level?: string) {
   switch (level) {
@@ -163,6 +148,14 @@ function localGenerate(topic: string): HashtagData {
 }
 
 export default function HashtagGeneratorPage() {
+  const { t } = useTranslations();
+  const tc = t("toolPages.hashtagGenerator") as NonNullable<ReturnType<typeof t<"toolPages.hashtagGenerator">>>;
+  const guides = tc.guides.map((g: { title: string; desc: string }, i: number) => ({
+    ...g,
+    icon: guidesColorsAndIcons[i % guidesColorsAndIcons.length].icon,
+    color: guidesColorsAndIcons[i % guidesColorsAndIcons.length].color,
+  }));
+
   const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -259,12 +252,12 @@ export default function HashtagGeneratorPage() {
 
   return (
     <ToolLayout
-      title="YouTube Hashtag Generator"
-      description="Generate 60 high-performing YouTube hashtags for any topic — broad, niche, and trending tags ranked by popularity."
+      title={tc.title}
+      description={tc.description}
       icon={Hash}
-      badge="Free Tool · Live Trend Signals"
+      badge={tc.badge}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={tc.stats} />
 
       <ToolCard className="mb-6">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -274,18 +267,18 @@ export default function HashtagGeneratorPage() {
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && run()}
-              placeholder="Enter your video topic (e.g. AI tools, morning routine)..."
+              placeholder={tc.inputPlaceholder}
               className="flex-1 py-3 outline-none text-sm font-medium"
             />
           </div>
           <PrimaryButton onClick={() => run()} disabled={loading || !topic.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Hash className="w-4 h-4" />}
-            {loading ? "Generating..." : "Generate Hashtags"}
+            {loading ? tc.btnGenerating : tc.btnGenerate}
           </PrimaryButton>
         </div>
         <div className="flex flex-wrap items-center gap-2 mt-4">
-          <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">Try:</span>
-          {suggestions.map((s) => (
+          <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">{tc.tryPrefix}</span>
+          {tc.suggestions.map((s: string) => (
             <button
               key={s}
               onClick={() => run(s)}
@@ -350,7 +343,7 @@ export default function HashtagGeneratorPage() {
                   transition={{ duration: 0.4 }}
                   className="font-black text-base sm:text-lg text-white"
                 >
-                  Mining trending hashtags…
+                  {tc.loadingTitle}
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -358,7 +351,7 @@ export default function HashtagGeneratorPage() {
                   transition={{ delay: 0.2 }}
                   className="text-xs text-neutral-400 font-bold"
                 >
-                  Scanning live YouTube trends for your topic
+                  {tc.loadingDesc}
                 </motion.div>
               </div>
 
@@ -388,7 +381,7 @@ export default function HashtagGeneratorPage() {
             <div className="flex items-start gap-3">
               <XCircle className="w-6 h-6 text-red-600 shrink-0" />
               <div>
-                <div className="font-black text-base text-red-800">Hashtag generation failed</div>
+                <div className="font-black text-base text-red-800">{tc.errorPrefix}</div>
                 <div className="text-sm text-red-700 mt-1">{error}</div>
               </div>
             </div>
@@ -407,21 +400,20 @@ export default function HashtagGeneratorPage() {
             <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">
-                  Generated for
+                  {tc.generatedFor}
                 </div>
                 <div className="font-black text-base sm:text-lg truncate">{data.topic}</div>
               </div>
               <div className="text-xs font-bold text-neutral-600">
-                {data.recommended.length} hashtags
+                {data.recommended.length} {tc.hashtagsSuffix}
               </div>
               <button
                 onClick={copyAll}
-                className={`inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-black rounded-xl border-2 border-black transition shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${
-                  copiedAll ? "bg-green-500 text-white" : "bg-black text-white hover:bg-red-600"
-                }`}
+                className={`inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-black rounded-xl border-2 border-black transition shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${copiedAll ? "bg-green-500 text-white" : "bg-black text-white hover:bg-red-600"
+                  }`}
               >
                 {copiedAll ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                {copiedAll ? "Copied all" : "Copy all"}
+                {copiedAll ? tc.btnCopiedAll : tc.btnCopyAll}
               </button>
             </div>
 
@@ -429,11 +421,11 @@ export default function HashtagGeneratorPage() {
             <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
               <div className="px-4 sm:px-5 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                 <Hash className="w-4 h-4 text-red-600" />
-                <div className="font-black text-sm">All hashtags</div>
+                <div className="font-black text-sm">{tc.sectionAllTitle}</div>
                 {loading && (
                   <span className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-red-600">
                     <Loader2 className="w-3 h-3 animate-spin" />
-                    Streaming…
+                    {tc.loadingStreaming}
                   </span>
                 )}
               </div>
@@ -451,41 +443,36 @@ export default function HashtagGeneratorPage() {
                       transition={{ duration: 0.24, ease: "easeOut" }}
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.97 }}
-                      className={`group relative flex items-center gap-2.5 px-3 sm:px-4 py-2.5 rounded-xl border-2 text-left transition-all overflow-hidden ${
-                        copied
-                          ? "bg-green-500 border-green-600 shadow-[3px_3px_0px_0px_rgba(22,163,74,1)]"
-                          : isNew
+                      className={`group relative flex items-center gap-2.5 px-3 sm:px-4 py-2.5 rounded-xl border-2 text-left transition-all overflow-hidden ${copied
+                        ? "bg-green-500 border-green-600 shadow-[3px_3px_0px_0px_rgba(22,163,74,1)]"
+                        : isNew
                           ? "bg-red-50 border-red-600 shadow-[3px_3px_0px_0px_rgba(220,38,38,1)]"
                           : "bg-white border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] hover:border-red-600"
-                      }`}
+                        }`}
                     >
                       {/* Icon */}
-                      <span className={`shrink-0 w-7 h-7 rounded-lg flex items-center justify-center border-2 border-black text-sm font-black transition-colors ${
-                        copied ? "bg-white text-green-600 border-green-600" : "bg-black text-white group-hover:bg-red-600"
-                      }`}>
+                      <span className={`shrink-0 w-7 h-7 rounded-lg flex items-center justify-center border-2 border-black text-sm font-black transition-colors ${copied ? "bg-white text-green-600 border-green-600" : "bg-black text-white group-hover:bg-red-600"
+                        }`}>
                         {copied ? <Check className="w-3.5 h-3.5" /> : "#"}
                       </span>
 
                       {/* Tag name */}
-                      <span className={`flex-1 font-black text-xs sm:text-sm truncate transition-colors ${
-                        copied ? "text-white" : "text-black group-hover:text-red-600"
-                      }`}>
+                      <span className={`flex-1 font-black text-xs sm:text-sm truncate transition-colors ${copied ? "text-white" : "text-black group-hover:text-red-600"
+                        }`}>
                         {h.tag}
                       </span>
 
                       {/* Badges */}
                       <div className="flex items-center gap-1 shrink-0">
                         {typeof h.relevanceScore === "number" && (
-                          <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border ${
-                            copied ? "bg-white/20 border-white/30 text-white" : "bg-red-50 border-red-300 text-red-700"
-                          }`}>
+                          <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border ${copied ? "bg-white/20 border-white/30 text-white" : "bg-red-50 border-red-300 text-red-700"
+                            }`}>
                             {h.relevanceScore}%
                           </span>
                         )}
                         {h.searchVolume && (
-                          <span className={`hidden sm:inline-flex px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border ${
-                            copied ? "bg-white/20 border-white/30 text-white" : popBadge(h.searchVolume)
-                          }`}>
+                          <span className={`hidden sm:inline-flex px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border ${copied ? "bg-white/20 border-white/30 text-white" : popBadge(h.searchVolume)
+                            }`}>
                             {h.searchVolume}
                           </span>
                         )}
@@ -500,7 +487,7 @@ export default function HashtagGeneratorPage() {
                       animate={{ opacity: [0.3, 1, 0.3] }}
                       transition={{ duration: 1, repeat: Infinity }}
                     >
-                      more hashtags incoming…
+                      {tc.loadingMore}
                     </motion.span>
                   </span>
                 )}
@@ -512,7 +499,7 @@ export default function HashtagGeneratorPage() {
               <div className="bg-black text-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] p-4 sm:p-5">
                 <div className="flex items-center gap-2 mb-2">
                   <Sparkles className="w-4 h-4 text-red-500" />
-                  <div className="font-black text-sm uppercase tracking-wider">Hashtag strategy</div>
+                  <div className="font-black text-sm uppercase tracking-wider">{tc.strategyTitle}</div>
                 </div>
                 <p className="text-sm text-neutral-200 leading-relaxed">{data.strategy}</p>
               </div>
@@ -520,101 +507,83 @@ export default function HashtagGeneratorPage() {
 
             {/* CATEGORY BREAKDOWN */}
             {!loading && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[
-                { title: "Trending now", icon: TrendingUp, color: "text-red-600", items: data.trending },
-                { title: "Niche & long-tail", icon: Target, color: "text-orange-600", items: data.niche },
-                { title: "Broad reach", icon: Hash, color: "text-neutral-700", items: data.broad },
-              ].map(
-                (group) =>
-                  group.items &&
-                  group.items.length > 0 && (
-                    <div
-                      key={group.title}
-                      className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4"
-                    >
-                      <div className="flex items-center gap-2 mb-3">
-                        <group.icon className={`w-4 h-4 ${group.color}`} />
-                        <div className="font-black text-sm">{group.title}</div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  { title: tc.groupTrending, icon: TrendingUp, color: "text-red-600", items: data.trending },
+                  { title: tc.groupNiche, icon: Target, color: "text-orange-600", items: data.niche },
+                  { title: tc.groupBroad, icon: Hash, color: "text-neutral-700", items: data.broad },
+                ].map(
+                  (group) =>
+                    group.items &&
+                    group.items.length > 0 && (
+                      <div
+                        key={group.title}
+                        className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4"
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <group.icon className={`w-4 h-4 ${group.color}`} />
+                          <div className="font-black text-sm">{group.title}</div>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {group.items.map((t, i) => (
+                            <span
+                              key={`${t}-${i}`}
+                              className="inline-flex items-center text-[11px] font-black bg-neutral-100 text-black px-2 py-1 rounded-full border border-neutral-300"
+                            >
+                              #{t.replace(/[^a-zA-Z0-9]/g, "")}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {group.items.map((t, i) => (
-                          <span
-                            key={`${t}-${i}`}
-                            className="inline-flex items-center text-[11px] font-black bg-neutral-100 text-black px-2 py-1 rounded-full border border-neutral-300"
-                          >
-                            #{t.replace(/[^a-zA-Z0-9]/g, "")}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )
-              )}
-            </div>
+                    )
+                )}
+              </div>
             )}
           </motion.div>
         )}
       </AnimatePresence>
 
       <GuideGrid
-        badge="Hashtag Rules"
-        title="How to use YouTube hashtags the right way"
-        intro="Six rules for hashtag strategy on YouTube — what to do, what to skip, and how to refresh."
+        badge={tc.guideBadge}
+        title={tc.guideTitle}
+        intro={tc.guideIntro}
         cards={guides}
       />
 
       <Workflow
-        title="Your 4-step hashtag workflow"
-        steps={[
-          { n: "01", t: "Enter your topic", d: "Be specific — 'iPhone 17 camera review' beats 'tech'." },
-          { n: "02", t: "Generate the list", d: "Get 30+ tags split across broad, niche, and trending categories." },
-          { n: "03", t: "Pick your top 10-15", d: "Mix one broad, several mid-volume, and a few long-tail tags." },
-          { n: "04", t: "Paste into description", d: "Put your top 3 in the title, the rest at the end of your description." },
-        ]}
+        title={tc.workflowTitle}
+        steps={tc.workflows}
       />
 
-      <SeoContent badge="Hashtag Strategy Guide" title="YouTube hashtags in 2026: what actually moves the needle">
-        <p>
-          YouTube hashtags do two things: they make your video discoverable on hashtag landing pages, and they signal context to the
-          recommendation algorithm. Used right, they pull in viewers searching the tag. Used wrong, they water down your relevance and can
-          trigger spam demotion.
-        </p>
-        <h3>How many hashtags should you actually use?</h3>
-        <p>
-          YouTube only indexes the <strong>first 15 hashtags</strong> in your description. Anything beyond that is ignored — and stuffing
-          more than 60 hashtags into a description gets the video flagged. The sweet spot is 10-15 thoughtful tags.
-        </p>
-        <h3>Title vs description placement</h3>
-        <p>
-          Hashtags in the <strong>title</strong> become clickable links right under your video, driving traffic to that hashtag's feed.
-          Reserve them for your 3 strongest tags. The rest belong at the bottom of your description.
-        </p>
-        <h3>Pair hashtags with video tags</h3>
-        <p>
-          Hashtags are public; video tags are hidden metadata. They're not the same thing. Generate both — use our{" "}
-          <a href="/tools/tag-generator">Tag Generator</a> for hidden tags and this tool for public hashtags.
-        </p>
+      <SeoContent badge={tc.seoContent.badge} title={tc.seoContent.title}>
+        <p>{tc.seoContent.p1}</p>
+        <h3>{tc.seoContent.h3_1}</h3>
+        <p>{tc.seoContent.p2_1}</p>
+        <h3>{tc.seoContent.h3_2}</h3>
+        <p>{tc.seoContent.p2_2}</p>
+        <h3>{tc.seoContent.h3_3}</h3>
+        <p>{tc.seoContent.p2_3}</p>
       </SeoContent>
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={tc.faqs} />
 
       <CrossCTA
-        title="Now generate hidden video tags too"
-        desc="Hashtags handle public discoverability — video tags handle algorithmic context. Use both."
-        primary={{ label: "Generate Video Tags", href: "/tools/tag-generator", icon: Target }}
-        secondary={{ label: "Write Viral Titles", href: "/tools/viral-title-generator", icon: TrendingUp }}
+        title={tc.crossCta.title}
+        desc={tc.crossCta.desc}
+        primary={{ label: tc.crossCta.btn1, href: "/tools/tag-generator", icon: Target }}
+        secondary={{ label: tc.crossCta.btn2, href: "/tools/viral-title-generator", icon: TrendingUp }}
       />
-          <ToolSeoJsonLd
-        name="YouTube Hashtag Generator"
-        description={"Generate relevant YouTube hashtags from any topic — tuned for reach without spam or repetition."}
+      <ToolSeoJsonLd
+        name={tc.title}
+        description={tc.seoJsonDesc}
         slug="hashtag-generator"
-        faqs={faqs}
+        faqs={tc.faqs}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "YouTube Hashtag Generator", slug: "/tools/hashtag-generator" },
+          { name: tc.title, slug: "/tools/hashtag-generator" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }

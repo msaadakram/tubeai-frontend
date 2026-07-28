@@ -34,6 +34,7 @@ import {
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -121,29 +122,7 @@ type MonetizationData = {
   recommendations: string[];
 };
 
-const stats = [
-  { value: "1.2M+", label: "Channels Checked" },
-  { value: "98%", label: "Accuracy Rate" },
-  { value: "190+", label: "Countries" },
-  { value: "Live", label: "YouTube Data" },
-];
-
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "1,000 subscribers minimum", desc: "YPP requires at least 1,000 subscribers before you can apply for monetization." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "4,000 watch hours OR 10M Shorts views", desc: "Hit 4,000 valid public watch hours in 12 months, OR 10 million Shorts views in 90 days." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Follow community guidelines", desc: "No active strikes, no copyright issues. Clean record for the past 90 days." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Reused / low-effort content", desc: "Compilation channels, AI-only voiceovers, and reaction-only content are routinely rejected." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Inactive country", desc: "Monetization isn't available in every region. You must be in a YPP-eligible country." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Linked AdSense required", desc: "You'll need a verified AdSense account in your name to receive payments." },
-];
-
-const faqs = [
-  { q: "Can I really check any channel's monetization status?", a: "We estimate monetization status based on YouTube's public requirements (subscribers, watch time, country, channel age) plus signals like ad presence and channel age. Actual YPP status is private to the creator, so this is an educated estimate — not a confirmed verdict." },
-  { q: "What's the minimum to qualify for YouTube monetization?", a: "1,000 subscribers + 4,000 valid public watch hours (in the past 12 months) OR 10 million Shorts views (in the past 90 days). You must also live in a YPP-eligible country and follow YouTube's community guidelines." },
-  { q: "Why does my channel show \"Eligible but Not Monetized\"?", a: "You meet YouTube's thresholds but haven't applied to the Partner Program yet, OR your application is pending review. Apply inside YouTube Studio → Earn." },
-  { q: "How long does YPP review take?", a: "Most applications are reviewed within 1-4 weeks. If you're rejected, you can re-apply 30 days later — focus on adding original content during that window." },
-  { q: "Does this tool work for YouTube Shorts channels?", a: "Yes. Shorts-only channels qualify via the 10M views in 90 days path." },
-];
+// Stats, Guides, and FAQs have been moved to translation dictionary
 
 function fmt(n: number): string {
   if (!Number.isFinite(n)) return "0";
@@ -183,7 +162,7 @@ type StatusInfo = {
   desc: string;
 };
 
-function getStatusInfo(status: string): StatusInfo {
+function getStatusInfo(status: string, tc: any): StatusInfo {
   const s = (status || "").toUpperCase();
   if (s === "LIKELY_MONETIZED") {
     return {
@@ -191,9 +170,9 @@ function getStatusInfo(status: string): StatusInfo {
       cardBorder: "border-green-600",
       badgeBg: "bg-green-500",
       shadowColor: "rgba(22,163,74,1)",
-      label: "Likely Monetized",
+      label: tc.status.likely.label,
       icon: CheckCircle2,
-      desc: "This channel meets all YPP thresholds and shows signals consistent with active ad revenue.",
+      desc: tc.status.likely.desc,
     };
   }
   if (s === "RESTRICTED_REGION") {
@@ -202,9 +181,9 @@ function getStatusInfo(status: string): StatusInfo {
       cardBorder: "border-red-600",
       badgeBg: "bg-red-600",
       shadowColor: "rgba(220,38,38,1)",
-      label: "Restricted Region",
+      label: tc.status.restrictedRegion.label,
       icon: Ban,
-      desc: "YPP is not available in this channel's country. Monetization is blocked regardless of stats.",
+      desc: tc.status.restrictedRegion.desc,
     };
   }
   if (s === "RESTRICTED") {
@@ -213,9 +192,9 @@ function getStatusInfo(status: string): StatusInfo {
       cardBorder: "border-yellow-500",
       badgeBg: "bg-yellow-500",
       shadowColor: "rgba(234,179,8,1)",
-      label: "Restricted",
+      label: tc.status.restricted.label,
       icon: AlertTriangle,
-      desc: "Limited monetization due to channel settings — typically Made for Kids or content type restrictions.",
+      desc: tc.status.restricted.desc,
     };
   }
   return {
@@ -223,13 +202,16 @@ function getStatusInfo(status: string): StatusInfo {
     cardBorder: "border-orange-500",
     badgeBg: "bg-orange-500",
     shadowColor: "rgba(249,115,22,1)",
-    label: "Not Monetized",
+    label: tc.status.notMonetized.label,
     icon: XCircle,
-    desc: "This channel does not currently meet YouTube Partner Program requirements.",
+    desc: tc.status.notMonetized.desc,
   };
 }
 
 export default function MonetizationCheckerPage() {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -262,21 +244,21 @@ export default function MonetizationCheckerPage() {
     }
   };
 
-  const suggestions = ["@MrBeast", "@MarquesBrownlee", "@AliAbdaal", "@PewDiePie", "@TheVerge"];
+  const suggestions = tc.suggestions;
 
   return (
     <ToolLayout
-      title="YouTube Channel Monetization Checker"
-      description="Paste any YouTube channel link, video, or @handle to instantly check if it's monetized — eligibility score, YPP requirements, niche CPM, and full earnings estimate."
+      title={tc.title}
+      description={tc.description}
       icon={DollarSign}
-      badge="Channel Monetization · Live YouTube Data"
+      badge={tc.badge}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={tc.stats} />
 
       {/* Search Input */}
       <ToolCard className="mb-6">
         <label className="flex items-center gap-2 text-xs font-black uppercase tracking-wider mb-3">
-          <Youtube className="w-4 h-4 text-red-600" /> YouTube URL, channel, or @handle
+          <Youtube className="w-4 h-4 text-red-600" /> {tc.inputLabel}
         </label>
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] transition-shadow">
@@ -285,17 +267,17 @@ export default function MonetizationCheckerPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && run()}
-              placeholder="https://youtube.com/@MrBeast  or  @MrBeast"
+              placeholder={tc.inputPlaceholder}
               className="flex-1 py-3 outline-none text-sm font-medium bg-transparent min-w-0"
             />
           </div>
           <PrimaryButton onClick={() => run()} disabled={loading || !input.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <DollarSign className="w-4 h-4" />}
-            {loading ? "Checking..." : "Check Channel"}
+            {loading ? tc.btnChecking : tc.btnCheck}
           </PrimaryButton>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider">Try:</span>
+          <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider">{tc.tryPrefix}</span>
           {suggestions.map((s) => (
             <button
               key={s}
@@ -319,7 +301,7 @@ export default function MonetizationCheckerPage() {
               <XCircle className="w-5 h-5" />
             </div>
             <div className="min-w-0">
-              <div className="font-black text-sm text-black">Couldn't check this channel</div>
+              <div className="font-black text-sm text-black">{tc.errorTitle}</div>
               <div className="text-xs font-medium text-neutral-600 mt-1 break-words">{error}</div>
             </div>
           </div>
@@ -379,69 +361,66 @@ export default function MonetizationCheckerPage() {
       {!data && !loading && !error && <div className="mb-12 sm:mb-16" />}
 
       <GuideGrid
-        badge="YPP Requirements"
-        title="What YouTube actually requires for monetization"
-        intro="The full checklist YouTube uses to approve or reject Partner Program applications in 2026."
-        cards={guides}
+        badge={tc.guideBadge}
+        title={tc.guideTitle}
+        intro={tc.guideIntro}
+        cards={tc.guides.map((g, i) => ({ ...g, color: "text-amber-500 bg-amber-50", icon: [Lightbulb, Award, PenTool, ShieldCheck][i] || Zap }))}
       />
 
       <Workflow
-        title="Your 4-step monetization workflow"
-        steps={[
-          { n: "01", t: "Paste channel link", d: "Drop in any YouTube channel URL or @handle — yours or a competitor's." },
-          { n: "02", t: "Read the report", d: "See subscribers, watch hours, country, and YPP eligibility status." },
-          { n: "03", t: "Identify the gap", d: "If not eligible, the report shows exactly which threshold is missing." },
-          { n: "04", t: "Apply or grow", d: "If eligible, apply inside YouTube Studio → Earn. If not, plan content to close the gap." },
-        ]}
+        title={tc.workflowTitle}
+        steps={tc.workflows.map((s, i) => ({ ...s, color: "text-red-500", icon: [BarChart3, CheckCircle2, TrendingUp][i] || Zap }))}
       />
 
-      <SeoContent badge="Complete Monetization Guide" title="The complete guide to YouTube channel monetization in 2026">
-        <p>YouTube monetization is the gateway to earning a real income from your content. Our YouTube Channel Monetization Checker pulls public data from any channel, runs it against the latest YouTube Partner Program (YPP) rules, and returns a clear verdict in seconds — including an eligibility score, niche-specific CPM, regional multipliers, and a full earnings estimate.</p>
+      <SeoContent badge={tc.seoContent.badge} title={tc.seoContent.title}>
+        <p>{tc.seoContent.p1}</p>
 
-        <h3>What is YouTube monetization?</h3>
-        <p>YouTube monetization means your channel is approved into the <strong>YouTube Partner Program (YPP)</strong> and can earn revenue through ads, channel memberships, Super Chats, Super Thanks, the merch shelf, and YouTube Premium revenue share.</p>
+        <h3>{tc.seoContent.h3_1}</h3>
+        <p>{tc.seoContent.p2_1}</p>
 
-        <h3>The 2026 YPP requirements</h3>
-        <p>To be eligible: <strong>1,000+ subscribers</strong>, <strong>4,000+ valid public watch hours</strong> (12 mo) OR <strong>10M Shorts views</strong> (90 days), a verified <strong>AdSense account</strong>, residency in a <strong>YPP-eligible country</strong>, and a <strong>clean record</strong> with no active strikes.</p>
+        <h3>{tc.seoContent.h3_2}</h3>
+        <p>{tc.seoContent.p2_2}</p>
 
-        <h3>How niche and region change everything</h3>
-        <p>Two channels with identical view counts can earn 5–10x different amounts depending on niche. Finance, tech, and B2B niches earn $6–$15 CPM; gaming and entertainment earn $1.50–$3 CPM. Region adds another multiplier — US/UK/CA/AU traffic pays the most.</p>
+        <h3>{tc.seoContent.h3_3}</h3>
+        <p>{tc.seoContent.p2_3}</p>
 
-        <h3>Beyond AdSense</h3>
-        <p>Top creators earn 60–80% of their income from <strong>sponsorships</strong>, <strong>memberships</strong>, <strong>merch</strong>, <strong>affiliates</strong>, and <strong>digital products</strong>. Use our <a href="/tools/earnings-calculator">Earnings Calculator</a> to project your full revenue potential.</p>
+        <h3>{tc.seoContent.h3_4}</h3>
+        <p>{tc.seoContent.p2_4}</p>
       </SeoContent>
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={tc.faqs} />
 
       <CrossCTA
-        title="Maximize your channel revenue"
-        desc="Once you're monetized, calculate your potential earnings and pair high-CTR content with ad-safe scripts."
-        primary={{ label: "Calculate Earnings", href: "/tools/earnings-calculator", icon: DollarSign }}
-        secondary={{ label: "Write Script", href: "/tools/ai-script-writer", icon: PenTool }}
+        title={tc.crossCta.title}
+        desc={tc.crossCta.desc}
+        primary={{ label: tc.crossCta.btn1, href: "/tools/earnings-calculator", icon: DollarSign }}
+        secondary={{ label: tc.crossCta.btn2, href: "/tools/ai-script-writer", icon: PenTool }}
       />
-          <ToolSeoJsonLd
-        name="YouTube Monetization Checker"
-        description={"Check any channel monetization status, YPP eligibility, and estimated ad-revenue tier in seconds."}
+      <ToolSeoJsonLd
+        name={tc.title}
+        description={tc.seoJsonDesc}
         slug="monetization-checker"
-        faqs={faqs}
+        faqs={tc.faqs}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "YouTube Monetization Checker", slug: "/tools/monetization-checker" },
+          { name: tc.title, slug: "/tools/monetization-checker" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }
 
 /* ----------------- Sub Components ----------------- */
 
 function SkeletonReport() {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   return (
     <ToolCard className="mb-12 sm:mb-16">
       <div className="flex flex-col items-center justify-center py-10 gap-4">
         <Loader2 className="w-10 h-10 animate-spin text-red-600" />
-        <div className="text-xs font-black uppercase tracking-wider text-neutral-600">Pulling channel + 50 recent videos...</div>
+        <div className="text-xs font-black uppercase tracking-wider text-neutral-600">{tc.loadingMsg}</div>
         <div className="w-full max-w-md space-y-2">
           <div className="h-3 rounded-full bg-neutral-200 animate-pulse" />
           <div className="h-3 rounded-full bg-neutral-200 animate-pulse w-5/6" />
@@ -461,6 +440,8 @@ function ChannelHeroCard({
   bannerFailed: boolean;
   onBannerFail: () => void;
 }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const avatar = data.branding.logo?.high || data.branding.logo?.medium || data.branding.logo?.default || null;
   const handleStr = data.handle?.replace(/^@@/, "@") || (data.customUrl ? (data.customUrl.startsWith("@") ? data.customUrl : "@" + data.customUrl) : "");
   const flag = countryToFlag(data.country || data.regionInfo?.countryCode);
@@ -468,9 +449,9 @@ function ChannelHeroCard({
   const s = data.statistics;
 
   const quickStats = [
-    { icon: Users, label: "Subscribers", value: s.hiddenSubscriberCount ? "Hidden" : fmt(s.subscriberCount) },
-    { icon: Eye, label: "Total Views", value: fmt(s.totalViews) },
-    { icon: VideoIcon, label: "Videos", value: fmt(s.videoCount) },
+    { icon: Users, label: tc.hero.statsSub, value: s.hiddenSubscriberCount ? tc.hero.privateLabel : fmt(s.subscriberCount) },
+    { icon: Eye, label: tc.hero.statsViews, value: fmt(s.totalViews) },
+    { icon: VideoIcon, label: tc.hero.statsVideos, value: fmt(s.videoCount) },
   ];
 
   return (
@@ -616,7 +597,9 @@ function ChannelHeroCard({
 }
 
 function StatusCard({ data }: { data: MonetizationData }) {
-  const info = getStatusInfo(data.monetization.status);
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
+  const info = getStatusInfo(data.monetization.status, tc);
   const Icon = info.icon;
   const earnings = data.monetization.estimatedEarnings;
   const subs = data.monetization.requirements.subscribers;
@@ -634,17 +617,17 @@ function StatusCard({ data }: { data: MonetizationData }) {
         <div className="flex-1 min-w-0">
           <div className="font-black text-xl sm:text-2xl text-black">{info.label}</div>
           <div className="text-xs font-bold text-neutral-700 uppercase tracking-wider mt-0.5">
-            {data.monetization.confidence} confidence
+            {tc.status.confidenceLabel} {data.monetization.confidence}
           </div>
           <p className="text-sm text-neutral-700 leading-relaxed mt-1">{info.desc}</p>
         </div>
         {data.monetization.status === "LIKELY_MONETIZED" && earnings && (
           <div className="bg-black text-white rounded-xl border-2 border-black p-4 shrink-0">
-            <div className="text-[10px] font-black text-neutral-400 uppercase tracking-wider">Est. Monthly</div>
+            <div className="text-[10px] font-black text-neutral-400 uppercase tracking-wider">{tc.status.estMonthlyStr}</div>
             <div className="text-2xl font-black tabular-nums">
               {fmtMoney(earnings.estimatedMonthlyRange.low)}<span className="text-red-500">–</span>{fmtMoney(earnings.estimatedMonthlyRange.high)}
             </div>
-            <div className="text-[10px] font-bold text-red-500 mt-1">{fmtMoney(earnings.estimatedYearly)} / year</div>
+            <div className="text-[10px] font-bold text-red-500 mt-1">{fmtMoney(earnings.estimatedYearly)} / {tc.status.estYearlyStr}</div>
           </div>
         )}
       </div>
@@ -653,14 +636,14 @@ function StatusCard({ data }: { data: MonetizationData }) {
       {data.monetization.status === "NOT_MONETIZED" && (
         <div className="mt-5 space-y-4">
           <ProgressRow
-            label="Subscribers"
+            label={tc.status.progressSub}
             pass={subs.met}
             current={fmt(subs.current)}
             target={fmt(subs.required)}
             percent={subs.progressPercent}
           />
           <ProgressRow
-            label="Watch Hours (12 mo est.)"
+            label={tc.status.progressWatchAuth}
             pass={hours.met}
             current={fmt(hours.estimated)}
             target={fmt(hours.required)}
@@ -672,7 +655,7 @@ function StatusCard({ data }: { data: MonetizationData }) {
       {/* Rejection reasons */}
       {data.monetization.rejectionReasons && data.monetization.rejectionReasons.length > 0 && (
         <div className="mt-4 p-4 rounded-xl border-2 border-black bg-white">
-          <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">Why it's not monetized</div>
+          <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">{tc.status.rejectionReasonsTitle}</div>
           <ul className="space-y-1.5">
             {data.monetization.rejectionReasons.map((r, i) => (
               <li key={i} className="flex items-start gap-2 text-sm font-medium text-neutral-800">
@@ -688,6 +671,8 @@ function StatusCard({ data }: { data: MonetizationData }) {
 }
 
 function ScoreGauge({ score, confidence }: { score: number; confidence: string }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const pct = Math.max(0, Math.min(100, score));
   const r = 52;
   const circ = 2 * Math.PI * r;
@@ -697,7 +682,7 @@ function ScoreGauge({ score, confidence }: { score: number; confidence: string }
   return (
     <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6 h-full">
       <h3 className="font-black text-base text-black mb-4 flex items-center gap-2">
-        <Zap className="w-5 h-5 text-red-600" /> Eligibility Score
+        <Zap className="w-5 h-5 text-red-600" /> {tc.score.title}
       </h3>
       <div className="flex flex-col items-center justify-center">
         <div className="relative w-36 h-36">
@@ -721,25 +706,27 @@ function ScoreGauge({ score, confidence }: { score: number; confidence: string }
             <div className="text-[9px] font-black uppercase tracking-wider text-neutral-500">/ 100</div>
           </div>
         </div>
-        <div className="mt-3 text-xs font-black uppercase tracking-wider text-neutral-600">{confidence} confidence</div>
+        <div className="mt-3 text-xs font-black uppercase tracking-wider text-neutral-600">{tc.status.confidenceLabel} {confidence}</div>
       </div>
     </div>
   );
 }
 
 function RequirementsChecklist({ data }: { data: MonetizationData }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const r = data.monetization.requirements;
   const items = [
-    { label: "1,000+ Subscribers", met: r.subscribers.met, value: `${fmt(r.subscribers.current)} / ${fmt(r.subscribers.required)}` },
-    { label: "4,000+ Watch Hours", met: r.watchHours.met, value: `${fmt(r.watchHours.estimated)} / ${fmt(r.watchHours.required)}` },
-    { label: "Content Count", met: r.content.met, value: `${fmt(r.content.current)} / ${fmt(r.content.required)} videos` },
-    { label: "Eligible Region", met: r.region.met, value: r.region.restricted ? "Restricted" : r.region.countryName },
-    { label: "Standard Audience", met: r.contentType.met, value: r.contentType.isMadeForKids ? "Made for Kids" : "OK" },
+    { label: tc.requirements.subLabel, met: r.subscribers.met, value: `${fmt(r.subscribers.current)} / ${fmt(r.subscribers.required)}` },
+    { label: tc.requirements.watchLabel, met: r.watchHours.met, value: `${fmt(r.watchHours.estimated)} / ${fmt(r.watchHours.required)}` },
+    { label: tc.requirements.contentLabel, met: r.content.met, value: `${fmt(r.content.current)} / ${fmt(r.content.required)} ${tc.requirements.videoText}` },
+    { label: tc.requirements.regionLabel, met: r.region.met, value: r.region.restricted ? tc.requirements.regionRestricted : r.region.countryName },
+    { label: tc.requirements.audienceLabel, met: r.contentType.met, value: r.contentType.isMadeForKids ? tc.requirements.audienceMadeForKids : tc.requirements.audienceOk },
   ];
   return (
     <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6 h-full">
       <h3 className="font-black text-base text-black mb-4 flex items-center gap-2">
-        <ShieldCheck className="w-5 h-5 text-red-600" /> YPP Requirements
+        <ShieldCheck className="w-5 h-5 text-red-600" /> {tc.requirements.title}
       </h3>
       <div className="space-y-2.5">
         {items.map((it) => (
@@ -759,18 +746,20 @@ function RequirementsChecklist({ data }: { data: MonetizationData }) {
 }
 
 function ChannelAnalysisGrid({ data }: { data: MonetizationData }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const a = data.channelAnalysis;
   const items = [
-    { icon: Hash, label: "Niche", value: a.niche, sub: `CPM $${a.nicheCpm.low}–$${a.nicheCpm.high}` },
-    { icon: TrendingUp, label: "Upload Frequency", value: a.uploadFrequency, sub: `${a.averageVideosPerMonth.toFixed(1)} videos/mo` },
-    { icon: Calendar, label: "Channel Age", value: `${a.channelAge.years.toFixed(1)} yrs`, sub: `${a.channelAge.months} months` },
-    { icon: VideoIcon, label: "Avg Videos / Mo", value: a.averageVideosPerMonth.toFixed(1), sub: a.uploadFrequency },
+    { icon: Hash, label: tc.analysis.nicheLabel, value: a.niche, sub: `CPM $${a.nicheCpm.low}–$${a.nicheCpm.high}` },
+    { icon: TrendingUp, label: tc.analysis.uploadLabel, value: a.uploadFrequency, sub: `${a.averageVideosPerMonth.toFixed(1)} ${tc.requirements.videoText}/mo` },
+    { icon: Calendar, label: tc.analysis.ageLabel, value: `${a.channelAge.years.toFixed(1)} yrs`, sub: `${a.channelAge.months} months` },
+    { icon: VideoIcon, label: tc.analysis.avgVideoLabel, value: a.averageVideosPerMonth.toFixed(1), sub: a.uploadFrequency },
   ];
 
   return (
     <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6">
       <h3 className="font-black text-base text-black mb-4 flex items-center gap-2">
-        <BarChart3 className="w-5 h-5 text-red-600" /> Channel Analysis
+        <BarChart3 className="w-5 h-5 text-red-600" /> {tc.analysis.title}
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {items.map((it) => (
@@ -788,6 +777,8 @@ function ChannelAnalysisGrid({ data }: { data: MonetizationData }) {
 }
 
 function StatisticsRow({ data }: { data: MonetizationData }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const s = data.statistics;
   const a = data.channelAnalysis;
 
@@ -825,7 +816,7 @@ function StatisticsRow({ data }: { data: MonetizationData }) {
   return (
     <div className="bg-black border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] p-4 sm:p-6 h-full">
       <h3 className="font-black text-sm sm:text-base text-white mb-4 flex items-center gap-2">
-        <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" /> Channel Statistics
+        <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" /> {tc.hero.titleStats}
       </h3>
 
       <div className="flex flex-col gap-2 sm:gap-3">
@@ -861,12 +852,14 @@ function StatisticsRow({ data }: { data: MonetizationData }) {
 }
 
 function RegionCard({ data }: { data: MonetizationData }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const r = data.regionInfo;
   const flag = countryToFlag(r.countryCode);
   return (
     <div className={`bg-white border-2 ${r.isRestricted ? "border-red-600" : "border-black"} rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6 h-full`}>
       <h3 className="font-black text-base text-black mb-4 flex items-center gap-2">
-        <MapPin className="w-5 h-5 text-red-600" /> Region
+        <MapPin className="w-5 h-5 text-red-600" /> {tc.region.title}
       </h3>
       <div className="flex items-center gap-3">
         {flag && <div className="text-4xl leading-none">{flag}</div>}
@@ -877,12 +870,12 @@ function RegionCard({ data }: { data: MonetizationData }) {
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2">
         <div className="p-3 rounded-xl border-2 border-black bg-neutral-50">
-          <div className="text-[9px] font-black uppercase tracking-wider text-neutral-500">CPM Multiplier</div>
+          <div className="text-[9px] font-black uppercase tracking-wider text-neutral-500">{tc.region.cpmMultiplier}</div>
           <div className="text-lg font-black tabular-nums text-black">{r.cpmMultiplier.toFixed(2)}×</div>
         </div>
         <div className={`p-3 rounded-xl border-2 border-black ${r.isRestricted ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
-          <div className="text-[9px] font-black uppercase tracking-wider opacity-80">Status</div>
-          <div className="text-sm font-black truncate">{r.isRestricted ? "Restricted" : "Eligible"}</div>
+          <div className="text-[9px] font-black uppercase tracking-wider opacity-80">{tc.region.statusLabel}</div>
+          <div className="text-sm font-black truncate">{r.isRestricted ? tc.region.statusRestricted : tc.region.statusEligible}</div>
         </div>
       </div>
       <p className="text-[11px] text-neutral-500 mt-3 leading-relaxed">{r.restrictionNote}</p>
@@ -891,6 +884,8 @@ function RegionCard({ data }: { data: MonetizationData }) {
 }
 
 function EarningsCard({ data }: { data: MonetizationData }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const e = data.monetization.estimatedEarnings!;
   return (
     <div
@@ -898,28 +893,28 @@ function EarningsCard({ data }: { data: MonetizationData }) {
       style={{ boxShadow: "4px 4px 0px 0px rgba(220,38,38,1)" }}
     >
       <h3 className="font-black text-base mb-4 flex items-center gap-2">
-        <DollarSign className="w-5 h-5 text-red-500" /> Estimated Earnings
+        <DollarSign className="w-5 h-5 text-red-500" /> {tc.earnings.title}
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="p-4 rounded-xl border-2 border-white bg-red-600">
-          <div className="text-[10px] font-black uppercase tracking-wider opacity-90">Monthly Range</div>
+          <div className="text-[10px] font-black uppercase tracking-wider opacity-90">{tc.earnings.monthlyRange}</div>
           <div className="text-xl font-black tabular-nums break-words">
             {fmtMoney(e.estimatedMonthlyRange.low)}–{fmtMoney(e.estimatedMonthlyRange.high)}
           </div>
         </div>
         <div className="p-4 rounded-xl border-2 border-white bg-white text-black">
-          <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Est. Monthly</div>
+          <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">{tc.earnings.estMonthly}</div>
           <div className="text-xl font-black tabular-nums">{fmtMoney(e.estimatedMonthly)}</div>
         </div>
         <div className="p-4 rounded-xl border-2 border-white bg-white text-black">
-          <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Est. Yearly</div>
+          <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">{tc.earnings.estYearly}</div>
           <div className="text-xl font-black tabular-nums">{fmtMoney(e.estimatedYearly)}</div>
         </div>
       </div>
       <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <Pill label="Niche" value={e.niche} />
-        <Pill label="CPM Range" value={`$${e.cpmRange.low}–$${e.cpmRange.high}`} />
-        <Pill label="RPM Estimate" value={`$${e.rpmEstimate.toFixed(2)}`} />
+        <Pill label={tc.earnings.niche} value={e.niche} />
+        <Pill label={tc.earnings.cpmRange} value={`$${e.cpmRange.low}–$${e.cpmRange.high}`} />
+        <Pill label={tc.earnings.rpmEstimate} value={`$${e.rpmEstimate.toFixed(2)}`} />
       </div>
       <p className="text-[10px] text-neutral-400 mt-4 leading-relaxed">* {e.basis}</p>
     </div>
@@ -936,11 +931,13 @@ function Pill({ label, value }: { label: string; value: string }) {
 }
 
 function RecentUploadsTable({ uploads }: { uploads: MonetizationData["recentUploads"] }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   return (
     <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
       <div className="p-5 sm:p-6 pb-3">
         <h3 className="font-black text-base text-black flex items-center gap-2">
-          <VideoIcon className="w-5 h-5 text-red-600" /> Recent Uploads
+          <VideoIcon className="w-5 h-5 text-red-600" /> {tc.uploads.title}
         </h3>
       </div>
       <div className="overflow-x-auto">
@@ -948,10 +945,10 @@ function RecentUploadsTable({ uploads }: { uploads: MonetizationData["recentUplo
           <thead className="bg-black text-white">
             <tr>
               <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-wider">#</th>
-              <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-wider">Title</th>
-              <th className="px-4 py-3 text-right text-[10px] font-black uppercase tracking-wider">Views</th>
-              <th className="px-4 py-3 text-right text-[10px] font-black uppercase tracking-wider hidden sm:table-cell">Likes</th>
-              <th className="px-4 py-3 text-right text-[10px] font-black uppercase tracking-wider hidden md:table-cell">Comments</th>
+              <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-wider">{tc.uploads.colTitle}</th>
+              <th className="px-4 py-3 text-right text-[10px] font-black uppercase tracking-wider">{tc.uploads.colViews}</th>
+              <th className="px-4 py-3 text-right text-[10px] font-black uppercase tracking-wider hidden sm:table-cell">{tc.uploads.colLikes}</th>
+              <th className="px-4 py-3 text-right text-[10px] font-black uppercase tracking-wider hidden md:table-cell">{tc.uploads.colComments}</th>
               <th className="px-4 py-3 text-right text-[10px] font-black uppercase tracking-wider">ER</th>
             </tr>
           </thead>
@@ -974,10 +971,12 @@ function RecentUploadsTable({ uploads }: { uploads: MonetizationData["recentUplo
 }
 
 function RecommendationsList({ items }: { items: string[] }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   return (
     <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6">
       <h3 className="font-black text-base text-black mb-4 flex items-center gap-2">
-        <Lightbulb className="w-5 h-5 text-red-600" /> Recommendations
+        <Lightbulb className="w-5 h-5 text-red-600" /> {tc.recommendations.title}
       </h3>
       <ul className="space-y-2.5">
         {items.map((r, i) => (
@@ -996,10 +995,12 @@ function RecommendationsList({ items }: { items: string[] }) {
 // ─── NEW GRAPH COMPONENTS ───────────────────────────────────────────────────
 
 function YPPRequirementsChart({ data }: { data: MonetizationData }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const r = data.monetization.requirements;
   const items = [
     {
-      label: "Subscribers",
+      label: tc.requirements.subLabel,
       current: r.subscribers.current,
       required: r.subscribers.required,
       pct: Math.min(100, r.subscribers.progressPercent),
@@ -1007,12 +1008,12 @@ function YPPRequirementsChart({ data }: { data: MonetizationData }) {
       display: `${fmt(r.subscribers.current)} / ${fmt(r.subscribers.required)}`,
     },
     {
-      label: "Watch Hours",
+      label: tc.requirements.watchLabel,
       current: r.watchHours.estimated,
       required: r.watchHours.required,
       pct: Math.min(100, r.watchHours.progressPercent),
       met: r.watchHours.met,
-      display: `${fmt(r.watchHours.estimated)} / ${fmt(r.watchHours.required)}h`,
+      display: `${fmt(r.watchHours.estimated)} / ${fmt(r.watchHours.required)}`,
     },
     {
       label: "Videos",
@@ -1033,7 +1034,7 @@ function YPPRequirementsChart({ data }: { data: MonetizationData }) {
   return (
     <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6">
       <h3 className="font-black text-base text-black mb-6 flex items-center gap-2">
-        <BarChart3 className="w-5 h-5 text-red-600" /> YPP Progress Overview
+        <BarChart3 className="w-5 h-5 text-red-600" /> {tc.requirements.title}
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
 
@@ -1061,7 +1062,7 @@ function YPPRequirementsChart({ data }: { data: MonetizationData }) {
               <div className="text-2xl font-black text-black">
                 {items.filter((i) => i.met).length}/{items.length}
               </div>
-              <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Met</div>
+              <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">{tc.requirements.audienceOk}</div>
             </div>
           </div>
         </div>
@@ -1099,6 +1100,8 @@ function YPPRequirementsChart({ data }: { data: MonetizationData }) {
 }
 
 function EarningsBarChart({ data }: { data: MonetizationData }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const e = data.monetization.estimatedEarnings!;
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -1114,10 +1117,10 @@ function EarningsBarChart({ data }: { data: MonetizationData }) {
   return (
     <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6">
       <h3 className="font-black text-base text-black mb-1 flex items-center gap-2">
-        <DollarSign className="w-5 h-5 text-red-600" /> Estimated Monthly Earnings (Seasonal)
+        <DollarSign className="w-5 h-5 text-red-600" /> {tc.earnings.titleChart}
       </h3>
       <p className="text-[11px] text-neutral-500 font-bold mb-5">
-        Q4 typically earns 30–40% more due to advertiser spend spikes — shown below.
+        {tc.earnings.chartDesc}
       </p>
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={chartData} barCategoryGap="28%" margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
@@ -1136,7 +1139,7 @@ function EarningsBarChart({ data }: { data: MonetizationData }) {
           />
           <Tooltip
             contentStyle={{ border: "2px solid #000", borderRadius: 10, fontSize: 11, fontWeight: 700 }}
-            formatter={(v: number, name: string) => [`$${v.toLocaleString()}`, name === "high" ? "High" : name === "low" ? "Low" : "Mid"]}
+            formatter={(v: number, name: string) => [`$${v.toLocaleString()}`, name === "high" ? "High" : name === "low" ? tc.earnings.chartLow : tc.earnings.chartMid]}
           />
           <Bar dataKey="low" stackId="a" fill="#fca5a5" radius={[0, 0, 4, 4]} name="low" />
           <Bar dataKey="mid" stackId="b" fill="#dc2626" radius={[4, 4, 0, 0]} name="mid" />
@@ -1144,8 +1147,8 @@ function EarningsBarChart({ data }: { data: MonetizationData }) {
       </ResponsiveContainer>
       <div className="flex flex-wrap items-center gap-4 mt-3">
         {[
-          { color: "#dc2626", label: `Mid — ${fmtMoney(e.estimatedMonthly)}/mo` },
-          { color: "#fca5a5", label: `Low — ${fmtMoney(e.estimatedMonthlyRange.low)}/mo` },
+          { color: "#dc2626", label: `${tc.earnings.chartMid} — ${fmtMoney(e.estimatedMonthly)}/mo` },
+          { color: "#fca5a5", label: `${tc.earnings.chartLow} — ${fmtMoney(e.estimatedMonthlyRange.low)}/mo` },
         ].map((l) => (
           <div key={l.label} className="flex items-center gap-1.5 text-[10px] font-bold text-neutral-600">
             <span className="w-3 h-3 rounded-sm shrink-0" style={{ background: l.color }} />
@@ -1158,6 +1161,8 @@ function EarningsBarChart({ data }: { data: MonetizationData }) {
 }
 
 function UploadsViewsChart({ uploads }: { uploads: MonetizationData["recentUploads"] }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const top = uploads.slice(0, 8);
   const chartData = top.map((u) => ({
     name: u.title.length > 16 ? u.title.slice(0, 14) + "…" : u.title,
@@ -1171,9 +1176,9 @@ function UploadsViewsChart({ uploads }: { uploads: MonetizationData["recentUploa
   return (
     <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6">
       <h3 className="font-black text-base text-black mb-1 flex items-center gap-2">
-        <Eye className="w-5 h-5 text-red-600" /> Recent Upload Performance
+        <Eye className="w-5 h-5 text-red-600" /> {tc.uploads.title}
       </h3>
-      <p className="text-[11px] text-neutral-500 font-bold mb-5">Views and likes across the last {top.length} videos.</p>
+      <p className="text-[11px] text-neutral-500 font-bold mb-5">{tc.uploads.desc.replace("{count}", top.length.toString())}</p>
 
       {/* Horizontal bar chart — custom rendered for perfect control */}
       <div className="space-y-2.5 mb-6">
@@ -1202,7 +1207,7 @@ function UploadsViewsChart({ uploads }: { uploads: MonetizationData["recentUploa
 
       {/* Likes recharts bar chart */}
       <div className="border-t-2 border-dashed border-neutral-200 pt-4">
-        <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">Likes per video</div>
+        <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-2">{tc.uploads.likesPerVideo}</div>
         <ResponsiveContainer width="100%" height={140}>
           <BarChart data={chartData} barCategoryGap="30%" margin={{ top: 2, right: 4, bottom: 0, left: 0 }}>
             <XAxis
@@ -1214,7 +1219,7 @@ function UploadsViewsChart({ uploads }: { uploads: MonetizationData["recentUploa
             <YAxis hide />
             <Tooltip
               contentStyle={{ border: "2px solid #000", borderRadius: 8, fontSize: 10, fontWeight: 700 }}
-              formatter={(v: number) => [`${v.toLocaleString()}`, "Likes"]}
+              formatter={(v: number) => [`${v.toLocaleString()}`, tc.uploads.colLikes]}
             />
             <Bar dataKey="likes" radius={[4, 4, 0, 0]}>
               {chartData.map((_, i) => (
@@ -1241,6 +1246,8 @@ function ProgressRow({
   target: string;
   percent: number;
 }) {
+  const { t } = useTranslations();
+  const tc = t("toolPages.monetizationChecker");
   const pct = Math.max(0, Math.min(100, percent));
   return (
     <div>
@@ -1263,7 +1270,7 @@ function ProgressRow({
           className={`h-full ${pass ? "bg-green-500" : "bg-red-600"}`}
         />
       </div>
-      <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mt-1 tabular-nums">{pct.toFixed(0)}% complete</div>
+      <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mt-1 tabular-nums">{pct.toFixed(0)}% {tc.progressRow.complete}</div>
     </div>
   );
 }

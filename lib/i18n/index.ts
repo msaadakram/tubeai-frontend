@@ -24,6 +24,12 @@ export function createTranslator(locale: Locale) {
         return undefined;
       }
     }
+
+    // Treat empty objects from empty stubs as missing translations
+    if (cur !== null && typeof cur === "object" && !Array.isArray(cur) && Object.keys(cur).length === 0) {
+      return undefined;
+    }
+
     return cur;
   }
 

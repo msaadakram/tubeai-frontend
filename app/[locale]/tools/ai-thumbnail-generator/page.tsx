@@ -18,6 +18,7 @@ import {
   Star,
   Clock,
 } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { ToolLayout } from "@/components/tools/ToolLayout";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import {
@@ -29,88 +30,22 @@ import {
   CrossCTA,
 } from "@/components/tools/ToolSections";
 
-const stats = [
-  { value: "1.4M+", label: "Thumbnails Generated" },
-  { value: "+62%", label: "Avg CTR Lift" },
-  { value: "4", label: "Variants / Prompt" },
-  { value: "1280×720", label: "HD PNG Export" },
-];
 
-const guides = [
-  { icon: Wand2, color: "text-purple-600 bg-purple-100", title: "One focal point per thumbnail", desc: "The eye needs a single anchor — a face, a product, or a bold object. AI generates around one focal point; don't add a second." },
-  { icon: Palette, color: "text-purple-600 bg-purple-100", title: "High contrast wins clicks", desc: "Light text on dark backgrounds or vice versa. AI thumbnails that maximize contrast outperform muted ones by 20-30% in CTR." },
-  { icon: Layers, color: "text-purple-600 bg-purple-100", title: "Three words of text max", desc: "Thumbnails render at 2 inches on mobile. More than three words becomes noise. Let AI simplify your headline." },
-  { icon: ImageIcon, color: "text-red-600 bg-red-100", title: "Don't reuse the same template", desc: "Viewers develop banner blindness to repeated layouts. Rotate styles so each video looks fresh in the feed." },
-  { icon: ImageIcon, color: "text-red-600 bg-red-100", title: "Don't overstuff with arrows and circles", desc: "One annotation element is fine; three looks spammy. Trust a clean composition over clutter." },
-  { icon: Clock, color: "text-yellow-600 bg-yellow-100", title: "A/B test in the first 24 hours", desc: "Upload two variants and let YouTube's Test & Compare feature pick the winner while the video has momentum." },
-];
-
-const faqs = [
-  { q: "How does the AI thumbnail generator work?", a: "You describe your video's topic and angle in a prompt, and the model generates four 1280×720 thumbnail variants matching proven high-CTR patterns — bold focal point, high contrast, minimal text. Pick the strongest, export as lossless PNG, and upload." },
-  { q: "Are AI-generated thumbnails allowed by YouTube?", a: "Yes. YouTube's policies allow AI-generated imagery in thumbnails as long as the content isn't deceptive, sexually explicit, or harmful. Always review AI output for accuracy before publishing." },
-  { q: "What resolution do the thumbnails export at?", a: "1280×720 pixels — YouTube's recommended resolution — exported as lossless PNG so there's no compression artifacting when the platform re-encodes for different devices." },
-  { q: "Can I use my own face in AI thumbnails?", a: "Pro plans support reference-image style transfer — upload a swipe-file thumbnail you admire and the model remixes its composition and color style around your topic, while keeping your branding consistent." },
-  { q: "How many thumbnails can I generate per month?", a: "The Creator plan includes 100 generations per month (4 variants each = 400 thumbnails). Pro includes 500 generations. Unused generations don't roll over." },
-  { q: "Is there a free trial?", a: "Yes — start a free trial on any paid plan, no credit card required. Cancel anytime within the trial period and pay nothing." },
-];
-
-const perks = [
-  { icon: Wand2, title: "4 variants per prompt", desc: "Generate four click-tested thumbnail concepts in a single click." },
-  { icon: Palette, title: "Style transfer", desc: "Reference any swipe-file thumbnail and remix its style into yours." },
-  { icon: Layers, title: "Layered exports", desc: "Auto-extracted face, text, and emoji layers — fully editable." },
-  { icon: Zap, title: "HD lossless PNG", desc: "1280×720 export at YouTube-perfect resolution, zero compression." },
-];
-
-const plans = [
-  {
-    name: "Creator",
-    price: "$19",
-    period: "/ month",
-    highlight: false,
-    tag: "Most popular",
-    features: [
-      "100 AI thumbnails / month",
-      "All 4 variant generations",
-      "HD lossless PNG export",
-      "Style transfer + reference upload",
-      "Background remover",
-      "Priority generation queue",
-    ],
-    cta: "Upgrade to Creator",
-  },
-  {
-    name: "Pro",
-    price: "$49",
-    period: "/ month",
-    highlight: true,
-    tag: "Best value",
-    features: [
-      "Unlimited AI thumbnails",
-      "All Creator features",
-      "Bulk generation (10 at once)",
-      "Team workspaces (5 seats)",
-      "API access for automation",
-      "Dedicated priority queue",
-    ],
-    cta: "Upgrade to Pro",
-  },
-];
-
-const social = [
-  { value: "1.4M+", label: "Thumbnails Generated" },
-  { value: "+62%", label: "Avg CTR Lift" },
-  { value: "4.9★", label: "Creator Rating" },
-];
 
 export default function AIThumbnailGeneratorPage() {
+  const { t } = useTranslations();
+  const c = t("toolPages.aiThumbnailGenerator");
+  // @ts-ignore
+  const toolContent: any = c || {};
+
   return (
     <ToolLayout
-      title="AI Thumbnail Generator"
-      description="Generate click-magnet YouTube thumbnails matching the proven patterns of top creators in your niche."
+      title={toolContent.title || "AI Thumbnail Generator"}
+      description={toolContent.description || "Generate click-magnet YouTube thumbnails matching the proven patterns of top creators in your niche."}
       icon={ImageIcon}
-      badge="Premium · Pro Feature"
+      badge={toolContent.badge || "Premium · Pro Feature"}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={toolContent.stats || []} />
 
       {/* HERO Lock Card */}
       <motion.div
@@ -161,17 +96,17 @@ export default function AIThumbnailGeneratorPage() {
           {/* Left: Copy */}
           <div className="lg:col-span-3">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-red-600 to-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full border-2 border-white mb-5">
-              <Crown className="w-3 h-3" /> Premium Feature
+              <Crown className="w-3 h-3" /> {toolContent.heroBadge}
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-[1.05] mb-4">
-              Unlock studio-grade{" "}
-              <span className="text-red-500">AI thumbnails</span>{" "}
-              that get the click.
+              {toolContent.heroTitle_1}{" "}
+              <span className="text-red-500">{toolContent.heroTitle_2}</span>{" "}
+              {toolContent.heroTitle_3}
             </h1>
             <p className="text-sm sm:text-base text-neutral-300 leading-relaxed mb-6 max-w-xl">
-              The AI Thumbnail Generator is part of our <strong className="text-white">Creator</strong> and{" "}
-              <strong className="text-white">Pro</strong> plans. Upgrade to design 4 click-tested variants per
-              prompt, with style transfer, layered exports, and priority queue.
+              <span dangerouslySetInnerHTML={{ __html: toolContent.heroDesc_1 || "" }} />
+              <br className="hidden sm:block" />
+              {toolContent.heroDesc_2}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -179,20 +114,20 @@ export default function AIThumbnailGeneratorPage() {
                 href="/pricing"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-wider text-sm rounded-xl border-2 border-white shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-y-0.5 transition-all"
               >
-                <Crown className="w-4 h-4" /> Upgrade to Unlock
+                <Crown className="w-4 h-4" /> {toolContent.heroBtn_1}
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/tools/viral-title-generator"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-black uppercase tracking-wider text-sm rounded-xl border-2 border-white/40 transition-all"
               >
-                Try Free Tools
+                {toolContent.heroBtn_2}
               </Link>
             </div>
 
             <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
-              {social.map((s) => (
-                <div key={s.label} className="flex items-baseline gap-2">
+              {(toolContent.social || []).map((s: any, i: number) => (
+                <div key={i} className="flex items-baseline gap-2">
                   <span className="text-xl sm:text-2xl font-black text-red-500 tabular-nums">{s.value}</span>
                   <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400">
                     {s.label}
@@ -256,29 +191,33 @@ export default function AIThumbnailGeneratorPage() {
       <section className="mb-12 sm:mb-16">
         <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-full mb-3">
-            <Sparkles className="w-3 h-3 text-red-500" /> What you'll unlock
+            <Sparkles className="w-3 h-3 text-red-500" /> {toolContent.perksBadge}
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-black">
-            Everything you need to win the click
+            {toolContent.perksTitle}
           </h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {perks.map((p, i) => (
-            <motion.div
-              key={p.title}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              className="bg-white border-2 border-black rounded-2xl p-5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(220,38,38,1)] hover:-translate-y-0.5 transition-all"
-            >
-              <div className="w-11 h-11 rounded-xl bg-red-600 text-white flex items-center justify-center border-2 border-black mb-3">
-                <p.icon className="w-5 h-5" />
-              </div>
-              <h3 className="font-black text-base text-black mb-1.5">{p.title}</h3>
-              <p className="text-sm text-neutral-600 leading-relaxed">{p.desc}</p>
-            </motion.div>
-          ))}
+          {(toolContent.perks || []).map((p: any, i: number) => {
+            const icons = [Wand2, Palette, Layers, Zap, Star];
+            const Icon = icons[i] || Star;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.06 }}
+                className="bg-white border-2 border-black rounded-2xl p-5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(220,38,38,1)] hover:-translate-y-0.5 transition-all"
+              >
+                <div className="w-11 h-11 rounded-xl bg-red-600 text-white flex items-center justify-center border-2 border-black mb-3">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <h3 className="font-black text-base text-black mb-1.5">{p.title}</h3>
+                <p className="text-sm text-neutral-600 leading-relaxed">{p.desc}</p>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
@@ -286,116 +225,129 @@ export default function AIThumbnailGeneratorPage() {
       <section className="mb-12 sm:mb-16">
         <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full mb-3">
-            <Crown className="w-3 h-3" /> Choose your plan
+            <Crown className="w-3 h-3" /> {toolContent.plansBadge}
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-black">
-            Two ways to unlock the generator
+            {toolContent.plansTitle}
           </h2>
           <p className="text-sm sm:text-base text-neutral-500 max-w-xl mx-auto mt-2">
-            7-day free trial · cancel anytime · 30-day money-back guarantee
+            {toolContent.plansDesc}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
-          {plans.map((plan, i) => (
-            <motion.div
-              key={plan.name}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className={`relative rounded-2xl border-2 border-black p-6 sm:p-7 ${
-                plan.highlight
+          {(toolContent.plans || []).map((plan: any, i: number) => {
+            const isHighlight = i === 1; // Assuming second plan is highlighted
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className={`relative rounded-2xl border-2 border-black p-6 sm:p-7 ${isHighlight
                   ? "bg-red-600 text-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
                   : "bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-              }`}
-            >
-              {plan.tag && (
-                <div
-                  className={`absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-full border-2 border-black ${
-                    plan.highlight ? "bg-yellow-400 text-black" : "bg-black text-white"
                   }`}
-                >
-                  <Star className="w-3 h-3" /> {plan.tag}
-                </div>
-              )}
-              <h3 className="text-2xl font-black tracking-tight mb-1">{plan.name}</h3>
-              <div className="flex items-baseline gap-1 mb-5">
-                <span className="text-4xl font-black tabular-nums">{plan.price}</span>
-                <span className={`text-sm font-bold ${plan.highlight ? "text-red-100" : "text-neutral-500"}`}>
-                  {plan.period}
-                </span>
-              </div>
-              <ul className="space-y-2.5 mb-6">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm">
-                    <Check
-                      className={`w-4 h-4 shrink-0 mt-0.5 ${
-                        plan.highlight ? "text-white" : "text-red-600"
+              >
+                {plan.tag && (
+                  <div
+                    className={`absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-full border-2 border-black ${isHighlight ? "bg-yellow-400 text-black" : "bg-black text-white"
                       }`}
-                      strokeWidth={3}
-                    />
-                    <span className={plan.highlight ? "text-white" : "text-neutral-800"}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/pricing"
-                className={`w-full inline-flex items-center justify-center gap-2 px-4 py-3 font-black uppercase tracking-wider text-sm rounded-xl border-2 border-black transition-all hover:-translate-y-0.5 ${
-                  plan.highlight
+                  >
+                    <Star className="w-3 h-3" /> {plan.tag}
+                  </div>
+                )}
+                <h3 className="text-2xl font-black tracking-tight mb-1">{plan.name}</h3>
+                <div className="flex items-baseline gap-1 mb-5">
+                  <span className="text-4xl font-black tabular-nums">{plan.price}</span>
+                  <span className={`text-sm font-bold ${isHighlight ? "text-red-100" : "text-neutral-500"}`}>
+                    {plan.period}
+                  </span>
+                </div>
+                <ul className="space-y-2.5 mb-6">
+                  {(plan.features || []).map((f: any, idx: number) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm">
+                      <Check
+                        className={`w-4 h-4 shrink-0 mt-0.5 ${isHighlight ? "text-white" : "text-red-600"
+                          }`}
+                        strokeWidth={3}
+                      />
+                      <span className={isHighlight ? "text-white" : "text-neutral-800"}>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/pricing"
+                  className={`w-full inline-flex items-center justify-center gap-2 px-4 py-3 font-black uppercase tracking-wider text-sm rounded-xl border-2 border-black transition-all hover:-translate-y-0.5 ${isHighlight
                     ? "bg-black text-white shadow-[3px_3px_0px_0px_rgba(255,255,255,0.3)]"
                     : "bg-red-600 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
-                }`}
-              >
-                {plan.cta}
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-          ))}
+                    }`}
+                >
+                  {plan.cta}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
       <GuideGrid
-        badge="Thumbnail Design"
-        title="What makes a YouTube thumbnail that gets clicked"
-        intro="Six rules the AI is trained on — and that you should enforce on every thumbnail you ship."
-        cards={guides}
+        badge={toolContent.guideBadge}
+        title={toolContent.guideTitle}
+        intro={toolContent.guideIntro}
+        cards={(toolContent.guides || []).map((g: any, i: number) => {
+          const icons = [Wand2, Palette, Layers, ImageIcon, ImageIcon, Clock];
+          const colors = [
+            "text-purple-600 bg-purple-100",
+            "text-purple-600 bg-purple-100",
+            "text-purple-600 bg-purple-100",
+            "text-red-600 bg-red-100",
+            "text-red-600 bg-red-100",
+            "text-yellow-600 bg-yellow-100"
+          ];
+          return {
+            ...g,
+            icon: icons[i] || Star,
+            color: colors[i] || "text-gray-600 bg-gray-100"
+          };
+        })}
       />
 
       <Workflow
-        title="Your 4-step AI thumbnail workflow"
-        steps={[
-          { n: "01", t: "Describe your video", d: "Enter the topic, angle, and the emotion you want viewers to feel." },
-          { n: "02", t: "Generate 4 variants", d: "The AI produces four high-CTR concepts based on proven patterns." },
-          { n: "03", t: "Pick & refine", d: "Choose the strongest variant and tweak text or focal point if needed." },
-          { n: "04", t: "Export HD PNG", d: "Download a 1280×720 lossless PNG ready for YouTube Studio." },
-        ]}
+        title={toolContent.workflowTitle}
+        steps={toolContent.workflows || []}
       />
 
-      <SeoContent badge="AI Thumbnail Strategy" title="AI YouTube thumbnails in 2026: design systems, not one-offs">
-        <p>A great YouTube thumbnail is not designed — it's engineered. Top creators in 2026 run a repeatable system: one focal point, high contrast, three words of text, and an A/B test in the first 24 hours. AI now handles the generation; your job is the system around it. The <strong>thumbnail</strong> is the single biggest lever on click-through rate, and CTR is the gate to every other ranking signal YouTube measures.</p>
-        <h3>The three-element rule</h3>
-        <p>Every high-performing thumbnail has at most three elements: a focal subject (a face, a product, or a bold object), a short text overlay, and a background that creates contrast. More than three elements and the eye doesn't know where to land. The AI thumbnail generator is trained to enforce this constraint — describe your topic and it returns compositions that respect it.</p>
-        <h3>Contrast beats aesthetics</h3>
-        <p>A "beautiful" thumbnail with low contrast loses to an "ugly" thumbnail with high contrast every time. Light text on a dark background, or a saturated subject against a muted background, makes the thumbnail pop in a feed full of competing videos. If your AI-generated variant looks too tasteful, prompt for bolder colors and higher contrast.</p>
-        <h3>Text that survives at 2 inches</h3>
-        <p>Most views come from mobile, where your thumbnail renders at roughly 2 inches wide. Any text smaller than three words becomes illegible. Use text to reinforce the title's promise — not to repeat it. The AI keeps overlays to a maximum of three words by default.</p>
-        <h3>Faces and emotion</h3>
-        <p>Thumbnails with expressive faces consistently outperform faceless ones — YouTube's own data shows faces with visible emotion lift CTR by up to 38%. If your video is people-centric, generate variants with a clear facial focal point. For product or tutorial videos, let the product be the focal point.</p>
-        <h3>A/B testing while it matters</h3>
-        <p>YouTube's Test & Compare feature lets you upload three thumbnail variants and serve them to equal audience slices for up to 14 days. The winner gets promoted to 100% of impressions. Run the test in the first 24-48 hours — that's when a video's momentum compounds, and a stronger thumbnail early lifts the ceiling on total views.</p>
-        <h3>From thumbnail to full system</h3>
-        <p>The thumbnail is step one. Pair it with a <a href="/tools/viral-title-generator">clickable title</a>, preview how it renders across devices with our <a href="/tools/thumbnail-preview">Thumbnail Preview</a> tool, and download any competitor's thumbnail with the <a href="/tools/thumbnail-downloader">Thumbnail Downloader</a> for swipe-file inspiration.</p>
-      </SeoContent>
+      {toolContent.seoContent && (
+        <SeoContent badge={toolContent.seoContent.badge} title={toolContent.seoContent.title}>
+          <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent.p1 }} />
+          <h3>{toolContent.seoContent.h3_1}</h3>
+          <p>{toolContent.seoContent.p2_1}</p>
+          <h3>{toolContent.seoContent.h3_2}</h3>
+          <p>{toolContent.seoContent.p2_2}</p>
+          <h3>{toolContent.seoContent.h3_3}</h3>
+          <p>{toolContent.seoContent.p2_3}</p>
+          <h3>{toolContent.seoContent.h3_4}</h3>
+          <p>{toolContent.seoContent.p2_4}</p>
+          <h3>{toolContent.seoContent.h3_5}</h3>
+          <p>{toolContent.seoContent.p2_5}</p>
+          <h3>{toolContent.seoContent.h3_6}</h3>
+          <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent.p2_6 }} />
+        </SeoContent>
+      )}
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={toolContent.faqs || []} />
 
-      <CrossCTA
-        title="Pair your thumbnail with a viral title"
-        desc="The best thumbnail fails without a clickable title. Generate both in one workflow."
-        primary={{ label: "Generate Titles", href: "/tools/viral-title-generator", icon: Sparkles }}
-        secondary={{ label: "Preview Thumbnail", href: "/tools/thumbnail-preview", icon: ImageIcon }}
-      />
+      {toolContent.crossCta && (
+        <CrossCTA
+          title={toolContent.crossCta.title}
+          desc={toolContent.crossCta.desc}
+          primary={{ label: toolContent.crossCta.btn1, href: "/tools/viral-title-generator", icon: Sparkles }}
+          secondary={{ label: toolContent.crossCta.btn2, href: "/tools/thumbnail-preview", icon: ImageIcon }}
+        />
+      )}
 
       {/* Bottom CTA */}
       <motion.div
@@ -416,35 +368,35 @@ export default function AIThumbnailGeneratorPage() {
         />
         <div className="relative">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full border-2 border-white mb-3">
-            <Clock className="w-3 h-3" /> Limited Time
+            <Clock className="w-3 h-3" /> {toolContent.bottomCta?.badge}
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 tracking-tight">
-            Ready to make thumbnails that get the click?
+            {toolContent.bottomCta?.title}
           </h2>
           <p className="text-sm sm:text-base text-neutral-300 max-w-xl mx-auto mb-6">
-            Join 18,000+ creators using YTForge to ship faster, get more views, and grow their channels.
+            {toolContent.bottomCta?.desc}
           </p>
           <Link
             href="/pricing"
             className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-wider text-sm rounded-xl border-2 border-white shadow-[4px_4px_0px_0px_rgba(255,255,255,0.25)] hover:-translate-y-0.5 transition-all"
           >
-            <Rocket className="w-4 h-4" /> Start Free Trial
+            <Rocket className="w-4 h-4" /> {toolContent.bottomCta?.btn}
             <ArrowRight className="w-4 h-4" />
           </Link>
-          <p className="text-[10px] text-neutral-400 mt-3">No credit card required · cancel anytime</p>
+          <p className="text-[10px] text-neutral-400 mt-3">{toolContent.bottomCta?.footer}</p>
         </div>
       </motion.div>
-          <ToolSeoJsonLd
-        name="AI YouTube Thumbnail Generator"
-        description={"Generate click-magnet YouTube thumbnails with AI — 4 high-CTR variants per prompt, HD PNG export."}
+      <ToolSeoJsonLd
+        name={toolContent.title || "AI YouTube Thumbnail Generator"}
+        description={toolContent.seoJsonDesc || "Generate click-magnet YouTube thumbnails with AI — 4 high-CTR variants per prompt, HD PNG export."}
         slug="ai-thumbnail-generator"
-        faqs={faqs}
+        faqs={toolContent.faqs || []}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "AI YouTube Thumbnail Generator", slug: "/tools/ai-thumbnail-generator" },
+          { name: toolContent.title || "AI YouTube Thumbnail Generator", slug: "/tools/ai-thumbnail-generator" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }

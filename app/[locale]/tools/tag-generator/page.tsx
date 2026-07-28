@@ -27,6 +27,7 @@ import {
   FaqAccordion,
   CrossCTA,
 } from "@/components/tools/ToolSections";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
@@ -37,31 +38,6 @@ type TagData = {
   topic: string;
   tags: string[];
 };
-
-const stats = [
-  { value: "60", label: "Tags Per Search" },
-  { value: "500", label: "YouTube Char Limit" },
-  { value: "<3s", label: "Generation Time" },
-  { value: "Free", label: "Unlimited Forever" },
-];
-
-const guides = [
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Lead with your primary keyword", desc: "Your first 2-3 tags should match your title's main keyword phrase exactly." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Use the full 500 characters", desc: "YouTube gives you 500 characters for tags — fill them with relevant, varied terms." },
-  { icon: CheckCircle2, color: "text-green-600 bg-green-100", title: "Mix exact + broad match", desc: "Combine specific multi-word phrases with single broader terms for the widest reach." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Don't repeat the same word", desc: "Tag stuffing the same keyword 10 ways triggers spam penalties — vary your phrasing." },
-  { icon: XCircle, color: "text-red-600 bg-red-100", title: "Skip misleading tags", desc: "Tagging unrelated trending topics violates YouTube policy and harms watch time signals." },
-  { icon: AlertTriangle, color: "text-yellow-600 bg-yellow-100", title: "Tags are secondary signal", desc: "Title and thumbnail matter more — treat tags as supportive context, not your main SEO play." },
-];
-
-const faqs = [
-  { q: "Are video tags still important in 2026?", a: "Yes, but as a supporting signal. YouTube uses tags to understand context and disambiguate similar topics. They're not the primary ranking factor (title and thumbnail are), but well-chosen tags noticeably improve recommended-traffic performance." },
-  { q: "How many tags should I use?", a: "Use as many as fit in the 500-character limit — usually 25-40 tags. Quality over quantity: stop adding tags when they stop being relevant." },
-  { q: "What's the difference between tags and hashtags?", a: "Tags are hidden metadata only the algorithm sees; hashtags appear publicly in your title or description with a # symbol. Use both for maximum reach. Try our Hashtag Generator for public hashtags." },
-  { q: "Is this tool free?", a: "Yes — unlimited generations, no signup, forever free." },
-];
-
-const suggestions = ["AI tools 2026", "iPhone 17 review", "morning routine", "Tesla Model Y", "react tutorial"];
 
 // Local fallback — generates ~60 varied tags when the backend is unreachable
 function localGenerate(topic: string): TagData {
@@ -135,6 +111,9 @@ function localGenerate(topic: string): TagData {
 }
 
 export default function TagGeneratorPage() {
+  const { t } = useTranslations();
+  const tc = t("toolPages.tagGenerator") as any;
+
   const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -214,14 +193,17 @@ export default function TagGeneratorPage() {
     setTimeout(() => setCopiedIdx(null), 1200);
   };
 
+  const guideIcons = [CheckCircle2, CheckCircle2, CheckCircle2, XCircle, XCircle, AlertTriangle];
+  const guideColors = ["text-green-600 bg-green-100", "text-green-600 bg-green-100", "text-green-600 bg-green-100", "text-red-600 bg-red-100", "text-red-600 bg-red-100", "text-yellow-600 bg-yellow-100"];
+
   return (
     <ToolLayout
-      title="YouTube Video Tag Generator"
-      description="Generate 60 optimized video tags for your YouTube uploads — primary, secondary, and long-tail keywords ranked by search volume."
+      title={tc.title}
+      description={tc.description}
       icon={TagIcon}
-      badge="Free Tool · SEO-Optimized Tags"
+      badge={tc.badge}
     >
-      <StatsStrip stats={stats} />
+      <StatsStrip stats={tc.stats} />
 
       <ToolCard className="mb-6">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -231,18 +213,18 @@ export default function TagGeneratorPage() {
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && run()}
-              placeholder="Enter your video topic or main keyword..."
+              placeholder={tc.inputPlaceholder}
               className="flex-1 py-3 outline-none text-sm font-medium"
             />
           </div>
           <PrimaryButton onClick={() => run()} disabled={loading || !topic.trim()}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <TagIcon className="w-4 h-4" />}
-            {loading ? "Generating..." : "Generate Tags"}
+            {loading ? tc.generatingBtn : tc.generateBtn}
           </PrimaryButton>
         </div>
         <div className="flex flex-wrap items-center gap-2 mt-4">
-          <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">Try:</span>
-          {suggestions.map((s) => (
+          <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">{tc.tryLabel}</span>
+          {tc.suggestions.map((s: string) => (
             <button
               key={s}
               onClick={() => run(s)}
@@ -296,7 +278,7 @@ export default function TagGeneratorPage() {
                   transition={{ duration: 0.4 }}
                   className="font-black text-base sm:text-lg text-white"
                 >
-                  Building your tag set…
+                  {tc.loadingTitle}
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -304,7 +286,7 @@ export default function TagGeneratorPage() {
                   transition={{ delay: 0.2 }}
                   className="text-xs text-neutral-400 font-bold"
                 >
-                  Analyzing search volume and competition
+                  {tc.loadingSub}
                 </motion.div>
               </div>
 
@@ -334,7 +316,7 @@ export default function TagGeneratorPage() {
             <div className="flex items-start gap-3">
               <XCircle className="w-6 h-6 text-red-600 shrink-0" />
               <div>
-                <div className="font-black text-base text-red-800">Tag generation failed</div>
+                <div className="font-black text-base text-red-800">{tc.errorTitle}</div>
                 <div className="text-sm text-red-700 mt-1">{error}</div>
               </div>
             </div>
@@ -353,25 +335,23 @@ export default function TagGeneratorPage() {
             <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">
-                  Generated for
+                  {tc.generatedFor}
                 </div>
                 <div className="font-black text-base sm:text-lg truncate">{data.topic}</div>
               </div>
               <div
-                className={`text-xs font-black px-3 py-1.5 rounded-full border-2 border-black ${
-                  overLimit ? "bg-red-600 text-white" : "bg-neutral-100 text-black"
-                }`}
+                className={`text-xs font-black px-3 py-1.5 rounded-full border-2 border-black ${overLimit ? "bg-red-600 text-white" : "bg-neutral-100 text-black"
+                  }`}
               >
                 {charCount}/{TAG_LIMIT} chars
               </div>
               <button
                 onClick={copyAll}
-                className={`inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-black rounded-xl border-2 border-black transition shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${
-                  copiedAll ? "bg-green-500 text-white" : "bg-black text-white hover:bg-red-600"
-                }`}
+                className={`inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-black rounded-xl border-2 border-black transition shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${copiedAll ? "bg-green-500 text-white" : "bg-black text-white hover:bg-red-600"
+                  }`}
               >
                 {copiedAll ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                {copiedAll ? "Copied all" : "Copy all"}
+                {copiedAll ? tc.copiedAll : tc.copyAll}
               </button>
             </div>
 
@@ -379,11 +359,11 @@ export default function TagGeneratorPage() {
             <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
               <div className="px-4 sm:px-5 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                 <TagIcon className="w-4 h-4 text-red-600" />
-                <div className="font-black text-sm">All video tags ({data.tags.length})</div>
+                <div className="font-black text-sm">{tc.allTags} ({data.tags.length})</div>
                 {loading && (
                   <span className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-red-600">
                     <Loader2 className="w-3 h-3 animate-spin" />
-                    Streaming…
+                    {tc.streaming}
                   </span>
                 )}
               </div>
@@ -397,13 +377,12 @@ export default function TagGeneratorPage() {
                       initial={{ opacity: 0, scale: 0.85, y: 6 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       transition={{ duration: 0.22, ease: "easeOut" }}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 text-xs font-black transition hover:-translate-y-0.5 ${
-                        copiedIdx === idx
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 text-xs font-black transition hover:-translate-y-0.5 ${copiedIdx === idx
                           ? "bg-green-500 text-white border-black"
                           : isNew
-                          ? "bg-red-600 text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-                          : "bg-white text-black border-black hover:bg-red-600 hover:text-white"
-                      }`}
+                            ? "bg-red-600 text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                            : "bg-white text-black border-black hover:bg-red-600 hover:text-white"
+                        }`}
                     >
                       {copiedIdx === idx ? <Check className="w-3 h-3" /> : null}
                       {t}
@@ -417,7 +396,7 @@ export default function TagGeneratorPage() {
                       animate={{ opacity: [0.3, 1, 0.3] }}
                       transition={{ duration: 1, repeat: Infinity }}
                     >
-                      more…
+                      {tc.more}
                     </motion.span>
                   </span>
                 )}
@@ -428,64 +407,46 @@ export default function TagGeneratorPage() {
       </AnimatePresence>
 
       <GuideGrid
-        badge="Tag Rules"
-        title="How to write video tags that work"
-        intro="Six rules for video-tag SEO — what to lead with, what to skip, and where tags actually matter."
-        cards={guides}
+        badge={tc.guideBadge}
+        title={tc.guideTitle}
+        intro={tc.guideIntro}
+        cards={tc.guides.map((g: any, i: number) => ({ ...g, icon: guideIcons[i] || CheckCircle2, color: guideColors[i] || "text-green-600 bg-green-100" }))}
       />
 
       <Workflow
-        title="Your 4-step tagging workflow"
-        steps={[
-          { n: "01", t: "Enter your topic", d: "Use your main title keyword as the starting point." },
-          { n: "02", t: "Generate the list", d: "Get 40+ tags split into primary, secondary, and long-tail." },
-          { n: "03", t: "Trim to fit 500 chars", d: "Keep the strongest mix — exact match first, broad terms last." },
-          { n: "04", t: "Paste into YouTube Studio", d: "Add them in the 'Tags' field under your video's details page." },
-        ]}
+        title={tc.workflowTitle}
+        steps={tc.workflows}
       />
 
-      <SeoContent badge="Video Tag Strategy" title="YouTube video tags in 2026: still worth it, if done right">
-        <p>
-          Video tags are hidden metadata — viewers never see them, but the algorithm uses them to understand what your video is about and
-          which similar videos to recommend alongside it. They're not the SEO silver bullet they were in 2015, but they're a meaningful
-          secondary signal — especially for ambiguous topics.
-        </p>
-        <h3>Lead with your exact title keyword</h3>
-        <p>
-          YouTube weights the first 2-3 tags more heavily. They should mirror the main keyword phrase from your title <em>exactly</em>.
-          After that, branch out into related variations.
-        </p>
-        <h3>The 500-character limit is your budget</h3>
-        <p>
-          You get 500 characters total (including commas). That's roughly 25-40 tags. Don't waste characters on filler — every tag should
-          be a phrase a real person might search.
-        </p>
-        <h3>Tags vs hashtags — use both</h3>
-        <p>
-          Hashtags are public and appear in your title/description. Video tags are hidden. They serve different purposes and don't overlap.
-          Generate hashtags with our <a href="/tools/hashtag-generator">Hashtag Generator</a> and tags here.
-        </p>
+      <SeoContent badge={tc.seoContent.badge} title={tc.seoContent.title}>
+        <p>{tc.seoContent.p1}</p>
+        <h3>{tc.seoContent.h3_1}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_1 }} />
+        <h3>{tc.seoContent.h3_2}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_2 }} />
+        <h3>{tc.seoContent.h3_3}</h3>
+        <div dangerouslySetInnerHTML={{ __html: tc.seoContent.p2_3 }} />
       </SeoContent>
 
-      <FaqAccordion faqs={faqs} />
+      <FaqAccordion faqs={tc.faqs} />
 
       <CrossCTA
-        title="Now generate public hashtags too"
-        desc="Video tags are hidden metadata. Hashtags appear in your title and description. You need both."
-        primary={{ label: "Generate Hashtags", href: "/tools/hashtag-generator", icon: Hash }}
-        secondary={{ label: "Write Viral Titles", href: "/tools/viral-title-generator", icon: TrendingUp }}
+        title={tc.crossCta.title}
+        desc={tc.crossCta.desc}
+        primary={{ label: tc.crossCta.btn1, href: "/tools/hashtag-generator", icon: Hash }}
+        secondary={{ label: tc.crossCta.btn2, href: "/tools/viral-title-generator", icon: TrendingUp }}
       />
-          <ToolSeoJsonLd
-        name="YouTube Tag Generator"
-        description={"Generate SEO-optimized YouTube tags from any topic — exact, broad, and long-tail, within the 500-char limit."}
+      <ToolSeoJsonLd
+        name={tc.title}
+        description={tc.seoJsonDesc}
         slug="tag-generator"
-        faqs={faqs}
+        faqs={tc.faqs}
         breadcrumb={[
           { name: "Home", slug: "/" },
           { name: "Tools", slug: "/tools" },
-          { name: "YouTube Tag Generator", slug: "/tools/tag-generator" },
+          { name: tc.title, slug: "/tools/tag-generator" },
         ]}
       />
-</ToolLayout>
+    </ToolLayout>
   );
 }
