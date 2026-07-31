@@ -17,6 +17,8 @@ export type Messages = {
     allTools: string;
     closeMenu: string;
     toggleMenu: string;
+    pro: string;
+    plan: string;
   };
   footer: {
     newsletterBadge: string;
@@ -74,42 +76,6 @@ export type Messages = {
     exploreAll: string;
     tools: Record<string, { title: string; description: string }>;
   };
-  pricing: {
-    badge: string;
-    title: string;
-    subtitle: string;
-    monthly: string;
-    yearly: string;
-    yearlySave: string;
-    mostPopular: string;
-    perMonth: string;
-    perMonthBilledYearly: string;
-    savePerYear: string;
-    freeForever: string;
-    custom: string;
-    getStarted: string;
-    startTrial: string;
-    contactSales: string;
-    plans: Record<string, { name: string; tagline: string; features: string[]; cta: string }>;
-    compareTitle: string;
-    compareSubtitle: string;
-    featureCol: string;
-    testimonialsBadge: string;
-    testimonialsTitle: string;
-    testimonialsSubtitle: string;
-    faqBadge: string;
-    faqTitle: string;
-    faqSubtitle: string;
-    faqs: { q: string; a: string }[];
-    guarantees: { title: string; desc: string }[];
-    finalCtaBadge: string;
-    finalCtaTitle: string;
-    finalCtaSubtitle: string;
-    startFreeTrial: string;
-    tryFreeTools: string;
-    fineprint: string;
-    compareRows: { label: string; values: (string | boolean)[] }[];
-  };
   faq: {
     title: string;
     subtitle: string;
@@ -157,6 +123,175 @@ export type Messages = {
     backToHome: string;
     loading: string;
     lastUpdated: string;
+  };
+  demo: {
+    tabs: {
+      strategy: string;
+      seo: string;
+      script: string;
+      analytics: string;
+      monetization: string;
+    };
+    subFeatures: string[];
+    strategy: {
+      pipelineTitle: string;
+      steps: { title: string }[];
+    };
+    seo: {
+      pipelineTitle: string;
+      steps: { title: string }[];
+    };
+    script: {
+      pipelineTitle: string;
+      steps: { title: string }[];
+    };
+    analytics: {
+      pipelineTitle: string;
+      steps: { title: string }[];
+    };
+    monetization: {
+      pipelineTitle: string;
+      steps: { title: string }[];
+    };
+    description: string;
+    exploreButton: string;
+  };
+  aiFeatures: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    features: {
+      title: string;
+      description: string;
+      icon: any;
+      color: string;
+      bg: string;
+      border: string;
+      stat: string;
+      statLabel: string;
+    }[];
+    metrics: {
+      label: string;
+      value: string;
+      icon: any;
+      color: string;
+      delay: number;
+      top?: string;
+      bottom?: string;
+      side: string;
+      y: [number, number];
+    }[];
+    exploreButton: string;
+  };
+  testimonials: {
+    stats: { value: string; label: string }[];
+    achievementsLabel: string;
+    title: string;
+    subtitle: string;
+    builtForCreators: string;
+    empoweringTitle: string;
+    empoweringDesc: string;
+    platforms: string[];
+    highlightStat: string;
+    highlightDesc: string;
+  };
+  pricing: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    monthly: string;
+    yearly: string;
+    yearlySave: string;
+    mostPopular: string;
+    perMonth: string;
+    perMonthBilledYearly: string;
+    savePerYear: string;
+    freeForever: string;
+    custom: string;
+    getStarted: string;
+    startTrial: string;
+    startFreeTrial: string;
+    tryFreeTools: string;
+    fineprint: string;
+    contactSales: string;
+    plans: {
+      starter: { name: string; tagline: string; description?: string; features: string[]; cta: string };
+      pro: { name: string; tagline: string; description?: string; features: string[]; cta: string };
+      enterprise: { name: string; tagline: string; description?: string; features: string[]; cta: string };
+      free: { name: string; tagline: string; description?: string; features: string[]; cta: string };
+    };
+    compareRows: {
+      label: string;
+      values: (string | boolean | number)[];
+    }[];
+    compareTitle: string;
+    compareSubtitle: string;
+    featureCol: string;
+    testimonialsBadge: string;
+    testimonialsTitle: string;
+    testimonialsSubtitle: string;
+    faqBadge: string;
+    faqTitle: string;
+    faqSubtitle: string;
+    faqs: { q: string; a: string }[];
+    finalCtaBadge: string;
+    finalCtaTitle: string;
+    finalCtaSubtitle: string;
+    finalCtaDesc: string;
+    finalCtaBtn: string;
+    guarantees: { title: string; desc: string }[];
+  };
+  monetizationChecker: {
+    placeholder: string;
+    label: string;
+    checkButton: string;
+    analyzingButton: string;
+    suggestionsPrefix: string;
+    errorTitle: string;
+    retryButton: string;
+    result: {
+      monthly: string;
+      rpm: string;
+      sponsorPerYear: string;
+      growthScore: string;
+      notMonetized: string;
+      estimateLabel: string;
+    };
+  };
+  pageRating: {
+    aiChat: {
+      welcomeMessage: string;
+      inputPlaceholder: string;
+      sendAriaLabel: string;
+      closeAriaLabel: string;
+      errorPrefix: string;
+      loadingText: string;
+    };
+    review: {
+      fabLabel: string;
+      closeLabel: string;
+      chatOption: string;
+      reviewOption: string;
+      editOption: string;
+      ratingLabels: string[];
+      emptyState: string;
+      submitButton: string;
+      pickRating: string;
+      submitting: string;
+      thanksTitle: string;
+      thanksDesc: string;
+      quickTags: string[];
+      tagPrompt: string;
+      commentPrompt: string;
+      commentPlaceholder: string;
+      alreadyRated: string;
+      notRated: string;
+    };
+  };
+  languageSelect: {
+    placeholder: string;
+    noMatch: string;
+    label: string;
   };
   auth: {
     signInTitle: string;
@@ -417,6 +552,13 @@ export type Messages = {
       resultsAdjust: string;
       resultsViewFull: string;
       resultsHideDetails: string;
+      resultsSeoScoreLabel: string;
+      resultsClickabilityLabel: string;
+      resultsStrengthsLabel: string;
+      resultsWeaknessesLabel: string;
+      resultsKeywordsLabel: string;
+      stepPrefix: string;
+      streamingTitle: string;
       generator: string;
       loadingScreen: {
         working: string;
