@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
+    <html suppressHydrationWarning>
       <head>
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
       </head>

@@ -4,61 +4,51 @@ import React from "react";
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
 import { Button } from "../ui/button";
-
-const plans = [
-  {
-    name: "Starter",
-    price: "Free",
-    description: "Perfect for new creators getting started.",
-    features: [
-      "Basic SEO Analyzer",
-      "5 AI Title Generations / mo",
-      "Tag Generator",
-      "Thumbnail Downloader",
-      "Standard Support",
-    ],
-  },
-  {
-    name: "Pro",
-    price: "$29",
-    period: "/mo",
-    description: "Everything you need to scale your channel.",
-    popular: true,
-    features: [
-      "Everything in Starter",
-      "Unlimited AI Title Generations",
-      "AI Script Writer",
-      "Monetization Checker",
-      "Advanced Analytics Dashboard",
-      "Priority Support",
-    ],
-  },
-  {
-    name: "Enterprise",
-    price: "$99",
-    period: "/mo",
-    description: "For agencies and large media teams.",
-    features: [
-      "Everything in Pro",
-      "Multiple Channel Management",
-      "Team Collaboration",
-      "API Access",
-      "Custom AI Model Training",
-      "24/7 Dedicated Manager",
-    ],
-  },
-];
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 export function Pricing() {
+  const { t } = useTranslations();
+  const pricingTranslations = t("pricing");
+
+  const plans = [
+    {
+      name: pricingTranslations.plans.free.name,
+      price: pricingTranslations.freeForever,
+      period: pricingTranslations.perMonth,
+      description: pricingTranslations.plans.free.tagline,
+      features: pricingTranslations.plans.free.features,
+      cta: pricingTranslations.plans.free.cta,
+      popular: false,
+    },
+    {
+      name: pricingTranslations.plans.pro.name,
+      price: "$29",
+      period: pricingTranslations.perMonth,
+      description: pricingTranslations.plans.pro.tagline,
+      features: pricingTranslations.plans.pro.features,
+      cta: pricingTranslations.plans.pro.cta,
+      popular: true,
+    },
+    {
+      name: pricingTranslations.plans.enterprise.name,
+      price: "$99",
+      period: pricingTranslations.perMonth,
+      description: pricingTranslations.plans.enterprise.tagline,
+      features: pricingTranslations.plans.enterprise.features,
+      cta: pricingTranslations.plans.enterprise.cta,
+      popular: false,
+    },
+  ];
+
   return (
     <section id="pricing" className="py-16 sm:py-20 md:py-24 bg-white relative">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 md:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-black mb-4 sm:mb-6">
-            Simple, transparent pricing
+            {pricingTranslations.title}
           </h2>
           <p className="text-base sm:text-lg text-neutral-500">
-            Start for free, upgrade when you need more power. No hidden fees.
+            {pricingTranslations.subtitle}
           </p>
         </div>
 
@@ -78,7 +68,7 @@ export function Pricing() {
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-red-600 text-xs font-bold text-white shadow-md uppercase tracking-wider">
-                  Most Popular
+                  {pricingTranslations.mostPopular}
                 </div>
               )}
               
@@ -110,7 +100,7 @@ export function Pricing() {
                   : "border-neutral-200 text-black hover:bg-red-50 hover:text-red-600"
                 }`}
               >
-                {plan.price === "Free" ? "Get Started" : "Start 14-Day Trial"}
+                {plan.cta}
               </Button>
             </motion.div>
           ))}

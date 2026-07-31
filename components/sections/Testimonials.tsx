@@ -3,8 +3,12 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Play } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 export function Testimonials() {
+  const { t } = useTranslations();
+  const testimonialsTranslations = t("testimonials");
+
   return (
     <section id="testimonials" className="py-16 sm:py-20 md:py-24 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
@@ -15,28 +19,22 @@ export function Testimonials() {
           {/* Sideways Text */}
           <div className="hidden lg:block w-12 border-l border-neutral-200 relative">
             <div className="absolute top-0 -left-6 transform -rotate-90 origin-top-left text-neutral-400 text-xs tracking-[0.2em] font-medium whitespace-nowrap">
-              OUR ACHIEVEMENTS
+              {testimonialsTranslations.achievementsLabel}
             </div>
           </div>
           
           <div className="flex-1">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 sm:mb-12 md:mb-16 gap-6 md:gap-8">
               <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-black max-w-xl">
-                Why Choose YTForge for <br />
-                your channel
+                {testimonialsTranslations.title}
               </h2>
               <p className="text-neutral-500 text-sm max-w-sm">
-                We've won many awards for our works. Our AI models are trained on the top 1% of performing videos.
+                {testimonialsTranslations.subtitle}
               </p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 border-b border-neutral-200 pb-10 sm:pb-14 md:pb-16">
-              {[
-                { value: "+10K", label: "Creators" },
-                { value: "+50M", label: "Extra Views" },
-                { value: "12", label: "AI Models" },
-                { value: "$2M+", label: "Creator Revenue" }
-              ].map((stat, i) => (
+              {testimonialsTranslations.stats.map((stat, i) => (
                 <motion.div 
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -99,22 +97,20 @@ export function Testimonials() {
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-red-600" />
                 </span>
                 <span className="text-xs font-bold uppercase tracking-[0.18em] text-red-600">
-                  Built for creators
+                  {testimonialsTranslations.builtForCreators}
                 </span>
               </div>
 
               <h3 className="text-2xl sm:text-3xl md:text-5xl font-bold text-black mb-4 sm:mb-6 leading-tight tracking-tight">
-                We're empowering <br />
-                <span className="text-red-600">the next generation of</span> <br />
-                Creators.
+                {testimonialsTranslations.empoweringTitle}
               </h3>
               <p className="text-neutral-600 text-base sm:text-lg mb-8 sm:mb-10 md:mb-12 max-w-md leading-relaxed">
-                YTForge was founded by engineers, creators and product managers from leading tech companies to level the playing field.
+                {testimonialsTranslations.empoweringDesc}
               </p>
 
               {/* Platform logos */}
               <div className="flex flex-wrap items-center gap-3">
-                {["YouTube", "Twitch", "TikTok", "Instagram"].map((platform) => (
+                {testimonialsTranslations.platforms.map((platform) => (
                   <div
                     key={platform}
                     className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-neutral-200 text-sm sm:text-base font-bold text-black shadow-sm hover:border-red-600/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
@@ -156,10 +152,10 @@ export function Testimonials() {
             {/* Highlight stat */}
             <div className="relative z-10">
               <div className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-2 font-mono tracking-tighter">
-                98<span className="text-red-600">%</span>
+                {testimonialsTranslations.highlightStat}
               </div>
               <p className="text-neutral-400 text-sm sm:text-base max-w-[16rem] leading-relaxed">
-                of creators saw faster channel growth within their first month using YTForge.
+                {testimonialsTranslations.highlightDesc}
               </p>
             </div>
           </div>

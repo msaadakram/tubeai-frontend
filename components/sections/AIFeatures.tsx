@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Zap, Target, Cpu, MessageSquare, TrendingUp, BarChart3, Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const aiFeatures = [
   {
@@ -58,6 +59,8 @@ const metrics = [
 const ORB_COUNT = 6;
 
 export function AIFeatures() {
+  const { t } = useTranslations();
+  const aiFeaturesTranslations = t("aiFeatures");
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
@@ -73,7 +76,7 @@ export function AIFeatures() {
           className="flex justify-center mb-10 sm:mb-14"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black text-white text-[11px] sm:text-xs font-black uppercase tracking-widest border-2 border-black shadow-[3px_3px_0px_0px_rgba(220,38,38,1)]">
-            <Sparkles className="w-3 h-3 text-red-500" /> Real AI Intelligence
+            <Sparkles className="w-3 h-3 text-red-500" /> {aiFeaturesTranslations.badge}
           </span>
         </motion.div>
 
@@ -88,17 +91,15 @@ export function AIFeatures() {
               transition={{ duration: 0.55 }}
             >
               <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-black mb-4 sm:mb-5 leading-[1.08]">
-                Not just another wrapper.{" "}
-                <br className="hidden sm:block" />
-                <span className="text-neutral-400">Real AI intelligence.</span>
+                {aiFeaturesTranslations.title}
               </h2>
               <p className="text-base sm:text-lg text-neutral-600 mb-8 sm:mb-10 max-w-xl leading-relaxed">
-                We didn't just plug into an API. We trained our own models specifically on YouTube metadata, retention graphs, and click-through rates from 4.2 million viral videos.
+                {aiFeaturesTranslations.subtitle}
               </p>
             </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-8 sm:mb-10">
-              {aiFeatures.map((feature, i) => (
+              {aiFeaturesTranslations.features.map((feature, i) => (
                 <motion.div
                   key={feature.title}
                   initial={{ opacity: 0, y: 24 }}
@@ -157,7 +158,7 @@ export function AIFeatures() {
                 href="/features"
                 className="inline-flex items-center gap-2 px-5 py-3 bg-black text-white text-sm font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] hover:shadow-[6px_6px_0px_0px_rgba(220,38,38,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all uppercase tracking-wider"
               >
-                <Sparkles className="w-4 h-4 text-red-500" /> Explore all 14 tools
+                <Sparkles className="w-4 h-4 text-red-500" /> {aiFeaturesTranslations.exploreButton}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </motion.div>
@@ -230,7 +231,7 @@ export function AIFeatures() {
               </motion.div>
 
               {/* Floating metric cards */}
-              {metrics.map((m, mi) => (
+              {aiFeaturesTranslations.metrics.map((m, mi) => (
                 <motion.div
                   key={m.label}
                   animate={{ y: [m.y[0], m.y[1], m.y[0]] }}

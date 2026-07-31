@@ -175,7 +175,7 @@ export function Navbar() {
                                 <div className="font-black text-sm text-black truncate">{tr.title}</div>
                                 {tool.upgrade && (
                                   <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[9px] font-black rounded-md border-2 border-black tracking-wide shrink-0">
-                                    <Crown className="w-2.5 h-2.5" /> PRO
+                                    <Crown className="w-2.5 h-2.5" /> {t("nav.pro")}
                                   </span>
                                 )}
                               </div>
@@ -237,7 +237,7 @@ export function Navbar() {
                             </div>
                           </div>
                           <div className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border-2 border-black text-white", planColor)}>
-                            <Crown className="w-2.5 h-2.5" /> {planLabel} Plan
+                            <Crown className="w-2.5 h-2.5" /> {planLabel} {t("nav.plan")}
                           </div>
                         </div>
                         <div className="p-2">
@@ -362,7 +362,7 @@ export function Navbar() {
                                   <div className="font-black text-sm text-black truncate">{tr.title}</div>
                                   {tool.upgrade && (
                                     <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-[9px] font-black rounded-md border-2 border-black shrink-0">
-                                      <Crown className="w-2.5 h-2.5" /> PRO
+                                      <Crown className="w-2.5 h-2.5" /> {t("nav.pro")}
                                     </span>
                                   )}
                                 </div>
@@ -399,7 +399,7 @@ export function Navbar() {
                         <div className="text-[10px] text-neutral-500 font-bold truncate">{user.email}</div>
                       </div>
                       <div className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border-2 border-black text-white shrink-0", planColor)}>
-                        <Crown className="w-2.5 h-2.5" /> {planLabel}
+                        <Crown className="w-2.5 h-2.5" /> {planLabel} {t("nav.plan")}
                       </div>
                     </div>
                     <Link href={getLocalePath(locale, "/dashboard")} className="w-full inline-flex items-center justify-center gap-2 py-3 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase tracking-wider">

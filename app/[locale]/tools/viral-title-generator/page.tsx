@@ -23,6 +23,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+import { getLocalePath } from "@/lib/i18n/utils";
 import {
   ToolLayout,
   ToolCard,
@@ -427,7 +428,7 @@ function GenerationLoader({
 }
 
 export default function ViralTitleGeneratorPage() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const c = t("toolPages.viralTitleGenerator");
   // @ts-ignore
   const toolContent: any = c || {};
@@ -556,7 +557,7 @@ export default function ViralTitleGeneratorPage() {
       <ToolCard className="mb-8 sm:mb-10">
         <div className="flex items-center gap-2 mb-4 sm:mb-6">
           <Sparkles className="w-5 h-5 text-red-600" />
-          <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">{toolContent.generator || "Generator"}</h2>
+          <h2 className="text-base sm:text-lg font-black uppercase tracking-wider">{toolContent.generator}</h2>
         </div>
 
         {/* Keyword */}
@@ -650,7 +651,7 @@ export default function ViralTitleGeneratorPage() {
         open={loading || !!streamText}
         text={streamText}
         onCancel={loading ? cancel : undefined}
-        title={toolContent.streamingTitle || "Streaming titles"}
+        title={toolContent.streamingTitle}
       />
 
       {/* Loading State */}
@@ -822,8 +823,8 @@ export default function ViralTitleGeneratorPage() {
                       {/* Scores */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-5">
                         {[
-                          { label: toolContent.resultsSeoScoreLabel || "SEO Score", value: t.seoScore, icon: Target },
-                          { label: toolContent.resultsClickabilityLabel || "Clickability", value: t.clickability, icon: TrendingUp },
+                          { label: toolContent.resultsSeoScoreLabel, value: t.seoScore, icon: Target },
+                          { label: toolContent.resultsClickabilityLabel, value: t.clickability, icon: TrendingUp },
                         ].map((m) => {
                           const Icon = m.icon;
                           const color =
@@ -868,7 +869,7 @@ export default function ViralTitleGeneratorPage() {
                           <Sparkles className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
 <p className="text-xs text-neutral-700 leading-relaxed">
                               <strong className="text-black font-black uppercase tracking-wider text-[10px]">
-                                {toolContent.resultsWhyRank || "Why this rank:"}
+                                {toolContent.resultsWhyRank}
                               </strong>{" "}
                               <span className="block mt-0.5">{t.explanation}</span>
                             </p>
@@ -884,7 +885,7 @@ export default function ViralTitleGeneratorPage() {
                                 <CheckCircle2 className="w-3 h-3 text-white" />
                               </div>
                               <span className="text-[10px] font-black uppercase tracking-wider text-green-800">
-                                {toolContent.resultsStrengthsLabel || "Strengths"}
+                                {toolContent.resultsStrengthsLabel}
                               </span>
                             </div>
                             <div className="flex flex-wrap gap-1.5">
@@ -906,7 +907,7 @@ export default function ViralTitleGeneratorPage() {
                                 <XCircle className="w-3 h-3 text-white" />
                               </div>
                               <span className="text-[10px] font-black uppercase tracking-wider text-red-800">
-                                {toolContent.resultsWeaknessesLabel || "Weaknesses"}
+                                {toolContent.resultsWeaknessesLabel}
                               </span>
                             </div>
                             <div className="flex flex-wrap gap-1.5">
@@ -931,7 +932,7 @@ export default function ViralTitleGeneratorPage() {
                               <Hash className="w-3 h-3 text-red-500" />
                             </div>
                             <span className="text-[10px] font-black uppercase tracking-wider text-black">
-                              {toolContent.resultsKeywordsLabel || "Key SEO Keywords"}
+                              {toolContent.resultsKeywordsLabel}
                             </span>
                           </div>
                           <div className="flex flex-wrap gap-1.5">
@@ -1035,7 +1036,7 @@ export default function ViralTitleGeneratorPage() {
                 {step.n}
               </div>
               <div className="relative">
-                <div className="text-[10px] font-black text-red-500 tracking-widest mb-2">{toolContent.stepPrefix || "STEP "} {step.n}</div>
+                <div className="text-[10px] font-black text-red-500 tracking-widest mb-2">{toolContent.stepPrefix}{step.n}</div>
                 <h3 className="font-black text-base mb-2">{step.t}</h3>
                 <p className="text-xs text-neutral-300 leading-relaxed">{step.d}</p>
               </div>
@@ -1175,13 +1176,13 @@ export default function ViralTitleGeneratorPage() {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
-            href="/tools/ai-thumbnail-generator"
+            href={getLocalePath(locale, "/tools/ai-thumbnail-generator")}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-red-600 font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 transition-transform text-sm uppercase tracking-wider"
           >
             <Sparkles className="w-4 h-4" /> {toolContent.ctaBtn1}
           </a>
           <a
-            href="/tools/ai-script-writer"
+            href={getLocalePath(locale, "/tools/ai-script-writer")}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-black text-white font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(255,255,255,0.3)] hover:-translate-y-0.5 transition-transform text-sm uppercase tracking-wider"
           >
             <Type className="w-4 h-4" /> {toolContent.ctaBtn2}
@@ -1189,14 +1190,14 @@ export default function ViralTitleGeneratorPage() {
         </div>
       </motion.div>
       <ToolSeoJsonLd
-        name={toolContent.title || "Viral Title Generator"}
+        name={toolContent.title}
         description={toolContent.seoJsonDesc}
         slug="viral-title-generator"
         faqs={toolContent.faqs || []}
         breadcrumb={[
-          { name: "Home", slug: "/" },
-          { name: "Tools", slug: "/tools" },
-          { name: toolContent.title || "Viral Title Generator", slug: "/tools/viral-title-generator" },
+          { name: t("common.backToHome"), slug: getLocalePath(locale, "/") },
+          { name: t("nav.allTools"), slug: getLocalePath(locale, "/tools") },
+          { name: toolContent.title, slug: getLocalePath(locale, "/tools/viral-title-generator") },
         ]}
       />
     </ToolLayout>

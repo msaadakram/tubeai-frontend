@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Star, X, MessageSquare, Check, Sparkles, ThumbsUp, Loader2, AlertTriangle, MessageCircle, Send, Bot, Plus } from "lucide-react";
 import { ChatMarkdown } from "./ChatMarkdown";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const STORAGE_KEY = "ytforge_page_ratings_v1";
 const BASE_URL = "https://api.ytforge.app";
@@ -37,6 +38,8 @@ const QUICK_TAGS = [
 ];
 
 export function PageRating() {
+  const { t } = useTranslations();
+  const pageRatingTranslations = t("pageRating");
   const pathname = usePathname();
   const pageKey = pathname;
 
@@ -50,7 +53,7 @@ export function PageRating() {
     {
       id: "welcome",
       role: "bot",
-      text: "Hi! I'm the YTForge assistant 👋 Ask me anything about growing your YouTube channel, our tools, or how to get more views.",
+      text: pageRatingTranslations.aiChat.welcomeMessage,
     },
   ]);
   const [chatInput, setChatInput] = useState("");

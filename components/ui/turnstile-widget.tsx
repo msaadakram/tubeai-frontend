@@ -52,19 +52,43 @@ interface TurnstileWidgetProps {
 const SCRIPT_ID = 'cf-turnstile-script';
 
 function loadScript(): Promise<void> {
-  return new Promise((resolve) => {
-    if (window._turnstileLoaded || document.getElementById(SCRIPT_ID)) {
-      // Script already loading or loaded—wait for it.
-      if (window.turnstile) { resolve(); return; }
-      const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
-      if (existing) { existing.addEventListener('load', () => resolve()); return; }
+  return new Promise((resolve, reject) => {
+    if (window.turnstile) {
+      resolve();
+      return;
+    }
+    const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
+    if (existing) {
+      if (existing.dataset.loaded === 'true') {
+        resolve();
+        return;
+      }
+      const onLoaded = () => {
+        existing.removeEventListener('load', onLoaded);
+        existing.removeEventListener('error', onError);
+        resolve();
+      };
+      const onError = () => {
+        existing.removeEventListener('load', onLoaded);
+        existing.removeEventListener('error', onError);
+        reject(new Error('Turnstile script failed to load'));
+      };
+      existing.addEventListener('load', onLoaded);
+      existing.addEventListener('error', onError);
+      return;
     }
     const script = document.createElement('script');
     script.id = SCRIPT_ID;
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
     script.async = true;
     script.defer = true;
-    script.onload = () => { window._turnstileLoaded = true; resolve(); };
+    script.onload = () => {
+      script.dataset.loaded = 'true';
+      resolve();
+    };
+    script.onerror = () => {
+      reject(new Error('Turnstile script failed to load'));
+    };
     document.head.appendChild(script);
   });
 }
@@ -73,6 +97,11 @@ const TurnstileWidget = forwardRef<TurnstileHandle, TurnstileWidgetProps>(
   ({ siteKey, onToken, onExpire, theme = 'light', size = 'normal', className }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const widgetIdRef = useRef<string | null>(null);
+    const onTokenRef = useRef(onToken);
+    const onExpireRef = useRef(onExpire);
+
+    onTokenRef.current = onToken;
+    onExpireRef.current = onExpire;
 
     useImperativeHandle(ref, () => ({
       reset: () => {
@@ -97,9 +126,15 @@ const TurnstileWidget = forwardRef<TurnstileHandle, TurnstileWidgetProps>(
           sitekey: siteKey,
           theme,
           size,
-          callback: (token: string) => onToken(token),
-          'expired-callback': () => { onExpire?.(); onToken(''); },
-          'error-callback': () => { onExpire?.(); onToken(''); },
+          callback: (token: string) => onTokenRef.current(token),
+          'expired-callback': () => {
+            onExpireRef.current?.();
+            onTokenRef.current('');
+          },
+          'error-callback': () => {
+            onExpireRef.current?.();
+            onTokenRef.current('');
+          },
         });
       });
 
@@ -110,8 +145,7 @@ const TurnstileWidget = forwardRef<TurnstileHandle, TurnstileWidgetProps>(
           widgetIdRef.current = null;
         }
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [siteKey]);
+    }, [siteKey, theme, size]);
 
     return <div ref={containerRef} className={className} />;
   }

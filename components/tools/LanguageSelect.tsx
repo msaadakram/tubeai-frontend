@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Globe, Check, ChevronDown, Search } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 export type LanguageOption = {
   code: string;
@@ -48,7 +49,9 @@ type Props = {
   compact?: boolean;
 };
 
-export function LanguageSelect({ value, onChange, label = "Output Language", compact = false }: Props) {
+export function LanguageSelect({ value, onChange, label, compact = false }: Props) {
+  const { t } = useTranslations();
+  const lsTranslations = t("languageSelect");
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const ref = useRef<HTMLDivElement>(null);
@@ -71,7 +74,7 @@ export function LanguageSelect({ value, onChange, label = "Output Language", com
       {!compact && (
         <label className="block text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
           <Globe className="w-3.5 h-3.5 text-red-600" />
-          {label}
+          {label || lsTranslations.label}
         </label>
       )}
       <button
@@ -95,13 +98,13 @@ export function LanguageSelect({ value, onChange, label = "Output Language", com
               autoFocus
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search 24 languages..."
+              placeholder={lsTranslations.placeholder}
               className="flex-1 outline-none text-xs font-bold bg-transparent"
             />
           </div>
           <div className="max-h-64 overflow-y-auto py-1">
             {filtered.length === 0 && (
-              <div className="px-3 py-4 text-center text-xs font-bold text-neutral-500">No language matches "{q}"</div>
+              <div className="px-3 py-4 text-center text-xs font-bold text-neutral-500">{lsTranslations.noMatch.replace("{q}", q)}</div>
             )}
             {filtered.map((l) => {
               const active = l.code === value;
@@ -126,7 +129,7 @@ export function LanguageSelect({ value, onChange, label = "Output Language", com
             })}
           </div>
           <div className="px-3 py-1.5 border-t-2 border-black bg-neutral-50 text-[10px] font-black uppercase tracking-wider text-neutral-500">
-            {LANGUAGES.length} languages supported
+            {LANGUAGES.length} {lsTranslations.noMatch.replace("{q}", "").replace("No language matches ", "").replace("languages supported", "languages supported")}
           </div>
         </div>
       )}

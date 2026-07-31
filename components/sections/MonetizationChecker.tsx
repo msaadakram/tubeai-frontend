@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Youtube, Search, DollarSign, TrendingUp, Users, Briefcase, Loader2, AlertCircle } from "lucide-react";
 import { friendlyApiError } from "@/lib/apiError";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
@@ -38,6 +39,8 @@ function fmtHandle(r: Result): string {
 }
 
 export function MonetizationChecker() {
+  const { t } = useTranslations();
+  const mcTranslations = t("monetizationChecker");
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
@@ -84,7 +87,7 @@ export function MonetizationChecker() {
     >
       <div className="flex items-center gap-2 mb-3 text-white/70 text-xs font-bold uppercase tracking-wider">
         <DollarSign className="w-3.5 h-3.5 text-red-500" />
-        Free Tool · Channel Earnings Estimator
+        {mcTranslations.label}
       </div>
 
       <form
@@ -98,7 +101,7 @@ export function MonetizationChecker() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Paste channel URL or @handle..."
+          placeholder={mcTranslations.placeholder}
           className="flex-1 py-3 sm:py-4 px-2 bg-transparent text-black placeholder:text-neutral-400 outline-none text-sm md:text-base font-medium min-w-0"
         />
         <button
@@ -109,12 +112,12 @@ export function MonetizationChecker() {
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span className="hidden md:inline">Analyzing</span>
+              <span className="hidden md:inline">{mcTranslations.analyzingButton}</span>
             </>
           ) : (
             <>
               <Search className="w-4 h-4" />
-              <span className="hidden md:inline">Check Earnings</span>
+              <span className="hidden md:inline">{mcTranslations.checkButton}</span>
             </>
           )}
         </button>
@@ -123,7 +126,7 @@ export function MonetizationChecker() {
       {/* Suggestions */}
       {!result && !loading && !error && (
         <div className="flex flex-wrap items-center gap-2 mt-3">
-          <span className="text-white/50 text-xs">Try:</span>
+          <span className="text-white/50 text-xs">{mcTranslations.suggestionsPrefix}</span>
           {["@MrBeast", "@MKBHD", "@veritasium"].map((s) => (
             <button
               key={s}
@@ -180,36 +183,36 @@ export function MonetizationChecker() {
                 </div>
               </div>
               <div className="px-2 py-0.5 bg-red-600 rounded-full text-[10px] font-black tracking-wider">
-                ESTIMATE
+                {mcTranslations.result.estimateLabel}
               </div>
             </div>
 
             <div className="p-3 sm:p-5 grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
               <div className="border-2 border-black rounded-xl p-3 bg-red-600 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <DollarSign className="w-4 h-4 mb-1" />
-                <div className="text-[9px] font-bold uppercase tracking-wider opacity-90">Monthly</div>
+                <div className="text-[9px] font-bold uppercase tracking-wider opacity-90">{mcTranslations.result.monthly}</div>
                 <div className="text-base font-black tabular-nums leading-tight">
                   {hasEarnings ? fmtMoney(monthlyMin) : "—"}
                 </div>
-                <div className="text-[10px] font-bold opacity-80">{hasEarnings ? `to ${fmtMoney(monthlyMax)}` : "not monetized"}</div>
+                <div className="text-[10px] font-bold opacity-80">{hasEarnings ? `to ${fmtMoney(monthlyMax)}` : mcTranslations.result.notMonetized}</div>
               </div>
 
               <div className="border-2 border-black rounded-xl p-3 bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <TrendingUp className="w-4 h-4 mb-1 text-red-600" />
-                <div className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">Avg RPM</div>
+                <div className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">{mcTranslations.result.rpm}</div>
                 <div className="text-base font-black tabular-nums">{rpm ? `$${rpm.toFixed(2)}` : "—"}</div>
                 <div className="text-[10px] font-bold text-neutral-500">per 1K views</div>
               </div>
 
               <div className="border-2 border-black rounded-xl p-3 bg-white text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <Briefcase className="w-4 h-4 mb-1 text-red-600" />
-                <div className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">Sponsor /yr</div>
+                <div className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">{mcTranslations.result.sponsorPerYear}</div>
                 <div className="text-base font-black tabular-nums">{hasEarnings ? sponsorValue : "—"}</div>
                 <div className="text-[10px] font-bold text-neutral-500">est. value</div>
               </div>
 
               <div className="border-2 border-black rounded-xl p-3 bg-black text-white shadow-[3px_3px_0px_0px_rgba(220,38,38,1)]">
-                <div className="text-[9px] font-bold uppercase tracking-wider text-neutral-400 mb-1">Growth Score</div>
+                <div className="text-[9px] font-bold uppercase tracking-wider text-neutral-400 mb-1">{mcTranslations.result.growthScore}</div>
                 <div className="text-base font-black tabular-nums">{growthScore}/100</div>
                 <div className="h-1 bg-neutral-700 rounded-full mt-1.5 overflow-hidden">
                   <motion.div

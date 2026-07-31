@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm";
 import { Check, Copy } from "lucide-react";
 import { copyToClipboard } from "@/lib/clipboard";
 
-function CodeBlock({ children }: { children?: React.ReactNode }) {
+function CodeBlock({ children, className }: { children?: React.ReactNode; className?: string }) {
   const [copied, setCopied] = useState(false);
   const onCopy = useCallback(() => {
     const text = extractText(children);
@@ -167,7 +167,13 @@ const components: Components = {
       </code>
     );
   },
-  pre: ({ children }) => <>{children}</>,
+  pre: ({ children }) => {
+    if (React.isValidElement(children) && children.type === 'code') {
+      const codeProps = children.props as { className?: string; children?: React.ReactNode };
+      return <CodeBlock className={codeProps.className}>{codeProps.children}</CodeBlock>;
+    }
+    return <>{children}</>;
+  },
   table: ({ children }) => (
     <div className="my-2 overflow-x-auto rounded-lg border-2 border-black">
       <table className="w-full text-[12px] border-collapse">{children}</table>

@@ -20,13 +20,14 @@ import { SeoDemo } from "./demo-animations/SeoDemo";
 import { StrategyDemo } from "./demo-animations/StrategyDemo";
 import { AnalyticsDemo } from "./demo-animations/AnalyticsDemo";
 import { MonetizationDemo } from "./demo-animations/MonetizationDemo";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const tabs = [
-  { id: "strategy", label: "Content Strategy", icon: Sparkles },
-  { id: "seo", label: "SEO & Ranking", icon: Search },
-  { id: "script", label: "Script Writing", icon: PenTool },
-  { id: "analytics", label: "Analytics", icon: BarChart },
-  { id: "monetization", label: "Monetization", icon: DollarSign },
+  { id: "strategy", icon: Sparkles },
+  { id: "seo", icon: Search },
+  { id: "script", icon: PenTool },
+  { id: "analytics", icon: BarChart },
+  { id: "monetization", icon: DollarSign },
 ];
 
 const subFeatures = [
@@ -89,6 +90,7 @@ const tabPipelines: Record<string, { title: string, steps: Array<{ title: string
 };
 
 export function Demo() {
+  const { t } = useTranslations();
   const [activeTab, setActiveTab] = useState("strategy");
   const [creationStep, setCreationStep] = useState(0);
 
@@ -99,6 +101,9 @@ export function Demo() {
     return () => clearInterval(interval);
   }, [activeTab]);
 
+  const demoTranslations = t("demo");
+  const tabLabels = demoTranslations.tabs;
+  const subFeatures = demoTranslations.subFeatures;
   const currentPipeline = tabPipelines[activeTab] || tabPipelines.strategy;
   const creationSteps = currentPipeline.steps;
 
@@ -120,7 +125,7 @@ export function Demo() {
             </h2>
           </div>
           <div className="max-w-md text-neutral-500 text-sm md:text-base">
-            Our AI solutions support the demands of your YouTube channel, shorts strategy, or main content. Use the same tools that empower the top 1% of creators.
+            {demoTranslations.description}
           </div>
         </div>
 
@@ -128,6 +133,7 @@ export function Demo() {
         <div className="flex md:flex-nowrap items-center justify-start md:justify-between border-b border-neutral-200 mb-8 sm:mb-12 overflow-x-auto pb-4 gap-4 sm:gap-6 md:gap-0 -mx-4 sm:mx-0 px-4 sm:px-0">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
+            const label = tabLabels[tab.id as keyof typeof tabLabels];
             return (
               <button
                 key={tab.id}
@@ -162,7 +168,7 @@ export function Demo() {
                     isActive ? "text-black" : ""
                   }`}
                 >
-                  {tab.label}
+                  {label}
                 </span>
                 {isActive && (
                   <motion.div
@@ -323,7 +329,7 @@ export function Demo() {
           {/* Right: Text and Features List */}
           <div>
             <p className="text-neutral-600 leading-relaxed mb-8">
-              AI Tools are disrupting traditional YouTube growth strategies thanks to the adoption of advanced LLMs. YTForge provides highly accurate and cost-effective cloud services, allowing creators to more efficiently manage their content and focus more on creating.
+              {demoTranslations.description}
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
@@ -336,7 +342,7 @@ export function Demo() {
             </div>
 
             <Button variant="outline" className="mt-10 border-neutral-200 text-black hover:bg-red-50 hover:text-red-600 rounded-full px-6 transition-colors">
-              Explore All Features
+              {demoTranslations.exploreButton}
             </Button>
           </div>
         </div>
