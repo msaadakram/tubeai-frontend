@@ -62,9 +62,9 @@ function formatCount(num: number): string {
   return num.toLocaleString();
 }
 
-function formatJoined(iso: string): string {
+function formatJoined(iso: string, locale: string): string {
   try {
-    return new Date(iso).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+    return new Date(iso).toLocaleDateString(locale, { month: "short", year: "numeric" });
   } catch {
     return iso;
   }
@@ -78,7 +78,7 @@ function flagEmoji(country?: string): string {
 const suggestions = ["@MrBeast", "@MarquesBrownlee", "@AliAbdaal", "@Veritasium", "@TheVerge"];
 
 export default function ChannelIdFinderPage() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const toolContent = t("toolPages.channelIdFinder") as NonNullable<ReturnType<typeof t<"toolPages.channelIdFinder">>>;
 
   const [input, setInput] = useState("");
@@ -305,7 +305,7 @@ export default function ChannelIdFinderPage() {
                     {/* Foreground banner — contain on mobile so the safe-area is fully visible, cover on desktop */}
                     <img
                       src={data.bannerImage}
-                      alt="Channel banner"
+                      alt={toolContent.resultBannerAlt}
                       onError={() => setBannerFailed(true)}
                       className="relative w-full h-full object-contain sm:object-cover object-center"
                     />
@@ -359,7 +359,7 @@ export default function ChannelIdFinderPage() {
                         </span>
                       )}
                       <span className="inline-flex items-center gap-1">
-                        <Calendar className="w-3 h-3" /> {toolContent.resultJoinedPrefix} {formatJoined(data.publishedAt)}
+                        <Calendar className="w-3 h-3" /> {toolContent.resultJoinedPrefix} {formatJoined(data.publishedAt, locale)}
                       </span>
                     </div>
                   </div>
@@ -489,6 +489,7 @@ export default function ChannelIdFinderPage() {
 
       <Workflow
         title={toolContent.workflowTitle}
+        stepLabel={toolContent.workflowStepLabel}
         steps={toolContent.workflows}
       />
 
@@ -506,7 +507,7 @@ export default function ChannelIdFinderPage() {
         <p dangerouslySetInnerHTML={{ __html: toolContent.seoContent.p2_5 }} />
       </SeoContent>
 
-      <FaqAccordion faqs={toolContent.faqs} />
+      <FaqAccordion faqs={toolContent.faqs} title={toolContent.faqTitle} />
 
       <CrossCTA
         title={toolContent.crossCta.title}
@@ -520,8 +521,8 @@ export default function ChannelIdFinderPage() {
         slug="channel-id-finder"
         faqs={toolContent.faqs}
         breadcrumb={[
-          { name: "Home", slug: "/" },
-          { name: "Tools", slug: "/tools" },
+          { name: toolContent.breadcrumbHome, slug: "/" },
+          { name: toolContent.breadcrumbTools, slug: "/tools" },
           { name: toolContent.title, slug: "/tools/channel-id-finder" },
         ]}
       />

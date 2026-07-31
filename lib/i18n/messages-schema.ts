@@ -827,6 +827,11 @@ export type Messages = {
       description: string;
       badge: string;
       stats: { value: string; label: string }[];
+      faqTitle: string;
+      workflowStepLabel: string;
+      resultBannerAlt: string;
+      breadcrumbHome: string;
+      breadcrumbTools: string;
       inputPlaceholder: string;
       btnFetching: string;
       btnFind: string;

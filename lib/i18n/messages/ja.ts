@@ -973,7 +973,103 @@ free: {
       },
       seoJsonDesc: "任意のチャンネルURLからライブのチャンネル分析（登録者数、再生回数、視聴時間、上位動画、成長速度）を取得。"
     },
-    channelIdFinder: {} as any,
+    channelIdFinder: {
+      title: "YouTubeチャンネルID検索ツール",
+      description: "動画リンク、ショート、チャンネルURL、@ハンドルなど、任意のYouTubeリンクを貼り付けるだけで、ライブのチャンネル情報、永久的なUC...で始まるID、RSSフィード、正規URLを取得できます。",
+      badge: "無料ツール · YouTubeライブデータ",
+      stats: [
+        { value: "ライブ", label: "YouTube API" },
+        { value: "<2秒", label: "検索速度" },
+        { value: "100%", label: "永久無料" },
+        { value: "全形式", label: "URL対応" }
+      ],
+      inputPlaceholder: "YouTubeのURL、@ハンドル、動画リンクを貼り付け...",
+      btnFetching: "取得中...",
+      btnFind: "チャンネルを検索",
+      tryPrefix: "例:",
+      suggestions: ["@MrBeast", "@MarquesBrownlee", "@AliAbdaal", "@Veritasium", "@TheVerge"],
+      errorNotFound: "チャンネルが見つかりません",
+      errorTitle: "このチャンネルを見つけられませんでした",
+      errorTips: [
+        { label: "完全なURLを使用", hint: "youtube.com/@handle" },
+        { label: "動画を貼り付ける", hint: "youtu.be/abc123" },
+        { label: "ハンドルのみ", hint: "@MrBeast" }
+      ],
+      errorRetryBtn: "別のリンクを試す",
+      errorOrTry: "または試す:",
+      loadingTitle: "チャンネルを検索中...",
+      loadingDesc: "YouTube APIからライブデータを取得しています",
+      resultLiveBadge: "ライブ",
+      resultJoinedPrefix: "登録日",
+      resultOpenChannel: "チャンネルを開く",
+      resultStatSubs: "登録者",
+      resultStatSubsHidden: "非公開",
+      resultStatViews: "総再生回数",
+      resultStatVideos: "動画",
+      resultAbout: "概要",
+      resultAboutShowMore: "もっと見る",
+      resultAboutShowLess: "閉じる",
+      resultBannerAlt: "チャンネルバナー",
+      resultIdentifiersTitle: "識別子とリンク",
+      resultIdentifiers: [
+        { label: "チャンネルID", hint: "永久のUC...識別子" },
+        { label: "チャンネルURL", hint: "正規の /channel/ リンク" },
+        { label: "ハンドルURL", hint: "人が読める@ハンドルリンク" },
+        { label: "RSSフィード", hint: "任意のRSSリーダーで登録" }
+      ],
+      resultCopy: "コピー",
+      resultCopied: "コピー済み",
+      guideBadge: "検索ルール",
+      guideTitle: "チャンネルIDをいつ・どう使うか",
+      guideIntro: "APIワークフロー、自動化、調査でYouTubeチャンネルIDを使うための6つのルール。",
+      guides: [
+        { title: "API連携に使う", desc: "チャンネルIDはYouTube Data API、RSSフィード、ほとんどの分析ツール連携に必須です。" },
+        { title: "正規URLを保存する", desc: "/channel/UC... URLは絶対に変わりません。ハンドルは変更可能でも、IDは永久です。" },
+        { title: "RSSで購読する", desc: "パワーユーザーはRSSでチャンネルを追跡します。IDを任意のRSSリーダーに貼り付ければ、広告なしの更新を受け取れます。" },
+        { title: "ハンドルとIDを混同しない", desc: "@ハンドルは人間向けの名前。IDはYouTubeのバックエンドが使う24文字のUC...文字列です。" },
+        { title: "文脈なしにIDを公開共有しない", desc: "チャンネルIDは自動化を可能にします。公開のスクレイパーやボット設定に記載する際は注意しましょう。" },
+        { title: "旧カスタムURLは異なる場合がある", desc: "2022年以前の /c/ や /user/ URLは、新しい@ハンドルと異なるIDに解決されることがあります。両方を確認してください。" }
+      ],
+      workflowTitle: "4ステップの検索ワークフロー",
+      workflowStepLabel: "ステップ",
+      workflows: [
+        { n: "01", t: "YouTubeリンクをコピー", d: "チャンネルURL、@ハンドル、動画リンク、ショート——どの形式でもOKです。" },
+        { n: "02", t: "貼り付けて取得", d: "YouTube Data APIで解決し、ライブのチャンネルデータを取得します。" },
+        { n: "03", t: "必要なものをコピー", d: "チャンネルID、/channel/ URL、@ハンドルURL、RSSフィード——すべてワンクリックです。" },
+        { n: "04", t: "ツールに組み込む", d: "YouTube Data APIのリクエスト、RSSリーダー、分析ダッシュボードでIDを使用します。" }
+      ],
+      seoContent: {
+        badge: "チャンネルID完全ガイド",
+        title: "2026年、YouTubeチャンネルIDの見つけ方",
+        p1: "YouTubeには2つの並行する識別システムがあります。<strong>@ハンドル</strong>は2022年の導入でクリエイターが選んだ、人間が読めるユーザー名。短く、ブランドに合い、共有しやすいのが特徴です。<strong>チャンネルID</strong>は、プラットフォーム上のすべてのAPIリクエスト、RSSフィード、埋め込みウィジェットを支える、常に「UC」で始まる24文字の永久的なバックエンド識別子です。YouTube Data APIと連携したり自動化を構築したりするなら、ハンドルではなくIDが必要です。",
+        h3_1: "クリエイターと開発者にとってチャンネルIDが重要な理由",
+        p2_1: "ハンドルは変更できます。IDはできません。クリエイターが@OldNameから@NewNameに改名すると、ハンドルを使ったリンクはやがてすべて壊れますが、<code>/channel/UC...</code>を使ったリンクは機能し続けます。だからこそ、サードパーティの分析プラットフォーム、スケジュールツール、YouTube Data APIはすべて、ハンドルではなくIDでチャンネルを索引付けしています。",
+        h3_2: "どこで必要になるか",
+        p2_2: "<strong>YouTube Data API:</strong> チャンネルレベルのエンドポイント（<code>channels.list</code>、<code>search.list</code>、<code>playlistItems.list</code>）はすべて、チャンネルIDを主キーとして受け取ります。<strong>RSS購読:</strong> <code>youtube.com/feeds/videos.xml?channel_id=UC...</code>というURLで、APIキーなしで新しいアップロードのライブフィードを取得できます。<strong>分析ダッシュボード:</strong> Social Blade、vidIQ、TubeBuddyなどのツールは、追跡にチャンネルIDを必要とします。",
+        h3_3: "よくある落とし穴",
+        p2_3: "2022年以前のチャンネルは、<code>/c/CustomName</code>、<code>/user/LegacyName</code>、<code>/channel/UC...</code>の3つのURL形式を使用していました。一部の旧式の<code>/c/</code>リンクは、同じクリエイターの現代の@ハンドルとは異なるIDに解決されることがあります。チャンネルページにアクセスし、YouTubeの「共有」メニューで正規の<code>/channel/</code>URLを確認して、必ず検証してください。",
+        h3_4: "このツールの仕組み",
+        p2_4: "完全なリンク、@ハンドル、/c/、/user/、/channel/など、あらゆるチャンネルURL形式に対応し、チャンネルID、/channel/ URL、@ハンドルURL、ライブRSSフィードURLの4つの正規形式をすべて返します。データはすべてYouTubeの公開メタデータから取得されます。APIキーや登録は不要です。",
+        h3_5: "チャンネルIDからより深い洞察へ",
+        p2_5: "IDを取得したら、<a href=\"/tools/channel-analytics\">チャンネル分析</a>に貼り付けてパフォーマンスを詳しく分析するか、<a href=\"/tools/monetization-checker\">収益化チェッカー</a>で収益化の資格を確認しましょう。"
+      },
+      faqs: [
+        { q: "YouTubeチャンネルIDとは？", a: "YouTubeが各チャンネルを内部で識別するために使う、「UC」で始まる24文字の一意な文字列です。@ハンドルと違い、チャンネルIDは改名しても絶対に変わりません。" },
+        { q: "なぜ必要ですか？", a: "YouTube Data API、サードパーティの分析ツール、RSSフィード購読、埋め込みウィジェット、ほとんどの自動化ワークフローでチャンネルIDが必要になります。" },
+        { q: "@ハンドルとどう違いますか？", a: "ハンドルは所有者が変更できる人間向けのユーザー名（@MrBeastなど）です。チャンネルIDは永久的なバックエンド識別子で、アプリやAPIはIDを使い、人間はハンドルを使います。" },
+        { q: "このツールは無料ですか？", a: "はい。100%無料、登録不要、検索回数無制限です。URLやハンドルを貼り付けるだけで、ID、RSSフィード、正規のチャンネルURLを即座に取得できます。" }
+      ],
+      crossCta: {
+        title: "あらゆるチャンネルをさらに深掘り",
+        desc: "IDを取得しましたか？数秒で完全な分析レポートや収益化監査を実行できます。",
+        btn1: "チャンネルを分析",
+        btn2: "収益化を確認"
+      },
+      seoJsonDesc: "動画リンク、@ハンドル、チャンネルURLから、任意のYouTubeチャンネルID、RSSフィード、正規URLを見つけます。",
+      faqTitle: "よくある質問",
+      breadcrumbHome: "ホーム",
+      breadcrumbTools: "ツール"
+    },
     earningsCalculator: {} as any,
     embedGenerator: {
       title: "YouTube 埋め込みジェネレーター",

@@ -1604,12 +1604,14 @@ free: {
         { title: "Old custom URLs may differ", desc: "Pre-2022 /c/ and /user/ URLs sometimes resolve to a different ID than the new @handle. Verify both." },
       ],
       workflowTitle: "Your 4-step lookup workflow",
+      workflowStepLabel: "STEP",
       workflows: [
         { n: "01", t: "Copy any YouTube link", d: "Channel URL, @handle, video link, or short — any format works." },
         { n: "02", t: "Paste & fetch", d: "We resolve it through the YouTube Data API and pull live channel data." },
         { n: "03", t: "Copy what you need", d: "Channel ID, /channel/ URL, @handle URL, or RSS feed — all one click." },
         { n: "04", t: "Plug into your tools", d: "Use the ID in YouTube Data API requests, RSS readers, or analytics dashboards." },
       ],
+      resultBannerAlt: "Channel banner",
       seoContent: {
         badge: "Complete Channel ID Guide",
         title: "How to find any YouTube channel ID in 2026",
@@ -1638,6 +1640,9 @@ free: {
         btn2: "Check Monetization",
       },
       seoJsonDesc: "Find any YouTube channel ID, RSS feed, and canonical URL from a video link, @handle, or channel URL.",
+      faqTitle: "Frequently asked questions",
+      breadcrumbHome: "Home",
+      breadcrumbTools: "Tools",
     },
     earningsCalculator: {
       badge: "POPULAR · AdSense Calculator",

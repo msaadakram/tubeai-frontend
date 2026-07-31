@@ -973,7 +973,103 @@ free: {
       },
       seoJsonDesc: "Herhangi bir kanal URL'sinden canlı kanal analizleri alın — aboneler, görüntülenmeler, izlenme süresi, en iyi videolar ve büyüme hızı."
     },
-    channelIdFinder: {} as any,
+    channelIdFinder: {
+      title: "YouTube Kanal ID Bulucu",
+      description: "Video, Short, kanal URL'si veya @kullanıcı adı — herhangi bir YouTube bağlantısını yapıştırın; canlı kanal bilgisi, kalıcı UC... ID, RSS beslemesi ve kanonik URL'leri alın.",
+      badge: "Ücretsiz Araç · Canlı YouTube Verisi",
+      stats: [
+        { value: "Canlı", label: "YouTube API" },
+        { value: "<2sn", label: "Sorgu Hızı" },
+        { value: "%100", label: "Sonsuza Dek Ücretsiz" },
+        { value: "Her", label: "URL Formatı" }
+      ],
+      inputPlaceholder: "Herhangi bir YouTube URL'sini, @kullanıcı adını veya video bağlantısını yapıştırın...",
+      btnFetching: "Getiriliyor...",
+      btnFind: "Kanalı Bul",
+      tryPrefix: "Dene:",
+      suggestions: ["@MrBeast", "@MarquesBrownlee", "@AliAbdaal", "@Veritasium", "@TheVerge"],
+      errorNotFound: "Kanal Bulunamadı",
+      errorTitle: "Bu kanalı bulamadık",
+      errorTips: [
+        { label: "Tam URL kullan", hint: "youtube.com/@handle" },
+        { label: "Veya bir video yapıştır", hint: "youtu.be/abc123" },
+        { label: "Veya sadece kullanıcı adı", hint: "@MrBeast" }
+      ],
+      errorRetryBtn: "Başka bir bağlantı dene",
+      errorOrTry: "Veya dene:",
+      loadingTitle: "Kanal aranıyor...",
+      loadingDesc: "YouTube API'den canlı veri çekiliyor",
+      resultLiveBadge: "Canlı",
+      resultJoinedPrefix: "Katılım",
+      resultOpenChannel: "Kanalı Aç",
+      resultStatSubs: "Aboneler",
+      resultStatSubsHidden: "Gizli",
+      resultStatViews: "Toplam Görüntülenme",
+      resultStatVideos: "Videolar",
+      resultAbout: "Hakkında",
+      resultAboutShowMore: "Daha fazla göster",
+      resultAboutShowLess: "Daha az göster",
+      resultBannerAlt: "Kanal banner'ı",
+      resultIdentifiersTitle: "Tanımlayıcılar ve Bağlantılar",
+      resultIdentifiers: [
+        { label: "Kanal ID", hint: "Kalıcı UC... tanımlayıcı" },
+        { label: "Kanal URL'si", hint: "Kanonik /channel/ bağlantısı" },
+        { label: "Kullanıcı adı URL'si", hint: "Okunabilir @kullanıcı adı bağlantısı" },
+        { label: "RSS Beslemesi", hint: "Herhangi bir RSS okuyucuda abone olun" }
+      ],
+      resultCopy: "Kopyala",
+      resultCopied: "Kopyalandı",
+      guideBadge: "Sorgulama Kuralları",
+      guideTitle: "Kanal ID'leri ne zaman ve nasıl kullanılır",
+      guideIntro: "YouTube kanal ID'lerini API iş akışlarında, otomasyon ve araştırmalarda kullanmak için altı kural.",
+      guides: [
+        { title: "API entegrasyonları için kullanın", desc: "Kanal ID'leri YouTube Data API, RSS beslemeleri ve çoğu analitik entegrasyonu için zorunludur." },
+        { title: "Kanonik URL'yi saklayın", desc: "/channel/UC... URL'si asla değişmez — kullanıcı adları yeniden markalanabilir ama ID'ler kalıcıdır." },
+        { title: "RSS ile abone olun", desc: "Güç kullanıcıları kanalları RSS ile takip eder — reklamsız güncellemeler için kanal ID'sini herhangi bir RSS okuyucuya yapıştırın." },
+        { title: "Kullanıcı adı ile ID'yi karıştırmayın", desc: "@kullanıcı adı insanların okuduğu addır; ID, YouTube'un arka ucunun kullandığı 24 karakterlik UC... dizesidir." },
+        { title: "ID'leri bağlamsız paylaşmayın", desc: "Kanal ID'leri otomasyonu mümkün kılar. Halka açık kazıyıcı veya bot yapılandırmalarında paylaşırken dikkatli olun." },
+        { title: "Eski özel URL'ler farklı olabilir", desc: "2022 öncesi /c/ ve /user/ URL'leri bazen yeni @kullanıcı adından farklı bir ID'ye çözümlenir. İkisini de doğrulayın." }
+      ],
+      workflowTitle: "4 adımlı sorgulama iş akışınız",
+      workflowStepLabel: "ADIM",
+      workflows: [
+        { n: "01", t: "Herhangi bir YouTube bağlantısını kopyalayın", d: "Kanal URL'si, @kullanıcı adı, video bağlantısı veya Short — her format çalışır." },
+        { n: "02", t: "Yapıştırın ve getirin", d: "YouTube Data API üzerinden çözümlüyor ve canlı kanal verisi çekiyoruz." },
+        { n: "03", t: "İhtiyacınız olanı kopyalayın", d: "Kanal ID, /channel/ URL'si, @kullanıcı adı URL'si veya RSS beslemesi — hepsi tek tıkla." },
+        { n: "04", t: "Araçlarınıza bağlayın", d: "ID'yi YouTube Data API isteklerinde, RSS okuyucularda veya analitik panolarında kullanın." }
+      ],
+      seoContent: {
+        badge: "Kapsamlı Kanal ID Rehberi",
+        title: "2026'da herhangi bir YouTube kanal ID'si nasıl bulunur",
+        p1: "YouTube iki paralel tanımlama sistemi kullanır. <strong>@kullanıcı adı</strong>, 2022'deki kullanıma sunum sırasında içerik üreticilerinin seçtiği, insanların okuyabildiği kullanıcı adıdır — kısa, markalanabilir ve paylaşımı kolay. <strong>Kanal ID</strong>, platformdaki her API isteğini, RSS beslemesini ve gömme widget'ını destekleyen, her zaman \"UC\" ile başlayan kalıcı 24 karakterlik arka uç tanımlayıcısıdır. YouTube Data API ile entegrasyon kuruyor veya herhangi bir otomasyon oluşturuyorsanız, kullanıcı adına değil ID'ye ihtiyacınız var.",
+        h3_1: "Kanal ID'leri içerik üreticileri ve geliştiriciler için neden önemlidir",
+        p2_1: "Kullanıcı adları değiştirilebilir. ID'ler değiştirilemez. Bir içerik üreticisi @OldName'den @NewName'e geçtiğinde, kullanıcı adını kullanan her bağlantı eninde sonunda bozulur — ama <code>/channel/UC...</code> kullanan her bağlantı çalışmaya devam eder. Bu yüzden üçüncü taraf analitik platformları, planlama araçları ve YouTube Data API kanalları kullanıcı adına göre değil ID'ye göre dizinler.",
+        h3_2: "Nerede gerekecek",
+        p2_2: "<strong>YouTube Data API:</strong> kanal düzeyindeki her uç nokta (<code>channels.list</code>, <code>search.list</code>, <code>playlistItems.list</code>) birincil anahtar olarak kanal ID kabul eder. <strong>RSS abonelikleri:</strong> <code>youtube.com/feeds/videos.xml?channel_id=UC...</code> URL'si, API anahtarı gerektirmeden her yeni yüklemenin canlı beslemesini sunar. <strong>Analitik panoları:</strong> Social Blade, vidIQ ve TubeBuddy gibi araçların tümü takip için kanal ID bekler.",
+        h3_3: "Sık karşılaşılan tuzaklar",
+        p2_3: "2022 öncesi kanallar üç URL formatı kullanıyordu: <code>/c/CustomName</code>, <code>/user/LegacyName</code> ve <code>/channel/UC...</code>. Bazı eski <code>/c/</code> bağlantıları hâlâ aynı içerik üreticisinin modern @kullanıcı adından farklı bir ID'ye çözümleniyor. Kanal sayfasını ziyaret edip YouTube'un \"Paylaş\" menüsündeki kanonik <code>/channel/</code> URL'sini kontrol ederek her zaman doğrulayın.",
+        h3_4: "Aracımız nasıl çalışıyor",
+        p2_4: "Tam bağlantı, @kullanıcı adı, /c/, /user/ veya /channel/ — her kanal URL formatını kabul ediyor ve dört kanonik formatı da döndürüyoruz: kanal ID, /channel/ URL'si, @kullanıcı adı URL'si ve canlı RSS besleme URL'si. Her şey YouTube'un halka açık meta verilerinden alınır; API anahtarı veya kayıt gerekmez.",
+        h3_5: "Kanal ID'sinden daha derin içgörülere",
+        p2_5: "ID'yi aldıktan sonra, tam performans dökümü için <a href=\"/tools/channel-analytics\">Kanal Analitiği</a> aracımıza ekleyin veya <a href=\"/tools/monetization-checker\">Para Kazanma Kontrolü</a> ile para kazanma uygunluğunu denetleyin."
+      },
+      faqs: [
+        { q: "YouTube Kanal ID'si nedir?", a: "YouTube'un her kanalı dahili olarak tanımlamak için kullandığı, 'UC' ile başlayan 24 karakterlik benzersiz bir dizedir. @kullanıcı adlarının aksine, kanal ID'leri kanal yeniden markalansa bile asla değişmez." },
+        { q: "Neden ihtiyacım var?", a: "YouTube Data API, üçüncü taraf analitik araçları, RSS beslemesi abonelikleri, gömme widget'ları ve çoğu otomasyon iş akışı için bir kanal ID'ye ihtiyacınız olacak." },
+        { q: "Bu @kullanıcı adından nasıl farklı?", a: "Kullanıcı adları, sahibinin değiştirebildiği insanların okuyabildiği adlardır (@MrBeast gibi). Kanal ID'leri kalıcı arka uç tanımlayıcılarıdır — uygulamalar ve API'ler ID kullanır, insanlar kullanıcı adı kullanır." },
+        { q: "Bu araç ücretsiz mi?", a: "Evet — %100 ücretsiz, kayıt gerektirmez, sınırsız sorgu. Herhangi bir URL veya kullanıcı adını yapıştırın; ID'yi, RSS beslemesini ve kanonik kanal URL'sini anında alın." }
+      ],
+      crossCta: {
+        title: "Şimdi herhangi bir kanalda daha derine inin",
+        desc: "ID'yi aldınız mı? Saniyeler içinde tam bir analitik raporu veya para kazanma denetimi çalıştırın.",
+        btn1: "Kanalı Analiz Et",
+        btn2: "Para Kazanmayı Kontrol Et"
+      },
+      seoJsonDesc: "Bir video bağlantısından, @kullanıcı adından veya kanal URL'sinden herhangi bir YouTube kanal ID'sini, RSS beslemesini ve kanonik URL'yi bulun.",
+      faqTitle: "Sık Sorulan Sorular",
+      breadcrumbHome: "Ana Sayfa",
+      breadcrumbTools: "Araçlar"
+    },
     earningsCalculator: {} as any,
     embedGenerator: {
       title: "YouTube Embed Oluşturucu",

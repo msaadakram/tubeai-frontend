@@ -973,7 +973,103 @@ free: {
       },
       seoJsonDesc: "Live-Kanal-Analysen abrufen — Abonnenten, Aufrufe, Watchtime, Top-Videos und Wachstumsgeschwindigkeit — von jeder Kanal-URL."
     },
-    channelIdFinder: {} as any,
+    channelIdFinder: {
+      title: "YouTube-Kanal-ID-Finder",
+      description: "Füge einen beliebigen YouTube-Link ein — Video, Short, Kanal-URL oder @handle — und erhalte Live-Kanalinfos, die permanente UC...-ID, den RSS-Feed und die kanonischen URLs.",
+      badge: "Kostenloses Tool · Live-YouTube-Daten",
+      stats: [
+        { value: "Live", label: "YouTube-API" },
+        { value: "<2s", label: "Lookup-Geschwindigkeit" },
+        { value: "100%", label: "Für immer kostenlos" },
+        { value: "Jede", label: "URL-Format" }
+      ],
+      inputPlaceholder: "Beliebige YouTube-URL, @handle oder Video-Link einfügen...",
+      btnFetching: "Wird abgerufen...",
+      btnFind: "Kanal finden",
+      tryPrefix: "Probier:",
+      suggestions: ["@MrBeast", "@MarquesBrownlee", "@AliAbdaal", "@Veritasium", "@TheVerge"],
+      errorNotFound: "Kanal nicht gefunden",
+      errorTitle: "Wir konnten diesen Kanal nicht finden",
+      errorTips: [
+        { label: "Vollständige URL nutzen", hint: "youtube.com/@handle" },
+        { label: "Oder ein Video einfügen", hint: "youtu.be/abc123" },
+        { label: "Oder nur den Handle", hint: "@MrBeast" }
+      ],
+      errorRetryBtn: "Anderen Link versuchen",
+      errorOrTry: "Oder versuch:",
+      loadingTitle: "Kanal wird gesucht...",
+      loadingDesc: "Live-Daten werden von der YouTube-API abgerufen",
+      resultLiveBadge: "Live",
+      resultJoinedPrefix: "Beigetreten",
+      resultOpenChannel: "Kanal öffnen",
+      resultStatSubs: "Abonnenten",
+      resultStatSubsHidden: "Versteckt",
+      resultStatViews: "Aufrufe gesamt",
+      resultStatVideos: "Videos",
+      resultAbout: "Über",
+      resultAboutShowMore: "Mehr anzeigen",
+      resultAboutShowLess: "Weniger anzeigen",
+      resultBannerAlt: "Kanalbanner",
+      resultIdentifiersTitle: "Kennungen & Links",
+      resultIdentifiers: [
+        { label: "Kanal-ID", hint: "Permanente UC...-Kennung" },
+        { label: "Kanal-URL", hint: "Kanonischer /channel/-Link" },
+        { label: "Handle-URL", hint: "Benutzerfreundlicher @handle-Link" },
+        { label: "RSS-Feed", hint: "In jedem RSS-Reader abonnieren" }
+      ],
+      resultCopy: "Kopieren",
+      resultCopied: "Kopiert",
+      guideBadge: "Lookup-Regeln",
+      guideTitle: "Wann und wie man Kanal-IDs verwendet",
+      guideIntro: "Sechs Regeln für die Verwendung von YouTube-Kanal-IDs in API-Workflows, Automatisierung und Forschung.",
+      guides: [
+        { title: "Für API-Integrationen verwenden", desc: "Kanal-IDs sind für die YouTube Data API, RSS-Feeds und die meisten Analyse-Integrationen erforderlich." },
+        { title: "Die kanonische URL speichern", desc: "Die /channel/UC...-URL ändert sich nie — Handles können umbenannt werden, aber IDs sind permanent." },
+        { title: "Über RSS abonnieren", desc: "Power-User folgen Kanälen per RSS — fügen Sie die Kanal-ID in einen beliebigen RSS-Reader ein, um werbefreie Updates zu erhalten." },
+        { title: "Handle nicht mit ID verwechseln", desc: "@handle ist menschenlesbar; die ID ist ein 24-stelliger UC...-String, den YouTubes Backend verwendet." },
+        { title: "IDs nicht ohne Kontext öffentlich teilen", desc: "Kanal-IDs schalten Automatisierung frei. Seien Sie vorsichtig, wenn Sie sie in öffentlichen Scraper- oder Bot-Konfigurationen veröffentlichen." },
+        { title: "Alte Custom-URLs können abweichen", desc: "Pre-2022-/c/- und /user/-URLs lösen manchmal zu einer anderen ID auf als der neue @handle. Verifizieren Sie beide." }
+      ],
+      workflowTitle: "Ihr 4-Schritte-Lookup-Workflow",
+      workflowStepLabel: "SCHRITT",
+      workflows: [
+        { n: "01", t: "Beliebigen YouTube-Link kopieren", d: "Kanal-URL, @handle, Video-Link oder Short — jedes Format funktioniert." },
+        { n: "02", t: "Einfügen & abrufen", d: "Wir lösen ihn über die YouTube Data API auf und ziehen Live-Kanaldaten." },
+        { n: "03", t: "Kopieren, was Sie brauchen", d: "Kanal-ID, /channel/-URL, @handle-URL oder RSS-Feed — alles mit einem Klick." },
+        { n: "04", t: "In Ihre Tools einbinden", d: "Verwenden Sie die ID in YouTube-Data-API-Anfragen, RSS-Readern oder Analyse-Dashboards." }
+      ],
+      seoContent: {
+        badge: "Kompletter Kanal-ID-Leitfaden",
+        title: "So finden Sie 2026 jede YouTube-Kanal-ID",
+        p1: "YouTube nutzt zwei parallele Kennzeichnungssysteme. Der <strong>@handle</strong> ist der menschenlesbare Benutzername, den Creator im Rahmen des Rollouts 2022 gewählt haben — kurz, markenfreundlich und einfach zu teilen. Die <strong>Kanal-ID</strong> ist die permanente 24-stellige Backend-Kennung (beginnt immer mit \"UC\"), die jede API-Anfrage, jeden RSS-Feed und jedes Embed-Widget auf der Plattform antreibt. Wenn Sie mit der YouTube Data API integrieren oder Automatisierung aufbauen, brauchen Sie die ID, nicht den Handle.",
+        h3_1: "Warum Kanal-IDs für Creator und Entwickler wichtig sind",
+        p2_1: "Handles können geändert werden. IDs nicht. Wenn ein Creator von @OldName zu @NewName rebrandet, brechen irgendwann alle Links mit dem Handle — aber jeder Link mit <code>/channel/UC...</code> funktioniert weiter. Deshalb indizieren Drittanbieter-Analyseplattformen, Planungstools und die YouTube Data API Kanäle nach ID und nicht nach Handle.",
+        h3_2: "Wo Sie sie brauchen",
+        p2_2: "<strong>YouTube Data API:</strong> Jeder kanalbezogene Endpunkt (<code>channels.list</code>, <code>search.list</code>, <code>playlistItems.list</code>) akzeptiert eine Kanal-ID als Primärschlüssel. <strong>RSS-Abonnements:</strong> Die URL <code>youtube.com/feeds/videos.xml?channel_id=UC...</code> liefert einen Live-Feed jedes neuen Uploads, ohne API-Schlüssel. <strong>Analyse-Dashboards:</strong> Tools wie Social Blade, vidIQ und TubeBuddy erwarten für das Tracking alle eine Kanal-ID.",
+        h3_3: "Häufige Stolperfallen",
+        p2_3: "Vor 2022 verwendeten Kanäle drei URL-Formate: <code>/c/CustomName</code>, <code>/user/LegacyName</code> und <code>/channel/UC...</code>. Einige Legacy-<code>/c/</code>-Links lösen noch immer zu einer anderen ID auf als der moderne @handle desselben Creators. Verifizieren Sie immer, indem Sie die Kanal-Seite besuchen und die kanonische <code>/channel/</code>-URL im Teilen-Menü von YouTube prüfen.",
+        h3_4: "So funktioniert unser Tool",
+        p2_4: "Wir akzeptieren jedes Kanal-URL-Format — vollen Link, @handle, /c/, /user/ oder /channel/ — und liefern alle vier kanonischen Formate: die Kanal-ID, die /channel/-URL, die @handle-URL und die Live-RSS-Feed-URL. Alles stammt aus YouTubes öffentlichen Metadaten; kein API-Schlüssel oder Konto erforderlich.",
+        h3_5: "Von der Kanal-ID zu tieferen Einblicken",
+        p2_5: "Sobald Sie die ID haben, stecken Sie sie in unsere <a href=\"/tools/channel-analytics\">Kanal-Analytics</a> für einen vollständigen Performance-Bericht oder führen Sie eine Monetarisierungsprüfung über unseren <a href=\"/tools/monetization-checker\">Monetarisierungs-Checker</a> durch."
+      },
+      faqs: [
+        { q: "Was ist eine YouTube-Kanal-ID?", a: "Ein eindeutiger 24-stelliger String, der mit 'UC' beginnt und von YouTube intern zur Identifizierung jedes Kanals verwendet wird. Anders als @handles ändern sich Kanal-IDs nie — selbst wenn der Kanal umbenannt wird." },
+        { q: "Wozu brauche ich sie?", a: "Sie benötigen eine Kanal-ID für die YouTube Data API, Drittanbieter-Analysetools, RSS-Feed-Abonnements, Embed-Widgets und die meisten Automatisierungs-Workflows." },
+        { q: "Worin unterscheidet sie sich vom @handle?", a: "Handles sind menschenlesbare Benutzernamen (wie @MrBeast), die der Inhaber ändern kann. Kanal-IDs sind permanente Backend-Kennungen — Apps und APIs nutzen IDs, Menschen nutzen Handles." },
+        { q: "Ist dieses Tool kostenlos?", a: "Ja — 100 % kostenlos, ohne Anmeldung, unbegrenzte Lookups. Fügen Sie eine URL oder einen Handle ein und erhalten Sie ID, RSS-Feed und kanonische Kanal-URL sofort." }
+      ],
+      crossCta: {
+        title: "Jetzt tiefer in jeden Kanal eintauchen",
+        desc: "ID erhalten? Führen Sie in Sekunden einen vollständigen Analyse-Bericht oder eine Monetarisierungsprüfung durch.",
+        btn1: "Kanal analysieren",
+        btn2: "Monetarisierung prüfen"
+      },
+      seoJsonDesc: "Finde jede YouTube-Kanal-ID, jeden RSS-Feed und jede kanonische URL aus einem Video-Link, @handle oder einer Kanal-URL.",
+      faqTitle: "Häufig gestellte Fragen",
+      breadcrumbHome: "Startseite",
+      breadcrumbTools: "Tools"
+    },
     earningsCalculator: {} as any,
     embedGenerator: {
       title: "YouTube Embed Generator",

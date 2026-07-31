@@ -1,0 +1,114 @@
+# FULL I18N COVERAGE PLAN - ALL TOOL PAGES
+
+## Current State Analysis (16 tools × 9 locales = 144 combinations)
+
+### ✅ FULLY TRANSLATED (all 9 locales)
+| Tool | Status |
+|------|--------|
+| viralTitleGenerator | ✅ Done (just completed) |
+| hashtagGenerator | ✅ Mandatory - all locales |
+| monetizationChecker | ✅ Mandatory - all locales |
+| qrCodeGenerator | ✅ Mandatory - all locales |
+| shortsIdeas | ✅ Mandatory - all locales |
+| tagGenerator | ✅ Mandatory - all locales |
+| thumbnailDownloader | ✅ Mandatory - all locales |
+| thumbnailPreview | ✅ Mandatory - all locales |
+
+### ⚠️ PARTIAL - Present but EMPTY (`{} as any`) in 7 locales
+| Tool | Missing locales (7) | Has full in |
+|------|---------------------|-------------|
+| ~~channelAnalytics~~ | ✅ **DONE — all 9 locales (2026-07-31)** | en, zh |
+| ~~channelIdFinder~~ | ✅ **DONE — all 9 locales (2026-07-31)** | en, zh |
+| earningsCalculator | de, es, fr, it, ja, ko, tr | en, zh |
+
+### ❌ MISSING ENTIRELY from 7 locales
+| Tool | Missing locales (7) | Has full in |
+|------|---------------------|-------------|
+| aiThumbnailGenerator | de, es, fr, it, ja, ko, tr | en, zh |
+| aiTranscript | de, es, fr, it, ja, ko, tr | en, zh |
+| embedGenerator | de, es, fr, it, ja, ko, tr | en, zh |
+
+### 🔍 NEEDS AUDIT
+| Tool | Status |
+|------|--------|
+| aiScriptWriter | Present in all 9 - verify completeness |
+| seoAnalyzer | Present in all 9 - verify completeness |
+
+---
+
+## IMPLEMENTATION PLAN
+
+### Phase 1: Fix 3 Empty Tools (channelAnalytics ✅, channelIdFinder, earningsCalculator)
+**Effort**: Medium - Copy from en/zh, translate to 7 locales
+**Files**: 3 tools × 7 locales = 21 translation blocks
+**Priority**: HIGH (tools exist but show nothing in 7 languages)
+- [x] channelAnalytics → de, es, fr, it, ja, ko, tr (done 2026-07-31, tsc + build pass, 76 keys/6 guides/4 workflows/4 faqs matched vs en.ts)
+
+### Phase 2: Add 3 Missing Tools (aiThumbnailGenerator, aiTranscript, embedGenerator)
+**Effort**: High - Full translation from scratch for 7 locales
+**Files**: 3 tools × 7 locales = 21 translation blocks
+**Priority**: HIGH (tools completely invisible in 7 languages)
+
+### Phase 3: Audit & Fix aiScriptWriter + seoAnalyzer
+**Effort**: Low-Medium - Verify all keys present
+**Priority**: MEDIUM
+
+### Phase 4: Component-Level Hardcoded Strings
+**Effort**: Medium - Replace hardcoded English in tool page components
+**Files to check**:
+- Each tool's page.tsx for hardcoded strings not using t()
+- Shared components: ToolLayout, ToolCard, ToolInput, LanguageSelect, StreamingPreview, ToolSeoJsonLd
+
+---
+
+## DETAILED CHECKLIST
+
+### Phase 1: Empty Tools (21 blocks)
+- [x] channelAnalytics → de, es, fr, it, ja, ko, tr
+- [x] channelIdFinder → de, es, fr, it, ja, ko, tr (done 2026-07-31, tsc + build pass; zh.ts rewritten to 6 guides/4 faqs + corrupted char fixed; +5 new keys: faqTitle, workflowStepLabel, resultBannerAlt, breadcrumbHome, breadcrumbTools; page.tsx hardcoded strings localized — banner alt, breadcrumb, STEP label, FAQ title, locale-aware date)
+- [ ] earningsCalculator → de, es, fr, it, ja, ko, tr
+
+### Phase 2: Missing Tools (21 blocks)
+- [ ] aiThumbnailGenerator → de, es, fr, it, ja, ko, tr
+- [ ] aiTranscript → de, es, fr, it, ja, ko, tr
+- [ ] embedGenerator → de, es, fr, it, ja, ko, tr
+
+### Phase 3: Audit
+- [ ] aiScriptWriter - compare schema vs all 9 locale files
+- [ ] seoAnalyzer - compare schema vs all 9 locale files
+
+### Phase 4: Component Strings
+- [ ] Scan all 16 tool page.tsx for hardcoded English
+- [ ] Fix ToolLayout, ToolCard, ToolInput, LanguageSelect, StreamingPreview, ToolSeoJsonLd
+- [ ] Verify LanguageSelect.getLanguage() supports all 9 locales
+
+---
+
+## TRANSLATION SOURCE STRATEGY
+
+For each tool, use **English (en.ts)** as source of truth, then **Chinese (zh.ts)** as secondary reference for tone/style. Translate to:
+- de (German)
+- es (Spanish) 
+- fr (French)
+- it (Italian)
+- ja (Japanese)
+- ko (Korean)
+- tr (Turkish)
+
+---
+
+## ESTIMATED TIMELINE
+- Phase 1: ~2-3 hours
+- Phase 2: ~4-6 hours  
+- Phase 3: ~1 hour
+- Phase 4: ~2-3 hours
+**Total: ~9-13 hours**
+
+---
+
+## SUCCESS CRITERIA
+1. `npx tsc --noEmit` passes (zero TS errors)
+2. `npm run build` passes
+3. All 16 tools show translated content in all 9 locales
+4. No hardcoded English strings in tool page components
+5. Language switcher works correctly for all tools

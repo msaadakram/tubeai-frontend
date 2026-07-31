@@ -973,7 +973,103 @@ free: {
       },
       seoJsonDesc: "모든 채널 URL에서 구독자, 조회수, 시청 시간, 상위 동영상, 성장 속도 등 실시간 채널 분석을 받아보세요."
     },
-    channelIdFinder: {} as any,
+    channelIdFinder: {
+      title: "YouTube 채널 ID 찾기",
+      description: "동영상, 쇼츠, 채널 URL, @핸들 등 어떤 YouTube 링크든 붙여넣어 실시간 채널 정보, 영구적인 UC... ID, RSS 피드, 정식 URL을 확인하세요.",
+      badge: "무료 도구 · 실시간 YouTube 데이터",
+      stats: [
+        { value: "실시간", label: "YouTube API" },
+        { value: "<2초", label: "조회 속도" },
+        { value: "100%", label: "영구 무료" },
+        { value: "전체", label: "URL 형식" }
+      ],
+      inputPlaceholder: "YouTube URL, @핸들 또는 동영상 링크를 붙여넣으세요...",
+      btnFetching: "조회 중...",
+      btnFind: "채널 찾기",
+      tryPrefix: "시도:",
+      suggestions: ["@MrBeast", "@MarquesBrownlee", "@AliAbdaal", "@Veritasium", "@TheVerge"],
+      errorNotFound: "채널을 찾을 수 없음",
+      errorTitle: "이 채널을 찾을 수 없습니다",
+      errorTips: [
+        { label: "전체 URL 사용", hint: "youtube.com/@handle" },
+        { label: "또는 동영상 붙여넣기", hint: "youtu.be/abc123" },
+        { label: "또는 핸들만", hint: "@MrBeast" }
+      ],
+      errorRetryBtn: "다른 링크 시도",
+      errorOrTry: "또는 시도:",
+      loadingTitle: "채널을 조회하는 중...",
+      loadingDesc: "YouTube API에서 실시간 데이터를 가져오는 중",
+      resultLiveBadge: "실시간",
+      resultJoinedPrefix: "가입일",
+      resultOpenChannel: "채널 열기",
+      resultStatSubs: "구독자",
+      resultStatSubsHidden: "숨김",
+      resultStatViews: "총 조회수",
+      resultStatVideos: "동영상",
+      resultAbout: "정보",
+      resultAboutShowMore: "더 보기",
+      resultAboutShowLess: "접기",
+      resultBannerAlt: "채널 배너",
+      resultIdentifiersTitle: "식별자 및 링크",
+      resultIdentifiers: [
+        { label: "채널 ID", hint: "영구적인 UC... 식별자" },
+        { label: "채널 URL", hint: "정식 /channel/ 링크" },
+        { label: "핸들 URL", hint: "사람이 읽을 수 있는 @핸들 링크" },
+        { label: "RSS 피드", hint: "아무 RSS 리더에서나 구독" }
+      ],
+      resultCopy: "복사",
+      resultCopied: "복사됨",
+      guideBadge: "조회 규칙",
+      guideTitle: "채널 ID를 언제, 어떻게 사용할까요",
+      guideIntro: "API 워크플로, 자동화, 리서치에서 YouTube 채널 ID를 활용하는 6가지 규칙입니다.",
+      guides: [
+        { title: "API 연동에 사용", desc: "채널 ID는 YouTube Data API, RSS 피드, 대부분의 분석 연동에 필수입니다." },
+        { title: "정식 URL 저장", desc: "/channel/UC... URL은 절대 바뀌지 않습니다. 핸들은 변경될 수 있어도 ID는 영구적입니다." },
+        { title: "RSS로 구독", desc: "파워 유저는 RSS로 채널을 팔로우합니다. 아무 RSS 리더에 채널 ID를 붙여넣으면 광고 없는 업데이트를 받을 수 있습니다." },
+        { title: "핸들과 ID를 혼동하지 않기", desc: "@핸들은 사람이 읽을 수 있는 이름이고, ID는 YouTube 백엔드가 사용하는 24자리의 UC... 문자열입니다." },
+        { title: "문맥 없이 ID를 공개 공유하지 않기", desc: "채널 ID는 자동화를 가능하게 합니다. 공개 스크래퍼나 봇 설정에 올릴 때는 주의하세요." },
+        { title: "구(舊) 맞춤 URL은 다를 수 있음", desc: "2022년 이전의 /c/ 및 /user/ URL은 새 @핸들과 다른 ID로 해석되는 경우가 있습니다. 둘 다 확인하세요." }
+      ],
+      workflowTitle: "4단계 조회 워크플로",
+      workflowStepLabel: "단계",
+      workflows: [
+        { n: "01", t: "아무 YouTube 링크 복사", d: "채널 URL, @핸들, 동영상 링크, 쇼츠 — 어떤 형식이든 가능합니다." },
+        { n: "02", t: "붙여넣고 조회", d: "YouTube Data API로 링크를 해석해 실시간 채널 데이터를 가져옵니다." },
+        { n: "03", t: "필요한 것 복사", d: "채널 ID, /channel/ URL, @핸들 URL, RSS 피드 — 모두 한 번의 클릭으로." },
+        { n: "04", t: "도구에 연결", d: "YouTube Data API 요청, RSS 리더, 분석 대시보드에서 ID를 사용하세요." }
+      ],
+      seoContent: {
+        badge: "채널 ID 완전 가이드",
+        title: "2026년에 YouTube 채널 ID를 찾는 방법",
+        p1: "YouTube는 두 가지 병행 식별 체계를 사용합니다. <strong>@핸들</strong>은 2022년 도입 당시 크리에이터가 선택한, 사람이 읽을 수 있는 사용자 이름으로, 짧고 브랜드에 어울리며 공유하기 쉽습니다. <strong>채널 ID</strong>는 항상 \"UC\"로 시작하는 24자리의 영구적인 백엔드 식별자로, 플랫폼의 모든 API 요청, RSS 피드, 임베드 위젯을 뒷받침합니다. YouTube Data API와 연동하거나 자동화를 구축한다면 핸들이 아니라 ID가 필요합니다.",
+        h3_1: "크리에이터와 개발자에게 채널 ID가 중요한 이유",
+        p2_1: "핸들은 바꿀 수 있습니다. ID는 바꿀 수 없습니다. 크리에이터가 @OldName에서 @NewName으로 리브랜딩하면 핸들을 사용한 모든 링크는 결국 깨지지만, <code>/channel/UC...</code> 링크는 계속 작동합니다. 그래서 서드파티 분석 플랫폼, 스케줄링 도구, YouTube Data API 모두 핸들이 아닌 ID로 채널을 인덱싱합니다.",
+        h3_2: "어디에서 필요할까요",
+        p2_2: "<strong>YouTube Data API:</strong> 모든 채널 수준 엔드포인트(<code>channels.list</code>, <code>search.list</code>, <code>playlistItems.list</code>)는 채널 ID를 기본 키로 받습니다. <strong>RSS 구독:</strong> <code>youtube.com/feeds/videos.xml?channel_id=UC...</code> URL은 API 키 없이 새 업로드의 실시간 피드를 제공합니다. <strong>분석 대시보드:</strong> Social Blade, vidIQ, TubeBuddy 같은 도구는 추적에 채널 ID를 요구합니다.",
+        h3_3: "흔한 함정",
+        p2_3: "2022년 이전 채널은 <code>/c/CustomName</code>, <code>/user/LegacyName</code>, <code>/channel/UC...</code>의 세 가지 URL 형식을 사용했습니다. 일부 구식 <code>/c/</code> 링크는 같은 크리에이터의 최신 @핸들과 다른 ID로 해석되기도 합니다. 채널 페이지를 방문해 YouTube의 \"공유\" 메뉴에서 정식 <code>/channel/</code> URL을 확인해 항상 검증하세요.",
+        h3_4: "이 도구의 작동 방식",
+        p2_4: "전체 링크, @핸들, /c/, /user/, /channel/ 등 모든 채널 URL 형식을 지원하며, 채널 ID, /channel/ URL, @핸들 URL, 실시간 RSS 피드 URL의 네 가지 정식 형식을 모두 반환합니다. 모든 데이터는 YouTube의 공개 메타데이터에서 가져오며 API 키나 회원가입이 필요 없습니다.",
+        h3_5: "채널 ID에서 더 깊은 인사이트로",
+        p2_5: "ID를 확보했다면 <a href=\"/tools/channel-analytics\">채널 분석</a>에 넣어 전체 성과를 분석하거나, <a href=\"/tools/monetization-checker\">수익화 확인</a>으로 수익화 자격을 검토해 보세요."
+      },
+      faqs: [
+        { q: "YouTube 채널 ID란 무엇인가요?", a: "YouTube가 각 채널을 내부적으로 식별하는 데 사용하는, 'UC'로 시작하는 24자리 고유 문자열입니다. @핸들과 달리 채널 ID는 리브랜딩을 해도 절대 바뀌지 않습니다." },
+        { q: "왜 필요한가요?", a: "YouTube Data API, 서드파티 분석 도구, RSS 피드 구독, 임베드 위젯, 그리고 대부분의 자동화 워크플로에서 채널 ID가 필요합니다." },
+        { q: "@핸들과 어떻게 다른가요?", a: "핸들은 소유자가 변경할 수 있는 사람이 읽을 수 있는 사용자 이름(예: @MrBeast)입니다. 채널 ID는 영구적인 백엔드 식별자로, 앱과 API는 ID를, 사람은 핸들을 사용합니다." },
+        { q: "이 도구는 무료인가요?", a: "네. 100% 무료, 회원가입 없음, 조회 무제한입니다. URL이나 핸들을 붙여넣으면 ID, RSS 피드, 정식 채널 URL을 즉시 얻을 수 있습니다." }
+      ],
+      crossCta: {
+        title: "이제 모든 채널을 더 깊이 파헤쳐 보세요",
+        desc: "ID를 얻으셨나요? 몇 초 안에 전체 분석 보고서나 수익화 감사를 실행해 보세요.",
+        btn1: "채널 분석",
+        btn2: "수익화 확인"
+      },
+      seoJsonDesc: "동영상 링크, @핸들 또는 채널 URL에서 모든 YouTube 채널 ID, RSS 피드, 정식 URL을 찾으세요.",
+      faqTitle: "자주 묻는 질문",
+      breadcrumbHome: "홈",
+      breadcrumbTools: "도구"
+    },
     earningsCalculator: {} as any,
     embedGenerator: {
       title: "YouTube 임베드 생성기",

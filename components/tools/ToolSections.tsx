@@ -71,7 +71,15 @@ export function GuideGrid({
   );
 }
 
-export function Workflow({ title, steps }: { title: string; steps: { n: string; t: string; d: string }[] }) {
+export function Workflow({
+  title,
+  steps,
+  stepLabel = "STEP",
+}: {
+  title: string;
+  steps: { n: string; t: string; d: string }[];
+  stepLabel?: string;
+}) {
   return (
     <section className="mb-12 sm:mb-16">
       <motion.h2
@@ -94,7 +102,7 @@ export function Workflow({ title, steps }: { title: string; steps: { n: string; 
           >
             <div className="absolute -top-4 -right-4 text-6xl font-black text-white/10 select-none">{step.n}</div>
             <div className="relative">
-              <div className="text-[10px] font-black text-red-500 tracking-widest mb-2">STEP {step.n}</div>
+              <div className="text-[10px] font-black text-red-500 tracking-widest mb-2">{stepLabel} {step.n}</div>
               <h3 className="font-black text-base mb-2">{step.t}</h3>
               <p className="text-xs text-neutral-300 leading-relaxed">{step.d}</p>
             </div>
@@ -134,7 +142,13 @@ export function SeoContent({
   );
 }
 
-export function FaqAccordion({ faqs }: { faqs: { q: string; a: string }[] }) {
+export function FaqAccordion({
+  faqs,
+  title = "Frequently asked questions",
+}: {
+  faqs: { q: string; a: string }[];
+  title?: string;
+}) {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section className="mb-8">
@@ -144,7 +158,7 @@ export function FaqAccordion({ faqs }: { faqs: { q: string; a: string }[] }) {
         viewport={{ once: true }}
         className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-black mb-6 sm:mb-8"
       >
-        Frequently asked questions
+        {title}
       </motion.h2>
       <div className="space-y-3 max-w-3xl">
         {faqs.map((f, i) => (
