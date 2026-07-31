@@ -392,8 +392,8 @@ export default function AIThumbnailGeneratorPage() {
         slug="ai-thumbnail-generator"
         faqs={toolContent.faqs || []}
         breadcrumb={[
-          { name: "Home", slug: "/" },
-          { name: "Tools", slug: "/tools" },
+          { name: toolContent.breadcrumbHome, slug: "/" },
+          { name: toolContent.breadcrumbTools, slug: "/tools" },
           { name: toolContent.title || "AI YouTube Thumbnail Generator", slug: "/tools/ai-thumbnail-generator" },
         ]}
       />

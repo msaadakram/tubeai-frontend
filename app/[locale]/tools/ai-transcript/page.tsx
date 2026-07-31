@@ -1,7 +1,6 @@
 "use client";
 
 import { copyToClipboard } from "@/lib/clipboard";
-import { friendlyApiError } from "@/lib/apiError";
 import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -107,16 +106,17 @@ function parseIsoDuration(iso?: string): string {
   return `${min}:${pad(s)}`;
 }
 
-function friendlyError(raw: string, status: number): string {
-  if (/invalid youtube url/i.test(raw)) return "Please enter a valid YouTube link.";
-  if (/no captions|not available/i.test(raw)) return "No captions available for this video.";
-  if (status >= 500) return "Server error, please try again in a moment.";
-  return friendlyApiError(raw || "", status);
+function friendlyError(raw: string, status: number, tc: any): string {
+  if (/invalid youtube url/i.test(raw)) return tc.errorInvalidUrl;
+  if (/no captions|not available/i.test(raw)) return tc.errorNoCaptions;
+  if (status >= 500) return tc.errorServer;
+  return tc.errorDefault;
 }
 
 export default function AITranscriptPage() {
   const { t } = useTranslations();
   const toolContent = t("toolPages.aiTranscript");
+  const tc = toolContent as NonNullable<typeof toolContent>;
 
   const [url, setUrl] = useState("");
   const [lang, setLang] = useState("en");
@@ -151,11 +151,11 @@ export default function AITranscriptPage() {
       console.log("Response body:", body);
       if (!res.ok) {
         console.error("[Transcribe] Non-OK response:", res.status, body?.error);
-        throw new Error(friendlyError(body?.error || "", res.status));
+        throw new Error(friendlyError(body?.error || "", res.status, tc));
       }
       if (!body?.success) {
         console.warn("[Transcribe] success=false. Reason from backend:", body?.error, "| Full body:", body);
-        throw new Error(friendlyError(body?.error || "Transcript unavailable.", res.status));
+        throw new Error(friendlyError(body?.error || "Transcript unavailable.", res.status, tc));
       }
       if (!body?.data?.transcript) {
         console.warn(
@@ -167,7 +167,7 @@ export default function AITranscriptPage() {
       setData(body.data as TranscriptData);
     } catch (err: any) {
       console.error("[Transcribe] FAILED:", err?.message, err);
-      setError(err?.message || "Something went wrong. Please try again.");
+      setError(err?.message || tc.errorDefault);
     } finally {
       console.groupEnd();
       setLoading(false);
@@ -189,13 +189,13 @@ export default function AITranscriptPage() {
       console.log("XML fetch status:", xmlRes.status, xmlRes.statusText);
       if (!xmlRes.ok) {
         console.error("[Transcribe Proxy] XML fetch failed:", xmlRes.status);
-        throw new Error(friendlyError(`Caption fetch failed`, xmlRes.status));
+        throw new Error(friendlyError(`Caption fetch failed`, xmlRes.status, tc));
       }
       const xml = await xmlRes.text();
       console.log("XML length:", xml.length, "First 200 chars:", xml.slice(0, 200));
       if (!xml || xml.length < 20) {
         console.warn("[Transcribe Proxy] Caption track XML is empty / too short.");
-        throw new Error("Empty caption track returned.");
+        throw new Error(tc.errorDefault);
       }
 
       console.log("Step 2 — POST /api/transcribe/process with language:", lang);
@@ -212,7 +212,7 @@ export default function AITranscriptPage() {
       console.log("Process response body:", procBody);
       if (!procRes.ok || !procBody?.success) {
         console.error("[Transcribe Proxy] Process step failed:", procBody?.error);
-        throw new Error(friendlyError(procBody?.error || "", procRes.status));
+        throw new Error(friendlyError(procBody?.error || "", procRes.status, tc));
       }
       const proc = procBody.data as Partial<TranscriptData>;
       setData((prev) => ({
@@ -226,7 +226,7 @@ export default function AITranscriptPage() {
       }));
     } catch (err: any) {
       console.error("[Transcribe Proxy] FAILED:", err?.message, err);
-      setError(err?.message || "Something went wrong. Please try again.");
+      setError(err?.message || tc.errorDefault);
     } finally {
       console.groupEnd();
       setLoading(false);
@@ -262,9 +262,6 @@ export default function AITranscriptPage() {
   const hasTranscript = !!data?.transcript;
   const showLanguageToggle = !!data?.translatedText && data.captionLanguage !== lang;
 
-  // Add a non-null assertion or cast since we know it's in the English base
-  const tc = toolContent as NonNullable<typeof toolContent>;
-
   return (
     <ToolLayout
       title={tc.title || ""}
@@ -284,7 +281,7 @@ export default function AITranscriptPage() {
           />
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1 min-w-0">
-              <LanguageSelect value={lang} onChange={setLang} compact label="Transcript language" />
+              <LanguageSelect value={lang} onChange={setLang} compact label={tc.inputLanguageLabel} />
             </div>
             <PrimaryButton onClick={() => run()} disabled={loading || !url.trim()}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
@@ -367,15 +364,15 @@ export default function AITranscriptPage() {
                       <Clock className="w-3 h-3" /> {data.totalDurationFormatted || parseIsoDuration(data.duration)}
                     </span>
                     {data.segmentCount != null && (
-                      <span className="flex items-center gap-1"><AlignLeft className="w-3 h-3" /> {data.segmentCount.toLocaleString()} segments</span>
+                      <span className="flex items-center gap-1"><AlignLeft className="w-3 h-3" /> {data.segmentCount.toLocaleString()} {tc.resultSegmentsSuffix}</span>
                     )}
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {data.captionLanguage && (
-                      <Badge icon={Languages} label={`Source: ${data.captionLanguage.toUpperCase()}`} color="green" />
+                      <Badge icon={Languages} label={`${tc.resultSourcePrefix}: ${data.captionLanguage.toUpperCase()}`} color="green" />
                     )}
                     {data.translatedText && data.captionLanguage !== lang && (
-                      <Badge icon={Sparkles} label={`Translated → ${getLanguage(lang).name}`} color="red" />
+                      <Badge icon={Sparkles} label={`${tc.resultTranslatedPrefix} → ${getLanguage(lang).name}`} color="red" />
                     )}
                   </div>
                 </div>
@@ -420,7 +417,7 @@ export default function AITranscriptPage() {
                       key={`${l.code}-${l.kind}-${i}`}
                       onClick={() => (l.proxyUrl ? runFromProxy(l) : run(l.code))}
                       disabled={loading}
-                      title={l.kind === "auto-generated" ? "Auto-generated" : "Manual captions"}
+                      title={l.kind === "auto-generated" ? tc.resultAutoGenerated : tc.resultManualCaptions}
                       className="text-[11px] font-black px-3 py-2 rounded-xl border-2 border-black bg-white text-black flex items-center gap-1.5 hover:bg-blue-600 hover:text-white transition-colors disabled:opacity-50"
                     >
                       <span>{l.name}</span>
@@ -449,7 +446,7 @@ export default function AITranscriptPage() {
                           if (l.proxyUrl) runFromProxy(l);
                           else run(l.code);
                         }}
-                        title={l.kind === "auto-generated" ? "Auto-generated" : "Manual captions"}
+                        title={l.kind === "auto-generated" ? tc.resultAutoGenerated : tc.resultManualCaptions}
                         className={`text-[11px] font-black px-2.5 py-1.5 rounded-full border-2 border-black flex items-center gap-1.5 transition-colors ${active ? "bg-red-600 text-white" : "bg-white text-black hover:bg-black hover:text-white"
                           }`}
                       >
@@ -590,8 +587,8 @@ export default function AITranscriptPage() {
         slug="ai-transcript"
         faqs={tc.faqs || []}
         breadcrumb={[
-          { name: "Home", slug: "/" },
-          { name: "Tools", slug: "/tools" },
+          { name: tc.breadcrumbHome, slug: "/" },
+          { name: tc.breadcrumbTools, slug: "/tools" },
           { name: tc.title || "AI Transcript", slug: "/tools/ai-transcript" },
         ]}
       />

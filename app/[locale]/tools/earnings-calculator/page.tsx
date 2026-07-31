@@ -176,7 +176,7 @@ export default function EarningsCalculatorPage() {
 
             {/* Niche Selection */}
             <div>
-              <label className="block text-xs font-black uppercase tracking-wider mb-3">Content Niche</label>
+              <label className="block text-xs font-black uppercase tracking-wider mb-3">{toolContent.inputNiche}</label>
               <div className="grid grid-cols-2 sm:grid-cols-2 gap-2">
                 {niches.map((n) => (
                   <button
@@ -191,7 +191,7 @@ export default function EarningsCalculatorPage() {
                       <span>{n.name}</span>
                       <span className={`text-[10px] sm:text-xs ${niche.name === n.name ? "opacity-90" : "opacity-50"}`}>${n.rpm}</span>
                     </div>
-                    <div className="text-[8px] sm:text-[9px] font-bold opacity-70 mt-0.5">RPM</div>
+                    <div className="text-[8px] sm:text-[9px] font-bold opacity-70 mt-0.5">{toolContent.inputNicheRpm}</div>
                   </button>
                 ))}
               </div>
@@ -459,9 +459,9 @@ export default function EarningsCalculatorPage() {
         slug="earnings-calculator"
         faqs={toolContent.faqs}
         breadcrumb={[
-          { name: "Home", slug: "/" },
-          { name: "Tools", slug: "/tools" },
-          { name: "YouTube Earnings Calculator", slug: "/tools/earnings-calculator" },
+          { name: toolContent.breadcrumbHome, slug: "/" },
+          { name: toolContent.breadcrumbTools, slug: "/tools" },
+          { name: toolContent.title, slug: "/tools/earnings-calculator" },
         ]}
       />
     </ToolLayout>
