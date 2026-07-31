@@ -2,9 +2,23 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Zap, Target, Cpu, MessageSquare, TrendingUp, BarChart3, Sparkles, ArrowRight } from "lucide-react";
+import { Zap, Target, Cpu, MessageSquare, TrendingUp, BarChart3, Sparkles, ArrowRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+
+const iconMap: Record<string, LucideIcon> = {
+  Cpu,
+  Target,
+  Zap,
+  MessageSquare,
+  BarChart3,
+  TrendingUp,
+};
+
+function DynamicIcon({ name, className }: { name: string; className?: string }) {
+  const Icon = iconMap[name] ?? Sparkles;
+  return <Icon className={className} />;
+}
 
 const aiFeatures = [
   {
@@ -118,7 +132,7 @@ export function AIFeatures() {
                   <div className="relative z-10">
                     <div className="flex items-start justify-between mb-3">
                       <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${feature.bg} ${feature.border} border flex items-center justify-center`}>
-                        <feature.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${feature.color}`} />
+                        <DynamicIcon name={feature.icon} className={`w-4 h-4 sm:w-5 sm:h-5 ${feature.color}`} />
                       </div>
                       {/* Stat badge */}
                       <AnimatePresence>
@@ -240,7 +254,7 @@ export function AIFeatures() {
                   style={"top" in m ? { top: m.top } : { bottom: (m as any).bottom }}
                 >
                   <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-red-50 flex items-center justify-center shrink-0 border border-red-200">
-                    <m.icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-red-600" />
+                    <DynamicIcon name={m.icon} className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-red-600" />
                   </div>
                   <div className="min-w-0">
                     <div className="text-[9px] sm:text-[10px] text-neutral-500 truncate">{m.label}</div>
