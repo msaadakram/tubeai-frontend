@@ -270,7 +270,7 @@ const guidesColorsAndIcons = [
 
 // ─── Page ───
 export default function EmbedGeneratorPage() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const tc = t("toolPages.embedGenerator") as NonNullable<ReturnType<typeof t<"toolPages.embedGenerator">>>;
   const guides = tc.guides.map((g: { title: string; desc: string }, i: number) => ({
     ...g,
@@ -346,11 +346,11 @@ export default function EmbedGeneratorPage() {
   const downloadHtml = () => {
     if (!embedHtml || !videoId) return;
     const doc = `<!DOCTYPE html>
-<html lang="en">
+<html lang="${locale}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>YouTube Embed — ${videoId}</title>
+<title>${tc.uiShareTitle} — ${videoId}</title>
 <style>body{font-family:system-ui,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem}</style>
 </head>
 <body>
@@ -373,7 +373,7 @@ ${embedHtml}
     if (!videoId) return;
     const url = `https://www.youtube.com/watch?v=${videoId}`;
     if (navigator.share) {
-      try { await navigator.share({ title: "YouTube Embed", url }); } catch { /* user canceled */ }
+      try { await navigator.share({ title: tc.uiShareTitle, url }); } catch { /* user canceled */ }
     } else {
       try {
         await copyToClipboard(url);
@@ -415,7 +415,7 @@ ${embedHtml}
             {input && !loading && (
               <button
                 onClick={() => { setInput(""); setVideoId(null); setError(null); inputRef.current?.focus(); }}
-                aria-label="Clear input"
+                aria-label={tc.uiClearInput}
                 className="p-1 rounded-md hover:bg-neutral-100 transition shrink-0"
               >
                 <X className="w-3.5 h-3.5 text-neutral-500" />
@@ -486,7 +486,7 @@ ${embedHtml}
 
           <div className="grid lg:grid-cols-[1fr_1.15fr] gap-6">
             {/* ─── OPTIONS PANEL ─── */}
-            <section aria-label="Embed customization" className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden min-w-0">
+            <section aria-label={tc.uiCustomizationAria} className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden min-w-0">
               <div className="px-5 py-3 border-b-2 border-black bg-neutral-50 flex items-center gap-2">
                 <Sliders className="w-4 h-4 text-red-600" />
                 <h2 className="font-black text-sm">{tc.customizationTitle}</h2>
@@ -558,11 +558,8 @@ ${embedHtml}
                 </FieldGroup>
 
                 {/* THEME */}
-                <FieldGroup title="Theme">
-                  <SelectField label="Progress bar color" value={opts.colorTheme} onChange={(v) => update("colorTheme", v as "red" | "white")} options={[
-                    { value: "red", label: "Red (default)" },
-                    { value: "white", label: "White" },
-                  ]} />
+                <FieldGroup title={tc.themeTitle}>
+                  <SelectField label={tc.progressBarColorLabel} value={opts.colorTheme} onChange={(v) => update("colorTheme", v as "red" | "white")} options={tc.progressBarOptions} />
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => update("previewTheme", "light")}
@@ -570,7 +567,7 @@ ${embedHtml}
                       className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black rounded-lg border-2 transition ${opts.previewTheme === "light" ? "bg-white text-black border-black shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]" : "bg-white text-neutral-600 border-neutral-300 hover:border-black"
                         }`}
                     >
-                      <Sun className="w-3.5 h-3.5" /> Light Preview
+                      <Sun className="w-3.5 h-3.5" /> {tc.previewLight}
                     </button>
                     <button
                       onClick={() => update("previewTheme", "dark")}
@@ -578,7 +575,7 @@ ${embedHtml}
                       className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-black rounded-lg border-2 transition ${opts.previewTheme === "dark" ? "bg-black text-white border-black shadow-[2px_2px_0px_0px_rgba(220,38,38,1)]" : "bg-white text-neutral-600 border-neutral-300 hover:border-black"
                         }`}
                     >
-                      <Moon className="w-3.5 h-3.5" /> Dark Preview
+                      <Moon className="w-3.5 h-3.5" /> {tc.previewDark}
                     </button>
                   </div>
                 </FieldGroup>
@@ -599,7 +596,7 @@ ${embedHtml}
                   <h2 className="font-black text-sm flex items-center gap-2">
                     <Play className="w-4 h-4 text-red-500" /> {tc.previewTitle}
                   </h2>
-                  <div role="tablist" aria-label="Device" className="flex flex-wrap gap-1">
+                  <div role="tablist" aria-label={tc.uiDeviceAria} className="flex flex-wrap gap-1">
                     {([
                       { id: "desktop", label: tc.previewDesktop, icon: Monitor },
                       { id: "tablet", label: tc.previewTablet, icon: Tablet },
@@ -632,7 +629,7 @@ ${embedHtml}
                         <iframe
                           src={embedSrc}
                           style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
-                          title="YouTube preview"
+                            title={tc.uiIframeTitle}
                           loading="lazy"
                           allow={`accelerometer; ${opts.autoplay ? "autoplay; " : ""}clipboard-write; encrypted-media; gyroscope; picture-in-picture`}
                           allowFullScreen={opts.fullscreen}
@@ -645,7 +642,7 @@ ${embedHtml}
                           <iframe
                             src={embedSrc}
                             style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
-                            title="YouTube preview"
+                          title={tc.uiIframeTitle}
                             loading="lazy"
                             allow={`accelerometer; ${opts.autoplay ? "autoplay; " : ""}clipboard-write; encrypted-media; gyroscope; picture-in-picture`}
                             allowFullScreen={opts.fullscreen}
@@ -698,7 +695,7 @@ ${embedHtml}
         <h3>{tc.seoContent.h3_4}</h3>
         <p>{tc.seoContent.p2_4}</p>
         <h3>{tc.seoContent.h3_5}</h3>
-        <p>{tc.seoContent.p2_5} <Link href="/tools/thumbnail-preview">Thumbnail Preview</Link> {tc.crossCta.desc} <Link href="/tools/thumbnail-downloader">Thumbnail Downloader</Link>.</p>
+        <p>{tc.seoContent.p2_5} <Link href="/tools/thumbnail-preview">{tc.crossCta.btn1}</Link> {tc.crossCta.desc} <Link href="/tools/thumbnail-downloader">{tc.crossCta.btn2}</Link>.</p>
       </SeoContent>
 
       <FaqAccordion faqs={tc.faqs} />
@@ -755,8 +752,8 @@ ${embedHtml}
         slug="embed-generator"
         faqs={tc.faqs}
         breadcrumb={[
-          { name: "Home", slug: "/" },
-          { name: "Tools", slug: "/tools" },
+          { name: tc.breadcrumbHome, slug: "/" },
+          { name: tc.breadcrumbTools, slug: "/tools" },
           { name: tc.title, slug: "/tools/embed-generator" },
         ]}
       />

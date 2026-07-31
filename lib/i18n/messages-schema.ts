@@ -1029,6 +1029,13 @@ export type Messages = {
       uiDownload: string;
       uiFullscreen: string;
       uiClose: string;
+      uiClearInput: string;
+      uiCustomizationAria: string;
+      uiDeviceAria: string;
+      uiShareTitle: string;
+      uiIframeTitle: string;
+      breadcrumbHome: string;
+      breadcrumbTools: string;
       guideBadge: string;
       guideTitle: string;
       guideIntro: string;
