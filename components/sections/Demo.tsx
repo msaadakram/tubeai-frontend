@@ -30,63 +30,42 @@ const tabs = [
   { id: "monetization", icon: DollarSign },
 ];
 
-const subFeatures = [
-  "Viral Hook Generation", "Thumbnail A/B Testing", 
-  "Competitor Analysis", "Trend Prediction", 
-  "Audience Retention Insights", "Automated Translations"
-];
-
-const tabPipelines: Record<string, { title: string, steps: Array<{ title: string, icon: any, color: string, bg: string }> }> = {
-  strategy: {
-    title: "Content Strategy Planner",
-    steps: [
-      { title: "Analyzing YouTube Trends", icon: Search, color: "text-blue-600", bg: "bg-blue-100" },
-      { title: "Generating Video Ideas", icon: Sparkles, color: "text-purple-600", bg: "bg-purple-100" },
-      { title: "Drafting Viral Script", icon: PenTool, color: "text-green-600", bg: "bg-green-100" },
-      { title: "Designing Thumbnail", icon: ImageIcon, color: "text-orange-600", bg: "bg-orange-100" },
-      { title: "Ready to Publish", icon: Rocket, color: "text-red-600", bg: "bg-red-100" }
-    ]
-  },
-  seo: {
-    title: "SEO & Ranking Optimizer",
-    steps: [
-      { title: "Scanning Competitor Tags", icon: Search, color: "text-indigo-600", bg: "bg-indigo-100" },
-      { title: "Finding High-Volume Keywords", icon: BarChart, color: "text-blue-600", bg: "bg-blue-100" },
-      { title: "Optimizing Title & Description", icon: PenTool, color: "text-teal-600", bg: "bg-teal-100" },
-      { title: "A/B Testing Thumbnails", icon: ImageIcon, color: "text-orange-600", bg: "bg-orange-100" },
-      { title: "Ranking #1 on Search", icon: CheckCircle2, color: "text-green-600", bg: "bg-green-100" }
-    ]
-  },
-  script: {
-    title: "AI Script Writer",
-    steps: [
-      { title: "Analyzing Audience Retention", icon: Search, color: "text-purple-600", bg: "bg-purple-100" },
-      { title: "Writing 3-Second Hook", icon: PenTool, color: "text-red-600", bg: "bg-red-100" },
-      { title: "Structuring Story Arc", icon: BarChart, color: "text-blue-600", bg: "bg-blue-100" },
-      { title: "Inserting CTA Prompts", icon: Sparkles, color: "text-yellow-600", bg: "bg-yellow-100" },
-      { title: "Finalizing Script Draft", icon: CheckCircle2, color: "text-green-600", bg: "bg-green-100" }
-    ]
-  },
-  analytics: {
-    title: "Analytics Engine",
-    steps: [
-      { title: "Fetching Real-time Views", icon: PlayCircle, color: "text-red-600", bg: "bg-red-100" },
-      { title: "Analyzing Watch Time", icon: BarChart, color: "text-indigo-600", bg: "bg-indigo-100" },
-      { title: "Tracking Subscriber Growth", icon: Search, color: "text-emerald-600", bg: "bg-emerald-100" },
-      { title: "Calculating Click-Through Rate", icon: ImageIcon, color: "text-orange-600", bg: "bg-orange-100" },
-      { title: "Generating Insights Report", icon: CheckCircle2, color: "text-blue-600", bg: "bg-blue-100" }
-    ]
-  },
-  monetization: {
-    title: "Monetization Tracker",
-    steps: [
-      { title: "Analyzing RPM / CPM", icon: DollarSign, color: "text-green-600", bg: "bg-green-100" },
-      { title: "Finding Sponsor Matches", icon: Search, color: "text-blue-600", bg: "bg-blue-100" },
-      { title: "Optimizing Ad Placements", icon: BarChart, color: "text-purple-600", bg: "bg-purple-100" },
-      { title: "Projecting Revenue", icon: Sparkles, color: "text-yellow-600", bg: "bg-yellow-100" },
-      { title: "Maximizing Earnings", icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-100" }
-    ]
-  }
+const stepStyles: Record<string, Array<{ icon: any; color: string; bg: string }>> = {
+  strategy: [
+    { icon: Search, color: "text-blue-600", bg: "bg-blue-100" },
+    { icon: Sparkles, color: "text-purple-600", bg: "bg-purple-100" },
+    { icon: PenTool, color: "text-green-600", bg: "bg-green-100" },
+    { icon: ImageIcon, color: "text-orange-600", bg: "bg-orange-100" },
+    { icon: Rocket, color: "text-red-600", bg: "bg-red-100" },
+  ],
+  seo: [
+    { icon: Search, color: "text-indigo-600", bg: "bg-indigo-100" },
+    { icon: BarChart, color: "text-blue-600", bg: "bg-blue-100" },
+    { icon: PenTool, color: "text-teal-600", bg: "bg-teal-100" },
+    { icon: ImageIcon, color: "text-orange-600", bg: "bg-orange-100" },
+    { icon: CheckCircle2, color: "text-green-600", bg: "bg-green-100" },
+  ],
+  script: [
+    { icon: Search, color: "text-purple-600", bg: "bg-purple-100" },
+    { icon: PenTool, color: "text-red-600", bg: "bg-red-100" },
+    { icon: BarChart, color: "text-blue-600", bg: "bg-blue-100" },
+    { icon: Sparkles, color: "text-yellow-600", bg: "bg-yellow-100" },
+    { icon: CheckCircle2, color: "text-green-600", bg: "bg-green-100" },
+  ],
+  analytics: [
+    { icon: PlayCircle, color: "text-red-600", bg: "bg-red-100" },
+    { icon: BarChart, color: "text-indigo-600", bg: "bg-indigo-100" },
+    { icon: Search, color: "text-emerald-600", bg: "bg-emerald-100" },
+    { icon: ImageIcon, color: "text-orange-600", bg: "bg-orange-100" },
+    { icon: CheckCircle2, color: "text-blue-600", bg: "bg-blue-100" },
+  ],
+  monetization: [
+    { icon: DollarSign, color: "text-green-600", bg: "bg-green-100" },
+    { icon: Search, color: "text-blue-600", bg: "bg-blue-100" },
+    { icon: BarChart, color: "text-purple-600", bg: "bg-purple-100" },
+    { icon: Sparkles, color: "text-yellow-600", bg: "bg-yellow-100" },
+    { icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-100" },
+  ],
 };
 
 export function Demo() {
@@ -104,8 +83,18 @@ export function Demo() {
   const demoTranslations = t("demo");
   const tabLabels = demoTranslations.tabs;
   const subFeatures = demoTranslations.subFeatures;
-  const currentPipeline = tabPipelines[activeTab] || tabPipelines.strategy;
-  const creationSteps = currentPipeline.steps;
+  const pipelines: Record<string, { title: string; steps: Array<{ title: string }> }> = {
+    strategy: { title: demoTranslations.strategy.pipelineTitle, steps: demoTranslations.strategy.steps },
+    seo: { title: demoTranslations.seo.pipelineTitle, steps: demoTranslations.seo.steps },
+    script: { title: demoTranslations.script.pipelineTitle, steps: demoTranslations.script.steps },
+    analytics: { title: demoTranslations.analytics.pipelineTitle, steps: demoTranslations.analytics.steps },
+    monetization: { title: demoTranslations.monetization.pipelineTitle, steps: demoTranslations.monetization.steps },
+  };
+  const currentPipeline = pipelines[activeTab] || pipelines.strategy;
+  const creationSteps = currentPipeline.steps.map((s, i) => ({
+    ...s,
+    ...(stepStyles[activeTab] || stepStyles.strategy)[i % 5],
+  }));
 
   return (
     <section id="demo" className="py-16 sm:py-20 md:py-24 bg-white border-t border-neutral-200 relative overflow-hidden">
@@ -116,12 +105,12 @@ export function Demo() {
           <div className="max-w-xl relative">
             {/* Sideways Text */}
             <div className="absolute top-8 -left-12 transform -rotate-90 origin-top-left text-neutral-400 text-xs tracking-[0.2em] font-medium hidden lg:block">
-              BY SOLUTIONS
+              {demoTranslations.badge}
             </div>
             
             <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-black pl-0 lg:pl-6">
-              Our Solutions <br />
-              <span className="text-neutral-400">for your channel</span>
+              {demoTranslations.title} <br />
+              <span className="text-neutral-400">{demoTranslations.titleAccent}</span>
             </h2>
           </div>
           <div className="max-w-md text-neutral-500 text-sm md:text-base">
@@ -226,7 +215,7 @@ export function Demo() {
                     transition={{ repeat: Infinity, duration: 2 }}
                     className="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black"
                   >
-                    AI Sync Active
+                    {demoTranslations.aiSyncActive}
                   </motion.div>
                 </motion.div>
 
@@ -238,7 +227,7 @@ export function Demo() {
                     transition={{ delay: 0.1 }}
                     className="border-2 border-black rounded-xl p-4 flex flex-col shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white relative overflow-hidden"
                   >
-                    <div className="text-xs font-black text-black uppercase tracking-wider mb-4">Auto-Creation Pipeline</div>
+                    <div className="text-xs font-black text-black uppercase tracking-wider mb-4">{demoTranslations.autoCreationPipeline}</div>
                     
                     <div className="flex-1 relative flex flex-col justify-center items-center py-2">
                       <AnimatePresence mode="wait">
@@ -290,7 +279,7 @@ export function Demo() {
                       transition={{ delay: 0.2 }}
                       className="bg-black text-white p-4 rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(220,38,38,1)]"
                     >
-                      <div className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1">Predicted Views</div>
+                      <div className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1">{demoTranslations.predictedViews}</div>
                       <div className="text-3xl font-black text-white">1.2M+</div>
                       <motion.div 
                         className="h-1.5 bg-red-600 mt-3 rounded-full"
@@ -306,7 +295,7 @@ export function Demo() {
                       transition={{ delay: 0.3 }}
                       className="flex-1 border-2 border-black rounded-xl p-4 flex flex-col justify-end relative overflow-hidden bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                     >
-                      <div className="absolute top-3 left-3 text-xs font-black text-black uppercase tracking-wider">Growth Curve</div>
+                      <div className="absolute top-3 left-3 text-xs font-black text-black uppercase tracking-wider">{demoTranslations.growthCurve}</div>
                       <div className="flex items-end gap-1.5 h-16 mt-6">
                         {[20, 35, 25, 60, 45, 80, 100].map((h, i) => (
                           <motion.div 

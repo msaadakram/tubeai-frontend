@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { TrendingUp, Eye, Users, Clock } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 function useCounter(target: number, duration = 1500) {
   const [value, setValue] = useState(0);
@@ -20,6 +21,8 @@ function useCounter(target: number, duration = 1500) {
 }
 
 export function AnalyticsDemo() {
+  const { t } = useTranslations();
+  const demo = t("demo");
   const [tick, setTick] = useState(0);
   const views = useCounter(1247893 + tick * 137);
   const subs = useCounter(48291 + tick * 3);
@@ -35,7 +38,7 @@ export function AnalyticsDemo() {
   return (
     <div className="p-3 sm:p-5 flex flex-col gap-2.5 sm:gap-3 aspect-[5/6] sm:aspect-[4/3] bg-white">
       <div className="flex items-center justify-between border-b-2 border-black pb-2">
-        <div className="font-black text-black text-lg tracking-tight">Live Analytics</div>
+        <div className="font-black text-black text-lg tracking-tight">{demo.liveAnalytics}</div>
         <div className="flex items-center gap-1.5 text-xs font-bold">
           <motion.div
             animate={{ scale: [1, 1.3, 1] }}

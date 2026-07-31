@@ -125,6 +125,13 @@ export type Messages = {
     lastUpdated: string;
   };
   demo: {
+    badge: string;
+    title: string;
+    titleAccent: string;
+    aiSyncActive: string;
+    autoCreationPipeline: string;
+    predictedViews: string;
+    growthCurve: string;
     tabs: {
       strategy: string;
       seo: string;
@@ -153,6 +160,20 @@ export type Messages = {
       pipelineTitle: string;
       steps: { title: string }[];
     };
+    strategyPlanner: string;
+    trendingNow: string;
+    nicheFit: string;
+    nextVideoIdea: string;
+    tutorialBadge: string;
+    matchBadge: string;
+    aiBrainstorming: string;
+    liveAnalytics: string;
+    searchRank: string;
+    keywordsFound: string;
+    revenueEngine: string;
+    sponsorMatch: string;
+    revenueSplit: string;
+    thisMonth: string;
     description: string;
     exploreButton: string;
   };

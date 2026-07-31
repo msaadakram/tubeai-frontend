@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Sparkles, Calendar, Flame, Target, Lightbulb } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const trendingTopics = [
   { topic: "AI Productivity Hacks", heat: 94, tag: "RISING" },
@@ -23,6 +24,8 @@ const videoIdeas = [
 const calendar = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 export function StrategyDemo() {
+  const { t } = useTranslations();
+  const demo = t("demo");
   const [trendIdx, setTrendIdx] = useState(0);
   const [ideaIdx, setIdeaIdx] = useState(0);
   const [activeDay, setActiveDay] = useState(0);
@@ -48,14 +51,14 @@ export function StrategyDemo() {
       <div className="flex items-center justify-between border-b-2 border-black pb-2">
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-red-600" />
-          <div className="font-black text-black text-lg tracking-tight">Strategy Planner</div>
+          <div className="font-black text-black text-lg tracking-tight">{demo.strategyPlanner}</div>
         </div>
         <motion.div
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
           className="px-2 py-0.5 bg-red-600 text-white text-[10px] font-black rounded-full border-2 border-black"
         >
-          AI BRAINSTORMING
+          {demo.aiBrainstorming}
         </motion.div>
       </div>
 
@@ -63,7 +66,7 @@ export function StrategyDemo() {
       <div className="border-2 border-black rounded-xl p-2.5 sm:p-3 bg-black text-white shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] sm:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] relative overflow-hidden">
         <div className="flex items-center gap-1.5 mb-1">
           <Lightbulb className="w-3.5 h-3.5 text-red-500" />
-          <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400">Next Video Idea</span>
+          <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400">{demo.nextVideoIdea}</span>
         </div>
         <AnimatePresence mode="wait">
           <motion.div
@@ -80,7 +83,7 @@ export function StrategyDemo() {
         <div className="flex gap-2 mt-2 text-[9px] font-bold">
           <span className="bg-red-600 text-white px-2 py-0.5 rounded-full">VIRAL POTENTIAL 92</span>
           <span className="bg-white text-black px-2 py-0.5 rounded-full">8 MIN</span>
-          <span className="border border-neutral-600 text-neutral-300 px-2 py-0.5 rounded-full">TUTORIAL</span>
+          <span className="border border-neutral-600 text-neutral-300 px-2 py-0.5 rounded-full">{demo.tutorialBadge}</span>
         </div>
       </div>
 
@@ -89,7 +92,7 @@ export function StrategyDemo() {
         <div className="border-2 border-black rounded-xl p-2.5 sm:p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col overflow-hidden min-w-0">
           <div className="flex items-center gap-1.5 mb-2">
             <Flame className="w-3.5 h-3.5 text-red-600" />
-            <span className="text-[10px] font-black uppercase tracking-wider">Trending Now</span>
+            <span className="text-[10px] font-black uppercase tracking-wider">{demo.trendingNow}</span>
           </div>
           <div className="flex flex-col gap-1.5 flex-1">
             <AnimatePresence mode="popLayout">
@@ -124,7 +127,7 @@ export function StrategyDemo() {
         <div className="border-2 border-black rounded-xl p-2.5 sm:p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col min-w-0">
           <div className="flex items-center gap-1.5 mb-2">
             <Target className="w-3.5 h-3.5 text-red-600" />
-            <span className="text-[10px] font-black uppercase tracking-wider">Niche Fit</span>
+            <span className="text-[10px] font-black uppercase tracking-wider">{demo.nicheFit}</span>
           </div>
           <div className="flex-1 flex items-center justify-center relative">
             <svg viewBox="0 0 100 100" className="w-20 h-20 sm:w-24 sm:h-24 -rotate-90">
@@ -152,7 +155,7 @@ export function StrategyDemo() {
               >
                 {niche}
               </motion.span>
-              <span className="text-[9px] font-bold text-neutral-500 -mt-1">MATCH</span>
+              <span className="text-[9px] font-bold text-neutral-500 -mt-1">{demo.matchBadge}</span>
             </div>
           </div>
           <div className="text-[9px] font-bold text-black text-center">Tech / Productivity</div>

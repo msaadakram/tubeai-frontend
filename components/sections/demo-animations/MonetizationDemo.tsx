@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { DollarSign, Briefcase, TrendingUp } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const sponsors = [
   { name: "Squarespace", deal: "$4,200", tag: "MATCH 98%" },
@@ -12,6 +13,8 @@ const sponsors = [
 ];
 
 export function MonetizationDemo() {
+  const { t } = useTranslations();
+  const demo = t("demo");
   const [revenue, setRevenue] = useState(12847);
   const [sponsorIdx, setSponsorIdx] = useState(0);
 
@@ -27,9 +30,9 @@ export function MonetizationDemo() {
   return (
     <div className="p-3 sm:p-5 flex flex-col gap-2.5 sm:gap-3 aspect-[5/6] sm:aspect-[4/3] bg-white">
       <div className="flex items-center justify-between border-b-2 border-black pb-2">
-        <div className="font-black text-black text-lg tracking-tight">Revenue Engine</div>
+        <div className="font-black text-black text-lg tracking-tight">{demo.revenueEngine}</div>
         <div className="px-2 py-0.5 bg-red-600 text-white text-[10px] font-black rounded-full border-2 border-black">
-          THIS MONTH
+          {demo.thisMonth}
         </div>
       </div>
 
@@ -78,7 +81,7 @@ export function MonetizationDemo() {
         <div className="border-2 border-black rounded-xl p-2.5 sm:p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col min-w-0">
           <div className="flex items-center gap-1.5 mb-2">
             <Briefcase className="w-3.5 h-3.5 text-red-600" />
-            <span className="text-[10px] font-black uppercase tracking-wider">Sponsor Match</span>
+            <span className="text-[10px] font-black uppercase tracking-wider">{demo.sponsorMatch}</span>
           </div>
           <AnimatePresence mode="wait">
             <motion.div
@@ -99,7 +102,7 @@ export function MonetizationDemo() {
 
         {/* Revenue split */}
         <div className="border-2 border-black rounded-xl p-2.5 sm:p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col min-w-0">
-          <div className="text-[10px] font-black uppercase tracking-wider mb-2">Revenue Split</div>
+          <div className="text-[10px] font-black uppercase tracking-wider mb-2">{demo.revenueSplit}</div>
           <div className="flex flex-col gap-2 flex-1 justify-center">
             {[
               { label: "AdSense", pct: 52, color: "bg-red-600" },

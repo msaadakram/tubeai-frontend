@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Search, TrendingUp, Hash, Trophy } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const keywordPool = [
   { kw: "ai video editing 2026", vol: "248K", diff: 42 },
@@ -20,6 +21,8 @@ const titleVariants = [
 ];
 
 export function SeoDemo() {
+  const { t } = useTranslations();
+  const demo = t("demo");
   const [rank, setRank] = useState(47);
   const [keywordIdx, setKeywordIdx] = useState(0);
   const [titleIdx, setTitleIdx] = useState(0);
@@ -82,7 +85,7 @@ export function SeoDemo() {
         <div className="border-2 border-black rounded-xl p-2.5 sm:p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-black text-white flex flex-col min-w-0">
           <div className="flex items-center gap-1.5 mb-1">
             <Trophy className="w-3.5 h-3.5 text-red-500" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400">Search Rank</span>
+            <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400">{demo.searchRank}</span>
           </div>
           <div className="flex items-baseline gap-1 mt-1">
             <span className="text-[10px] font-bold text-neutral-500">#</span>
@@ -122,7 +125,7 @@ export function SeoDemo() {
         <div className="border-2 border-black rounded-xl p-2.5 sm:p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col overflow-hidden min-w-0">
           <div className="flex items-center gap-1.5 mb-2">
             <Hash className="w-3.5 h-3.5 text-red-600" />
-            <span className="text-[10px] font-black uppercase tracking-wider">Keywords Found</span>
+            <span className="text-[10px] font-black uppercase tracking-wider">{demo.keywordsFound}</span>
           </div>
           <div className="flex flex-col gap-1.5 flex-1">
             <AnimatePresence mode="popLayout">
