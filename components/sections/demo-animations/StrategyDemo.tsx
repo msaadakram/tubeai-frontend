@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Sparkles, Calendar, Flame, Target, Lightbulb } from "lucide-react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+import { TweenNumber } from "./TweenNumber";
 
 const trendingTopics = [
   { topic: "AI Productivity Hacks", heat: 94, tag: "RISING" },
@@ -147,14 +148,7 @@ export function StrategyDemo() {
               />
             </svg>
             <div className="absolute flex flex-col items-center">
-              <motion.span
-                key={niche}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="text-xl sm:text-2xl font-black text-black tabular-nums"
-              >
-                {niche}
-              </motion.span>
+              <TweenNumber value={niche} className="text-xl sm:text-2xl font-black text-black" />
               <span className="text-[9px] font-bold text-neutral-500 -mt-1">{demo.matchBadge}</span>
             </div>
           </div>

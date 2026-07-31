@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Search, TrendingUp, Hash, Trophy } from "lucide-react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+import { TweenNumber } from "./TweenNumber";
 
 const keywordPool = [
   { kw: "ai video editing 2026", vol: "248K", diff: 42 },
@@ -89,14 +90,7 @@ export function SeoDemo() {
           </div>
           <div className="flex items-baseline gap-1 mt-1">
             <span className="text-[10px] font-bold text-neutral-500">#</span>
-            <motion.span
-              key={rank}
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="text-3xl sm:text-4xl font-black tabular-nums text-white"
-            >
-              {rank}
-            </motion.span>
+            <TweenNumber value={rank} className="text-3xl sm:text-4xl font-black text-white" />
             <motion.div
               animate={{ y: [0, -3, 0] }}
               transition={{ repeat: Infinity, duration: 1 }}

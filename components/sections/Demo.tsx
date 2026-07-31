@@ -191,6 +191,14 @@ export function Demo() {
               </div>
               
               {/* App Content */}
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 16, scale: 0.985 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -16, scale: 0.985 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                >
               {activeTab === "strategy" ? (
                 <StrategyDemo />
               ) : activeTab === "script" ? (
@@ -236,7 +244,7 @@ export function Demo() {
                           initial={{ opacity: 0, y: 20, scale: 0.9 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: -20, scale: 0.9 }}
-                          transition={{ duration: 0.3 }}
+                          transition={{ type: "spring", stiffness: 320, damping: 28 }}
                           className="flex flex-col items-center text-center gap-3 w-full"
                         >
                           {(() => {
@@ -312,6 +320,8 @@ export function Demo() {
                 </div>
               </div>
               )}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
 

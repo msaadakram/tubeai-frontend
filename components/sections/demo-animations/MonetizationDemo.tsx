@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { DollarSign, Briefcase, TrendingUp } from "lucide-react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+import { TweenNumber } from "./TweenNumber";
 
 const sponsors = [
   { name: "Squarespace", deal: "$4,200", tag: "MATCH 98%" },
@@ -45,14 +46,7 @@ export function MonetizationDemo() {
         </div>
         <div className="flex items-end gap-1">
           <DollarSign className="w-6 h-6 sm:w-7 sm:h-7 text-red-600 mb-1" />
-          <motion.span
-            key={revenue}
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="text-2xl sm:text-3xl md:text-4xl font-black tabular-nums"
-          >
-            {revenue.toLocaleString()}
-          </motion.span>
+          <TweenNumber value={revenue} className="text-2xl sm:text-3xl md:text-4xl font-black" />
           <motion.div
             animate={{ y: [-2, 2, -2] }}
             transition={{ repeat: Infinity, duration: 1.5 }}

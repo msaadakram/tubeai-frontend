@@ -1,20 +1,25 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { TrendingUp, Eye, Users, Clock } from "lucide-react";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 
 function useCounter(target: number, duration = 1500) {
   const [value, setValue] = useState(0);
+  const fromRef = useRef(0);
   useEffect(() => {
+    const from = fromRef.current;
     const start = Date.now();
     const interval = setInterval(() => {
-      const elapsed = Date.now() - start;
-      const progress = Math.min(elapsed / duration, 1);
-      setValue(Math.floor(target * progress));
-      if (progress >= 1) clearInterval(interval);
-    }, 30);
+      const progress = Math.min((Date.now() - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(from + (target - from) * eased));
+      if (progress >= 1) {
+        fromRef.current = target;
+        clearInterval(interval);
+      }
+    }, 16);
     return () => clearInterval(interval);
   }, [target, duration]);
   return value;
@@ -82,10 +87,10 @@ export function AnalyticsDemo() {
         <div className="flex-1 flex items-end gap-1">
           {chartData.map((h, i) => (
             <motion.div
-              key={`${i}-${tick}`}
+              key={i}
               initial={{ height: 0 }}
               animate={{ height: `${h + ((tick + i) % 7) * 2}%` }}
-              transition={{ duration: 0.8, delay: i * 0.04 }}
+              transition={{ duration: 1.1, delay: i * 0.05, ease: "easeInOut" }}
               className={`flex-1 rounded-t border-2 border-black ${
                 i === chartData.length - 1 ? "bg-red-600" : i % 2 === 0 ? "bg-black" : "bg-white"
               }`}
