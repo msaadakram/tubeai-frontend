@@ -89,6 +89,7 @@ function SignUpPageInner() {
   const [turnstileToken, setTurnstileToken] = useState("");
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [resendError, setResendError] = useState("");
+  const [existingCode, setExistingCode] = useState("");
 
   const turnstileRef = useRef<TurnstileHandle>(null);
   const score = strength(pwd);
@@ -160,6 +161,7 @@ function SignUpPageInner() {
     }
 
     setError(null);
+    setExistingCode("");
     setLoading(true);
     const res = await signUp(name.trim(), email.trim(), pwd, referralCode.trim() || undefined, turnstileToken || undefined);
     setLoading(false);
@@ -168,6 +170,7 @@ function SignUpPageInner() {
       setRegisteredEmail(email.trim());
       resendCd.start();
     } else {
+      setExistingCode(res.code || "");
       turnstileRef.current?.reset();
       setTurnstileToken("");
       setError(res.error);
@@ -283,6 +286,32 @@ function SignUpPageInner() {
               <div className="flex items-start gap-2 p-3 bg-red-50 border-2 border-red-500 rounded-xl text-xs font-bold text-red-700">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <span>{error}</span>
+              </div>
+            )}
+            {existingCode === "EMAIL_EXISTS_NO_PASSWORD" && (
+              <div className="flex flex-col gap-2 p-3.5 bg-yellow-50 border-2 border-yellow-400 rounded-xl">
+                <p className="text-xs font-bold text-neutral-800 leading-relaxed">
+                  You already have an account with this email — it was created with Google. Sign in
+                  with Google below, or set a password via the reset link and use email login.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <button
+                    type="button"
+                    onClick={() => router.push(getLocalePath(locale, "/forgot-password"))}
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 bg-white border-2 border-black rounded-lg font-black text-xs uppercase tracking-wider hover:bg-neutral-50 transition-colors"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-red-600" /> Reset password
+                  </button>
+                  {GOOGLE_CLIENT_ID && (
+                    <button
+                      type="button"
+                      onClick={() => router.push(getLocalePath(locale, "/signin"))}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 bg-red-600 text-white border-2 border-black rounded-lg font-black text-xs uppercase tracking-wider hover:bg-red-700 transition-colors"
+                    >
+                      Sign in with Google
+                    </button>
+                  )}
+                </div>
               </div>
             )}
             <div>

@@ -37,7 +37,7 @@ export type User = {
   hasPassword?: boolean;
 };
 
-type AuthResult = { ok: true; user: User } | { ok: false; error: string };
+type AuthResult = { ok: true; user: User } | { ok: false; error: string; code?: string };
 
 type AuthCtx = {
   user: User | null;
@@ -230,7 +230,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         persist(u, res.token);
         return { ok: true, user: u };
       } catch (err: any) {
-        return { ok: false, error: err?.message || "Sign up failed" };
+        return { ok: false, error: err?.message || "Sign up failed", code: err?.code };
       }
     }, [persist]);
 
