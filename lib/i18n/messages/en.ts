@@ -172,20 +172,10 @@ export const en: Messages = {
     getStarted: "Get Started",
     startTrial: "Start 7-Day Trial",
     contactSales: "Contact Sales",
+    homeCrumb: "Home",
+    pricingCrumb: "Pricing",
     plans: {
-            starter: {
-        name: "Free",
-        tagline: "Get started with the basics",
-        description: "Perfect for new creators getting started.",
-        features: [
-          "Basic SEO Analyzer",
-          "5 AI Title Generations / mo",
-          "Tag Generator",
-          "Thumbnail Downloader",
-          "Standard Support"
-        ],
-        cta: "Get Started"
-      },
+
 free: {
         name: "Free",
         tagline: "Get started with the basics",
@@ -197,6 +187,7 @@ free: {
           "Community support",
         ],
         cta: "Start Free",
+        notIncluded: ["AI Script Writer", "Channel Analytics", "API access"],
       },
       pro: {
         name: "Pro",
@@ -236,12 +227,30 @@ free: {
         cta: "Contact Sales",
       },
     },
+    compareBadge: "Full Feature Comparison",
     compareTitle: "Compare every plan, side by side",
     compareSubtitle: "Every feature, every limit — clearly laid out so you can pick the right plan in 30 seconds.",
     featureCol: "Feature",
     testimonialsBadge: "Loved by 200K+ creators",
     testimonialsTitle: "Don't take our word for it",
     testimonialsSubtitle: "Real creators, real channel growth, real ROI.",
+    testimonials: [
+      {
+        quote: "YTForge's Creator plan paid for itself in the first week. My CTR jumped 41% after switching to AI-generated titles.",
+        name: "Maya Chen",
+        role: "Tech YouTuber · 1.2M subs",
+      },
+      {
+        quote: "We run 14 channels for our network. Pro plan's bulk generation saves my team 30+ hours every week.",
+        name: "Diego Ramirez",
+        role: "Head of Content · MediaCorp",
+      },
+      {
+        quote: "I was skeptical of AI tools but the script writer is honestly indistinguishable from my best long-form work.",
+        name: "Aisha Patel",
+        role: "Documentary Filmmaker · 480K subs",
+      },
+    ],
     faqBadge: "Pricing FAQ",
     faqTitle: "Everything you might be wondering",
     faqSubtitle: "Still have questions? Email support@ytforge.app — we reply within 4 hours.",
@@ -310,8 +319,6 @@ free: {
       { label: "Support", values: ["Community", "Priority chat", "24/7 phone + AM"] },
     ],
   
-      finalCtaDesc: "Start free, upgrade when you're ready. No credit card required.",
-      finalCtaBtn: "Start Free",
 },
   faq: {
     title: "Frequently asked questions",
@@ -447,6 +454,7 @@ free: {
     noMatch: "No language matches",
     label: "Language",
   },
+
   demo: {
     badge: "BY SOLUTIONS",
     title: "Our Solutions",
@@ -536,6 +544,343 @@ free: {
     revenueSplit: "Revenue Split",
     thisMonth: "THIS MONTH",
     exploreButton: "Explore All Tools",
+  },
+  demoPage: {
+    heroBadge: "Live Demo · 11 Tools · One Workspace",
+    heroTitle1: "See YTForge in action,",
+    heroTitle2: "before you sign up.",
+    heroDesc:
+      "An interactive walkthrough of every tool, every workflow, and every result — straight from the creators behind 50M+ subscribers worth of channels. Watch how 30 minutes of YTForge replaces 6 hours of manual research.",
+    startTrial: "Start Free Trial",
+    exploreTools: "Explore Tools",
+    tryFreeTools: "Try Free Tools",
+    heroStats: [
+      { value: "200K+", label: "Active Creators" },
+      { value: "12.4M+", label: "AI Generations" },
+      { value: "+340%", label: "Avg View Lift" },
+      { value: "4.9★", label: "Creator Rating" },
+    ],
+    featuredIn: "Featured In",
+    tourBadge: "Interactive Tool Tour",
+    tourTitle: "Click any tool to see it work",
+    tourDesc:
+      "Eleven AI tools, one keyboard shortcut away. Hover, click, watch them generate in real time.",
+    tools: [
+      {
+        name: "Viral Title Generator",
+        desc: "Generate 10 high-CTR titles for any topic in 2 seconds.",
+        metrics: { gens: "3.2M+", lift: "+47% CTR" },
+        demo: [
+          "I tested AI titles for 30 days...",
+          "The truth about AI YouTubers",
+          "Why 90% of creators fail at this",
+        ],
+      },
+      {
+        name: "AI Script Writer",
+        desc: "Retention-optimized scripts with hooks, loops, and pattern interrupts baked in.",
+        metrics: { gens: "5.8M+", lift: "+92% AVD" },
+        demo: [
+          "[HOOK] Wait — most people are doing this wrong.",
+          "[INTRO] In the next 8 minutes...",
+          "[PAYOFF] Here's the framework.",
+        ],
+      },
+      {
+        name: "Channel Analytics",
+        desc: "Full performance breakdown of any channel — subs, growth, audience, top videos.",
+        metrics: { gens: "890K+", lift: "Live data" },
+        demo: null,
+      },
+      {
+        name: "Channel ID Finder",
+        desc: "Get any channel's permanent UC... ID, RSS feed, and canonical URLs.",
+        metrics: { gens: "3.2M+", lift: "<1s lookup" },
+        demo: null,
+      },
+      {
+        name: "Monetization Checker",
+        desc: "Verify any channel's eligibility for the YouTube Partner Program in one click.",
+        metrics: { gens: "640K+", lift: "Real-time" },
+        demo: null,
+      },
+      {
+        name: "SEO Analyzer",
+        desc: "Rank #1 with keyword research, tag suggestions, and metadata audits.",
+        metrics: { gens: "2.1M+", lift: "+3.4x reach" },
+        demo: null,
+      },
+      {
+        name: "Thumbnail Downloader",
+        desc: "Grab any YouTube thumbnail in 4 resolutions — HD, HQ, MQ, SD.",
+        metrics: { gens: "6.7M+", lift: "Free forever" },
+        demo: null,
+      },
+      {
+        name: "Thumbnail Preview (All Sizes)",
+        desc: "Preview every YouTube thumbnail size on realistic desktop, tablet, mobile, and TV mockups.",
+        metrics: { gens: "1.1M+", lift: "5 sizes · 4 devices" },
+        demo: null,
+      },
+      {
+        name: "Embed Generator",
+        desc: "Generate responsive YouTube embed code with 20+ player settings and a live preview.",
+        metrics: { gens: "880K+", lift: "20+ options" },
+        demo: null,
+      },
+      {
+        name: "QR Code Generator",
+        desc: "Turn any YouTube link into a customizable QR code with your logo — export in HD.",
+        metrics: { gens: "1.3M+", lift: "PNG/SVG/JPEG" },
+        demo: null,
+      },
+      {
+        name: "AI Short Video Creator",
+        desc: "60-second viral Shorts with hook, body, and CTA — built for the For You feed.",
+        metrics: { gens: "4.1M+", lift: "+340% views" },
+        demo: null,
+      },
+      {
+        name: "AI Transcript",
+        desc: "Transcribe and translate any video into 100+ languages with timestamp accuracy.",
+        metrics: { gens: "1.9M+", lift: "99.4% acc." },
+        demo: null,
+      },
+      {
+        name: "Earnings Calculator",
+        desc: "Estimate your monthly YouTube revenue based on RPM, CPM, and view volume.",
+        metrics: { gens: "2.8M+", lift: "Niche RPMs" },
+        demo: null,
+      },
+    ],
+    lifetimeGens: "Lifetime Generations",
+    avgLift: "Avg Performance Lift",
+    sampleOutput: "Sample Output",
+    livePreviewTitle: "Live preview available",
+    livePreviewDesc: 'Click "Try Free" to launch the full interactive tool.',
+    tryToolFreePre: "Try",
+    tryToolFreeSuffix: "Free",
+    workflowBadge: "The Creator Workflow",
+    workflowTitle: "Idea → Title → Thumbnail → Script → Publish",
+    workflowDesc:
+      "The complete creator workflow, end-to-end, in under 30 minutes per video.",
+    workflowSteps: [
+      {
+        n: "01",
+        t: "Find a viral angle",
+        d: "Use Channel Analytics + Shorts Ideas to spot what's working in your niche right now.",
+      },
+      {
+        n: "02",
+        t: "Write the title",
+        d: "Generate 10 click-magnet titles. Pick the winner. CTR up to +47% over manual titles.",
+      },
+      {
+        n: "03",
+        t: "Write the script",
+        d: "Retention-optimized 8-minute script with [HOOK], [LOOP], [PAYOFF] markers ready to film.",
+      },
+      {
+        n: "04",
+        t: "Optimize SEO",
+        d: "Run the SEO Analyzer for keyword tags, description, and metadata before upload.",
+      },
+      {
+        n: "05",
+        t: "Publish & track",
+        d: "Channel Analytics monitors first-hour performance, retention, and audience match.",
+      },
+    ],
+    benefitsBadge: "Why Creators Switch",
+    benefitsTitle: "The YTForge advantage",
+    benefitsDesc: "Six reasons creators keep coming back month after month.",
+    benefits: [
+      {
+        t: "10x Faster",
+        d: "What used to take 6 hours now takes 30 minutes. Spend the saved time creating, not researching.",
+      },
+      {
+        t: "Proven Patterns",
+        d: "Every AI model is trained on the exact patterns of the top 1% of YouTube — no guesswork.",
+      },
+      {
+        t: "Niche-Specific",
+        d: "Generate output tuned to your exact niche, audience, and brand voice — not generic templates.",
+      },
+      {
+        t: "Full Stack",
+        d: "Title, thumbnail, script, SEO, analytics — every part of the workflow in one tool.",
+      },
+      {
+        t: "100+ Languages",
+        d: "Localize and translate scripts, transcripts, and captions to grow internationally.",
+      },
+      {
+        t: "Creator-Built",
+        d: "Built by creators with combined 50M+ subscribers. We use these tools on our own channels.",
+      },
+    ],
+    useCasesBadge: "Built For Every Creator",
+    useCasesTitle: "Who is YTForge for?",
+    useCasesDesc:
+      "Whether you're starting at zero or running a 100-channel network, there's a workflow tuned for you.",
+    useCases: [
+      {
+        t: "New Creators (0-10K)",
+        d: "Skip the 2-year discovery curve. Use proven viral formulas from day one. Average channel hits 10K in 90 days.",
+      },
+      {
+        t: "Growing Channels (10K-500K)",
+        d: "Break the algorithm plateau. Optimize CTR, AVD, and retention with data-driven AI suggestions.",
+      },
+      {
+        t: "Established Creators (500K+)",
+        d: "Scale output without sacrificing quality. Run 3x more uploads without burning out your team.",
+      },
+      {
+        t: "Agencies & Networks",
+        d: "Manage 10-100 channels with bulk generation, team workspaces, and white-label exports.",
+      },
+      {
+        t: "Analysts & Marketers",
+        d: "Reverse-engineer competitors in minutes. Pull RSS feeds, channel IDs, and analytics via API.",
+      },
+      {
+        t: "International Creators",
+        d: "Localize content into 100+ languages with AI Transcript. Tap global audiences without rewriting.",
+      },
+    ],
+    testiBadge: "200,000+ Creators",
+    testiTitle: "Results creators rave about",
+    testiDesc: "Real channels, real growth, real numbers.",
+    testimonials: [
+      {
+        quote:
+          "I went from 12K to 480K subscribers in 9 months. The viral title generator alone tripled my CTR overnight — and the script writer is honestly indistinguishable from my best long-form work.",
+        name: "Aisha Patel",
+        role: "Documentary Filmmaker",
+        channel: "@AishaTalks · 480K subs",
+        metric: "+3,900%",
+        metricLabel: "Subscriber growth",
+      },
+      {
+        quote:
+          "We run 14 channels for our network. YTForge's bulk generation saves my team 30+ hours every single week. The ROI was 12x in month one.",
+        name: "Diego Ramirez",
+        role: "Head of Content",
+        channel: "MediaCorp · 22M subs (network)",
+        metric: "30 hrs",
+        metricLabel: "Saved per week",
+      },
+      {
+        quote:
+          "The Channel Analytics tool is wild. I can reverse-engineer any competitor's strategy in 5 minutes — it's the most unfair advantage I've ever paid for.",
+        name: "Maya Chen",
+        role: "Tech YouTuber",
+        channel: "@MayaCodes · 1.2M subs",
+        metric: "+41%",
+        metricLabel: "CTR increase",
+      },
+      {
+        quote:
+          "I was skeptical of AI tools after burning $400/mo on TubeBuddy + VidIQ + ChatGPT Plus. YTForge replaced all three at half the cost and works 10x better.",
+        name: "Jordan Blake",
+        role: "Gaming Creator",
+        channel: "@JordanPlays · 890K subs",
+        metric: "$200/mo",
+        metricLabel: "Saved",
+      },
+    ],
+    guideBadge: "The Complete YTForge Guide",
+    guideTitle: "Everything YTForge does, explained in plain English",
+    guideDesc:
+      "A 2,500-word deep-dive into the complete YTForge platform — what each tool does, how the AI models are trained, the workflows top creators use, and exactly how it grows your channel in 2026.",
+    guideLead:
+      "YTForge is the most comprehensive AI-powered platform built specifically for YouTube creators in 2026. While generic AI tools like ChatGPT can write a script and design tools like Canva can build a thumbnail, neither understands the YouTube algorithm — the click-through rates that move the needle, the retention curves that earn algorithmic boosts, or the metadata signals that surface videos in search. YTForge is purpose-built for those signals, trained on 4.2 million viral YouTube videos, and updated every week with the freshest performance data.",
+    seoContent: [
+      {
+        h3: "The complete eleven-tool platform",
+        p1: "Most creator suites give you 2-3 tools and call it a platform. YTForge ships eleven, covering every step from idea to upload. The Viral Title Generator writes 10 click-magnet titles in 2 seconds, each scored for predicted CTR. The AI Script Writer produces retention-optimized scripts up to 20 minutes long, with [HOOK], [LOOP], and [PAYOFF] markers ready to film.",
+        p2: "Beyond generation, YTForge handles research and analytics. Channel Analytics reverse-engineers any competitor's full performance breakdown — subscriber growth, audience demographics, top videos, upload cadence. The Channel ID Finder pulls permanent UC... identifiers and RSS feeds for any channel. The Monetization Checker verifies YPP eligibility in real-time. The SEO Analyzer audits your titles, descriptions, and tags for ranking signals. The Thumbnail Downloader grabs HD thumbnails from any video for swipe-file research. The Shorts Idea Generator outputs viral 60-second formats. The AI Transcript tool transcribes and translates into 100+ languages. And the Earnings Calculator estimates monthly revenue based on niche-specific RPMs.",
+      },
+      {
+        h3: "How YTForge's AI models are trained",
+        p1: "Generic AI tools are trained on generic web data — they know what a \"title\" looks like in the abstract but not what makes a YouTube title viral specifically. YTForge's models are trained exclusively on a curated dataset of 4.2 million viral YouTube videos, ranked across CTR, average view duration, retention curves, and engagement velocity. Every prediction is grounded in what has actually worked in the YouTube algorithm in the past 18 months.",
+        p2: "The training pipeline updates weekly. As new viral patterns emerge — short-form formats, trending hook structures, novel visual hierarchies — they're absorbed into the next model checkpoint. Creators using YTForge in May 2026 are getting the patterns of May 2026, not the patterns from when GPT-4 was trained.",
+      },
+      {
+        h3: "The 30-minute video workflow",
+        p1: "Top YTForge creators run the same 30-minute workflow per video. Minute 1-3: Use Channel Analytics to find a viral angle in your niche. Minute 4-6: Generate 10 titles in the Viral Title Generator. Pick the strongest. Minute 7-12: Generate 4 thumbnail variants. Pick the winner. Minute 13-25: Generate the full script with retention markers. Minute 26-28: Run the SEO Analyzer for keyword tags and description optimization. Minute 29-30: Schedule via your YouTube backend. What used to take six hours of research and writing now takes thirty minutes — without sacrificing quality.",
+      },
+      {
+        h3: "Why CTR and retention are the only metrics that matter",
+        p1: "The YouTube algorithm in 2026 ranks videos on two primary signals: click-through rate (CTR) and average view duration (AVD). Get both above your channel's baseline and the algorithm pushes your video into the recommendation feed, multiplying reach. Miss either and the video stalls regardless of production quality. YTForge optimizes for both: titles and thumbnails drive CTR, scripts engineer AVD with hooks, loops, and pattern interrupts.",
+        p2: "The data backs it up: YTForge users see an average +47% CTR improvement versus their pre-YTForge baseline, and a +92% AVD lift on AI-scripted videos. Compounded across a 12-month channel, that's the difference between hitting 10K subscribers and hitting 100K.",
+      },
+      {
+        h3: "Built by creators, for creators",
+        p1: "YTForge's founding team has a combined 50M+ subscribers across our own channels. Every tool was built because we needed it ourselves — and refined over years of running viral channels. We use YTForge on our own videos every week. If a feature doesn't actually move the needle on real channels, it never ships.",
+      },
+      {
+        h3: "Pricing built for every stage",
+        p1: "YTForge's Free plan gives you the basics — title generation, thumbnail downloads, channel ID lookups — at zero cost, forever. The Pro plan at $29/mo unlocks unlimited titles, scripts, thumbnails, and channel analytics, plus bulk generation and API access. Enterprise plans cover networks managing 100+ channels with custom AI fine-tuning, dedicated account managers, and SLA guarantees.",
+      },
+      {
+        h3: "The 7-day free trial, no risk",
+        p1: "Every paid plan includes a 7-day free trial — no credit card required. Generate 100+ titles, 20+ scripts, and 50+ thumbnails during your trial. If YTForge doesn't measurably grow your channel within 30 days, we refund every dollar, no questions asked. We've issued 0.4% refunds across 200,000+ paying creators — the lowest churn rate in the industry.",
+        p2: "The fastest way to understand YTForge is to use it. Pick any tool above, paste your channel URL or topic, and watch the output land in under 2 seconds. Free, no signup, no credit card. Then when you're ready to scale, our pricing page walks you through every plan side-by-side.",
+      },
+    ],
+    faqBadge: "Common Questions",
+    faqTitle: "Got questions? We've got answers.",
+    faqDesc:
+      "Everything you need to know before signing up — and a few things you probably haven't thought of yet.",
+    faqs: [
+      {
+        q: "What exactly is YTForge?",
+        a: "YTForge is the all-in-one AI platform for YouTube creators. We combine 13 specialized AI tools — title generation, script writing, thumbnail design, SEO optimization, channel analytics, monetization checking, transcript translation, and more — into a single workspace built specifically for the YouTube algorithm in 2026.",
+      },
+      {
+        q: "How is this different from TubeBuddy or VidIQ?",
+        a: "TubeBuddy and VidIQ are analytics extensions. YTForge is a generation platform. We don't just tell you what's wrong — we generate the fix. AI titles, AI scripts, AI thumbnails. Plus you get every analytics feature TubeBuddy offers, at half the price.",
+      },
+      {
+        q: "How accurate are the AI predictions?",
+        a: "Our models are trained on 4.2M viral YouTube videos and updated weekly. CTR predictions are within ±8% of actual performance, retention predictions within ±12%. We publish full accuracy reports quarterly.",
+      },
+      {
+        q: "Can I use YTForge for any niche?",
+        a: "Yes. Our models are trained across every major YouTube niche — tech, gaming, finance, education, vlogs, fitness, beauty, business, entertainment, news, sports, music. Specify your niche and audience and we tune output accordingly.",
+      },
+      {
+        q: "Do I need technical skills?",
+        a: "Zero. If you can copy-paste a YouTube link, you can use YTForge. Every tool has a 1-input → 1-output flow. No prompting, no settings, no learning curve.",
+      },
+      {
+        q: "Is my data safe?",
+        a: "Encrypted in transit (TLS 1.3) and at rest (AES-256). SOC 2 Type II certified. GDPR-compliant. We never train our models on your private content. Your scripts, channel data, and analytics are 100% yours.",
+      },
+      {
+        q: "Can I cancel anytime?",
+        a: "Two-click cancellation, no questions asked. 30-day money-back guarantee. Keep premium access until the end of your billing period.",
+      },
+      {
+        q: "Do you have a mobile app?",
+        a: "Web-first, mobile-optimized. Works flawlessly on any phone or tablet via your browser. Native iOS and Android apps shipping Q3 2026.",
+      },
+    ],
+    finalBadge: "Ready When You Are",
+    finalTitle1: "Stop guessing.",
+    finalTitle2: "Start growing.",
+    finalDesc:
+      "Join 200,000+ creators using YTForge to ship better videos, faster. 7-day free trial, no credit card, cancel anytime.",
+    noCreditCard: "No credit card",
+    cancelAnytime: "Cancel anytime",
+    refund30: "30-day refund",
+    viewLift: "View lift",
+    generations: "Generations",
+    homeCrumb: "Home",
+    demoCrumb: "Demo",
   },
   aiFeatures: {
     badge: "AI-Powered Features",
@@ -633,8 +978,244 @@ free: {
     loading: "Loading...",
     lastUpdated: "Last updated",
   },
+  chat: {
+    brand: "YTForge AI",
+    heroTitle: "Your YouTube growth coach",
+    heroDesc:
+      "Ask anything about your channel, scripts, thumbnails, SEO, or growth strategy. Get specific, actionable answers — streamed live.",
+    emptyTitle: "How can I help you grow?",
+    emptyDesc:
+      "Pick a starting point or type your own question. I'll diagnose, then give you something you can act on for your next video.",
+    starters: [
+      {
+        title: "Roast my video idea",
+        prompt:
+          "I'm planning a YouTube video about [your topic]. What angle would actually get clicks, and what mistake are most creators making on this topic?",
+      },
+      {
+        title: "Why am I not growing?",
+        prompt:
+          "My channel makes videos about [niche] and growth has stalled around [subs/views]. Walk me through what to diagnose first.",
+      },
+      {
+        title: "Write me a 30s hook",
+        prompt:
+          "Write a 30-second opening hook for a video titled [your title]. Give me 3 versions and explain which retention trick each one uses.",
+      },
+      {
+        title: "Plan my next 4 videos",
+        prompt:
+          "My channel is about [niche]. Suggest my next 4 video ideas as a progression that builds on each other, with a one-line thumbnail concept for each.",
+      },
+    ],
+    quickLinks: [
+      { label: "Tag Generator" },
+      { label: "Hashtag Generator" },
+      { label: "Title Generator" },
+    ],
+    placeholder: "Ask about your channel, script, thumbnail, SEO…",
+    clear: "Clear",
+    stop: "Stop",
+    send: "Send",
+    footerNote: "YTForge AI can be wrong — verify important advice before you ship.",
+    noResponse: "I didn't get a response back that time. Please try again.",
+    stopped: "_Stopped._",
+    errorDefault: "Something went wrong.",
+    streamingError: "Streaming error",
+    homeCrumb: "Home",
+    chatCrumb: "AI Chat",
+  },
+  disclaimer: {
+    lastUpdated: "Last updated May 10, 2026",
+    title: "Disclaimer",
+    intro:
+      "Important context about YTForge's tools, AI outputs, and the limits of what we promise. Read this before relying on anything we generate.",
+    callouts: [
+      {
+        t: "AI is not infallible",
+        d: "Verify outputs before publishing — AI can be wrong, biased, or outdated.",
+      },
+      {
+        t: "Results vary",
+        d: "Channel growth depends on niche, effort, and execution — not just our tools.",
+      },
+      {
+        t: "Estimates only",
+        d: "Earnings, analytics, and predictions are approximations, not guarantees.",
+      },
+      {
+        t: "Use at your own risk",
+        d: "You're responsible for compliance with YouTube's policies and the law.",
+      },
+    ],
+    tocTitle: "Contents",
+    effectiveDate: "Effective Date: May 10, 2026 · Version 2.1",
+    sections: [
+      {
+        id: "general",
+        title: "1. General Disclaimer",
+        intro:
+          'The information, tools, AI-generated content, analytics, estimates, and other materials made available on the YTForge website and any related applications, APIs, or services (collectively, the "Service") are provided for general informational and educational purposes only. By accessing or using the Service, you acknowledge that you do so entirely at your own risk and discretion.',
+        outro:
+          "While we work hard to keep the Service accurate, current, and useful, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability of the Service or any of its contents.",
+      },
+      {
+        id: "ai",
+        title: "2. AI-Generated Content",
+        intro:
+          "YTForge's tools use artificial intelligence and machine learning models to generate titles, scripts, thumbnails, transcripts, channel analyses, and other outputs. AI-generated content is probabilistic — it may be inaccurate, incomplete, biased, outdated, or factually wrong.",
+        subheads: [
+          {
+            title: "Verify before publishing",
+            body: "You are solely responsible for reviewing, fact-checking, editing, and verifying any AI-generated output before publishing it on YouTube or any other platform. Do not assume that anything generated by YTForge is accurate or appropriate for your specific situation.",
+          },
+          {
+            title: "Hallucination warning",
+            body: 'AI models can occasionally "hallucinate" — confidently producing information that sounds plausible but is fabricated. This is a known limitation of current generative AI technology and not a defect of YTForge specifically. Treat all factual claims, statistics, quotes, and citations in AI output as suggestions to verify, not as authoritative truth.',
+          },
+          {
+            title: "Bias and sensitivity",
+            body: "AI models reflect patterns in their training data, which may include cultural, demographic, or linguistic biases. If you produce content that targets specific audiences, communities, or sensitive topics, exercise additional editorial judgment.",
+          },
+        ],
+      },
+      {
+        id: "results",
+        title: "3. No Guaranteed Results",
+        intro:
+          "We do not guarantee any specific outcomes from using YTForge. References to view counts, subscriber growth, click-through rates, retention improvements, monetization eligibility, earnings, or any other channel metrics are illustrative examples and aspirational goals — not promises.",
+        outro:
+          "Channel performance depends on countless variables outside our control, including:",
+        list: [
+          "The creator's effort, consistency, and production quality",
+          "Niche competitiveness and audience demand",
+          "The current state of the YouTube algorithm",
+          "Cultural, geographic, and seasonal factors",
+          "YouTube policy changes and platform updates",
+          "Existing channel history, reputation, and audience",
+        ],
+        outro2:
+          "Testimonials and case studies featured on YTForge represent individual experiences and are not typical. Your results will differ.",
+      },
+      {
+        id: "earnings",
+        title: "4. Earnings & Financial Estimates",
+        intro:
+          "The Earnings Calculator, Monetization Checker, RPM benchmarks, and any other financial figures presented on YTForge are estimates based on industry averages and publicly available data. They are not guarantees, projections, or financial forecasts.",
+        outro:
+          "Actual YouTube revenue varies dramatically based on niche, audience geography, ad inventory, seasonality, brand-suitability filters, and many other factors. YTForge is not a financial advisor and does not provide tax, accounting, or investment advice. Consult a qualified professional before making business decisions based on our estimates.",
+      },
+      {
+        id: "analytics",
+        title: "5. Analytics Accuracy",
+        intro:
+          "Channel Analytics, Channel ID Finder, and similar research tools rely on a combination of YouTube's public APIs, public CDN endpoints, and our own statistical models. While we work to keep the data current and accurate:",
+        list: [
+          "YouTube does not expose all metrics publicly — some figures are estimated",
+          "Channel data may be cached and reflect a delayed view of reality",
+          "Channels can hide or restrict their public data, in which case our outputs are limited or unavailable",
+          "Subscriber counts above 1,000 are rounded by YouTube itself, not YTForge",
+        ],
+        outro:
+          "Do not rely on YTForge analytics for legal, financial, or investment-grade decisions about a creator or channel.",
+      },
+      {
+        id: "third-party",
+        title: "6. Third-Party Content",
+        intro:
+          "YTForge's research tools display publicly available content from YouTube and other third parties — including channel names, thumbnails, video titles, and metadata. This content remains the property of its respective owners. Reference to any creator, channel, brand, or product does not imply endorsement, partnership, or affiliation with YTForge.",
+        outro:
+          "If you believe any content displayed via YTForge infringes your rights, contact dmca@ytforge.app with a valid DMCA-style notice and we'll respond promptly.",
+      },
+      {
+        id: "youtube",
+        title: "7. YouTube Compliance",
+        intro:
+          "YTForge is an independent third-party tool. We are not affiliated with, endorsed by, or sponsored by YouTube, Google, or Alphabet Inc. \"YouTube\" is a trademark of Google LLC.",
+        outro: "You are solely responsible for ensuring your use of YTForge complies with:",
+        list: [
+          "YouTube's Terms of Service",
+          "YouTube Community Guidelines",
+          "YouTube Partner Program policies",
+          "YouTube API Services Terms (where applicable)",
+          "All applicable laws in your jurisdiction",
+        ],
+        outro2:
+          "Generating content with AI does not exempt you from YouTube's rules around authenticity, copyright, deepfakes, misinformation, monetization, or any other policy. YTForge is not liable for strikes, demonetization, or terminations resulting from your content.",
+      },
+      {
+        id: "professional",
+        title: "8. Not Professional Advice",
+        intro:
+          "Nothing on YTForge constitutes professional advice — legal, financial, medical, psychological, accounting, or otherwise. Articles, tool outputs, blog posts, and support replies are educational and informational. Consult a licensed professional for advice specific to your situation.",
+      },
+      {
+        id: "external",
+        title: "9. External Links",
+        intro:
+          "The Service may contain links to third-party websites, services, or resources operated by parties other than YTForge. These links are provided for convenience and do not imply endorsement. We have no control over the content, privacy practices, or accuracy of external sites and accept no responsibility for them. Visit external links at your own risk.",
+      },
+      {
+        id: "trademarks",
+        title: "10. Trademarks",
+        intro:
+          '"YTForge" and the YTForge logo are trademarks of YTForge Inc. All other trademarks, service marks, logos, and brand names referenced on the Service — including YouTube, Google, Stripe, Slack, Notion, TubeBuddy, VidIQ, and others — are the property of their respective owners. References are made for descriptive and informational purposes only.',
+      },
+      {
+        id: "fair-use",
+        title: "11. Fair Use",
+        intro:
+          "Some features (like the Thumbnail Downloader and SEO Analyzer) display or download content from public YouTube videos for purposes of research, commentary, education, and inspiration. This usage is intended to fall within the bounds of fair use under U.S. copyright law and equivalent doctrines internationally.",
+        outro:
+          "You are responsible for ensuring your own use of any downloaded or referenced material complies with copyright law. Republishing copyrighted thumbnails, audio, or video as your own — without permission — is not protected by fair use and may infringe the rights of the original creator.",
+      },
+      {
+        id: "errors",
+        title: "12. Errors, Omissions & Updates",
+        intro:
+          "Despite our best efforts, the Service may contain typographical errors, inaccuracies, or outdated information. We reserve the right to correct any errors, inaccuracies, or omissions and to change or update content at any time without prior notice. We do not warrant that any errors will be corrected.",
+      },
+      {
+        id: "liability",
+        title: "13. Limitation of Liability",
+        intro:
+          "TO THE MAXIMUM EXTENT PERMITTED BY LAW, YTFORGE INC., ITS OFFICERS, EMPLOYEES, AGENTS, AND AFFILIATES SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES — INCLUDING LOST PROFITS, LOST REVENUE, LOST SUBSCRIBERS, COPYRIGHT STRIKES, DEMONETIZATION, OR ACCOUNT TERMINATION — ARISING OUT OF OR RELATED TO YOUR USE OR INABILITY TO USE THE SERVICE OR ANY AI-GENERATED OUTPUT.",
+      },
+      {
+        id: "changes",
+        title: "14. Changes to This Disclaimer",
+        intro:
+          'We may update this Disclaimer at any time. The "Last updated" date at the top of the page reflects the most recent revision. Material changes will be communicated via email and a banner on the Service. Continued use after the effective date constitutes acceptance.',
+      },
+      {
+        id: "contact",
+        title: "15. Contact",
+        intro: "Questions, concerns, or DMCA notices? Reach out:",
+        contacts: [
+          { label: "General:", value: "support@ytforge.app" },
+          { label: "Legal:", value: "legal@ytforge.app" },
+          { label: "DMCA:", value: "dmca@ytforge.app" },
+          {
+            label: "Mail:",
+            value: "YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
+          },
+        ],
+      },
+    ],
+    liabilityOutroPre: "For our complete liability terms, see Section 12 of our",
+    liabilityOutroLink: "Terms of Service",
+    summaryTitle: "The 30-second summary",
+    summaryText:
+      "YTForge is a powerful set of AI tools — but AI isn't perfect. Verify everything before you publish. We don't guarantee growth, earnings, or YouTube compliance — that's on you. Treat estimates as estimates, not promises.",
+    termsCardTitle: "Terms of Service",
+    termsCardSub: "The full agreement",
+    privacyCardTitle: "Privacy Policy",
+    privacyCardSub: "How we handle your data",
+    homeCrumb: "Home",
+    disclaimerCrumb: "Disclaimer",
+  },
   auth: {
-    signInTitle: "Welcome back",
+    signInTitle: "Sign in",
     signInSubtitle: "Sign in to your YTForge account",
     signUpTitle: "Create your account",
     signUpSubtitle: "Start growing your channel today",
@@ -653,6 +1234,76 @@ free: {
     or: "or",
     continueGoogle: "Continue with Google",
     agreeTerms: "By continuing, you agree to our Terms and Privacy Policy",
+    signUp: "Sign Up",
+    signIn: "Sign In",
+    welcomeBackToast: "Welcome back!",
+    welcomeBackHeadline1: "Welcome back to the",
+    welcomeBackHeadline2: "creator workspace.",
+    welcomeBackDesc:
+      "200,000+ creators ship better videos faster with YTForge. Sign in and pick up where you left off.",
+    signInBenefits: [
+      { t: "Unlimited AI generations", d: "Titles, scripts, thumbnails — all unlimited" },
+      { t: "+340% avg view lift", d: "From 200K+ verified creators" },
+      { t: "Enterprise security", d: "SOC 2 certified, GDPR compliant" },
+    ],
+    viewLift: "View lift",
+    creators: "Creators",
+    testimonialQuote:
+      "YTForge tripled my CTR overnight. Single best subscription I pay for.",
+    testimonialName: "Maya Chen",
+    testimonialHandle: "@MayaCodes · 1.2M subs",
+    signingInGoogle: "Signing in with Google…",
+    googleNotConfigured: "Google sign-in is not configured.",
+    googleNotConfiguredHint: "Set NEXT_PUBLIC_GOOGLE_CLIENT_ID to enable it.",
+    keepSignedIn: "Keep me signed in for 30 days",
+    securityCheck: "Security check",
+    captchaRequired: "Please complete the CAPTCHA verification.",
+    signingIn: "Signing in…",
+    forgot: "Forgot?",
+    agreeSignIn: "By signing in you agree to our",
+    protectedBy: "and Privacy Policy. Protected by enterprise-grade encryption.",
+    createFreeAccount: "Create a free account",
+    newHere: "New here?",
+    orWithEmail: "Or with email",
+    fullName: "Full name",
+    namePlaceholder: "Alex Creator",
+    emailPlaceholder: "you@channel.com",
+    passwordPlaceholder: "At least 8 characters",
+    referralPlaceholder: "e.g. YT3A4B6",
+    referredBy: "Referred by",
+    strengthLabel: "Strength:",
+    strengthLabels: ["Too weak", "Weak", "Okay", "Strong", "Excellent"],
+    agreeSignUpPre: "I agree to YTForge's",
+    agreeSignUpPost: "and Privacy Policy.",
+    creatingAccount: "Creating account...",
+    signUpNow: "Sign Up Now",
+    accountCreated: "Account created — welcome to YTForge!",
+    welcomeReferredPre: "Welcome to YTForge!",
+    welcomeReferredNamePre: "Referred by",
+    freeBadge: "7 Days Free · No Card Required",
+    alreadyMember: "Already a member?",
+    signUpGoogle: "Sign up with Google",
+    signUpApple: "Sign up with Apple",
+    noCreditCard: "No credit card",
+    cancelAnytime: "Cancel anytime",
+    refund30: "30-day refund",
+    joinCreators: "Join 200K+ Creators",
+    advantageHeadline1: "Your unfair advantage,",
+    advantageHeadline2: "unlocked in 60 seconds.",
+    advantageDesc:
+      "Every AI tool. Every workflow. Every analytics dashboard. Free for 7 days, no credit card required.",
+    perks: [
+      { t: "7-day free trial", d: "All Creator features unlocked, no card needed" },
+      { t: "Unlimited AI generations", d: "Titles, scripts, thumbnails, analytics" },
+      { t: "Sub-2s generation", d: "Faster than the YouTube tab loads" },
+      { t: "Cancel anytime", d: "30-day money-back guarantee" },
+    ],
+    signupTestimonialQuote:
+      "Went from 12K to 480K subs in 9 months. The Creator plan paid for itself in week one.",
+    signupTestimonialName: "Aisha Patel",
+    signupTestimonialHandle: "@AishaTalks · 480K subs",
+    signupTestimonialMetric: "+3,900%",
+    signupTestimonialMetricLabel: "Growth",
   },
   notFound: {
     title: "Page not found",

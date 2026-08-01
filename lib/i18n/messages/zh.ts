@@ -20,7 +20,7 @@ export const zh: Messages = {
     closeMenu: "关闭菜单",
     toggleMenu: "打开菜单",
       pro: "Pro",
-    plan: "Plan",
+    plan: "套餐",
 },
   footer: {
     newsletterBadge: "创作者通讯",
@@ -171,21 +171,16 @@ export const zh: Messages = {
     getStarted: "开始",
     startTrial: "7 天试用",
     contactSales: "联系销售",
+    homeCrumb: "首页",
+    pricingCrumb: "价格",
     plans: {
-            starter: {
-        name: "Free",
-        tagline: "Get started with the basics",
-        description: "Perfect for new creators getting started.",
-        features: [
-          "Basic SEO Analyzer",
-          "5 AI Title Generations / mo",
-          "Tag Generator",
-          "Thumbnail Downloader",
-          "Standard Support"
-        ],
-        cta: "Get Started"
-      },
+
 free: {
+        notIncluded: [
+                "AI 脚本撰写器",
+                "频道分析",
+                "API 访问"
+        ],
         name: "免费",
         tagline: "从基础开始",
         features: [
@@ -236,11 +231,29 @@ free: {
       },
     },
     compareTitle: "并排比较每个套餐",
+    compareBadge: "完整功能对比",
     compareSubtitle: "每个功能,每个限制 — 清晰明了,30 秒内选出合适的套餐。",
     featureCol: "功能",
     testimonialsBadge: "受 200K+ 创作者喜爱",
     testimonialsTitle: "别只听我们说",
     testimonialsSubtitle: "真实的创作者,真实的频道成长,真实的投资回报率。",
+    testimonials: [
+      {
+        quote: "YTForge 的 Creator 套餐第一周就回本了。改用 AI 生成标题后，我的点击率飙升了 41%。",
+        name: "Maya Chen",
+        role: "科技 YouTuber · 120 万订阅",
+      },
+      {
+        quote: "我们为网络运营 14 个频道。Pro 套餐的批量生成功能每周为团队节省 30 多个小时。",
+        name: "Diego Ramirez",
+        role: "内容主管 · MediaCorp",
+      },
+      {
+        quote: "我以前对 AI 工具持怀疑态度，但脚本撰写器的水平确实与我最好的长视频作品难分高下。",
+        name: "Aisha Patel",
+        role: "纪录片导演 · 48 万订阅",
+      },
+    ],
     faqBadge: "价格常见问题",
     faqTitle: "您可能想知道的一切",
     faqSubtitle: "还有问题?发邮件到 support@ytforge.app — 我们在 4 小时内回复。",
@@ -309,8 +322,6 @@ free: {
       { label: "支持", values: ["社区", "优先聊天", "7×24 电话 + 客户经理"] },
     ],
   
-      finalCtaDesc: "Start free, upgrade when you're ready. No credit card required.",
-      finalCtaBtn: "Start Free",
 },
   faq: {
     title: "常见问题",
@@ -446,6 +457,7 @@ free: {
     noMatch: "没有匹配的语言",
     label: "语言",
   },
+
   demo: {
     badge: "BY SOLUTIONS",
     title: "我们的解决方案",
@@ -535,6 +547,372 @@ free: {
     revenueSplit: "收入分成",
     thisMonth: "本月",
     exploreButton: "探索所有工具",
+  },
+  demoPage: {
+    heroBadge: "实时演示 · 11 个工具 · 一个工作区",
+    heroTitle1: "AI 遇见",
+    heroTitle2: "YouTube 视频编辑",
+    heroDesc: "为下一个视频生成脚本、缩略图、标题和描述 — 全部在一个优雅的界面中。这是互动演示，而非广告。",
+    startTrial: "免费试用",
+    exploreTools: "探索工具",
+    tryFreeTools: "免费试用工具",
+    heroStats: [
+      {
+        value: "250K+",
+        label: "已优化视频",
+      },
+      {
+        value: "52K+",
+        label: "活跃创作者",
+      },
+      {
+        value: "110M+",
+        label: "预估获得观看量",
+      },
+      {
+        value: "4.9/5",
+        label: "平均评分",
+      },
+    ],
+    featuredIn: "曾见于",
+    tourBadge: "互动导览",
+    tourTitle: "无需账号即可体验 YTForge",
+    tourDesc: "下方所有演示均在浏览器中运行 — 您的输入本地处理，绝不离开设备。无需账号，无演示限制。",
+    tools: [
+      {
+        name: "脚本生成器",
+        desc: "从一个创意生成完整视频脚本。",
+        metrics: {
+          gens: "12,4K",
+          lift: "+212%",
+        },
+        demo: null,
+      },
+      {
+        name: "缩略图生成器",
+        desc: "基于标题生成高点击率缩略图概念。",
+        metrics: {
+          gens: "8,7K",
+          lift: "+147%",
+        },
+        demo: null,
+      },
+      {
+        name: "标题生成器",
+        desc: "为您的主题生成多达 25 个高表现标题。",
+        metrics: {
+          gens: "15,1K",
+          lift: "+189%",
+        },
+        demo: null,
+      },
+      {
+        name: "话题标签生成器",
+        desc: "让内容触达正确受众的标签。",
+        metrics: {
+          gens: "13,8K",
+          lift: "+156%",
+        },
+        demo: null,
+      },
+      {
+        name: "标签生成器",
+        desc: "一键实现更智能的 YouTube SEO。",
+        metrics: {
+          gens: "9,3K",
+          lift: "+98%",
+        },
+        demo: null,
+      },
+      {
+        name: "定义生成器",
+        desc: "为视频提供清晰专业的定义。",
+        metrics: {
+          gens: "5,9K",
+          lift: "+67%",
+        },
+        demo: null,
+      },
+      {
+        name: "新闻生成器",
+        desc: "包含关键事实和背景的时事内容。",
+        metrics: {
+          gens: "7,4K",
+          lift: "+83%",
+        },
+        demo: null,
+      },
+      {
+        name: "评论生成器",
+        desc: "建立社区的互动回复。",
+        metrics: {
+          gens: "16,7K",
+          lift: "+234%",
+        },
+        demo: null,
+      },
+      {
+        name: "爆款内容生成器",
+        desc: "为分享而设计的创意。",
+        metrics: {
+          gens: "11,2K",
+          lift: "+127%",
+        },
+        demo: null,
+      },
+      {
+        name: "描述生成器",
+        desc: "让您排名更高、转化更好的描述。",
+        metrics: {
+          gens: "10,5K",
+          lift: "+143%",
+        },
+        demo: null,
+      },
+      {
+        name: "Hook 生成器",
+        desc: "决定成败的前几秒。",
+        metrics: {
+          gens: "6,8K",
+          lift: "+79%",
+        },
+        demo: null,
+      },
+      {
+        name: "关键词生成器",
+        desc: "发现受众真正在搜索的内容。",
+        metrics: {
+          gens: "14,3K",
+          lift: "+162%",
+        },
+        demo: null,
+      },
+      {
+        name: "致谢生成器",
+        desc: "为团队或赞助商生成专业致谢。",
+        metrics: {
+          gens: "4,2K",
+          lift: "+54%",
+        },
+        demo: null,
+      },
+    ],
+    lifetimeGens: "1,300 万+",
+    avgLift: "平均 +139%",
+    sampleOutput: "输出示例",
+    livePreviewTitle: "实时预览",
+    livePreviewDesc: "输入主题，选择工具，实时测试输出 — 无需账号。",
+    tryToolFreePre: "免费试用 ",
+    tryToolFreeSuffix: "",
+    workflowBadge: "流程优化",
+    workflowTitle: "从构思到发布的单一工作流",
+    workflowDesc: "无需在五个标签页间跳转。YTForge 将视频完整生命周期整合在一个工作区。",
+    workflowSteps: [
+      {
+        n: "1",
+        t: "调研选题",
+        d: "用趋势数据和竞品分析，发现受众真正想看的内容。",
+      },
+      {
+        n: "2",
+        t: "撰写脚本",
+        d: "带 Hook、Loop 和 Payoff 的结构化脚本，锁住注意力。",
+      },
+      {
+        n: "3",
+        t: "设计缩略图",
+        d: "让人停止滑动的高转化概念。",
+      },
+      {
+        n: "4",
+        t: "优化发布",
+        d: "标题、描述、标签、话题标签 — 与 Google 和 YouTube 的排名偏好对齐。",
+      },
+      {
+        n: "5",
+        t: "发布与分析",
+        d: "发布、追踪表现、用频道分析迭代优化。",
+      },
+    ],
+    benefitsBadge: "为什么选择 YTForge",
+    benefitsTitle: "创作者打造，为创作者而生",
+    benefitsDesc: "每个工具都为解决我们自己频道遇到的真实问题而生。",
+    benefits: [
+      {
+        t: "巨大的时间节省",
+        d: "单视频数小时制作，压缩至几分钟。",
+      },
+      {
+        t: "一致的高质量",
+        d: "每次都能得到专业级脚本、标题和概念。",
+      },
+      {
+        t: "数据驱动增长",
+        d: "基于真实数据和趋势的优化。",
+      },
+      {
+        t: "极易上手",
+        d: "零学习曲线。会打字就会用 YTForge。",
+      },
+      {
+        t: "持续进化",
+        d: "每周推出新工具和改进。",
+      },
+      {
+        t: "安全可靠",
+        d: "您的创意归您所有 — 我们绝不出售您的数据。",
+      },
+    ],
+    useCasesBadge: "使用场景",
+    useCasesTitle: "为每类创作者而设计",
+    useCasesDesc: "从初出茅庐的 YouTuber 到全职工作室 — YTForge 适配您的工作流。",
+    useCases: [
+      {
+        t: "新手创作者",
+        d: "用结构化脚本和创意起步，避开新手常犯的错。",
+      },
+      {
+        t: "全职频道",
+        d: "简化调研、剪辑和优化 — 更快发布。",
+      },
+      {
+        t: "团队与工作室",
+        d: "用一致的模板在剪辑师和编剧间标准化制作。",
+      },
+      {
+        t: "教育者与课程",
+        d: "将知识转化为扣住注意力的结构化视频。",
+      },
+      {
+        t: "品牌与营销",
+        d: "建立品牌权威的一致性视频系列。",
+      },
+      {
+        t: "游戏玩家与主播",
+        d: "将切片转化为长青内容的标题、混剪和脚本。",
+      },
+    ],
+    testiBadge: "用户见证",
+    testiTitle: "创作者怎么说",
+    testiDesc: "52,000+ 创作者用 YTForge 制作更好内容、更快发布。",
+    testimonials: [
+      {
+        quote: "YTForge 改变了我的工作流。从创意到发布只需几小时，不再是几天。",
+        name: "Sarah M.",
+        role: "生活类 YouTuber，18 万订阅",
+        channel: "已验证频道",
+        metric: "+212%",
+        metricLabel: "观看量增长",
+      },
+      {
+        quote: "脚本生成器太强了。Hook 比我文案写得好 — 还快 30 倍。",
+        name: "David K.",
+        role: "科技创作者，9.2 万订阅",
+        channel: "Pro 订阅者",
+        metric: "38 小时",
+        metricLabel: "每月节省",
+      },
+      {
+        quote: "两个月观看量涨了 30%。我以为好得不真实 — 直到看了数据分析。",
+        name: "Amina R.",
+        role: "旅行 Vlogger，6.4 万订阅",
+        channel: "已验证频道",
+        metric: "+30%",
+        metricLabel: "60 天观看量",
+      },
+      {
+        quote: "变现检查工具精准指出我频道缺什么。一个月后就通过了合作伙伴计划。",
+        name: "Marcus T.",
+        role: "游戏创作者，1.1 万订阅",
+        channel: "社区成员",
+        metric: "1 个月",
+        metricLabel: "达成变现",
+      },
+    ],
+    guideBadge: "指南",
+    guideTitle: "YouTube 增长快速指南",
+    guideDesc: "我们植入每个 YTForge 工具的核心原则 — 2026 年依然有效。",
+    guideLead:
+      "YTForge 是专为 2026 年 YouTube 创作者打造的、最全面的 AI 平台。ChatGPT 之类的通用 AI 工具可以写脚本，Canva 之类的设计工具可以制作缩略图，但两者都不理解 YouTube 算法——决定成败的点击率、能获得算法加权的完播率曲线，或让视频在搜索中脱颖而出的元数据信号。YTForge 正是针对这些信号打造的，基于 420 万条病毒式传播的 YouTube 视频训练，并每周用最新的表现数据更新。",
+    seoContent: [
+      {
+        h3: "注意力是您唯一的货币",
+        p1: "YouTube 是注意力游戏。CTR 和留存决定了几乎一切：观看量、推荐、变现。在优化其他任何东西前，先优化人们点击什么、看完全程什么。",
+      },
+      {
+        h3: "从调研开始，而非脚本",
+        p1: "获胜内容源于人们已在搜索的内容。用 YTForge 关键词工具找到有真实需求的主题，再创作超越它们的内容。",
+      },
+      {
+        h3: "Hook 是承诺，不是预告",
+        p1: "前 30 秒决定留不留人。它们不总结视频 — 而是种下观众必须找到答案的问题。",
+      },
+      {
+        h3: "留存靠结构赢得",
+        p1: "Loop — 自我闭环的视频片段 — 才是推动观众进入下一条视频的力量。让每个片段都能独立站得住脚。",
+        p2: "YTForge 脚本默认采用 Hook → Loop → Payoff 结构。",
+      },
+      {
+        h3: "缩略图在拇指大小下被判断",
+        p1: "预览图洪流中，您的缩略图必须在拇指大小下可读。单一情绪、单一主体、单一对比。超过一个信息就会在信息流中沉底。",
+      },
+      {
+        h3: "YouTube SEO = 点击信号",
+        p1: "标题、描述、标签不是字段 — 是排名信号。把核心关键词自然地放进三者，其余交给 YTForge 对齐。",
+      },
+      {
+        h3: "一致性赢得战争",
+        p1: "可持续的发布节奏和清晰的主题能建立习惯性受众。习惯驱动的留存是平台上最被低估的增长杠杆。",
+      },
+    ],
+    faqBadge: "常见问题",
+    faqTitle: "FAQ",
+    faqDesc: "您一直想问的一切 — 无需客服。",
+    faqs: [
+      {
+        q: "YTForge 真的是免费的吗？",
+        a: "是的 — 免费计划包含所有工具访问权限，仅有每日生成限额。互动演示无需账号也无需付费。",
+      },
+      {
+        q: "工具支持哪些语言？",
+        a: "AI 输出跟随您的输入语言 — 无需切换设置。页面本身提供 9 种语言。",
+      },
+      {
+        q: "演示会处理我的数据吗？",
+        a: "不会。演示完全在浏览器端运行：您的输入永不离开设备。无服务器传输，无存储。",
+      },
+      {
+        q: "我可以在视频中使用演示输出吗？",
+        a: "可以，随意用 — 这正是它存在的意义。但演示是精简版；完整生成需注册账号使用 API。",
+      },
+      {
+        q: "YTForge 与 TubeBuddy 或 VidIQ 有何不同？",
+        a: "它们是数据导向的浏览器扩展；YTForge 是集成增长工具的 AI 创作工作室，全部在一个工作区。",
+      },
+      {
+        q: "我的脚本和创意是私密的吗？",
+        a: "是的。内容归您所有。我们用它为您服务，绝不拿它反向训练或出售。",
+      },
+      {
+        q: "我可以随时取消吗？",
+        a: "可以。两下点击随时取消 — 计划在账单周期结束前保持有效，随后降级为免费版。",
+      },
+      {
+        q: "YTForge 保证观看量或订阅吗？",
+        a: "绝不。没有任何工具能诚实地保证。我们承诺产出，不承诺结果 — 但 52,000+ 创作者信任我们把数字做上去。",
+      },
+    ],
+    finalBadge: "准备好改变一切了？",
+    finalTitle1: "别再猜了。",
+    finalTitle2: "开始有目的地创作。",
+    finalDesc: "加入 52,000+ 创作者，用 YTForge 制作更好内容、更快发布。",
+    noCreditCard: "无需信用卡",
+    cancelAnytime: "随时取消",
+    refund30: "30 天退款保证",
+    viewLift: "查看案例研究",
+    generations: "生成次数",
+    homeCrumb: "首页",
+    demoCrumb: "演示",
   },
   aiFeatures: {
     badge: "AI 驱动功能",
@@ -632,8 +1010,231 @@ free: {
     loading: "加载中...",
     lastUpdated: "最后更新",
   },
+  chat: {
+    brand: "YTForge AI",
+    heroTitle: "您的 YouTube 增长教练",
+    heroDesc: "随时提问频道、脚本、缩略图、SEO 或增长策略。实时获得精准、可落地的回答。",
+    emptyTitle: "我能如何帮您增长？",
+    emptyDesc: "选择一个起点或输入您自己的问题。我先诊断，再为您的下一个视频给出可执行的建议。",
+    starters: [
+      {
+        title: "评估我的视频创意",
+        prompt: "我计划做一个关于[您的主题]的 YouTube 视频。什么角度真能获得点击？大多数创作者在这个主题上会犯什么错？",
+      },
+      {
+        title: "为什么我不增长？",
+        prompt: "我的频道做[细分领域]视频，增长停滞在[订阅数/观看数]左右。请告诉我首先要诊断什么。",
+      },
+      {
+        title: "写个 30 秒 Hook",
+        prompt: "为标题为[您的标题]的视频写一个 30 秒开场 Hook。给我 3 个版本，并解释每个使用了什么留存技巧。",
+      },
+      {
+        title: "规划我接下来的 4 个视频",
+        prompt: "我的频道讲[细分领域]。推荐我接下来 4 个视频创意，作为一个递进的系列，每个附带一行缩略图概念。",
+      },
+    ],
+    quickLinks: [
+      {
+        label: "标签生成器",
+      },
+      {
+        label: "话题标签生成器",
+      },
+      {
+        label: "标题生成器",
+      },
+    ],
+    placeholder: "询问关于频道、脚本、缩略图、SEO 的问题…",
+    clear: "清除",
+    stop: "停止",
+    send: "发送",
+    footerNote: "YTForge AI 可能出错 — 发布前请核实重要建议。",
+    noResponse: "这次未收到回复，请再试一次。",
+    stopped: "_已停止。_",
+    errorDefault: "发生错误。",
+    streamingError: "流式传输错误",
+    homeCrumb: "首页",
+    chatCrumb: "AI 对话",
+  },
+  disclaimer: {
+    lastUpdated: "最后更新：2026 年 5 月 10 日",
+    title: "免责声明",
+    intro: "关于 YTForge 工具、AI 输出以及我们承诺范围的重要背景信息。在依赖我们生成的任何内容前，请先阅读本声明。",
+    callouts: [
+      {
+        t: "AI 并非万无一失",
+        d: "发布前请验证输出 — AI 可能出错、有偏见或过时。",
+      },
+      {
+        t: "结果因人而异",
+        d: "频道增长取决于细分领域、投入和执行 — 而不只是我们的工具。",
+      },
+      {
+        t: "仅为预估",
+        d: "收益、分析和预测均为近似值，非承诺。",
+      },
+      {
+        t: "自担风险使用",
+        d: "遵守 YouTube 政策和法律系您的责任。",
+      },
+    ],
+    tocTitle: "目录",
+    effectiveDate: "生效日期：2026 年 5 月 10 日 · 版本 2.1",
+    sections: [
+      {
+        id: "general",
+        title: "1. 一般免责声明",
+        intro: "通过 YTForge 网站及任何相关应用、API 或服务（统称“服务”）提供的信息、工具、AI 生成内容、分析、预估及其他材料，仅供一般信息和教育目的。访问或使用服务即表示您完全自担风险并自行判断。",
+        outro: "我们努力保持服务准确、最新且有用，但对服务或其任何内容的完整性、准确性、可靠性、适用性或可用性，不作任何明示或暗示的陈述或保证。",
+      },
+      {
+        id: "ai",
+        title: "2. AI 生成内容",
+        intro: "YTForge 工具使用人工智能和机器学习模型生成标题、脚本、缩略图、字幕、频道分析及其他输出。AI 生成内容具有概率性 — 可能不准确、不完整、有偏见、过时或与事实不符。",
+        subheads: [
+          {
+            title: "发布前请验证",
+            body: "您有责任在将任何 AI 生成输出发布到 YouTube 或其他平台前，进行审查、核实、编辑和验证。请勿假设 YTForge 生成的任何内容均准确或适用于您的特定情况。",
+          },
+          {
+            title: "幻觉警告",
+            body: "AI 模型有时会“幻觉” — 以自信的语气生成看似合理实为捏造的信息。这是当前生成式 AI 技术的已知局限，而非 YTForge 特有缺陷。请将 AI 输出中的所有事实主张、统计数据、引用和参考视为待核实的建议，而非权威真理。",
+          },
+          {
+            title: "偏见与敏感性",
+            body: "AI 模型反映其训练数据中的模式，可能包含文化、人口统计或语言偏见。若您为特定受众、社区或敏感话题制作内容，请行使额外的编辑判断。",
+          },
+        ],
+      },
+      {
+        id: "results",
+        title: "3. 不保证结果",
+        intro: "我们不保证使用 YTForge 会产生任何特定结果。关于观看量、订阅增长、点击率、留存提升、变现资格、收益或任何其他频道指标的提及，仅为说明性示例和进取目标 — 而非承诺。",
+        outro: "频道表现取决于无数我们无法控制的变量，包括但不限于：",
+        list: [
+          "创作者的投入、一致性和制作质量",
+          "细分领域竞争度和受众需求",
+          "YouTube 算法的当前状态",
+          "文化、地理和季节性因素",
+          "YouTube 政策变更和平台更新",
+          "频道的历史、声誉和现有受众",
+        ],
+        outro2:
+          "YTForge 上展示的用户见证和案例研究代表个别经历，并非典型结果。您的实际结果会有所不同。",
+      },
+      {
+        id: "earnings",
+        title: "4. 收益与财务预估",
+        intro: "YTForge 展示的收益计算器、变现检查工具、RPM 参考及任何其他财务数字，均基于行业平均值和公开数据的预估。它们不构成保证、预测或财务预测。",
+        outro: "实际 YouTube 收益因细分领域、受众地域、广告库存、季节性、品牌安全过滤器等诸多因素而显著差异。YTForge 非财务顾问，不提供税务、会计或投资建议。请在基于我们的预估做商业决策前咨询合格专业人士。",
+      },
+      {
+        id: "analytics",
+        title: "5. 分析准确性",
+        intro: "频道分析、频道 ID 查找器及类似搜索工具依赖 YouTube 公开 API、公开 CDN 端点及我们自有统计模型的组合。我们致力于保持数据最新准确，但：",
+        list: [
+          "YouTube 并未公开所有指标 — 部分数字为预估",
+          "频道数据可能被缓存，反映的是滞后的现实视图",
+          "频道可隐藏或限制其公开数据，此时我们的输出将受限或不可用",
+          "1,000 以上的订阅数由 YouTube 自身四舍五入，而非 YTForge",
+        ],
+        outro: "请勿将 YTForge 分析用于关于创作者或频道的法律、财务或投资级决策。",
+      },
+      {
+        id: "third-party",
+        title: "6. 第三方内容",
+        intro: "YTForge 搜索工具展示来自 YouTube 和其他第三方的公开可用内容 — 包括频道名称、缩略图、视频标题和元数据。这些内容归其各自所有者所有。提及某创作者、频道、品牌或产品，不代表 YTForge 的背书、合作或关联。",
+        outro: "若您认为通过 YTForge 显示的内容侵犯了您的权利，请附有效 DMCA 通知联系 dmca@ytforge.app，我们将迅速响应。",
+      },
+      {
+        id: "youtube",
+        title: "7. YouTube 合规",
+        intro: "YTForge 为独立第三方工具。我们与 YouTube、Google 或 Alphabet Inc. 无任何隶属、背书或赞助关系。“YouTube”为 Google LLC 商标。",
+        outro: "您有责任确保您对 YTForge 的使用符合：",
+        list: [
+          "YouTube 服务条款",
+          "YouTube 社区准则",
+          "YouTube 合作伙伴计划政策",
+          "YouTube API 服务条款（如适用）",
+          "您所在司法管辖区的所有适用法律",
+        ],
+        outro2:
+          "使用 AI 生成内容并不能免除您遵守 YouTube 关于真实性、版权、深度伪造、虚假信息、变现或其他政策的规则。YTForge 不对因您的内容导致的警告、去货币化或账号终止承担责任。",
+      },
+      {
+        id: "professional",
+        title: "8. 非专业建议",
+        intro: "YTForge 上的任何内容均不构成专业建议 — 法律、财务、医疗、心理、会计或其他。文章、工具输出、博客文章和支持回复仅供教育和信息参考。请咨询持牌专业人士以获取针对您情况的建议。",
+      },
+      {
+        id: "external",
+        title: "9. 外部链接",
+        intro: "服务可能包含指向由 YTForge 以外各方运营的第三方网站、服务或资源的链接。这些链接仅为您方便而提供，不代表任何背书。我们无法控制外部网站的内容、隐私做法或准确性，概不负责。访问外部链接自担风险。",
+      },
+      {
+        id: "trademarks",
+        title: "10. 商标",
+        intro: "“YTForge”及 YTForge 徽标为 YTForge Inc. 商标。服务中提及的所有其他商标、服务标记、徽标和品牌名称 — 包括 YouTube、Google、Stripe、Slack、Notion、TubeBuddy、VidIQ 等 — 均归各自所有者所有。提及仅为描述和信息目的。",
+      },
+      {
+        id: "fair-use",
+        title: "11. 合理使用",
+        intro: "某些功能（如缩略图下载器和 SEO 分析器）为研究、评论、教育和灵感目的，展示或下载公开 YouTube 视频内容。此用途旨在符合美国版权法及国际同等原则下的合理使用范围。",
+        outro: "您有责任确保自己对任何下载或引用材料的使用符合版权法。未经许可将受版权保护的缩略图、音频或视频作为自己的重新发布，不受合理使用保护，可能侵犯原创作者权利。",
+      },
+      {
+        id: "errors",
+        title: "12. 错误、遗漏与更新",
+        intro: "尽管我们尽力，服务仍可能包含错别字、不准确或过时信息。我们保留随时更正任何错误、不准确或遗漏，并在无需预先通知的情况下更改或更新内容的权利。我们不保证错误会被更正。",
+      },
+      {
+        id: "liability",
+        title: "13. 责任限制",
+        intro: "在法律允许的最大范围内，YTFORGE INC.、其高管、员工、代理人和关联公司不对因您使用或无法使用服务或任何 AI 生成输出而引起或相关的任何直接、间接、附带、特殊、后果性或惩罚性损害 — 包括利润损失、收入损失、订阅损失、版权警告、去货币化或账户终止 — 承担责任。",
+      },
+      {
+        id: "changes",
+        title: "14. 本免责声明的变更",
+        intro: "我们可随时更新本免责声明。页面顶部的“最后更新”日期反映最新修订。重大变更将通过邮件和服务横幅通知。生效日期后继续使用即视为接受。",
+      },
+      {
+        id: "contact",
+        title: "15. 联系我们",
+        intro: "有疑问、顾虑或 DMCA 通知？联系我们：",
+        contacts: [
+          {
+            label: "一般：",
+            value: "support@ytforge.app",
+          },
+          {
+            label: "法律：",
+            value: "legal@ytforge.app",
+          },
+          {
+            label: "DMCA：",
+            value: "dmca@ytforge.app",
+          },
+          {
+            label: "邮寄：",
+            value: "YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
+          },
+        ],
+      },
+    ],
+    liabilityOutroPre: "完整责任条款请见 ",
+    liabilityOutroLink: "服务条款",
+    summaryTitle: "30 秒速览",
+    summaryText: "YTForge 是强大的 AI 工具套件 — 但 AI 并不完美。发布前请核实一切。我们不保证增长、收益或 YouTube 合规 — 这取决于您。请将预估视为预估，而非承诺。",
+    termsCardTitle: "服务条款",
+    termsCardSub: "完整协议",
+    privacyCardTitle: "隐私政策",
+    privacyCardSub: "我们如何处理您的数据",
+    homeCrumb: "首页",
+    disclaimerCrumb: "免责声明",
+  },
   auth: {
-    signInTitle: "欢迎回来",
+    signInTitle: "登录",
     signInSubtitle: "登录您的 YTForge 账户",
     signUpTitle: "创建您的账户",
     signUpSubtitle: "今天就发展您的频道",
@@ -652,6 +1253,99 @@ free: {
     or: "或",
     continueGoogle: "使用 Google 继续",
     agreeTerms: "继续即表示您同意我们的条款和隐私政策",
+    signUp: "注册",
+    signIn: "登录",
+    welcomeBackToast: "欢迎回来！",
+    welcomeBackHeadline1: "欢迎回到",
+    welcomeBackHeadline2: "YTForge",
+    welcomeBackDesc: "登录以从中断处继续。",
+    signInBenefits: [
+      {
+        t: "更快增长",
+        d: "脚本、标题、缩略图几秒搞定 — 不是几天。",
+      },
+      {
+        t: "智能分析",
+        d: "关于您的频道、细分领域和竞品的可执行数据。",
+      },
+      {
+        t: "安全可靠",
+        d: "内容归您所有。加密存储，绝不出售，绝不用于训练模型。",
+      },
+    ],
+    viewLift: "查看案例研究",
+    creators: "位创作者信赖",
+    testimonialQuote: "30 分钟内，YTForge 给我关于频道的清晰度，胜过几个月的 YouTube 视频。",
+    testimonialName: "Amina R.",
+    testimonialHandle: "@amina_creates",
+    signingInGoogle: "正在通过 Google 登录…",
+    googleNotConfigured: "此部署未配置 Google 登录。请改用邮箱和密码。",
+    googleNotConfiguredHint: "在 .env 文件中添加 GOOGLE_CLIENT_ID 和 GOOGLE_CLIENT_SECRET 以启用此按钮。",
+    keepSignedIn: "保持登录",
+    securityCheck: "安全检查",
+    captchaRequired: "请完成安全验证。",
+    signingIn: "登录中…",
+    forgot: "忘记密码？",
+    agreeSignIn: "登录即表示您同意我们的",
+    protectedBy: "及隐私政策。受企业级加密保护。",
+    createFreeAccount: "创建免费账号",
+    newHere: "初次使用？",
+    orWithEmail: "或使用邮箱继续",
+    fullName: "姓名",
+    namePlaceholder: "张三",
+    emailPlaceholder: "you@example.com",
+    passwordPlaceholder: "设置密码",
+    referralPlaceholder: "推荐码（选填）",
+    referredBy: "推荐人",
+    strengthLabel: "密码强度",
+    strengthLabels: [
+      "弱",
+      "中",
+      "良",
+      "强",
+      "极强",
+    ],
+    agreeSignUpPre: "创建账号即表示您同意我们的",
+    agreeSignUpPost: "以及我们的隐私政策。",
+    creatingAccount: "创建账号中…",
+    signUpNow: "立即注册",
+    accountCreated: "账号创建成功！",
+    welcomeReferredPre: "欢迎",
+    welcomeReferredNamePre: "来到 YTForge！",
+    freeBadge: "永久免费 — 无需银行卡",
+    alreadyMember: "已有账号？",
+    signUpGoogle: "使用 Google 注册",
+    signUpApple: "使用 Apple 注册",
+    noCreditCard: "无需信用卡",
+    cancelAnytime: "随时取消",
+    refund30: "30 天退款保证",
+    joinCreators: "加入 52,000+ 创作者",
+    advantageHeadline1: "YouTube 增长的",
+    advantageHeadline2: "捷径",
+    advantageDesc: "脚本、缩略图、SEO、分析 — 完整创作工作室一站到位。",
+    perks: [
+      {
+        t: "即时 AI 回答",
+        d: "脚本、创意、Hook 几秒出结果 — 全天候。",
+      },
+      {
+        t: "增长工具",
+        d: "缩略图、标签、描述 — 频道增长所需一切。",
+      },
+      {
+        t: "永久免费",
+        d: "起步无需银行卡。付费计划带您走得更远。",
+      },
+      {
+        t: "创作者认可",
+        d: "52,000+ 创作者用它做得更好、更快。",
+      },
+    ],
+    signupTestimonialQuote: "我犹豫了几个月才尝试 AI 工具。YTForge 单靠一个视频首周就回本了。",
+    signupTestimonialName: "David K.",
+    signupTestimonialHandle: "@davidbuilds",
+    signupTestimonialMetric: "+212%",
+    signupTestimonialMetricLabel: "90 天后观看量增长",
   },
   notFound: {
     title: "页面未找到",

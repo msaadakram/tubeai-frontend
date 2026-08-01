@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { useLocale } from "@/lib/i18n/LocaleContext";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { getLocalePath } from "@/lib/i18n/utils";
 import { motion } from "motion/react";
 import { toast } from "sonner";
@@ -28,11 +29,7 @@ import {
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
 
-const benefits = [
-  { icon: Sparkles, t: "Unlimited AI generations", d: "Titles, scripts, thumbnails — all unlimited" },
-  { icon: TrendingUp, t: "+340% avg view lift", d: "From 200K+ verified creators" },
-  { icon: Shield, t: "Enterprise security", d: "SOC 2 certified, GDPR compliant" },
-];
+const SIGNIN_BENEFIT_ICONS = [Sparkles, TrendingUp, Shield];
 
 export default function SignInPage() {
   const [showPwd, setShowPwd] = useState(false);
@@ -47,6 +44,11 @@ export default function SignInPage() {
   const { signIn, signInWithGoogle, user, loading: authLoading } = useAuth();
   const router = useRouter();
   const { locale } = useLocale();
+  const { t } = useTranslations();
+
+  const benefits = t("auth.signInBenefits").map((b, i) => ({ ...b, icon: SIGNIN_BENEFIT_ICONS[i] }));
+  const googleHintParts = t("auth.googleNotConfiguredHint").split("NEXT_PUBLIC_GOOGLE_CLIENT_ID");
+  const protectedByParts = t("auth.protectedBy").split("Privacy Policy");
 
   useEffect(() => {
     if (!authLoading && user) {
@@ -68,7 +70,7 @@ export default function SignInPage() {
     const res = await signInWithGoogle(idToken);
     setGoogleLoading(false);
     if (res.ok) {
-      toast.success("Welcome back!");
+      toast.success(t("auth.welcomeBackToast"));
       router.push(getLocalePath(locale, "/dashboard"));
     } else {
       setError(res.error);
@@ -84,7 +86,7 @@ export default function SignInPage() {
     if (loading) return;
 
     if (TURNSTILE_SITE_KEY && !turnstileToken) {
-      setError("Please complete the CAPTCHA verification.");
+      setError(t("auth.captchaRequired"));
       return;
     }
 
@@ -95,7 +97,7 @@ export default function SignInPage() {
     setLoading(false);
 
     if (res.ok) {
-      toast.success("Welcome back!");
+      toast.success(t("auth.welcomeBackToast"));
       router.push(getLocalePath(locale, "/dashboard"));
     } else {
       turnstileRef.current?.reset();
@@ -116,12 +118,12 @@ export default function SignInPage() {
           <motion.div animate={{ y: [0, -10, 0], rotate: [6, 8, 6] }} transition={{ duration: 8, repeat: Infinity }} className="absolute top-32 right-16 w-24 h-24 bg-white border-2 border-black rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-3">
             <TrendingUp className="w-5 h-5 text-red-600 mb-1" />
             <div className="font-black text-[10px]">+340%</div>
-            <div className="text-[8px] text-neutral-500 font-bold">View lift</div>
+            <div className="text-[8px] text-neutral-500 font-bold">{t("auth.viewLift")}</div>
           </motion.div>
           <motion.div animate={{ y: [0, 10, 0], rotate: [-8, -10, -8] }} transition={{ duration: 9, repeat: Infinity, delay: 0.5 }} className="absolute bottom-44 left-12 w-28 h-28 bg-yellow-300 border-2 border-black rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-3">
             <Sparkles className="w-5 h-5 text-black mb-1" />
             <div className="font-black text-[10px]">200K+</div>
-            <div className="text-[8px] text-black/70 font-bold">Creators</div>
+            <div className="text-[8px] text-black/70 font-bold">{t("auth.creators")}</div>
           </motion.div>
         </div>
 
@@ -136,10 +138,10 @@ export default function SignInPage() {
 
         <div className="relative">
           <h2 className="text-4xl xl:text-5xl font-black tracking-tight text-white mb-5 leading-tight [text-shadow:_3px_3px_0_rgb(0_0_0_/_30%)]">
-            Welcome back to the<br />creator workspace.
+            {t("auth.welcomeBackHeadline1")}<br />{t("auth.welcomeBackHeadline2")}
           </h2>
           <p className="text-red-50 text-base xl:text-lg leading-relaxed mb-8 max-w-md">
-            200,000+ creators ship better videos faster with YTForge. Sign in and pick up where you left off.
+            {t("auth.welcomeBackDesc")}
           </p>
           <div className="space-y-3 max-w-md">
             {benefits.map((b) => (
@@ -162,12 +164,12 @@ export default function SignInPage() {
               <Star key={i} className="w-3.5 h-3.5 fill-yellow-300 text-yellow-300" />
             ))}
           </div>
-          <p className="text-white text-sm leading-relaxed mb-3">&quot;YTForge tripled my CTR overnight. Single best subscription I pay for.&quot;</p>
+          <p className="text-white text-sm leading-relaxed mb-3">&quot;{t("auth.testimonialQuote")}&quot;</p>
           <div className="flex items-center gap-2">
             <img src="https://ui-avatars.com/api/?name=Maya+Chen&background=000&color=fff&bold=true" alt="" className="w-8 h-8 rounded-full border-2 border-white" />
             <div>
-              <div className="font-black text-xs text-white">Maya Chen</div>
-              <div className="text-[10px] text-red-100 font-bold">@MayaCodes · 1.2M subs</div>
+              <div className="font-black text-xs text-white">{t("auth.testimonialName")}</div>
+              <div className="text-[10px] text-red-100 font-bold">{t("auth.testimonialHandle")}</div>
             </div>
           </div>
         </div>
@@ -183,18 +185,18 @@ export default function SignInPage() {
             <span className="font-black text-lg tracking-tight">YTForge</span>
           </Link>
           <Link href={getLocalePath(locale, "/signup")} className="text-xs font-black text-red-600 hover:text-black">
-            Sign Up →
+            {t("auth.signUp")} →
           </Link>
         </div>
 
         <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
             <div className="mb-8">
-              <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">Sign in</h1>
+              <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">{t("auth.signInTitle")}</h1>
               <p className="text-sm text-neutral-600">
-                New here?{" "}
+                {t("auth.newHere")}{" "}
                 <Link href={getLocalePath(locale, "/signup")} className="text-red-600 font-black underline">
-                  Create a free account
+                  {t("auth.createFreeAccount")}
                 </Link>
               </p>
             </div>
@@ -216,7 +218,7 @@ export default function SignInPage() {
                 />
                 {googleLoading && (
                   <div className="flex items-center justify-center gap-2 mt-2 text-xs text-neutral-500 font-bold">
-                    <Loader2 className="w-3 h-3 animate-spin" /> Signing in with Google…
+                    <Loader2 className="w-3 h-3 animate-spin" /> {t("auth.signingInGoogle")}
                   </div>
                 )}
               </div>
@@ -234,24 +236,26 @@ export default function SignInPage() {
                     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                   </svg>
-                  Continue with Google
+                  {t("auth.continueGoogle")}
                 </button>
                 <p className="text-center text-xs text-neutral-400 font-medium">
-                  Google sign-in is not configured.
-                  Set <code className="bg-neutral-100 px-1 rounded text-[10px]">NEXT_PUBLIC_GOOGLE_CLIENT_ID</code> to enable it.
+                  {t("auth.googleNotConfigured")}
+                  {googleHintParts[0]}
+                  <code className="bg-neutral-100 px-1 rounded text-[10px]">NEXT_PUBLIC_GOOGLE_CLIENT_ID</code>
+                  {googleHintParts[1] ?? ""}
                 </p>
               </div>
             )}
 
             <div className="flex items-center gap-3 mb-6">
               <div className="flex-1 h-0.5 bg-black" />
-              <span className="text-xs font-black uppercase tracking-wider text-neutral-500">Or with email</span>
+              <span className="text-xs font-black uppercase tracking-wider text-neutral-500">{t("auth.orWithEmail")}</span>
               <div className="flex-1 h-0.5 bg-black" />
             </div>
 
             <form onSubmit={submit} className="space-y-4">
               <div>
-                <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Email</label>
+                <label className="block text-xs font-black uppercase tracking-wider mb-1.5">{t("auth.email")}</label>
                 <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
                   <Mail className="w-4 h-4 text-red-600 shrink-0" />
                   <input
@@ -259,7 +263,7 @@ export default function SignInPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@channel.com"
+                    placeholder={t("auth.emailPlaceholder")}
                     className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
                   />
                 </div>
@@ -267,9 +271,9 @@ export default function SignInPage() {
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-black uppercase tracking-wider">Password</label>
+                  <label className="block text-xs font-black uppercase tracking-wider">{t("auth.password")}</label>
                   <Link href={getLocalePath(locale, "/forgot-password")} className="text-xs font-black text-red-600 hover:text-black">
-                    Forgot?
+                    {t("auth.forgot")}
                   </Link>
                 </div>
                 <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
@@ -291,12 +295,12 @@ export default function SignInPage() {
 
               <label className="flex items-center gap-2 text-xs font-bold text-neutral-700 cursor-pointer select-none">
                 <input type="checkbox" className="w-4 h-4 accent-red-600" defaultChecked />
-                Keep me signed in for 30 days
+                {t("auth.keepSignedIn")}
               </label>
 
               {TURNSTILE_SITE_KEY && (
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs font-black uppercase tracking-wider text-neutral-500">Security check</label>
+                  <label className="text-xs font-black uppercase tracking-wider text-neutral-500">{t("auth.securityCheck")}</label>
                   <TurnstileWidget
                     ref={turnstileRef}
                     siteKey={TURNSTILE_SITE_KEY}
@@ -314,14 +318,18 @@ export default function SignInPage() {
                 className="w-full inline-flex items-center justify-center gap-2 py-3.5 bg-red-600 text-white font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed transition-all uppercase tracking-wider text-sm"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
-                {loading ? "Signing in…" : "Sign In"}
+                {loading ? t("auth.signingIn") : t("auth.signInBtn")}
               </button>
             </form>
 
             <p className="mt-8 text-center text-[11px] text-neutral-500 leading-relaxed">
-              By signing in you agree to our{" "}
-              <Link href={getLocalePath(locale, "/terms")} className="underline font-bold">Terms</Link> and{" "}
-              <Link href={getLocalePath(locale, "/privacy")} className="underline font-bold">Privacy Policy</Link>. Protected by enterprise-grade encryption.
+              {t("auth.agreeSignIn")}{" "}
+              <Link href={getLocalePath(locale, "/terms")} className="underline font-bold">Terms</Link>{" "}
+              {protectedByParts[0]}
+              {protectedByParts[1] !== undefined && (
+                <Link href={getLocalePath(locale, "/privacy")} className="underline font-bold">Privacy Policy</Link>
+              )}
+              {protectedByParts[1] ?? ""}
             </p>
           </motion.div>
         </div>

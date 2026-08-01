@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { useLocale } from "@/lib/i18n/LocaleContext";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { getLocalePath } from "@/lib/i18n/utils";
 import { motion } from "motion/react";
 import { toast } from "sonner";
@@ -31,12 +32,7 @@ import {
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
-const perks = [
-  { icon: Gift, t: "7-day free trial", d: "All Creator features unlocked, no card needed" },
-  { icon: Sparkles, t: "Unlimited AI generations", d: "Titles, scripts, thumbnails, analytics" },
-  { icon: Zap, t: "Sub-2s generation", d: "Faster than the YouTube tab loads" },
-  { icon: Shield, t: "Cancel anytime", d: "30-day money-back guarantee" },
-];
+const PERK_ICONS = [Gift, Sparkles, Zap, Shield];
 
 function GoogleIcon() {
   return (
@@ -88,13 +84,17 @@ function SignUpPageInner() {
 
   const turnstileRef = useRef<TurnstileHandle>(null);
   const score = strength(pwd);
-  const labels = ["Too weak", "Weak", "Okay", "Strong", "Excellent"];
   const colors = ["bg-neutral-200", "bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-green-600"];
 
   const { signUp, user, loading: authLoading } = useAuth();
   const router = useRouter();
   const { locale } = useLocale();
+  const { t } = useTranslations();
   const searchParams = useSearchParams();
+
+  const labels = t("auth.strengthLabels");
+  const perks = t("auth.perks").map((p, i) => ({ ...p, icon: PERK_ICONS[i] }));
+  const agreeUpPostParts = t("auth.agreeSignUpPost").split("Privacy Policy");
 
   // ── Redirect already-authenticated users away from this page ──────────────
   useEffect(() => {
@@ -129,7 +129,7 @@ function SignUpPageInner() {
     if (!agree || loading) return;
 
     if (TURNSTILE_SITE_KEY && !turnstileToken) {
-      setError("Please complete the CAPTCHA verification.");
+      setError(t("auth.captchaRequired"));
       return;
     }
 
@@ -139,7 +139,11 @@ function SignUpPageInner() {
     setLoading(false);
 
     if (res.ok) {
-      toast.success(referralCode ? `Welcome to YTForge! ${referrerName ? `Referred by ${referrerName}.` : ""}` : "Account created — welcome to YTForge!");
+      toast.success(
+        referralCode
+          ? `${t("auth.welcomeReferredPre")} ${referrerName ? `${t("auth.welcomeReferredNamePre")} ${referrerName}.` : ""}`
+          : t("auth.accountCreated")
+      );
       router.push(getLocalePath(locale, "/dashboard"));
     } else {
       turnstileRef.current?.reset();
@@ -159,7 +163,7 @@ function SignUpPageInner() {
           <span className="font-black text-lg tracking-tight">YTForge</span>
         </Link>
         <Link href={getLocalePath(locale, "/signin")} className="text-xs font-black text-red-600 hover:text-black">
-          Sign In →
+          {t("auth.signIn")} →
         </Link>
       </div>
 
@@ -176,34 +180,34 @@ function SignUpPageInner() {
           </div>
 
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-yellow-300 text-black text-[10px] font-black uppercase tracking-wider mb-4 border-2 border-black">
-            <Gift className="w-3 h-3" /> 7 Days Free · No Card Required
+            <Gift className="w-3 h-3" /> {t("auth.freeBadge")}
           </div>
 
           <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">Create your account</h1>
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">{t("auth.signUpTitle")}</h1>
             <p className="text-sm text-neutral-600">
-              Already a member?{" "}
+              {t("auth.alreadyMember")}{" "}
               <Link href={getLocalePath(locale, "/signin")} className="text-red-600 font-black underline">
-                Sign in
+                {t("auth.signIn")}
               </Link>
             </p>
           </div>
 
           <div className="space-y-3 mb-6">
             <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-black rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
-              <GoogleIcon /> Sign up with Google
+              <GoogleIcon /> {t("auth.signUpGoogle")}
             </button>
             <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-black text-white border-2 border-black rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
               <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
                 <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
               </svg>
-              Sign up with Apple
+              {t("auth.signUpApple")}
             </button>
           </div>
 
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-0.5 bg-black" />
-            <span className="text-xs font-black uppercase tracking-wider text-neutral-500">Or with email</span>
+            <span className="text-xs font-black uppercase tracking-wider text-neutral-500">{t("auth.orWithEmail")}</span>
             <div className="flex-1 h-0.5 bg-black" />
           </div>
 
@@ -215,21 +219,21 @@ function SignUpPageInner() {
               </div>
             )}
             <div>
-              <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Full name</label>
+              <label className="block text-xs font-black uppercase tracking-wider mb-1.5">{t("auth.fullName")}</label>
               <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
                 <User className="w-4 h-4 text-red-600 shrink-0" />
                 <input
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Alex Creator"
+                  placeholder={t("auth.namePlaceholder")}
                   className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Email</label>
+              <label className="block text-xs font-black uppercase tracking-wider mb-1.5">{t("auth.email")}</label>
               <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
                 <Mail className="w-4 h-4 text-red-600 shrink-0" />
                 <input
@@ -237,14 +241,14 @@ function SignUpPageInner() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@channel.com"
+                  placeholder={t("auth.emailPlaceholder")}
                   className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Password</label>
+              <label className="block text-xs font-black uppercase tracking-wider mb-1.5">{t("auth.password")}</label>
               <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
                 <Lock className="w-4 h-4 text-red-600 shrink-0" />
                 <input
@@ -253,7 +257,7 @@ function SignUpPageInner() {
                   minLength={8}
                   value={pwd}
                   onChange={(e) => setPwd(e.target.value)}
-                  placeholder="At least 8 characters"
+                  placeholder={t("auth.passwordPlaceholder")}
                   className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
                 />
                 <button type="button" onClick={() => setShowPwd((s) => !s)} className="text-neutral-400 hover:text-black shrink-0">
@@ -271,27 +275,27 @@ function SignUpPageInner() {
                     ))}
                   </div>
                   <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">
-                    Strength: <span className={`${score >= 3 ? "text-green-600" : score >= 2 ? "text-yellow-600" : "text-red-600"}`}>{labels[score]}</span>
+                    {t("auth.strengthLabel")} <span className={`${score >= 3 ? "text-green-600" : score >= 2 ? "text-yellow-600" : "text-red-600"}`}>{labels[score]}</span>
                   </div>
                 </div>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Referral code (optional)</label>
+              <label className="block text-xs font-black uppercase tracking-wider mb-1.5">{t("auth.referralCode")}</label>
               <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
                 <Gift className="w-4 h-4 text-red-600 shrink-0" />
                 <input
                   type="text"
                   value={referralCode}
                   onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-                  placeholder="e.g. YT3A4B6"
+                  placeholder={t("auth.referralPlaceholder")}
                   className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
                 />
               </div>
               {referrerName && (
                 <p className="text-[11px] text-green-600 font-black mt-1.5 inline-flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Referred by {referrerName}
+                  <CheckCircle2 className="w-3.5 h-3.5" /> {t("auth.referredBy")} {referrerName}
                 </p>
               )}
             </div>
@@ -304,15 +308,19 @@ function SignUpPageInner() {
                 onChange={(e) => setAgree(e.target.checked)}
               />
               <span className="leading-snug">
-                I agree to YTForge&apos;s{" "}
-                <Link href={getLocalePath(locale, "/terms")} className="underline text-red-600">Terms of Service</Link> and{" "}
-                <Link href={getLocalePath(locale, "/privacy")} className="underline text-red-600">Privacy Policy</Link>.
+                {t("auth.agreeSignUpPre")}{" "}
+                <Link href={getLocalePath(locale, "/terms")} className="underline text-red-600">Terms of Service</Link>{" "}
+                {agreeUpPostParts[0]}
+                {agreeUpPostParts[1] !== undefined && (
+                  <Link href={getLocalePath(locale, "/privacy")} className="underline text-red-600">Privacy Policy</Link>
+                )}
+                {agreeUpPostParts[1] ?? ""}
               </span>
             </label>
 
             {TURNSTILE_SITE_KEY && (
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-black uppercase tracking-wider text-neutral-500">Security check</label>
+                <label className="text-xs font-black uppercase tracking-wider text-neutral-500">{t("auth.securityCheck")}</label>
                 <TurnstileWidget
                   ref={turnstileRef}
                   siteKey={TURNSTILE_SITE_KEY}
@@ -330,13 +338,13 @@ function SignUpPageInner() {
               className="w-full inline-flex items-center justify-center gap-2 py-3.5 bg-red-600 text-white font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 transition-all uppercase tracking-wider text-sm"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />}
-              {loading ? "Creating account..." : "Sign Up Now"}
+              {loading ? t("auth.creatingAccount") : t("auth.signUpBtn")}
             </button>
 
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 pt-2 text-[10px] font-bold text-neutral-500">
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-green-600" /> No credit card</span>
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-green-600" /> Cancel anytime</span>
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-green-600" /> 30-day refund</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-green-600" /> {t("auth.noCreditCard")}</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-green-600" /> {t("auth.cancelAnytime")}</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-green-600" /> {t("auth.refund30")}</span>
             </div>
           </form>
         </motion.div>
@@ -353,19 +361,19 @@ function SignUpPageInner() {
 
         <div className="relative flex justify-end">
           <Link href={getLocalePath(locale, "/signin")} className="text-xs font-black text-white/70 hover:text-white">
-            Have an account? <span className="text-red-500 underline">Sign in</span>
+            {t("auth.haveAccount")} <span className="text-red-500 underline">{t("auth.signIn")}</span>
           </Link>
         </div>
 
         <div className="relative">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600 text-white text-xs font-black tracking-wider uppercase mb-6 border-2 border-white shadow-[3px_3px_0px_0px_rgba(255,255,255,0.4)]">
-            <Sparkles className="w-3.5 h-3.5" /> Join 200K+ Creators
+            <Sparkles className="w-3.5 h-3.5" /> {t("auth.joinCreators")}
           </div>
           <h2 className="text-4xl xl:text-5xl font-black tracking-tight text-white mb-5 leading-tight">
-            Your unfair advantage,<br />unlocked in 60 seconds.
+            {t("auth.advantageHeadline1")}<br />{t("auth.advantageHeadline2")}
           </h2>
           <p className="text-neutral-300 text-base xl:text-lg leading-relaxed mb-8 max-w-md">
-            Every AI tool. Every workflow. Every analytics dashboard. Free for 7 days, no credit card required.
+            {t("auth.advantageDesc")}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg">
@@ -387,18 +395,18 @@ function SignUpPageInner() {
               <Star key={i} className="w-3.5 h-3.5 fill-yellow-300 text-yellow-300" />
             ))}
           </div>
-          <p className="text-white text-sm leading-relaxed mb-3">&quot;Went from 12K to 480K subs in 9 months. The Creator plan paid for itself in week one.&quot;</p>
+          <p className="text-white text-sm leading-relaxed mb-3">{t("auth.signupTestimonialQuote")}</p>
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <img src="https://ui-avatars.com/api/?name=Aisha+Patel&background=000&color=fff&bold=true" alt="" className="w-8 h-8 rounded-full border-2 border-white" />
               <div>
-                <div className="font-black text-xs text-white">Aisha Patel</div>
-                <div className="text-[10px] text-red-100 font-bold">@AishaTalks · 480K subs</div>
+                <div className="font-black text-xs text-white">{t("auth.signupTestimonialName")}</div>
+                <div className="text-[10px] text-red-100 font-bold">{t("auth.signupTestimonialHandle")}</div>
               </div>
             </div>
             <div className="text-right">
-              <div className="font-black text-lg text-white">+3,900%</div>
-              <div className="text-[9px] text-red-100 font-bold uppercase">Growth</div>
+              <div className="font-black text-lg text-white">{t("auth.signupTestimonialMetric")}</div>
+              <div className="text-[9px] text-red-100 font-bold uppercase">{t("auth.signupTestimonialMetricLabel")}</div>
             </div>
           </div>
         </div>

@@ -20,7 +20,7 @@ export const ko: Messages = {
     closeMenu: "메뉴 닫기",
     toggleMenu: "메뉴 열기",
       pro: "Pro",
-    plan: "Plan",
+    plan: "플랜",
 },
   footer: {
     newsletterBadge: "크리에이터 뉴스레터",
@@ -171,21 +171,16 @@ export const ko: Messages = {
     getStarted: "시작하기",
     startTrial: "7일 체험",
     contactSales: "영업팀 문의",
+    homeCrumb: "홈",
+    pricingCrumb: "요금",
     plans: {
-            starter: {
-        name: "Free",
-        tagline: "Get started with the basics",
-        description: "Perfect for new creators getting started.",
-        features: [
-          "Basic SEO Analyzer",
-          "5 AI Title Generations / mo",
-          "Tag Generator",
-          "Thumbnail Downloader",
-          "Standard Support"
-        ],
-        cta: "Get Started"
-      },
+
 free: {
+        notIncluded: [
+                "AI 스크립트 라이터",
+                "채널 분석",
+                "API 액세스"
+        ],
         name: "무료",
         tagline: "기본으로 시작하세요",
         features: [
@@ -236,11 +231,29 @@ free: {
       },
     },
     compareTitle: "모든 플랜을 나란히 비교",
+    compareBadge: "전체 기능 비교",
     compareSubtitle: "모든 기능, 모든 한도 — 30초 만에 올바른 플랜을 선택할 수 있도록 명확하게.",
     featureCol: "기능",
     testimonialsBadge: "200K+ 크리에이터의 사랑",
     testimonialsTitle: "우리 말만 믿지 마세요",
     testimonialsSubtitle: "실제 크리에이터, 실제 채널 성장, 실제 ROI.",
+    testimonials: [
+      {
+        quote: "YTForge의 Creator 플랜은 첫 주에 본전을 뽑았습니다. AI 생성 제목으로 바꾼 뒤 CTR이 41%나 올랐어요.",
+        name: "Maya Chen",
+        role: "테크 유튜버 · 구독자 120만",
+      },
+      {
+        quote: "네트워크용으로 채널 14개를 운영합니다. Pro 플랜의 일괄 생성 덕분에 팀이 매주 30시간 이상을 아낍니다.",
+        name: "Diego Ramirez",
+        role: "콘텐츠 총괄 · MediaCorp",
+      },
+      {
+        quote: "AI 도구에 회의적이었지만 스크립트 라이터는 솔직히 제 최고의 장편 작업과 구분이 안 될 정도입니다.",
+        name: "Aisha Patel",
+        role: "다큐멘터리 영화감독 · 구독자 48만",
+      },
+    ],
     faqBadge: "요금 FAQ",
     faqTitle: "궁금할 수 있는 모든 것",
     faqSubtitle: "아직 질문이 있으신가요? support@ytforge.app로 이메일 보내주세요 — 4시간 이내 답변.",
@@ -309,8 +322,6 @@ free: {
       { label: "지원", values: ["커뮤니티", "우선 채팅", "24/7 전화 + AM"] },
     ],
   
-      finalCtaDesc: "Start free, upgrade when you're ready. No credit card required.",
-      finalCtaBtn: "Start Free",
 },
   faq: {
     title: "자주 묻는 질문",
@@ -446,6 +457,7 @@ free: {
     noMatch: "일치하는 언어가 없습니다",
     label: "언어",
   },
+
   demo: {
     badge: "BY SOLUTIONS",
     title: "우리의 솔루션",
@@ -535,6 +547,372 @@ free: {
     revenueSplit: "수익 분배",
     thisMonth: "이번 달",
     exploreButton: "모든 도구 탐색",
+  },
+  demoPage: {
+    heroBadge: "라이브 데모 · 11개 도구 · 하나의 작업공간",
+    heroTitle1: "AI가 만나는 곳",
+    heroTitle2: "YouTube 영상 편집",
+    heroDesc: "다음 영상의 스크립트, 썸네일, 제목, 설명을 생성 — 모두 하나의 세련된 인터페이스에서. 이것은 인터랙티브 데모이지 광고가 아닙니다.",
+    startTrial: "무료 체험",
+    exploreTools: "도구 살펴보기",
+    tryFreeTools: "무료 도구 사용해 보기",
+    heroStats: [
+      {
+        value: "250K+",
+        label: "최적화된 영상",
+      },
+      {
+        value: "52K+",
+        label: "활성 크리에이터",
+      },
+      {
+        value: "110M+",
+        label: "추정 획득 조회수",
+      },
+      {
+        value: "4.9/5",
+        label: "평균 평점",
+      },
+    ],
+    featuredIn: "언급된 곳",
+    tourBadge: "인터랙티브 투어",
+    tourTitle: "계정 없이 YTForge 체험",
+    tourDesc: "아래 모든 데모는 브라우저에서 실행됩니다 — 입력은 로컬에서 처리되며 기기를 떠나지 않습니다. 계정 불필요, 데모 제한 없음.",
+    tools: [
+      {
+        name: "스크립트 생성기",
+        desc: "단일 아이디어에서 완전한 영상 스크립트 생성.",
+        metrics: {
+          gens: "12,4K",
+          lift: "+212%",
+        },
+        demo: null,
+      },
+      {
+        name: "썸네일 생성기",
+        desc: "제목 기반 클릭 유도 썸네일 컨셉.",
+        metrics: {
+          gens: "8,7K",
+          lift: "+147%",
+        },
+        demo: null,
+      },
+      {
+        name: "제목 생성기",
+        desc: "주제당 최대 25개 고성과 제목.",
+        metrics: {
+          gens: "15,1K",
+          lift: "+189%",
+        },
+        demo: null,
+      },
+      {
+        name: "해시태그 생성기",
+        desc: "콘텐츠를 적절한 시청자 앞에 배치하는 태그.",
+        metrics: {
+          gens: "13,8K",
+          lift: "+156%",
+        },
+        demo: null,
+      },
+      {
+        name: "태그 생성기",
+        desc: "한 번 클릭으로 더 똑똑한 YouTube SEO.",
+        metrics: {
+          gens: "9,3K",
+          lift: "+98%",
+        },
+        demo: null,
+      },
+      {
+        name: "정의 생성기",
+        desc: "영상용 명확하고 전문적인 정의.",
+        metrics: {
+          gens: "5,9K",
+          lift: "+67%",
+        },
+        demo: null,
+      },
+      {
+        name: "뉴스 생성기",
+        desc: "핵심 사실과 맥락을 담은 시사 콘텐츠.",
+        metrics: {
+          gens: "7,4K",
+          lift: "+83%",
+        },
+        demo: null,
+      },
+      {
+        name: "댓글 생성기",
+        desc: "커뮤니티를 만드는 매력적인 답글.",
+        metrics: {
+          gens: "16,7K",
+          lift: "+234%",
+        },
+        demo: null,
+      },
+      {
+        name: "바이럴 콘텐츠 생성기",
+        desc: "공유를 위해 설계된 아이디어.",
+        metrics: {
+          gens: "11,2K",
+          lift: "+127%",
+        },
+        demo: null,
+      },
+      {
+        name: "설명 생성기",
+        desc: "순위 상승과 판매를 돕는 설명.",
+        metrics: {
+          gens: "10,5K",
+          lift: "+143%",
+        },
+        demo: null,
+      },
+      {
+        name: "훅 생성기",
+        desc: "모든 것을 결정하는 첫 몇 초.",
+        metrics: {
+          gens: "6,8K",
+          lift: "+79%",
+        },
+        demo: null,
+      },
+      {
+        name: "키워드 생성기",
+        desc: "오디언스가 실제로 검색하는 것 찾기.",
+        metrics: {
+          gens: "14,3K",
+          lift: "+162%",
+        },
+        demo: null,
+      },
+      {
+        name: "크레딧 생성기",
+        desc: "팀 또는 스폰서용 전문 크레딧.",
+        metrics: {
+          gens: "4,2K",
+          lift: "+54%",
+        },
+        demo: null,
+      },
+    ],
+    lifetimeGens: "1,300만+",
+    avgLift: "평균 +139%",
+    sampleOutput: "출력 예시",
+    livePreviewTitle: "라이브 미리보기",
+    livePreviewDesc: "주제 입력, 도구 선택, 라이브 출력 테스트 — 계정 불필요.",
+    tryToolFreePre: "",
+    tryToolFreeSuffix: " 무료 체험",
+    workflowBadge: "간소화됨",
+    workflowTitle: "구상에서 게시까지 하나의 워크플로",
+    workflowDesc: "다섯 개 탭을 오갈 필요 없습니다. YTForge가 영상 라이프사이클 전체를 하나의 작업공간에 통합합니다.",
+    workflowSteps: [
+      {
+        n: "1",
+        t: "리서치",
+        d: "트렌드 데이터와 경쟁 분석으로 오디언스가 보고 싶은 것 발견.",
+      },
+      {
+        n: "2",
+        t: "스크립트 작성",
+        d: "후크, 루프, 페이오프로 관심을 유지하는 구조화된 스크립트.",
+      },
+      {
+        n: "3",
+        t: "썸네일 디자인",
+        d: "스크롤을 멈추는 고전환 컨셉.",
+      },
+      {
+        n: "4",
+        t: "게시 최적화",
+        d: "제목, 설명, 태그, 해시태그 — Google과 YouTube가 랭크하는 것에 맞춰 정렬.",
+      },
+      {
+        n: "5",
+        t: "게시 및 분석",
+        d: "게시, 성과 추적, 채널 분석으로 반복 개선.",
+      },
+    ],
+    benefitsBadge: "YTForge를 선택하는 이유",
+    benefitsTitle: "크리에이터가 만들고, 크리에이터를 위해 만듦",
+    benefitsDesc: "모든 도구는 우리 자신의 채널에서 겪은 실제 문제를 해결하기 위해 만들어졌습니다.",
+    benefits: [
+      {
+        t: "막대한 시간 절약",
+        d: "영상당 수시간 제작이 단 몇 분으로 단축.",
+      },
+      {
+        t: "일관된 품질",
+        d: "매번 전문가급 스크립트, 제목, 컨셉.",
+      },
+      {
+        t: "데이터 기반 성장",
+        d: "실제 데이터와 트렌드에 기반한 최적화.",
+      },
+      {
+        t: "사용자 친화적",
+        d: "학습 곡선 제로. 타이핑할 줄 알면 YTForge 사용 가능.",
+      },
+      {
+        t: "지속적 진화",
+        d: "매주 새로운 도구와 개선사항 출시.",
+      },
+      {
+        t: "안전하고 신뢰성 있음",
+        d: "당신의 아이디어는 당신의 것 — 절대 데이터를 판매하지 않음.",
+      },
+    ],
+    useCasesBadge: "활용 사례",
+    useCasesTitle: "모든 유형의 크리에이터를 위해 설계",
+    useCasesDesc: "초보 유튜버부터 풀타임 스튜디오까지 — YTForge는 당신의 워크플로에 적응합니다.",
+    useCases: [
+      {
+        t: "신인 크리에이터",
+        d: "초기 실수를 피하게 해주는 구조화된 스크립트와 아이디어로 시작.",
+      },
+      {
+        t: "풀타임 채널",
+        d: "리서치, 편집, 최적화 간소화 — 더 빠르게 게시.",
+      },
+      {
+        t: "팀 및 스튜디오",
+        d: "에디터와 작가 간 제작 표준화, 일관된 템플릿으로.",
+      },
+      {
+        t: "교육자 및 강의",
+        d: "지식을 관심을 유지하는 구조화된 영상으로 변환.",
+      },
+      {
+        t: "브랜드 및 마케팅",
+        d: "브랜드 권위를 구축하는 일관된 영상 시리즈.",
+      },
+      {
+        t: "게이머 및 스트리머",
+        d: "클립을 에버그린 콘텐츠로 바꾸는 제목, 몽타주, 스크립트.",
+      },
+    ],
+    testiBadge: "후기",
+    testiTitle: "크리에이터들이 말하는 것",
+    testiDesc: "52,000명 이상의 크리에이터가 YTForge로 더 나은 콘텐츠를 더 빠르게 만듭니다.",
+    testimonials: [
+      {
+        quote: "YTForge가 내 워크플로를 바꿨습니다. 아이디어에서 게시까지 며칠이 아닌 몇 시간이 걸립니다.",
+        name: "Sarah M.",
+        role: "라이프스타일 유튜버, 180K 구독자",
+        channel: "인증된 채널",
+        metric: "+212%",
+        metricLabel: "조회수 성장",
+      },
+      {
+        quote: "스크립트 생성기가 미쳤어요. 후크가 내 작가가 쓴 것보다 낫고 — 30배 더 빠릅니다.",
+        name: "David K.",
+        role: "테크 크리에이터, 92K 구독자",
+        channel: "프로 구독자",
+        metric: "38시간",
+        metricLabel: "월간 절약",
+      },
+      {
+        quote: "두 달 만에 조회수가 30% 늘었습니다. 너무 좋아서 사실일 수 없다고 생각했는데, 분석을 보고 믿게 됐습니다.",
+        name: "Amina R.",
+        role: "여행 브이로거, 64K 구독자",
+        channel: "인증된 채널",
+        metric: "+30%",
+        metricLabel: "60일간 조회수",
+      },
+      {
+        quote: "수익화 체크기가 내 채널에 정확히 무엇이 부족한지 말해줬습니다. 한 달 후 파트너 프로그램에 들어갔습니다.",
+        name: "Marcus T.",
+        role: "게임 크리에이터, 11K 구독자",
+        channel: "커뮤니티 멤버",
+        metric: "1개월",
+        metricLabel: "수익화까지",
+      },
+    ],
+    guideBadge: "가이드",
+    guideTitle: "YouTube 성장 퀵 가이드",
+    guideDesc: "모든 YTForge 도구에 내장된 기초 원칙 — 2026년에도 여전히 작동합니다.",
+    guideLead:
+      "YTForge는 2026년 YouTube 크리에이터를 위해 특별히 구축된 가장 포괄적인 AI 플랫폼입니다. ChatGPT 같은 범용 AI 도구는 대본을 쓸 수 있고 Canva 같은 디자인 도구는 썸네일을 만들 수 있지만, 둘 다 YouTube 알고리즘을 이해하지 못합니다. 핵심을 움직이는 클릭률, 알고리즘 부스트를 얻는 시청 유지 곡선, 검색에서 동영상을 노출시키는 메타데이터 신호를 말이죠. YTForge는 바로 그 신호에 특화되어 420만 개의 바이럴 YouTube 동영상으로 학습하고 매주 최신 성과 데이터로 업데이트됩니다.",
+    seoContent: [
+      {
+        h3: "관심이 유일한 화폐",
+        p1: "YouTube는 관심의 게임입니다. CTR과 리텐션이 거의 모든 것을 결정합니다: 조회수, 추천, 수익화. 다른 것을 최적화하기 전에, 사람들이 무엇에 클릭하고 끝까지 시청하는지 최적화하세요.",
+      },
+      {
+        h3: "스크립트가 아닌 리서치부터 시작",
+        p1: "이기는 콘텐츠는 사람들이 이미 검색하는 것에서 시작합니다. YTForge의 키워드 도구로 실제 수요가 있는 주제를 찾고, 그것을 능가하는 콘텐츠를 만드세요.",
+      },
+      {
+        h3: "훅은 약속이지 미리보기가 아님",
+        p1: "처음 30초가 누군가가 남을지 결정합니다. 영상을 요약하는 게 아니라, 시청자가 답을 알아야 하는 질문을 심습니다.",
+      },
+      {
+        h3: "리텐션은 구조로 얻음",
+        p1: "루프 — 스스로 되돌아오는 영상 섹션 — 가 사람들을 다음 영상으로 이끕니다. 각 섹션이 독립적으로 서도록 만드세요.",
+        p2: "YTForge 스크립트는 기본적으로 훅 → 루프 → 페이오프 구조로 만들어집니다.",
+      },
+      {
+        h3: "썸네일은 엄지손톱 크기로 판단됨",
+        p1: "미리보기 홍수 속에서 썸네일은 엄지손톱 크기에서 읽혀야 합니다. 하나의 감정, 하나의 주제, 하나의 대비. 메시지가 둘 이상이면 피드에서 묻힙니다.",
+      },
+      {
+        h3: "YouTube SEO = 클릭 신호",
+        p1: "제목, 설명, 태그는 필드가 아닙니다 — 랭킹 신호입니다. 메인 키워드를 세 곳 모두에 자연스럽게 넣고, 나머지는 YTForge가 정렬하게 두세요.",
+      },
+      {
+        h3: "일관성이 전쟁에서 이김",
+        p1: "지속 가능한 게시 리듬과 명확한 주제가 습관적인 오디언스를 만듭니다. 습관에 의한 리텐션은 플랫폼에서 가장 과소평가된 성장 레버입니다.",
+      },
+    ],
+    faqBadge: "FAQ",
+    faqTitle: "자주 묻는 질문",
+    faqDesc: "항상 묻고 싶었던 것 — 고객 지원 없이.",
+    faqs: [
+      {
+        q: "YTForge는 정말 무료인가요?",
+        a: "네 — 무료 플랜은 일일 생성 제한과 함께 모든 도구 액세스를 포함합니다. 인터랙티브 데모는 계정도 결제도 필요 없습니다.",
+      },
+      {
+        q: "도구는 어떤 언어를 지원하나요?",
+        a: "AI 출력은 입력 언어를 따릅니다 — 설정 전환 불필요. 페이지 자체는 9개 언어로 제공됩니다.",
+      },
+      {
+        q: "데모가 내 데이터를 처리하나요?",
+        a: "아니요. 데모는 브라우저에서 완전히 실행됩니다: 입력은 기기를 떠나지 않습니다. 서버 전송 없음, 저장 없음.",
+      },
+      {
+        q: "데모 출력을 영상에 쓸 수 있나요?",
+        a: "네, 자유롭게 — 그래서 존재하는 겁니다. 하지만 데모는 축소판이며, API를 통한 전체 생성은 가입 계정 전용입니다.",
+      },
+      {
+        q: "YTForge는 TubeBuddy나 VidIQ와 어떻게 다른가요?",
+        a: "그들은 데이터 중심 브라우저 확장; YTForge는 성장 도구를 갖춘 AI 기반 크리에이션 스튜디오, 하나의 작업공간에 모두.",
+      },
+      {
+        q: "내 스크립트와 아이디어는 비공개인가요?",
+        a: "네. 콘텐츠는 당신 것입니다. 당신을 서비스하기 위해 사용하며, 절대 당신에게 불리하게 학습하거나 판매하지 않습니다.",
+      },
+      {
+        q: "언제든 취소할 수 있나요?",
+        a: "네. 두 번 클릭으로 언제든 취소 — 플랜은 청구 기간 끝까지 활성, 이후 무료 플랜으로 전환.",
+      },
+      {
+        q: "YTForge는 조회수나 구독자를 보장하나요?",
+        a: "절대. 어떤 도구도 정직하게 못 합니다. 결과가 아닌 제작을 약속합니다 — 하지만 52,000명 이상의 크리에이터가 숫자를 올리기 위해 우리를 신뢰합니다.",
+      },
+    ],
+    finalBadge: "모든 것을 바꿀 준비되셨나요?",
+    finalTitle1: "추측하지 말고,",
+    finalTitle2: "의도를 가지고 만들기 시작하세요.",
+    finalDesc: "52,000명 이상의 크리에이터와 함께 YTForge로 더 나은 콘텐츠를 더 빠르게 만드세요.",
+    noCreditCard: "신용카드 불필요",
+    cancelAnytime: "언제든 취소 가능",
+    refund30: "30일 환불 보장",
+    viewLift: "케이스 스터디 보기",
+    generations: "생성 횟수",
+    homeCrumb: "홈",
+    demoCrumb: "데모",
   },
   aiFeatures: {
     badge: "AI 기반 기능",
@@ -632,8 +1010,231 @@ free: {
     loading: "로딩 중...",
     lastUpdated: "최근 업데이트",
   },
+  chat: {
+    brand: "YTForge AI",
+    heroTitle: "YouTube 성장 코치",
+    heroDesc: "채널, 스크립트, 썸네일, SEO, 성장 전략에 대한 모든 질문을 받습니다. 정확하고 실행 가능한 답변을 실시간으로 제공합니다.",
+    emptyTitle: "어떻게 성장을 도와드릴까요?",
+    emptyDesc: "시작점을 선택하거나 직접 질문하세요. 진단 후 다음 영상에 바로 적용할 수 있는 실질적인 조언을 드립니다.",
+    starters: [
+      {
+        title: "내 영상 아이디어 평가",
+        prompt: "[주제]에 대한 YouTube 영상을 기획 중입니다. 진짜 클릭을 유도할 각도는 무엇이고, 이 주제에서 대부분의 크리에이터가 저지르는 실수는 무엇인가요?",
+      },
+      {
+        title: "왜 성장이 안 될까요?",
+        prompt: "내 채널은 [니치] 영상을 만들고 있고 [구독자/조회수] 근처에서 성장이 정체되었습니다. 가장 먼저 진단해야 할 것을 알려주세요.",
+      },
+      {
+        title: "30초 훅 써줘",
+        prompt: "[제목]이라는 영상의 30초 오프닝 훅을 써주세요. 3가지 버전과 각 버전이 사용하는 리텐션 기법을 설명해주세요.",
+      },
+      {
+        title: "다음 4개 영상 기획",
+        prompt: "내 채널은 [니치]를 다룹니다. 이전 영상을 바탕으로 쌓아올리는 형태의 다음 4개 영상 아이디어를, 각각 한 줄 썸네일 컨셉과 함께 제안해주세요.",
+      },
+    ],
+    quickLinks: [
+      {
+        label: "태그 생성기",
+      },
+      {
+        label: "해시태그 생성기",
+      },
+      {
+        label: "제목 생성기",
+      },
+    ],
+    placeholder: "채널, 스크립트, 썸네일, SEO에 대해 질문하세요…",
+    clear: "지우기",
+    stop: "중지",
+    send: "보내기",
+    footerNote: "YTForge AI는 틀릴 수 있습니다 — 중요한 조언은 게시 전 확인하세요.",
+    noResponse: "이번엔 응답을 받지 못했습니다. 다시 시도해주세요.",
+    stopped: "_중지됨._",
+    errorDefault: "오류가 발생했습니다.",
+    streamingError: "스트리밍 오류",
+    homeCrumb: "홈",
+    chatCrumb: "AI 채팅",
+  },
+  disclaimer: {
+    lastUpdated: "최종 업데이트: 2026년 5월 10일",
+    title: "면책 조항",
+    intro: "YTForge의 도구, AI 출력, 우리가 약속하는 것의 한계에 대한 중요한 배경 정보입니다. 우리가 생성하는 어떤 것에 의존하기 전에 이 내용을 읽으십시오.",
+    callouts: [
+      {
+        t: "AI는 완벽하지 않습니다",
+        d: "게시 전 출력을 확인하세요 — AI는 틀리거나 편향되거나 구식일 수 있습니다.",
+      },
+      {
+        t: "결과는 다릅니다",
+        d: "채널 성장은 니치, 노력, 실행에 달려 있습니다 — 도구만이 아닙니다.",
+      },
+      {
+        t: "추정치만 제공",
+        d: "수익, 분석, 예측은 근사치이며 보장이 아닙니다.",
+      },
+      {
+        t: "본인 책임하에 사용",
+        d: "YouTube 정책 및 법률 준수는 귀하의 책임입니다.",
+      },
+    ],
+    tocTitle: "목차",
+    effectiveDate: "시행일: 2026년 5월 10일 · 버전 2.1",
+    sections: [
+      {
+        id: "general",
+        title: "1. 일반 면책 조항",
+        intro: "YTForge 웹사이트 및 관련 애플리케이션, API, 서비스(통칭 \"서비스\")에서 제공하는 정보, 도구, AI 생성 콘텐츠, 분석, 추정치 및 기타 자료는 일반적인 정보 제공 및 교육 목적만을 위한 것입니다. 서비스에 액세스하거나 사용함으로써 귀하는 전적으로 자신의 위험과 재량으로 그렇게 함을 인정합니다.",
+        outro: "우리는 서비스를 정확하고 최신이며 유용하게 유지하기 위해 열심히 노력하지만, 서비스 또는 그 콘텐츠의 완전성, 정확성, 신뢰성, 적합성 또는 가용성에 대해 명시적이든 묵시적이든 어떤 종류의 진술이나 보증도 하지 않습니다.",
+      },
+      {
+        id: "ai",
+        title: "2. AI 생성 콘텐츠",
+        intro: "YTForge의 도구는 인공지능과 머신러닝 모델을 사용하여 제목, 스크립트, 썸네일, 전사, 채널 분석 및 기타 출력을 생성합니다. AI 생성 콘텐츠는 확률적입니다 — 부정확하거나 불완전하거나 편향되거나 구식이거나 사실과 다를 수 있습니다.",
+        subheads: [
+          {
+            title: "게시 전 확인",
+            body: "YouTube 또는 기타 플랫폼에 게시하기 전에 AI 생성 출력을 검토, 사실 확인, 편집 및 검증할 책임은 전적으로 귀하에게 있습니다. YTForge가 생성한 것이 정확하거나 귀하의 특정 상황에 적합하다고 가정하지 마십시오.",
+          },
+          {
+            title: "할루시네이션 경고",
+            body: "AI 모델은 때때로 '할루시네이션(환각)'을 일으킵니다 — 그럴듯해 보이지만 허위로 만들어진 정보를 자신 있게 생성합니다. 이는 YTForge 고유의 결함이 아니라 현재 생성형 AI 기술의 알려진 한계입니다. AI 출력의 모든 사실적 주장, 통계, 인용, 참조는 검증해야 할 제안으로 다루고, 권위 있는 진실로 다루지 마십시오.",
+          },
+          {
+            title: "편향 및 민감성",
+            body: "AI 모델은 훈련 데이터에 존재하는 패턴을 반영하며, 여기에는 문화적, 인구통계학적, 언어적 편향이 포함될 수 있습니다. 특정 오디언스, 커뮤니티 또는 민감한 주제를 위한 콘텐츠를 제작하는 경우 추가적인 편집적 판단을 행사하십시오.",
+          },
+        ],
+      },
+      {
+        id: "results",
+        title: "3. 결과 보장 없음",
+        intro: "우리는 YTForge 사용으로 인해 발생하는 특정 결과를 보장하지 않습니다. 조회수, 구독자 증가, 클릭률, 리텐션 개선, 수익화 자격, 수익 또는 기타 채널 지표에 대한 언급은 설명을 위한 예시이자 야심찬 목표일 뿐, 약속이 아닙니다.",
+        outro: "채널 성과는 우리의 통제를 벗어난 수많은 변수에 의존합니다. 여기에는 다음이 포함되나 이에 국한되지 않습니다:",
+        list: [
+          "크리에이터의 노력, 일관성, 제작 품질",
+          "니치 경쟁력 및 오디언스 수요",
+          "YouTube 알고리즘의 현재 상태",
+          "문화적, 지리적, 계절적 요인",
+          "YouTube 정책 변경 및 플랫폼 업데이트",
+          "채널의 이력, 평판, 기존 오디언스",
+        ],
+        outro2:
+          "YTForge에 게시된 후기 및 사례 연구는 개별 경험을 나타내며 일반적인 것이 아닙니다. 귀하의 결과는 다를 수 있습니다.",
+      },
+      {
+        id: "earnings",
+        title: "4. 수익 및 재무 추정",
+        intro: "YTForge에 표시된 수익 계산기, 수익화 체크기준, RPM 참조 및 기타 재무 수치는 업계 평균과 공개 데이터를 기반으로 한 추정치입니다. 이는 보장, 예측 또는 재무 전망이 아닙니다.",
+        outro: "실제 YouTube 수익은 니치, 오디언스 지역, 광고 인벤토리, 계절성, 브랜드 안전 필터 및 기타 많은 요인에 따라 크게 다릅니다. YTForge는 재무 자문가가 아니며 세무, 회계, 투자 자문을 제공하지 않습니다. 당사의 추정에 기반한 비즈니스 결정을 내리기 전에 자격을 갖춘 전문가와 상담하십시오.",
+      },
+      {
+        id: "analytics",
+        title: "5. 분석 정확도",
+        intro: "채널 분석, 채널 ID 찾기 및 유사한 검색 도구는 YouTube의 공개 API, 공개 CDN 엔드포인트 및 자체 통계 모델의 조합에 의존합니다. 데이터를 최신 및 정확하게 유지하기 위해 노력하지만:",
+        list: [
+          "YouTube는 모든 지표를 공개하지 않습니다 — 일부 숫자는 추정치입니다",
+          "채널 데이터는 캐시될 수 있으며 현실의 지연된 보기를 반영할 수 있습니다",
+          "채널은 공개 데이터를 숨기거나 제한할 수 있으며, 이 경우 당사의 출력은 제한되거나 사용할 수 없습니다",
+          "1,000명 이상의 구독자 수는 YouTube 자체가 반올림하는 것이지, YTForge가 아닙니다",
+        ],
+        outro: "YTForge의 분석을 크리에이터 또는 채널에 대한 법적, 재무적 또는 투자 수준의 결정에 의존하지 마십시오.",
+      },
+      {
+        id: "third-party",
+        title: "6. 제3자 콘텐츠",
+        intro: "YTForge의 검색 도구는 YouTube 및 기타 제3자로부터 공개적으로 사용 가능한 콘텐츠 — 채널 이름, 썸네일, 동영상 제목, 메타데이터 포함 — 를 표시합니다. 이 콘텐츠는 각 소유자의 자산으로 남아 있습니다. 크리에이터, 채널, 브랜드 또는 제품에 대한 언급은 YTForge와의 보증, 파트너십 또는 제휴를 의미하지 않습니다.",
+        outro: "YTForge를 통해 표시되는 콘텐츠가 귀하의 권리를 침해한다고 생각되는 경우, 유효한 DMCA 통지와 함께 dmca@ytforge.app로 연락하시면 신속히 대응하겠습니다.",
+      },
+      {
+        id: "youtube",
+        title: "7. YouTube 준수",
+        intro: "YTForge는 독립적인 제3자 도구입니다. YouTube, Google 또는 Alphabet Inc.와 제휴, 보증, 후원 관계가 없습니다. \"YouTube\"는 Google LLC의 상표입니다.",
+        outro: "귀하는 YTForge 사용이 다음을 준수하도록 할 전적인 책임이 있습니다:",
+        list: [
+          "YouTube 서비스 약관",
+          "YouTube 커뮤니티 가이드라인",
+          "YouTube 파트너 프로그램 정책",
+          "YouTube API 서비스 약관(해당하는 경우)",
+          "귀하의 관할권에 적용되는 모든 법률",
+        ],
+        outro2:
+          "AI로 콘텐츠를 생성한다고 해서 진정성, 저작권, 딥페이크, 허위 정보, 수익화 또는 기타 정책에 관한 YouTube 규칙에서 면제되는 것은 아닙니다. YTForge는 귀하의 콘텐츠로 인한 스트라이크, 수익화 중단 또는 계정 종료에 대해 책임을 지지 않습니다.",
+      },
+      {
+        id: "professional",
+        title: "8. 전문적 조언 아님",
+        intro: "YTForge의 어떤 내용도 법적, 재무적, 의료적, 심리적, 회계적 또는 기타 전문적 조언을 구성하지 않습니다. 기사, 도구 출력, 블로그 게시물, 지원 답변은 교육 및 정보 제공 목적입니다. 귀하의 상황에 맞는 조언을 위해서는 면허가 있는 전문가와 상담하십시오.",
+      },
+      {
+        id: "external",
+        title: "9. 외부 링크",
+        intro: "서비스에는 YTForge 이외의 당사자가 운영하는 제3자 웹사이트, 서비스 또는 리소스에 대한 링크가 포함될 수 있습니다. 이러한 링크는 귀하의 편의를 위해 제공되며 어떠한 보증도 의미하지 않습니다. 우리는 외부 사이트의 콘텐츠, 개인정보 보호 관행 또는 정확성을 통제하지 않으며 이에 대한 책임을 지지 않습니다. 외부 링크는 귀하의 책임하에 방문하십시오.",
+      },
+      {
+        id: "trademarks",
+        title: "10. 상표",
+        intro: "\"YTForge\" 및 YTForge 로고는 YTForge Inc.의 상표입니다. 서비스에서 언급되는 기타 모든 상표, 서비스 마크, 로고, 브랜드 이름 — YouTube, Google, Stripe, Slack, Notion, TubeBuddy, VidIQ 등을 포함 — 은 각 소유자의 자산입니다. 언급은 설명 및 정보 제공 목적만을 위한 것입니다.",
+      },
+      {
+        id: "fair-use",
+        title: "11. 공정 이용",
+        intro: "썸네일 다운로더 및 SEO 분석기와 같은 일부 기능은 공개 YouTube 동영상 콘텐츠를 연구, 비평, 교육, 영감 목적으로 표시하거나 다운로드합니다. 이 이용은 미국 저작권법 및 국제적 동등 원칙 하의 공정 이용 범위 내에 머무르도록 의도되었습니다.",
+        outro: "귀하는 다운로드 또는 참조된 자료의 자체 사용이 저작권법을 준수하도록 할 책임이 있습니다. 허가 없이 저작권 보호 썸네일, 오디오, 동영상을 자신의 것으로 재게시하는 것은 공정 이용으로 보호되지 않으며 원작자의 권리를 침해할 수 있습니다.",
+      },
+      {
+        id: "errors",
+        title: "12. 오류, 누락 및 업데이트",
+        intro: "최선의 노력에도 불구하고 서비스에는 오타, 부정확성 또는 구식 정보가 포함될 수 있습니다. 우리는 사전 통지 없이 언제든지 오류, 부정확성 또는 누락을 수정하고 콘텐츠를 변경 또는 업데이트할 권리를 보유합니다. 오류가 수정될 것을 보장하지 않습니다.",
+      },
+      {
+        id: "liability",
+        title: "13. 책임 제한",
+        intro: "법이 허용하는 최대 범위 내에서, YTFORGE INC., 그 임원, 직원, 대리인 및 계열사는 귀하의 서비스 또는 AI 생성 출력 사용 또는 사용 불능으로 인해 발생하거나 관련된 직접적, 간접적, 부수적, 특별, 결과적 또는 징벌적 손해 — 이익 손실, 수익 손실, 구독자 손실, 저작권 경고, 수익화 중단, 계정 해지 포함하되 이에 국한되지 않음 — 에 대해 책임을 지지 않습니다.",
+      },
+      {
+        id: "changes",
+        title: "14. 면책 조항 변경",
+        intro: "우리는 언제든지 본 면책 조항을 업데이트할 수 있습니다. 페이지 상단의 \"최종 업데이트\" 날짜가 최신 개정을 반영합니다. 중요한 변경 사항은 이메일과 서비스상의 배너를 통해 통지됩니다. 시행일 이후 지속적인 사용은 동의를 구성합니다.",
+      },
+      {
+        id: "contact",
+        title: "15. 연락처",
+        intro: "질문, 우려 사항 또는 DMCA 통지? 연락주세요:",
+        contacts: [
+          {
+            label: "일반:",
+            value: "support@ytforge.app",
+          },
+          {
+            label: "법무:",
+            value: "legal@ytforge.app",
+          },
+          {
+            label: "DMCA:",
+            value: "dmca@ytforge.app",
+          },
+          {
+            label: "우편:",
+            value: "YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
+          },
+        ],
+      },
+    ],
+    liabilityOutroPre: "전체 책임 조항은 ",
+    liabilityOutroLink: "서비스 약관",
+    summaryTitle: "30초 요약",
+    summaryText: "YTForge는 강력한 AI 도구 모음이지만, AI는 완벽하지 않습니다. 게시 전 모든 것을 확인하세요. 성장, 수익, YouTube 준수를 보장하지 않습니다 — 그건 당신 몫입니다. 추정치를 추정치로 대우하세요, 약속으로 하지 마세요.",
+    termsCardTitle: "서비스 약관",
+    termsCardSub: "전체 계약",
+    privacyCardTitle: "개인정보 처리방침",
+    privacyCardSub: "데이터 처리 방식",
+    homeCrumb: "홈",
+    disclaimerCrumb: "면책 조항",
+  },
   auth: {
-    signInTitle: "다시 오신 것을 환영합니다",
+    signInTitle: "로그인",
     signInSubtitle: "YTForge 계정에 로그인",
     signUpTitle: "계정 만들기",
     signUpSubtitle: "오늘부터 채널을 성장시키세요",
@@ -652,6 +1253,99 @@ free: {
     or: "또는",
     continueGoogle: "Google로 계속",
     agreeTerms: "계속하면 이용약관 및 개인정보 처리방침에 동의합니다",
+    signUp: "가입",
+    signIn: "로그인",
+    welcomeBackToast: "다시 오신 걸 환영합니다!",
+    welcomeBackHeadline1: "다시 오신 걸 환영합니다,",
+    welcomeBackHeadline2: "YTForge",
+    welcomeBackDesc: "로그인해서 멈춘 곳부터 계속하세요.",
+    signInBenefits: [
+      {
+        t: "더 빠른 성장",
+        d: "스크립트, 제목, 썸네일이 몇 초 만에 — 며칠이 아닙니다.",
+      },
+      {
+        t: "스마트한 분석",
+        d: "채널, 니치, 경쟁자에 대한 실행 가능한 데이터.",
+      },
+      {
+        t: "안전하고 보안됨",
+        d: "콘텐츠는 당신의 것. 암호화됨, 판매 안 함, 모델 학습에 사용 안 함.",
+      },
+    ],
+    viewLift: "케이스 스터디 보기",
+    creators: "명의 크리에이터가 신뢰",
+    testimonialQuote: "30분 만에, YTForge는 수개월의 유튜브 영상보다 내 채널에 대한 더 많은 명확성을 주었습니다.",
+    testimonialName: "Amina R.",
+    testimonialHandle: "@amina_creates",
+    signingInGoogle: "Google로 로그인 중…",
+    googleNotConfigured: "이 설치에서는 Google 로그인이 구성되지 않았습니다. 대신 이메일과 비밀번호를 사용하세요.",
+    googleNotConfiguredHint: ".env 파일에 GOOGLE_CLIENT_ID와 GOOGLE_CLIENT_SECRET을 추가해 이 버튼을 활성화하세요.",
+    keepSignedIn: "로그인 유지",
+    securityCheck: "보안 확인",
+    captchaRequired: "보안 확인을 완료하세요.",
+    signingIn: "로그인 중…",
+    forgot: "비밀번호를 잊으셨나요?",
+    agreeSignIn: "로그인함으로써 귀하는 우리의",
+    protectedBy: "및 개인정보 처리방침. 엔터프라이즈급 암호화로 보호됩니다.",
+    createFreeAccount: "무료 계정 만들기",
+    newHere: "처음 오셨나요?",
+    orWithEmail: "또는 이메일로 계속하기",
+    fullName: "전체 이름",
+    namePlaceholder: "홍길동",
+    emailPlaceholder: "you@example.com",
+    passwordPlaceholder: "비밀번호 만들기",
+    referralPlaceholder: "추천 코드 (선택사항)",
+    referredBy: "추천인",
+    strengthLabel: "비밀번호 강도",
+    strengthLabels: [
+      "약함",
+      "보통",
+      "좋음",
+      "강함",
+      "매우 강함",
+    ],
+    agreeSignUpPre: "계정을 만들면 우리의",
+    agreeSignUpPost: "및 개인정보 처리방침에 동의하는 것입니다.",
+    creatingAccount: "계정 만드는 중…",
+    signUpNow: "지금 가입",
+    accountCreated: "계정이 생성되었습니다!",
+    welcomeReferredPre: "환영합니다",
+    welcomeReferredNamePre: "YTForge에 오신 것을!",
+    freeBadge: "영구 무료 — 카드 불필요",
+    alreadyMember: "이미 멤버입니까?",
+    signUpGoogle: "Google로 가입",
+    signUpApple: "Apple로 가입",
+    noCreditCard: "신용카드 불필요",
+    cancelAnytime: "언제든 취소 가능",
+    refund30: "30일 환불 보장",
+    joinCreators: "52,000명 이상의 크리에이터에 합류",
+    advantageHeadline1: "YouTube 성장의",
+    advantageHeadline2: "지름길",
+    advantageDesc: "스크립트, 썸네일, SEO, 분석 — 완전한 크리에이션 스튜디오를 한 곳에.",
+    perks: [
+      {
+        t: "즉시 AI 답변",
+        d: "스크립트, 아이디어, 후크를 몇 초 만에 — 24/7.",
+      },
+      {
+        t: "성장 도구",
+        d: "썸네일, 태그, 설명 — 채널을 성장시키는 모든 것.",
+      },
+      {
+        t: "영구 무료",
+        d: "시작에 카드 불필요. 유료 플랜으로 더 멀리 가세요.",
+      },
+      {
+        t: "크리에이터 검증",
+        d: "52,000명 이상의 크리에이터가 더 잘, 더 빠르게 제작.",
+      },
+    ],
+    signupTestimonialQuote: "AI 도구를 시도하기 전 몇 달을 망설였습니다. YTForge는 단 한 영상으로 첫 주에 본전을 뽑았습니다.",
+    signupTestimonialName: "David K.",
+    signupTestimonialHandle: "@davidbuilds",
+    signupTestimonialMetric: "+212%",
+    signupTestimonialMetricLabel: "90일 후 조회수 성장",
   },
   notFound: {
     title: "페이지를 찾을 수 없음",

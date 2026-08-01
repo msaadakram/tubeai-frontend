@@ -23,8 +23,12 @@ import {
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { getLocalePath } from "@/lib/i18n/utils";
 
 type Plan = {
+  id: string;
   name: string;
   tagline: string;
   monthly: number;
@@ -37,136 +41,66 @@ type Plan = {
   cta: string;
 };
 
-const plans: Plan[] = [
-  {
-    name: "Free",
-    tagline: "Get started with the basics",
-    monthly: 0,
-    yearly: 0,
-    icon: Sparkles,
-    features: [
-      "5 AI title generations / day",
-      "3 thumbnail downloads / day",
-      "Basic SEO analyzer",
-      "Channel ID finder (unlimited)",
-      "Community support",
-    ],
-    notIncluded: ["AI Script Writer", "Channel Analytics", "API access"],
-    cta: "Start Free",
-  },
-  {
-    name: "Pro",
-    tagline: "For serious YouTubers & teams",
-    monthly: 29,
-    yearly: 23,
-    icon: Crown,
-    highlight: true,
-    badge: "Most Popular",
-    features: [
-      "Unlimited AI title generations",
-      "Unlimited script writer",
-      "Unlimited AI thumbnails",
-      "Full SEO analyzer + keyword research",
-      "Channel Analytics (unlimited)",
-      "Monetization checker",
-      "Shorts ideas generator",
-      "AI transcript & translation",
-      "Bulk generation",
-      "API access (10K req/mo)",
-      "White-label exports",
-      "Priority chat support",
-      "Early access to new tools",
-    ],
-    cta: "Start 7-Day Trial",
-  },
-  {
-    name: "Enterprise",
-    tagline: "Custom deployments for media networks",
-    monthly: -1,
-    yearly: -1,
-    icon: Rocket,
-    features: [
-      "Everything in Pro, plus:",
-      "Unlimited team seats",
-      "Unlimited API requests",
-      "Dedicated account manager",
-      "Custom AI model fine-tuning",
-      "SSO & SAML auth",
-      "SOC 2 compliance docs",
-      "99.99% SLA",
-      "On-prem deployment option",
-      "24/7 phone support",
-    ],
-    cta: "Contact Sales",
-  },
+const AVATARS = [
+  "https://ui-avatars.com/api/?name=Maya+Chen&background=dc2626&color=fff&bold=true",
+  "https://ui-avatars.com/api/?name=Diego+Ramirez&background=000000&color=fff&bold=true",
+  "https://ui-avatars.com/api/?name=Aisha+Patel&background=f59e0b&color=000&bold=true",
 ];
 
-const compareRows = [
-  { label: "AI title generations", values: ["5/day", "Unlimited", "Unlimited"] },
-  { label: "AI script writer", values: [false, "Unlimited", "Unlimited"] },
-  { label: "AI thumbnails / month", values: [false, "Unlimited", "Unlimited"] },
-  { label: "Channel Analytics", values: [false, "Unlimited", "Unlimited"] },
-  { label: "Monetization checker", values: [false, true, true] },
-  { label: "SEO analyzer + keywords", values: ["Basic", true, true] },
-  { label: "Shorts ideas generator", values: [false, true, true] },
-  { label: "AI transcript & translation", values: [false, true, true] },
-  { label: "Bulk generation", values: [false, true, true] },
-  { label: "Team seats", values: ["1", "5", "Unlimited"] },
-  { label: "API access", values: [false, "10K req/mo", "Unlimited"] },
-  { label: "White-label exports", values: [false, true, true] },
-  { label: "SSO & SAML", values: [false, false, true] },
-  { label: "SLA guarantee", values: [false, false, "99.99%"] },
-  { label: "Support", values: ["Community", "Priority chat", "24/7 phone + AM"] },
-];
+const GUARANTEE_ICONS = [Shield, Clock, Users, Star];
 
-const testimonials = [
-  {
-    quote: "YTForge's Creator plan paid for itself in the first week. My CTR jumped 41% after switching to AI-generated titles.",
-    name: "Maya Chen",
-    role: "Tech YouTuber · 1.2M subs",
-    avatar: "https://ui-avatars.com/api/?name=Maya+Chen&background=dc2626&color=fff&bold=true",
-  },
-  {
-    quote: "We run 14 channels for our network. Pro plan's bulk generation saves my team 30+ hours every week.",
-    name: "Diego Ramirez",
-    role: "Head of Content · MediaCorp",
-    avatar: "https://ui-avatars.com/api/?name=Diego+Ramirez&background=000000&color=fff&bold=true",
-  },
-  {
-    quote: "I was skeptical of AI tools but the script writer is honestly indistinguishable from my best long-form work.",
-    name: "Aisha Patel",
-    role: "Documentary Filmmaker · 480K subs",
-    avatar: "https://ui-avatars.com/api/?name=Aisha+Patel&background=f59e0b&color=000&bold=true",
-  },
-];
-
-const faqs = [
-  { q: "Can I switch plans anytime?", a: "Yes — upgrade or downgrade in one click. Upgrades take effect immediately and we prorate the difference. Downgrades apply at the end of your current billing cycle so you keep premium features until then." },
-  { q: "Is there a free trial?", a: "All paid plans include a 7-day free trial with full access to every feature. No credit card required to start the Free plan, and you can cancel the trial anytime before day 7 with zero charges." },
-  { q: "What payment methods do you accept?", a: "All major credit cards (Visa, Mastercard, Amex, Discover), Apple Pay, Google Pay, and PayPal. Enterprise customers can pay via wire transfer or annual invoice." },
-  { q: "Do you offer refunds?", a: "Yes — 30-day money-back guarantee on all plans, no questions asked. If YTForge doesn't grow your channel, email support@ytforge.app and we'll refund your full payment." },
-  { q: "Are there discounts for students or non-profits?", a: "Yes — 50% off the Creator plan for verified students and 40% off for registered non-profits. Email support@ytforge.app with proof of eligibility to claim your discount." },
-  { q: "What happens if I exceed my plan limits?", a: "We'll send a friendly email at 80% usage. Beyond the cap, generations queue until the next cycle — we never charge surprise overage fees. You can upgrade anytime to lift the limit instantly." },
-  { q: "Can I cancel anytime?", a: "Absolutely. Cancel in two clicks from your dashboard. You'll keep premium access until the end of your billing period, and you can re-activate anytime with the same data intact." },
-  { q: "Is my data and content safe?", a: "Your scripts, titles, and channel data are encrypted in transit (TLS 1.3) and at rest (AES-256). We're SOC 2 Type II certified, GDPR-compliant, and never train on your private content." },
-];
-
-const guarantees = [
-  { icon: Shield, title: "30-Day Money Back", desc: "No questions, no hassle, full refund." },
-  { icon: Clock, title: "Cancel Anytime", desc: "Two-click cancellation. Keep what you've made." },
-  { icon: Users, title: "200K+ Creators", desc: "Trusted by top channels in 60+ countries." },
-  { icon: Star, title: "4.9 ★ Rated", desc: "From 12,000+ verified reviews." },
-];
-
-function FeatureCheck({ value }: { value: string | boolean }) {
+function FeatureCheck({ value }: { value: string | boolean | number }) {
   if (value === true) return <Check className="w-5 h-5 text-green-600 mx-auto" strokeWidth={3} />;
   if (value === false) return <X className="w-5 h-5 text-neutral-300 mx-auto" strokeWidth={3} />;
   return <span className="text-xs sm:text-sm font-black text-black">{value}</span>;
 }
 
 export default function PricingPage() {
+  const { t } = useTranslations();
+  const { locale } = useLocale();
   const [yearly, setYearly] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const plans: Plan[] = [
+    {
+      id: "free",
+      name: t("pricing.plans.free.name"),
+      tagline: t("pricing.plans.free.tagline"),
+      monthly: 0,
+      yearly: 0,
+      icon: Sparkles,
+      features: t("pricing.plans.free.features"),
+      notIncluded: t("pricing.plans.free.notIncluded"),
+      cta: t("pricing.plans.free.cta"),
+    },
+    {
+      id: "pro",
+      name: t("pricing.plans.pro.name"),
+      tagline: t("pricing.plans.pro.tagline"),
+      monthly: 29,
+      yearly: 23,
+      icon: Crown,
+      highlight: true,
+      badge: t("pricing.mostPopular"),
+      features: t("pricing.plans.pro.features"),
+      cta: t("pricing.plans.pro.cta"),
+    },
+    {
+      id: "enterprise",
+      name: t("pricing.plans.enterprise.name"),
+      tagline: t("pricing.plans.enterprise.tagline"),
+      monthly: -1,
+      yearly: -1,
+      icon: Rocket,
+      features: t("pricing.plans.enterprise.features"),
+      cta: t("pricing.plans.enterprise.cta"),
+    },
+  ];
+  const compareRows = t("pricing.compareRows");
+  const testimonials = t("pricing.testimonials").map((item, i) => ({ ...item, avatar: AVATARS[i] }));
+  const faqs = t("pricing.faqs");
+  const guarantees = t("pricing.guarantees").map((g, i) => ({ ...g, icon: GUARANTEE_ICONS[i] }));
+  const faqSubtitleParts = t("pricing.faqSubtitle").split("support@ytforge.app");
 
   return (
     <div className="min-h-screen bg-white text-black flex flex-col">
@@ -197,13 +131,13 @@ export default function PricingPage() {
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black text-white text-xs font-black tracking-wider uppercase mb-6 border-2 border-black shadow-[3px_3px_0px_0px_rgba(255,255,255,0.4)]">
               <Tag className="w-3.5 h-3.5 text-red-500" />
-              <span>Simple Pricing · No Hidden Fees</span>
+              <span>{t("pricing.badge")}</span>
             </div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white mb-4 [text-shadow:_3px_3px_0_rgb(0_0_0_/_30%)]">
-              Pricing that scales with your channel
+              {t("pricing.title")}
             </h1>
             <p className="text-base sm:text-lg text-red-50 max-w-2xl mx-auto leading-relaxed mb-8">
-              Start free, upgrade when you're ready. Every plan includes a 7-day trial and 30-day money-back guarantee.
+              {t("pricing.subtitle")}
             </p>
 
             {/* Toggle */}
@@ -214,7 +148,7 @@ export default function PricingPage() {
                   !yearly ? "bg-white text-black" : "text-white"
                 }`}
               >
-                Monthly
+                {t("pricing.monthly")}
               </button>
               <button
                 onClick={() => setYearly(true)}
@@ -222,8 +156,8 @@ export default function PricingPage() {
                   yearly ? "bg-white text-black" : "text-white"
                 }`}
               >
-                Yearly
-                <span className="px-1.5 py-0.5 text-[9px] font-black bg-red-600 text-white rounded-md">SAVE 20%</span>
+                {t("pricing.yearly")}
+                <span className="px-1.5 py-0.5 text-[9px] font-black bg-red-600 text-white rounded-md">{t("pricing.yearlySave")}</span>
               </button>
             </div>
           </motion.div>
@@ -272,29 +206,29 @@ export default function PricingPage() {
 
                   <div className="mb-5">
                     {price === -1 ? (
-                      <div className="font-black text-3xl sm:text-4xl">Custom</div>
+                      <div className="font-black text-3xl sm:text-4xl">{t("pricing.custom")}</div>
                     ) : (
                       <div className="flex items-baseline gap-1.5">
                         <span className="font-black text-3xl sm:text-4xl">${price}</span>
-                        <span className="text-xs text-neutral-500 font-bold">/{yearly ? "mo billed yearly" : "month"}</span>
+                        <span className="text-xs text-neutral-500 font-bold">/{yearly ? t("pricing.perMonthBilledYearly") : t("pricing.perMonth")}</span>
                       </div>
                     )}
                     {yearly && price > 0 && (
                       <div className="text-[11px] text-green-600 font-black mt-1">
-                        Save ${(plan.monthly - plan.yearly) * 12}/yr
+                        {t("pricing.savePerYear").replace("%{amount}", String((plan.monthly - plan.yearly) * 12))}
                       </div>
                     )}
-                    {price === 0 && <div className="text-[11px] text-neutral-500 font-bold mt-1">Free forever, no card needed</div>}
+                    {price === 0 && <div className="text-[11px] text-neutral-500 font-bold mt-1">{t("pricing.freeForever")}</div>}
                   </div>
 
                   <button
                     onClick={() => {
-                      if (plan.name === "Enterprise") {
+                      if (plan.id === "enterprise") {
                         window.location.href = `mailto:arhamsaad453@gmail.com?subject=YTForge%20Enterprise%20inquiry&body=Hi%2C%20I%27d%20like%20to%20discuss%20an%20YTForge%20Enterprise%20plan%20for%20my%20team.`;
-                      } else if (plan.name === "Pro") {
-                        window.location.href = "/settings?tab=plan";
+                      } else if (plan.id === "pro") {
+                        window.location.href = getLocalePath(locale, "/settings?tab=plan");
                       } else {
-                        window.location.href = "/signup";
+                        window.location.href = getLocalePath(locale, "/signup");
                       }
                     }}
                     className={`w-full py-3 text-sm font-black rounded-xl border-2 border-black uppercase tracking-wider mb-6 transition-all ${
@@ -355,10 +289,10 @@ export default function PricingPage() {
             className="text-center max-w-2xl mx-auto mb-10"
           >
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black text-white text-[10px] font-black uppercase tracking-wider mb-4">
-              <Sparkles className="w-3 h-3 text-red-500" /> Full Feature Comparison
+              <Sparkles className="w-3 h-3 text-red-500" /> {t("pricing.compareBadge")}
             </div>
-            <h2 className="text-2xl sm:text-4xl font-black tracking-tight mb-3">Compare every plan, side by side</h2>
-            <p className="text-sm sm:text-base text-neutral-600">Every feature, every limit — clearly laid out so you can pick the right plan in 30 seconds.</p>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight mb-3">{t("pricing.compareTitle")}</h2>
+            <p className="text-sm sm:text-base text-neutral-600">{t("pricing.compareSubtitle")}</p>
           </motion.div>
 
           <div className="overflow-x-auto -mx-4 sm:mx-0">
@@ -366,7 +300,7 @@ export default function PricingPage() {
               <div className="bg-white border-2 border-black rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                 {/* Header */}
                 <div className="grid grid-cols-4 bg-black text-white">
-                  <div className="p-4 font-black text-sm">Feature</div>
+                  <div className="p-4 font-black text-sm">{t("pricing.featureCol")}</div>
                   {plans.map((p) => (
                     <div key={p.name} className={`p-4 font-black text-sm text-center ${p.highlight ? "bg-red-600" : ""}`}>
                       {p.name}
@@ -405,16 +339,16 @@ export default function PricingPage() {
             className="text-center max-w-2xl mx-auto mb-10"
           >
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600 text-white text-[10px] font-black uppercase tracking-wider mb-4">
-              <Heart /> Loved by 200K+ creators
+              <Heart /> {t("pricing.testimonialsBadge")}
             </div>
-            <h2 className="text-2xl sm:text-4xl font-black tracking-tight mb-3">Don't take our word for it</h2>
-            <p className="text-sm sm:text-base text-neutral-600">Real creators, real channel growth, real ROI.</p>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight mb-3">{t("pricing.testimonialsTitle")}</h2>
+            <p className="text-sm sm:text-base text-neutral-600">{t("pricing.testimonialsSubtitle")}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {testimonials.map((t, i) => (
+            {testimonials.map((item, i) => (
               <motion.div
-                key={t.name}
+                key={item.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -426,12 +360,12 @@ export default function PricingPage() {
                     <Star key={k} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-sm leading-relaxed text-neutral-800 mb-5">"{t.quote}"</p>
+                <p className="text-sm leading-relaxed text-neutral-800 mb-5">"{item.quote}"</p>
                 <div className="flex items-center gap-3">
-                  <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full border-2 border-black" />
+                  <img src={item.avatar} alt={item.name} className="w-10 h-10 rounded-full border-2 border-black" />
                   <div>
-                    <div className="font-black text-sm">{t.name}</div>
-                    <div className="text-[11px] text-neutral-500 font-bold">{t.role}</div>
+                    <div className="font-black text-sm">{item.name}</div>
+                    <div className="text-[11px] text-neutral-500 font-bold">{item.role}</div>
                   </div>
                 </div>
               </motion.div>
@@ -450,10 +384,14 @@ export default function PricingPage() {
             className="text-center mb-10"
           >
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black text-white text-[10px] font-black uppercase tracking-wider mb-4">
-              <HelpCircle className="w-3 h-3 text-red-500" /> Pricing FAQ
+              <HelpCircle className="w-3 h-3 text-red-500" /> {t("pricing.faqBadge")}
             </div>
-            <h2 className="text-2xl sm:text-4xl font-black tracking-tight mb-3">Everything you might be wondering</h2>
-            <p className="text-sm sm:text-base text-neutral-600">Still have questions? Email <a href="mailto:support@ytforge.app" className="text-red-600 font-black underline">support@ytforge.app</a> — we reply within 4 hours.</p>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight mb-3">{t("pricing.faqTitle")}</h2>
+            <p className="text-sm sm:text-base text-neutral-600">
+              {faqSubtitleParts[0]}
+              <a href="mailto:support@ytforge.app" className="text-red-600 font-black underline">support@ytforge.app</a>
+              {faqSubtitleParts[1] ?? ""}
+            </p>
           </motion.div>
 
           <div className="space-y-3">
@@ -502,35 +440,35 @@ export default function PricingPage() {
             className="max-w-2xl mx-auto text-center"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600 text-white text-xs font-black tracking-wider uppercase mb-6 border-2 border-white">
-              <Gift className="w-3.5 h-3.5" /> 7-Day Free Trial
+              <Gift className="w-3.5 h-3.5" /> {t("pricing.finalCtaBadge")}
             </div>
             <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white mb-4">
-              Ready to grow your YouTube channel?
+              {t("pricing.finalCtaTitle")}
             </h2>
             <p className="text-base sm:text-lg text-neutral-300 mb-8 leading-relaxed">
-              Join 200,000+ creators using YTForge to write better titles, design click-magnet thumbnails, and ship retention-optimized videos every week.
+              {t("pricing.finalCtaSubtitle")}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <button className="inline-flex items-center gap-2 px-6 py-3.5 bg-red-600 text-white font-black rounded-xl border-2 border-white shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all uppercase tracking-wider">
-                <Sparkles className="w-4 h-4" /> Start Free Trial
+                <Sparkles className="w-4 h-4" /> {t("pricing.startFreeTrial")}
                 <ArrowRight className="w-4 h-4" />
               </button>
               <Link
-                href="/tools/viral-title-generator"
+                href={getLocalePath(locale, "/tools/viral-title-generator")}
                 className="inline-flex items-center gap-2 px-6 py-3.5 bg-white text-black font-black rounded-xl border-2 border-white hover:bg-neutral-100 transition-colors uppercase tracking-wider"
               >
-                <TrendingUp className="w-4 h-4" /> Try Free Tools
+                <TrendingUp className="w-4 h-4" /> {t("pricing.tryFreeTools")}
               </Link>
             </div>
             <div className="mt-6 text-xs text-neutral-400 font-bold">
-              No credit card required · Cancel anytime · 30-day money-back guarantee
+              {t("pricing.fineprint")}
             </div>
           </motion.div>
         </div>
       </section>
 
       <Footer />
-      <PricingJsonLd />
+      <PricingJsonLd plans={plans} faqs={faqs} home={t("pricing.homeCrumb")} pricing={t("pricing.pricingCrumb")} />
     </div>
   );
 }
@@ -539,7 +477,17 @@ function Heart() {
   return <span className="w-3 h-3 rounded-full bg-white inline-block" />;
 }
 
-function PricingJsonLd() {
+function PricingJsonLd({
+  plans,
+  faqs,
+  home,
+  pricing,
+}: {
+  plans: Plan[];
+  faqs: { q: string; a: string }[];
+  home: string;
+  pricing: string;
+}) {
   const products = plans
     .filter((p) => p.monthly > 0)
     .map((p, i) => ({
@@ -569,8 +517,8 @@ function PricingJsonLd() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://ytforge.app/" },
-      { "@type": "ListItem", position: 2, name: "Pricing", item: "https://ytforge.app/pricing" },
+      { "@type": "ListItem", position: 1, name: home, item: "https://ytforge.app/" },
+      { "@type": "ListItem", position: 2, name: pricing, item: "https://ytforge.app/pricing" },
     ],
   };
   return (

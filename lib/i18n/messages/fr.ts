@@ -171,21 +171,16 @@ export const fr: Messages = {
     getStarted: "Commencer",
     startTrial: "Essai de 7 jours",
     contactSales: "Contacter les ventes",
+    homeCrumb: "Accueil",
+    pricingCrumb: "Tarifs",
     plans: {
-            starter: {
-        name: "Free",
-        tagline: "Get started with the basics",
-        description: "Perfect for new creators getting started.",
-        features: [
-          "Basic SEO Analyzer",
-          "5 AI Title Generations / mo",
-          "Tag Generator",
-          "Thumbnail Downloader",
-          "Standard Support"
-        ],
-        cta: "Get Started"
-      },
+
 free: {
+        notIncluded: [
+                "Rédacteur de scripts IA",
+                "Analyses de chaîne",
+                "Accès API"
+        ],
         name: "Gratuit",
         tagline: "Commencez avec les bases",
         features: [
@@ -236,11 +231,29 @@ free: {
       },
     },
     compareTitle: "Comparez chaque forfait, côte à côte",
+    compareBadge: "Comparaison complète des fonctionnalités",
     compareSubtitle: "Chaque fonctionnalité, chaque limite — clairement présentée pour choisir le bon forfait en 30 secondes.",
     featureCol: "Fonctionnalité",
     testimonialsBadge: "Aimé par 200K+ créateurs",
     testimonialsTitle: "Ne nous croyez pas sur parole",
     testimonialsSubtitle: "De vrais créateurs, une vraie croissance, un vrai ROI.",
+    testimonials: [
+      {
+        quote: "Le plan Creator de YTForge s'est remboursé dès la première semaine. Mon CTR a bondi de 41 % après être passé aux titres générés par IA.",
+        name: "Maya Chen",
+        role: "YouTubeur tech · 1,2 M d'abonnés",
+      },
+      {
+        quote: "Nous gérons 14 chaînes pour notre réseau. La génération en masse du plan Pro fait gagner plus de 30 heures par semaine à mon équipe.",
+        name: "Diego Ramirez",
+        role: "Responsable contenu · MediaCorp",
+      },
+      {
+        quote: "J'étais sceptique envers les outils IA, mais le rédacteur de scripts est honnêtement indiscernable de mes meilleurs formats longs.",
+        name: "Aisha Patel",
+        role: "Cinéaste documentaire · 480 K abonnés",
+      },
+    ],
     faqBadge: "FAQ Tarifs",
     faqTitle: "Tout ce que vous pourriez vous demander",
     faqSubtitle: "Des questions ? Écrivez à support@ytforge.app — nous répondons sous 4 heures.",
@@ -309,8 +322,6 @@ free: {
       { label: "Support", values: ["Communauté", "Chat prioritaire", "Téléphone 24/7 + AM"] },
     ],
   
-      finalCtaDesc: "Start free, upgrade when you're ready. No credit card required.",
-      finalCtaBtn: "Start Free",
 },
   faq: {
     title: "Questions fréquentes",
@@ -446,6 +457,7 @@ free: {
     noMatch: "Aucune langue ne correspond",
     label: "Langue",
   },
+
   demo: {
     badge: "BY SOLUTIONS",
     title: "Nos Solutions",
@@ -535,6 +547,372 @@ free: {
     revenueSplit: "Répartition des revenus",
     thisMonth: "CE MOIS-CI",
     exploreButton: "Explorer tous les outils",
+  },
+  demoPage: {
+    heroBadge: "Démo en direct · 11 outils · Un espace de travail",
+    heroTitle1: "Là où l'IA rencontre",
+    heroTitle2: "l'édition vidéo YouTube",
+    heroDesc: "Générez des scripts, des miniatures, des titres et des descriptions pour votre prochaine vidéo — le tout dans une interface unique et élégante. C'est une démo interactive, pas une publicité.",
+    startTrial: "Essayer gratuitement",
+    exploreTools: "Explorer les outils",
+    tryFreeTools: "Essayer les outils gratuits",
+    heroStats: [
+      {
+        value: "250K+",
+        label: "vidéos optimisées",
+      },
+      {
+        value: "52K+",
+        label: "créateurs actifs",
+      },
+      {
+        value: "110M+",
+        label: "vues estimées gagnées",
+      },
+      {
+        value: "4.9/5",
+        label: "note moyenne",
+      },
+    ],
+    featuredIn: "Vu dans",
+    tourBadge: "Visite guidée interactive",
+    tourTitle: "Essayer YTForge sans créer de compte",
+    tourDesc: "Toutes les démos ci-dessous fonctionnent dans votre navigateur — votre saisie est traitée sur place et ne quitte jamais votre appareil. Aucun compte requis, aucune limite de démo.",
+    tools: [
+      {
+        name: "Générateur de Scripts",
+        desc: "Des scripts vidéo complets à partir d'une seule idée.",
+        metrics: {
+          gens: "12,4K",
+          lift: "+212%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Miniatures",
+        desc: "Des concepts de miniatures qui donnent envie de cliquer, basés sur votre titre.",
+        metrics: {
+          gens: "8,7K",
+          lift: "+147%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Titres",
+        desc: "Jusqu'à 25 titres de haut niveau pour votre sujet.",
+        metrics: {
+          gens: "15,1K",
+          lift: "+189%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Hashtags",
+        desc: "Tags qui placent votre contenu devant les bonnes personnes.",
+        metrics: {
+          gens: "13,8K",
+          lift: "+156%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Tags",
+        desc: "Un référencement YouTube plus intelligent, en un clic.",
+        metrics: {
+          gens: "9,3K",
+          lift: "+98%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Définitions",
+        desc: "Des définitions claires et professionnelles pour vos vidéos.",
+        metrics: {
+          gens: "5,9K",
+          lift: "+67%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de News",
+        desc: "Un contenu d'actualité avec les faits et le contexte clés.",
+        metrics: {
+          gens: "7,4K",
+          lift: "+83%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Commentaires",
+        desc: "Des réponses engageantes qui créent de la communauté.",
+        metrics: {
+          gens: "16,7K",
+          lift: "+234%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Contenus Viral",
+        desc: "Des idées conçues pour le partage.",
+        metrics: {
+          gens: "11,2K",
+          lift: "+127%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Descriptions",
+        desc: "Des descriptions qui vous font mieux classer et mieux vendre.",
+        metrics: {
+          gens: "10,5K",
+          lift: "+143%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Phrases d'Accroche",
+        desc: "Les premières secondes qui décident de tout.",
+        metrics: {
+          gens: "6,8K",
+          lift: "+79%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Mots-Clés",
+        desc: "Trouvez ce que votre audience recherche réellement.",
+        metrics: {
+          gens: "14,3K",
+          lift: "+162%",
+        },
+        demo: null,
+      },
+      {
+        name: "Générateur de Remerciements",
+        desc: "Des remerciements professionnels pour votre équipe ou vos sponsors.",
+        metrics: {
+          gens: "4,2K",
+          lift: "+54%",
+        },
+        demo: null,
+      },
+    ],
+    lifetimeGens: "13+ millions",
+    avgLift: "+139 % en moyenne",
+    sampleOutput: "Exemple de sortie",
+    livePreviewTitle: "Aperçu en direct",
+    livePreviewDesc: "Entrez un sujet, choisissez un outil, puis testez la sortie en direct — sans compte.",
+    tryToolFreePre: "Essayer le",
+    tryToolFreeSuffix: "gratuitement",
+    workflowBadge: "Optimisé",
+    workflowTitle: "Un flux de travail, du concept à la publication",
+    workflowDesc: "Ne rebondissez plus entre cinq onglets. YTForge rationalise tout le cycle de vie d'une vidéo en un seul espace de travail.",
+    workflowSteps: [
+      {
+        n: "1",
+        t: "Faites votre recherche",
+        d: "Trouvez ce que votre audience veut voir avec des données de tendance et l'analyse concurrentielle.",
+      },
+      {
+        n: "2",
+        t: "Scriptez votre vidéo",
+        d: "Des scripts structurés avec des hooks, des boucles et des payoff qui retiennent l'attention.",
+      },
+      {
+        n: "3",
+        t: "Concevez votre miniature",
+        d: "Des concepts haute conversion qui s'arrêtent sur le défilement.",
+      },
+      {
+        n: "4",
+        t: "Optimisez votre publication",
+        d: "Titres, descriptions, tags et hashtags — alignés sur ce que Google et YouTube classent.",
+      },
+      {
+        n: "5",
+        t: "Publiez et analysez",
+        d: "Publiez, suivez les performances et itérez avec des analyses de chaîne.",
+      },
+    ],
+    benefitsBadge: "Pourquoi YTForge",
+    benefitsTitle: "Conçu pour les créateurs, par des créateurs",
+    benefitsDesc: "Chaque outil est construit pour résoudre un problème réel que nous avons rencontré dans nos propres chaînes.",
+    benefits: [
+      {
+        t: "Gain de temps massif",
+        d: "Des heures de production par vidéo, réduites à quelques minutes.",
+      },
+      {
+        t: "Qualité constante",
+        d: "Des scripts, titres et concepts professionnels à chaque fois.",
+      },
+      {
+        t: "Croissance basée sur les données",
+        d: "Des optimisations fondées sur des données et tendances réelles.",
+      },
+      {
+        t: "Convivial",
+        d: "Zéro courbe d'apprentissage. Si vous savez taper, vous savez utiliser YTForge.",
+      },
+      {
+        t: "Toujours en évolution",
+        d: "Nous sortons de nouveaux outils et améliorations chaque semaine.",
+      },
+      {
+        t: "Sûr et fiable",
+        d: "Vos idées vous appartiennent — nous ne vendons jamais vos données.",
+      },
+    ],
+    useCasesBadge: "Cas d'utilisation",
+    useCasesTitle: "Conçu pour chaque type de créateur",
+    useCasesDesc: "Des YouTubers débutants aux studios à temps plein — YTForge s'adapte à votre flux de travail.",
+    useCases: [
+      {
+        t: "Créateurs en herbe",
+        d: "Commencez avec des scripts et des idées structurés qui évitent les premiers faux pas.",
+      },
+      {
+        t: "Chaînes à temps plein",
+        d: "Simplifiez la recherche, l'édition et l'optimisation — et sortez plus vite.",
+      },
+      {
+        t: "Équipes et studios",
+        d: "Standardisez la production entre les éditeurs et les rédacteurs avec des modèles cohérents.",
+      },
+      {
+        t: "Éducateurs et cours",
+        d: "Transformez des connaissances en vidéos structurées qui retiennent l'attention.",
+      },
+      {
+        t: "Marques et marketing",
+        d: "Des séries vidéo cohérentes qui renforcent l'autorité de la marque.",
+      },
+      {
+        t: "Gamers et streameurs",
+        d: "Des titres, montages et scripts qui transforment les clips en contenu permanent.",
+      },
+    ],
+    testiBadge: "Témoignages",
+    testiTitle: "Ce que les créateurs en disent",
+    testiDesc: "Plus de 52 000 créateurs utilisent YTForge pour produire un meilleur contenu, plus vite.",
+    testimonials: [
+      {
+        quote: "YTForge a transformé mon flux de travail. Je passe de l'idée à la publication en quelques heures, pas en quelques jours.",
+        name: "Sarah M.",
+        role: "YouTuber lifestyle, 180K abonnés",
+        channel: "Chaîne vérifiée",
+        metric: "+212%",
+        metricLabel: "de croissance des vues",
+      },
+      {
+        quote: "Le générateur de scripts est dingue. Les hooks sont meilleurs que ceux que mon rédacteur produisait — et c'est 30 fois plus rapide.",
+        name: "David K.",
+        role: "Créateur tech, 92K abonnés",
+        channel: "Abonné Pro",
+        metric: "38h",
+        metricLabel: "économisées par mois",
+      },
+      {
+        quote: "Mes vues ont augmenté de 30 % en deux mois. Je pensais que c'était trop beau pour être vrai — jusqu'à ce que je voie mes analyses.",
+        name: "Amina R.",
+        role: "Vloggeuse voyages, 64K abonnés",
+        channel: "Chaîne vérifiée",
+        metric: "+30%",
+        metricLabel: "de vues en 60 jours",
+      },
+      {
+        quote: "Le vérificateur de monétisation m'a dit exactement ce qui manquait à ma chaîne. Je suis rentré dans le programme Partenaire un mois plus tard.",
+        name: "Marcus T.",
+        role: "Créateur gaming, 11K abonnés",
+        channel: "Membre de la communauté",
+        metric: "1 mois",
+        metricLabel: "jusqu'à la monétisation",
+      },
+    ],
+    guideBadge: "Guide",
+    guideTitle: "Le guide rapide de la croissance YouTube",
+    guideDesc: "Les fondamentaux que nous intégrons dans chaque outil YTForge — et qui fonctionnent encore en 2026.",
+    guideLead:
+      "YTForge est la plateforme IA la plus complète, conçue spécifiquement pour les créateurs YouTube en 2026. Si des outils d'IA génériques comme ChatGPT peuvent écrire un script et des outils de design comme Canva peuvent créer une miniature, aucun ne comprend l'algorithme de YouTube — les taux de clic qui font la différence, les courbes de rétention qui déclenchent les boosts algorithmiques, ou les signaux de métadonnées qui remontent les vidéos dans la recherche. YTForge est conçu pour ces signaux, entraîné sur 4,2 millions de vidéos virales et mis à jour chaque semaine avec les données de performance les plus récentes.",
+    seoContent: [
+      {
+        h3: "L'attention est votre seule monnaie",
+        p1: "YouTube est un jeu d'attention. Le CTR et la rétention déterminent presque tout le reste : les vues, les recommandations, la monétisation. Avant d'optimiser quoi que ce soit d'autre, optimisez ce pour quoi les gens cliquent et ce qu'ils regardent jusqu'au bout.",
+      },
+      {
+        h3: "Commencez par la recherche, pas par le script",
+        p1: "Le contenu gagnant commence par ce que les gens recherchent déjà. Utilisez l'outil Mots-Clés de YTForge pour trouver des sujets avec une demande réelle, puis créez un contenu qui les dépasse.",
+      },
+      {
+        h3: "Le hook est un engagement, pas un aperçu",
+        p1: "Vos 30 premières secondes décident si quelqu'un reste. Elles ne résument pas la vidéo — elles plantent une question à laquelle le spectateur doit avoir une réponse.",
+      },
+      {
+        h3: "La rétention se gagne par la structure",
+        p1: "Les boucles — des sections de vidéo qui se referment sur elles-mêmes — sont ce qui pousse les gens vers la prochaine vidéo. Construisez chaque section pour qu'elle tienne debout seule.",
+        p2: "Les scripts de YTForge sont construits selon cette structure : hook → boucle → payoff, par défaut.",
+      },
+      {
+        h3: "Les miniatures se jugent au pouce",
+        p1: "Dans un flot d'aperçus, votre miniature doit se lire à la taille d'un pouce. Une émotion, un sujet, un contraste. Plus d'un message et elle se perd dans le flux.",
+      },
+      {
+        h3: "SEO YouTube = signaux de clic",
+        p1: "Le titre, la description et les tags ne sont pas des champs — ce sont des signaux de classement. Mettez votre mot-clé principal dans les trois, naturellement, et laissez YTForge aligner le reste.",
+      },
+      {
+        h3: "La cohérence gagne la guerre",
+        p1: "Un rythme de publication soutenable et un sujet clair construisent des audiences habituées. La fidélisation des habitudes est le levier de croissance le plus sous-estimé sur la plateforme.",
+      },
+    ],
+    faqBadge: "FAQ",
+    faqTitle: "Questions fréquentes",
+    faqDesc: "Tout ce que vous avez toujours voulu demander — sans le support client.",
+    faqs: [
+      {
+        q: "YTForge est-il vraiment gratuit ?",
+        a: "Oui — le plan gratuit inclut l'accès à tous les outils avec des générations quotidiennes limitées. La démo interactive n'exige ni compte ni paiement.",
+      },
+      {
+        q: "Quels langues les outils prennent-ils en charge ?",
+        a: "Les sorties d'IA suivent la langue de votre entrée — pas besoin de basculer entre les paramètres. La page elle-même est disponible en 9 langues.",
+      },
+      {
+        q: "La démo traite-t-elle mes données ?",
+        a: "Non. La démo s'exécute entièrement dans votre navigateur : votre saisie ne quitte jamais votre appareil. Pas d'envoi de serveur, pas de stockage.",
+      },
+      {
+        q: "Puis-je utiliser les sorties de la démo dans des vidéos ?",
+        a: "Oui, librement — c'est la raison pour laquelle elle existe. Mais la démo est une version réduite ; les générations complètes avec l'API sont réservées aux comptes inscrits.",
+      },
+      {
+        q: "En quoi YTForge diffère-t-il de TubeBuddy ou VidIQ ?",
+        a: "Ce sont des extensions de navigateur focalisées sur les données ; YTForge est un studio de création alimenté par l'IA avec des outils de croissance, le tout dans un seul espace de travail.",
+      },
+      {
+        q: "Mes scripts et idées sont-ils privés ?",
+        a: "Oui. Votre contenu vous appartient. Nous l'utilisons pour vous servir, jamais pour l'entraîner contre vous ou le vendre.",
+      },
+      {
+        q: "Puis-je annuler à tout moment ?",
+        a: "Oui. Annulez à tout moment en deux clics — votre plan reste actif jusqu'à la fin de la période de facturation, puis vous passez au plan gratuit.",
+      },
+      {
+        q: "YTForge garantit-il des vues ou des abonnés ?",
+        a: "Jamais. Aucun outil ne le peut honnêtement. Nous promettons la production, pas les résultats — mais 52 000+ créateurs nous font confiance pour faire monter les chiffres.",
+      },
+    ],
+    finalBadge: "Prêt à tout changer ?",
+    finalTitle1: "Arrêtez de deviner.",
+    finalTitle2: "Commencez à créer avec intention.",
+    finalDesc: "Rejoignez plus de 52 000 créateurs qui utilisent YTForge pour produire un meilleur contenu, plus vite.",
+    noCreditCard: "Aucune carte de crédit requise",
+    cancelAnytime: "Annulez à tout moment",
+    refund30: "Garantie de remboursement de 30 jours",
+    viewLift: "Voir l'étude de cas",
+    generations: "Générations",
+    homeCrumb: "Accueil",
+    demoCrumb: "Démo",
   },
   aiFeatures: {
     badge: "Fonctionnalités IA",
@@ -632,8 +1010,231 @@ free: {
     loading: "Chargement...",
     lastUpdated: "Dernière mise à jour",
   },
+  chat: {
+    brand: "YTForge IA",
+    heroTitle: "Votre coach de croissance YouTube",
+    heroDesc: "Posez toutes vos questions sur votre chaîne, vos scripts, vos miniatures, le SEO ou votre stratégie de croissance. Obtenez des réponses précises et actionnables — diffusées en direct.",
+    emptyTitle: "Comment puis-je vous aider à grandir ?",
+    emptyDesc: "Choisissez un point de départ ou écrivez votre propre question. Je diagnostique, puis je vous donne quelque chose d'actionnable pour votre prochaine vidéo.",
+    starters: [
+      {
+        title: "Évaluez mon idée de vidéo",
+        prompt: "Je prévois une vidéo YouTube sur [votre sujet]. Quel angle obtiendrait vraiment des clics, et quelle erreur commettent la plupart des créateurs sur ce sujet ?",
+      },
+      {
+        title: "Pourquoi je ne grandis pas ?",
+        prompt: "Ma chaîne fait des vidéos sur [niche] et la croissance stagne autour de [abonnés/vues]. Explique-moi quoi diagnostiquer en premier.",
+      },
+      {
+        title: "Écrivez-moi un hook de 30s",
+        prompt: "Écris un hook d'ouverture de 30 secondes pour une vidéo intitulée [votre titre]. Donne-moi 3 versions et explique quelle astuce de rétention chacune utilise.",
+      },
+      {
+        title: "Planifiez mes 4 prochaines vidéos",
+        prompt: "Ma chaîne parle de [niche]. Suggère mes 4 prochaines idées de vidéo comme une progression qui s'appuie sur la précédente, avec un concept de miniature en une ligne pour chacune.",
+      },
+    ],
+    quickLinks: [
+      {
+        label: "Générateur de Tags",
+      },
+      {
+        label: "Générateur de Hashtags",
+      },
+      {
+        label: "Générateur de Titres",
+      },
+    ],
+    placeholder: "Posez une question sur votre chaîne, script, miniature, SEO…",
+    clear: "Effacer",
+    stop: "Arrêter",
+    send: "Envoyer",
+    footerNote: "YTForge IA peut se tromper — vérifiez les conseils importants avant de publier.",
+    noResponse: "Je n'ai pas reçu de réponse cette fois. Veuillez réessayer.",
+    stopped: "_Arrêté._",
+    errorDefault: "Une erreur s'est produite.",
+    streamingError: "Erreur de streaming",
+    homeCrumb: "Accueil",
+    chatCrumb: "Chat IA",
+  },
+  disclaimer: {
+    lastUpdated: "Dernière mise à jour : 10 mai 2026",
+    title: "Avertissement",
+    intro: "Contexte important sur les outils de YTForge, les sorties d'IA et les limites de ce que nous promettons. Lisez ceci avant de vous fier à quoi que ce soit que nous générons.",
+    callouts: [
+      {
+        t: "L'IA n'est pas infaillible",
+        d: "Vérifiez les sorties avant de publier — l'IA peut être fausse, biaisée ou obsolète.",
+      },
+      {
+        t: "Les résultats varient",
+        d: "La croissance d'une chaîne dépend de la niche, de l'effort et de l'exécution — pas seulement de nos outils.",
+      },
+      {
+        t: "Estimations uniquement",
+        d: "Revenus, analyses et prédictions sont des approximations, pas des garanties.",
+      },
+      {
+        t: "Utilisation à vos risques",
+        d: "Vous êtes responsable du respect des politiques de YouTube et de la loi.",
+      },
+    ],
+    tocTitle: "Sommaire",
+    effectiveDate: "Date d'entrée en vigueur : 10 mai 2026 · Version 2.1",
+    sections: [
+      {
+        id: "general",
+        title: "1. Avertissement général",
+        intro: "Les informations, outils, contenus générés par IA, analyses, estimations et autres matériels mis à disposition sur le site web de YTForge et sur toute application, API ou service associé (collectivement, le \"Service\") sont fournis uniquement à des fins générales d'information et d'éducation. En accédant au Service ou en l'utilisant, vous reconnaissez le faire entièrement à vos propres risques et à votre discrétion.",
+        outro: "Bien que nous travaillions dur pour maintenir le Service exact, à jour et utile, nous ne faisons aucune déclaration ni garantie d'aucune sorte, expresse ou implicite, quant à l'exhaustivité, l'exactitude, la fiabilité, l'adéquation ou la disponibilité du Service ou de l'un de ses contenus.",
+      },
+      {
+        id: "ai",
+        title: "2. Contenu généré par IA",
+        intro: "Les outils de YTForge utilisent l'intelligence artificielle et des modèles d'apprentissage automatique pour générer des titres, scripts, miniatures, transcriptions, analyses de chaînes et autres sorties. Le contenu généré par IA est probabiliste — il peut être inexact, incomplet, biaisé, obsolète ou factuellement faux.",
+        subheads: [
+          {
+            title: "Vérifiez avant de publier",
+            body: "Vous êtes seul responsable de l'examen, de la vérification des faits, de l'édition et de la validation de toute sortie générée par IA avant de la publier sur YouTube ou toute autre plateforme. Ne supposez pas que quoi que ce soit généré par YTForge est exact ou approprié à votre situation particulière.",
+          },
+          {
+            title: "Avertissement sur les hallucinations",
+            body: "Les modèles d'IA peuvent parfois \"halluciner\" — produire avec assurance des informations qui semblent plausibles mais sont inventées. Il s'agit d'une limite connue de la technologie d'IA générative actuelle et non d'un défaut propre à YTForge. Traitez toutes les affirmations factuelles, statistiques, citations et références dans les sorties d'IA comme des suggestions à vérifier, et non comme une vérité faisant autorité.",
+          },
+          {
+            title: "Biais et sensibilité",
+            body: "Les modèles d'IA reflètent des modèles présents dans leurs données d'entraînement, qui peuvent inclure des biais culturels, démographiques ou linguistiques. Si vous produisez du contenu destiné à des audiences, communautés ou sujets sensibles spécifiques, exercez un jugement éditorial supplémentaire.",
+          },
+        ],
+      },
+      {
+        id: "results",
+        title: "3. Aucun résultat garanti",
+        intro: "Nous ne garantissons aucun résultat spécifique découlant de l'utilisation de YTForge. Les références aux nombres de vues, à la croissance des abonnés, aux taux de clics, aux améliorations de rétention, à l'éligibilité à la monétisation, aux revenus ou à toute autre métrique de chaîne sont des exemples illustratifs et des objectifs ambitieux — pas des promesses.",
+        outro: "La performance d'une chaîne dépend d'innombrables variables hors de notre contrôle, notamment :",
+        list: [
+          "L'effort, la constance et la qualité de production du créateur",
+          "La compétitivité de la niche et la demande de l'audience",
+          "L'état actuel de l'algorithme de YouTube",
+          "Les facteurs culturels, géographiques et saisonniers",
+          "Les changements de politiques de YouTube et les mises à jour de la plateforme",
+          "L'historique, la réputation et l'audience existants de la chaîne",
+        ],
+        outro2:
+          "Les témoignages et études de cas présentés sur YTForge représentent des expériences individuelles et ne sont pas représentatifs. Vos résultats seront différents.",
+      },
+      {
+        id: "earnings",
+        title: "4. Revenus et estimations financières",
+        intro: "Le calculateur de revenus, le vérificateur de monétisation, les références RPM et tout autre chiffre financier présenté sur YTForge sont des estimations basées sur des moyennes sectorielles et des données publiquement disponibles. Ce ne sont ni des garanties, ni des projections, ni des prévisions financières.",
+        outro: "Les revenus réels de YouTube varient considérablement selon la niche, la géographie de l'audience, l'inventaire publicitaire, la saisonnalité, les filtres de compatibilité de marque et bien d'autres facteurs. YTForge n'est pas un conseiller financier et ne fournit pas de conseils fiscaux, comptables ou d'investissement. Consultez un professionnel qualifié avant de prendre des décisions commerciales basées sur nos estimations.",
+      },
+      {
+        id: "analytics",
+        title: "5. Exactitude des analyses",
+        intro: "Les analyses de chaîne, le chercheur d'ID de chaîne et les outils de recherche similaires s'appuient sur une combinaison des API publiques de YouTube, des endpoints CDN publics et de nos propres modèles statistiques. Bien que nous travaillions à garder les données à jour et exactes :",
+        list: [
+          "YouTube n'expose pas toutes les métriques publiquement — certains chiffres sont estimés",
+          "Les données de chaîne peuvent être mises en cache et refléter une vision différée de la réalité",
+          "Les chaînes peuvent masquer ou restreindre leurs données publiques, auquel cas nos sorties sont limitées ou indisponibles",
+          "Les nombres d'abonnés supérieurs à 1 000 sont arrondis par YouTube lui-même, pas par YTForge",
+        ],
+        outro: "Ne vous fiez pas aux analyses de YTForge pour des décisions juridiques, financières ou de niveau investissement concernant un créateur ou une chaîne.",
+      },
+      {
+        id: "third-party",
+        title: "6. Contenu tiers",
+        intro: "Les outils de recherche de YTForge affichent du contenu publiquement disponible de YouTube et d'autres tiers — y compris les noms de chaînes, miniatures, titres de vidéos et métadonnées. Ce contenu reste la propriété de ses propriétaires respectifs. La référence à un créateur, une chaîne, une marque ou un produit n'implique aucun soutien, partenariat ou affiliation avec YTForge.",
+        outro: "Si vous estimez qu'un contenu affiché via YTForge porte atteinte à vos droits, contactez dmca@ytforge.app avec un avis valide de type DMCA et nous répondrons rapidement.",
+      },
+      {
+        id: "youtube",
+        title: "7. Conformité YouTube",
+        intro: "YTForge est un outil tiers indépendant. Nous ne sommes affiliés ni à YouTube, Google ou Alphabet Inc., ni approuvés ou sponsorisés par eux. \"YouTube\" est une marque commerciale de Google LLC.",
+        outro: "Vous êtes seul responsable de la conformité de votre utilisation de YTForge avec :",
+        list: [
+          "Les conditions d'utilisation de YouTube",
+          "Les règles de la communauté YouTube",
+          "Les politiques du programme Partenaire YouTube",
+          "Les conditions des services API YouTube (le cas échéant)",
+          "Toutes les lois applicables dans votre juridiction",
+        ],
+        outro2:
+          "Générer du contenu avec l'IA ne vous dispense pas des règles de YouTube sur l'authenticité, le droit d'auteur, les deepfakes, la désinformation, la monétisation ou toute autre politique. YTForge n'est pas responsable des strikes, démonétisations ou résiliations résultant de votre contenu.",
+      },
+      {
+        id: "professional",
+        title: "8. Pas de conseil professionnel",
+        intro: "Rien sur YTForge ne constitue un conseil professionnel — juridique, financier, médical, psychologique, comptable ou autre. Les articles, sorties d'outils, articles de blog et réponses du support sont éducatifs et informatifs. Consultez un professionnel agréé pour des conseils adaptés à votre situation.",
+      },
+      {
+        id: "external",
+        title: "9. Liens externes",
+        intro: "Le Service peut contenir des liens vers des sites web, services ou ressources tiers exploités par des parties autres que YTForge. Ces liens sont fournis pour votre commodité et n'impliquent aucun soutien. Nous n'avons aucun contrôle sur le contenu, les pratiques de confidentialité ou l'exactitude des sites externes et déclinons toute responsabilité à leur égard. Visitez les liens externes à vos propres risques.",
+      },
+      {
+        id: "trademarks",
+        title: "10. Marques commerciales",
+        intro: "\"YTForge\" et le logo YTForge sont des marques commerciales de YTForge Inc. Toutes les autres marques, marques de service, logos et noms de marque référencés sur le Service — y compris YouTube, Google, Stripe, Slack, Notion, TubeBuddy, VidIQ et autres — sont la propriété de leurs propriétaires respectifs. Les références sont faites à des fins descriptives et informatives uniquement.",
+      },
+      {
+        id: "fair-use",
+        title: "11. Usage loyal",
+        intro: "Certaines fonctionnalités (comme le téléchargeur de miniatures et l'analyseur SEO) affichent ou téléchargent du contenu de vidéos YouTube publiques à des fins de recherche, de commentaire, d'éducation et d'inspiration. Cet usage est destiné à rester dans les limites de l'usage loyal selon la loi américaine sur le droit d'auteur et les doctrines équivalentes au niveau international.",
+        outro: "Vous êtes responsable de veiller à ce que votre propre utilisation de tout matériel téléchargé ou référencé soit conforme à la loi sur le droit d'auteur. La republication de miniatures, d'audio ou de vidéo protégés par le droit d'auteur comme étant les vôtres — sans autorisation — n'est pas protégée par l'usage loyal et peut enfreindre les droits du créateur original.",
+      },
+      {
+        id: "errors",
+        title: "12. Erreurs, omissions et mises à jour",
+        intro: "Malgré tous nos efforts, le Service peut contenir des erreurs typographiques, des inexactitudes ou des informations obsolètes. Nous nous réservons le droit de corriger toute erreur, inexactitude ou omission et de modifier ou mettre à jour le contenu à tout moment sans préavis. Nous ne garantissons pas que les erreurs seront corrigées.",
+      },
+      {
+        id: "liability",
+        title: "13. Limitation de responsabilité",
+        intro: "DANS LA MESURE MAXIMALE PERMISE PAR LA LOI, YTFORGE INC., SES DIRIGEANTS, EMPLOYÉS, AGENTS ET AFFILIÉS NE SERONT PAS RESPONSABLES DE TOUT DOMMAGE DIRECT, INDIRECT, ACCESSOIRE, SPÉCIAL, CONSÉCUTIF OU PUNITIF — Y COMPRIS LES PERTES DE PROFITS, PERTES DE REVENUS, PERTES D'ABONNÉS, AVERTISSEMENTS DE DROIT D'AUTEUR, DÉMONÉTISATION OU RÉSILIATION DE COMPTE — DÉCOULANT DE OU LIÉ À VOTRE UTILISATION OU VOTRE INCAPACITÉ D'UTILISER LE SERVICE OU TOUTE SORTIE GÉNÉRÉE PAR IA.",
+      },
+      {
+        id: "changes",
+        title: "14. Modifications du présent avertissement",
+        intro: "Nous pouvons mettre à jour cet avertissement à tout moment. La date de \"Dernière mise à jour\" en haut de la page reflète la révision la plus récente. Les modifications importantes seront communiquées par e-mail et via une bannière sur le Service. L'utilisation continue après la date d'entrée en vigueur constitue une acceptation.",
+      },
+      {
+        id: "contact",
+        title: "15. Contact",
+        intro: "Questions, préoccupations ou avis DMCA ? Contactez-nous :",
+        contacts: [
+          {
+            label: "Général :",
+            value: "support@ytforge.app",
+          },
+          {
+            label: "Juridique :",
+            value: "legal@ytforge.app",
+          },
+          {
+            label: "DMCA :",
+            value: "dmca@ytforge.app",
+          },
+          {
+            label: "Courrier :",
+            value: "YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
+          },
+        ],
+      },
+    ],
+    liabilityOutroPre: "Pour nos conditions de responsabilité complètes, voir la section 12 de nos",
+    liabilityOutroLink: "Conditions d'utilisation",
+    summaryTitle: "Le résumé en 30 secondes",
+    summaryText: "YTForge est un ensemble puissant d'outils d'IA — mais l'IA n'est pas parfaite. Vérifiez tout avant de publier. Nous ne garantissons ni croissance, ni revenus, ni conformité YouTube — cela vous appartient. Traitez les estimations comme des estimations, pas comme des promesses.",
+    termsCardTitle: "Conditions d'utilisation",
+    termsCardSub: "L'accord complet",
+    privacyCardTitle: "Politique de confidentialité",
+    privacyCardSub: "Comment nous gérons vos données",
+    homeCrumb: "Accueil",
+    disclaimerCrumb: "Avertissement",
+  },
   auth: {
-    signInTitle: "Bon retour",
+    signInTitle: "Connexion",
     signInSubtitle: "Connectez-vous à votre compte YTForge",
     signUpTitle: "Créez votre compte",
     signUpSubtitle: "Faites progresser votre chaîne dès aujourd'hui",
@@ -652,6 +1253,99 @@ free: {
     or: "ou",
     continueGoogle: "Continuer avec Google",
     agreeTerms: "En continuant, vous acceptez nos Conditions et notre Politique de confidentialité",
+    signUp: "S'inscrire",
+    signIn: "Se connecter",
+    welcomeBackToast: "Ravi de vous revoir !",
+    welcomeBackHeadline1: "Bienvenue à nouveau sur",
+    welcomeBackHeadline2: "YTForge",
+    welcomeBackDesc: "Connectez-vous pour reprendre là où vous vous étiez arrêté.",
+    signInBenefits: [
+      {
+        t: "Croissance plus rapide",
+        d: "Des scripts, titres et miniatures en quelques secondes — pas en quelques jours.",
+      },
+      {
+        t: "Analyse intelligente",
+        d: "Des données exploitables sur votre chaîne, votre niche et vos concurrents.",
+      },
+      {
+        t: "Sûr et sécurisé",
+        d: "Votre contenu vous appartient. Crypté, jamais revendu, jamais utilisé pour entraîner des modèles.",
+      },
+    ],
+    viewLift: "Voir l'étude de cas",
+    creators: "plus de créateurs nous font confiance",
+    testimonialQuote: "En 30 minutes, YTForge m'a donné plus de clarté sur ma chaîne que des mois de vidéos YouTube sur le sujet.",
+    testimonialName: "Amina R.",
+    testimonialHandle: "@amina_creates",
+    signingInGoogle: "Connexion via Google en cours…",
+    googleNotConfigured: "La connexion Google n'est pas configurée sur cette installation. Utilisez plutôt l'e-mail et le mot de passe.",
+    googleNotConfiguredHint: "Ajoutez GOOGLE_CLIENT_ID et GOOGLE_CLIENT_SECRET à votre fichier .env pour activer ce bouton.",
+    keepSignedIn: "Rester connecté",
+    securityCheck: "Vérification de sécurité",
+    captchaRequired: "Veuillez terminer la vérification de sécurité.",
+    signingIn: "Connexion…",
+    forgot: "Mot de passe oublié ?",
+    agreeSignIn: "En vous connectant, vous acceptez nos",
+    protectedBy: "et la Politique de confidentialité. Protégé par un chiffrement de niveau entreprise.",
+    createFreeAccount: "Créer un compte gratuit",
+    newHere: "Nouveau ici ?",
+    orWithEmail: "ou continuez avec votre e-mail",
+    fullName: "Nom complet",
+    namePlaceholder: "Jean Dupont",
+    emailPlaceholder: "vous@exemple.com",
+    passwordPlaceholder: "Créez un mot de passe",
+    referralPlaceholder: "Code de parrainage (facultatif)",
+    referredBy: "Parrainé par",
+    strengthLabel: "Force du mot de passe",
+    strengthLabels: [
+      "Faible",
+      "Moyen",
+      "Bon",
+      "Fort",
+      "Excellent",
+    ],
+    agreeSignUpPre: "En créant un compte, vous acceptez nos",
+    agreeSignUpPost: "et notre Politique de confidentialité.",
+    creatingAccount: "Création du compte…",
+    signUpNow: "S'inscrire maintenant",
+    accountCreated: "Compte créé !",
+    welcomeReferredPre: "Bienvenue",
+    welcomeReferredNamePre: "à YTForge !",
+    freeBadge: "Gratuit pour toujours — aucune carte requise",
+    alreadyMember: "Déjà membre ?",
+    signUpGoogle: "S'inscrire avec Google",
+    signUpApple: "S'inscrire avec Apple",
+    noCreditCard: "Aucune carte de crédit requise",
+    cancelAnytime: "Annulez à tout moment",
+    refund30: "Garantie de remboursement de 30 jours",
+    joinCreators: "Rejoignez plus de 52 000 créateurs",
+    advantageHeadline1: "Le raccourci",
+    advantageHeadline2: "de la croissance YouTube",
+    advantageDesc: "Scripts, miniatures, SEO et analyses — votre studio de création complet en un seul endroit.",
+    perks: [
+      {
+        t: "Réponses IA instantanées",
+        d: "Scripts, idées et hooks en quelques secondes — 24h/24.",
+      },
+      {
+        t: "Outils de croissance",
+        d: "Miniatures, tags, descriptions — tout ce qui fait grandir une chaîne.",
+      },
+      {
+        t: "Gratuit pour toujours",
+        d: "Aucune carte requise pour démarrer. Les plans payants vous font aller encore plus loin.",
+      },
+      {
+        t: "Approuvé par les créateurs",
+        d: "Rejoint par plus de 52 000 créateurs qui produisent mieux et plus vite.",
+      },
+    ],
+    signupTestimonialQuote: "J'ai hésité des mois avant d'essayer un outil IA. YTForge a payé sa première semaine en une seule vidéo.",
+    signupTestimonialName: "David K.",
+    signupTestimonialHandle: "@davidbuilds",
+    signupTestimonialMetric: "+212%",
+    signupTestimonialMetricLabel: "croissance des vues après 90 jours",
   },
   notFound: {
     title: "Page introuvable",

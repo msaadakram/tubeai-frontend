@@ -21,6 +21,9 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ChatMarkdown } from "@/components/ChatMarkdown";
 import { friendlyApiError } from "@/lib/apiError";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { getLocalePath } from "@/lib/i18n/utils";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
@@ -30,38 +33,13 @@ type Message = { id: string; role: Role; content: string };
 
 const STORAGE_KEY = "ytforge.chat.history";
 
-const STARTERS = [
-  {
-    icon: Type,
-    title: "Roast my video idea",
-    prompt:
-      "I'm planning a YouTube video about [your topic]. What angle would actually get clicks, and what mistake are most creators making on this topic?",
-  },
-  {
-    icon: Search,
-    title: "Why am I not growing?",
-    prompt:
-      "My channel makes videos about [niche] and growth has stalled around [subs/views]. Walk me through what to diagnose first.",
-  },
-  {
-    icon: FileText,
-    title: "Write me a 30s hook",
-    prompt:
-      "Write a 30-second opening hook for a video titled [your title]. Give me 3 versions and explain which retention trick each one uses.",
-  },
-  {
-    icon: TagIcon,
-    title: "Plan my next 4 videos",
-    prompt:
-      "My channel is about [niche]. Suggest my next 4 video ideas as a progression that builds on each other, with a one-line thumbnail concept for each.",
-  },
-];
+const STARTER_ICONS = [Type, Search, FileText, TagIcon] as const;
 
-const QUICK_LINKS = [
-  { label: "Tag Generator", href: "/tools/tag-generator", icon: TagIcon },
-  { label: "Hashtag Generator", href: "/tools/hashtag-generator", icon: Hash },
-  { label: "Title Generator", href: "/tools/viral-title-generator", icon: Type },
-];
+const QUICK_LINK_ITEMS = [
+  { href: "/tools/tag-generator", icon: TagIcon },
+  { href: "/tools/hashtag-generator", icon: Hash },
+  { href: "/tools/viral-title-generator", icon: Type },
+] as const;
 
 function uid() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
@@ -90,6 +68,8 @@ function saveHistory(messages: Message[]) {
 }
 
 export default function ChatPage() {
+  const { t } = useTranslations();
+  const { locale } = useLocale();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -248,7 +228,7 @@ export default function ChatPage() {
             } else if (event === "error") {
               try {
                 const j = JSON.parse(data);
-                throw new Error(j.message || "Streaming error");
+                throw new Error(j.message || t("chat.streamingError"));
               } catch (e) {
                 throw e instanceof Error ? e : new Error(data);
               }
@@ -275,8 +255,7 @@ export default function ChatPage() {
               m.id === assistantMsg.id
                 ? {
                     ...m,
-                    content:
-                      "I didn't get a response back that time. Please try again.",
+                    content: t("chat.noResponse"),
                   }
                 : m
             )
@@ -287,12 +266,12 @@ export default function ChatPage() {
           setMessages((prev) =>
             prev.map((m) =>
               m.id === assistantMsg.id
-                ? { ...m, content: m.content || "_Stopped._" }
+                ? { ...m, content: m.content || t("chat.stopped") }
                 : m
             )
           );
         } else {
-          setError(err?.message || "Something went wrong.");
+          setError(err?.message || t("chat.errorDefault"));
           setMessages((prev) => prev.filter((m) => m.id !== assistantMsg.id));
         }
       } finally {
@@ -302,7 +281,7 @@ export default function ChatPage() {
         requestAnimationFrame(() => scrollToBottom("smooth"));
       }
     },
-    [input, messages, streaming, scrollToBottom]
+    [input, messages, streaming, scrollToBottom, t]
   );
 
   const clearChat = () => {
@@ -325,14 +304,13 @@ export default function ChatPage() {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:pt-10 sm:pb-10">
           <div className="flex items-center gap-2 text-white/80 text-[11px] font-black uppercase tracking-wider mb-2 sm:mb-3">
             <Sparkles className="w-4 h-4" />
-            YTForge AI
+            {t("chat.brand")}
           </div>
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
-            Your YouTube growth coach
+            {t("chat.heroTitle")}
           </h1>
           <p className="mt-2 sm:mt-3 text-white/90 text-xs sm:text-sm md:text-base font-medium max-w-2xl">
-            Ask anything about your channel, scripts, thumbnails, SEO, or growth
-            strategy. Get specific, actionable answers — streamed live.
+            {t("chat.heroDesc")}
           </p>
         </div>
       </section>
@@ -347,30 +325,31 @@ export default function ChatPage() {
               <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4 sm:p-5 mb-5 sm:mb-6">
                 <div className="flex items-center gap-2 mb-2">
                   <Bot className="w-5 h-5 text-red-600" />
-                  <div className="font-black text-sm sm:text-base">How can I help you grow?</div>
+                  <div className="font-black text-sm sm:text-base">{t("chat.emptyTitle")}</div>
                 </div>
                 <p className="text-xs sm:text-sm text-neutral-600">
-                  Pick a starting point or type your own question. I&apos;ll
-                  diagnose, then give you something you can act on for your next
-                  video.
+                  {t("chat.emptyDesc")}
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {STARTERS.map((s) => (
-                  <button
-                    key={s.title}
-                    onClick={() => send(s.prompt)}
-                    className="group text-left bg-white border-2 border-black rounded-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] p-3.5 sm:p-4 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] hover:border-red-600 transition-all"
-                  >
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <s.icon className="w-4 h-4 text-red-600 shrink-0" />
-                      <div className="font-black text-sm">{s.title}</div>
-                    </div>
-                    <p className="text-xs text-neutral-600 leading-relaxed line-clamp-3 sm:line-clamp-none">
-                      {s.prompt}
-                    </p>
-                  </button>
-                ))}
+                {t("chat.starters").map((s, i) => {
+                  const Icon = STARTER_ICONS[i % STARTER_ICONS.length];
+                  return (
+                    <button
+                      key={s.title}
+                      onClick={() => send(s.prompt)}
+                      className="group text-left bg-white border-2 border-black rounded-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] p-3.5 sm:p-4 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] hover:border-red-600 transition-all"
+                    >
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <Icon className="w-4 h-4 text-red-600 shrink-0" />
+                        <div className="font-black text-sm">{s.title}</div>
+                      </div>
+                      <p className="text-xs text-neutral-600 leading-relaxed line-clamp-3 sm:line-clamp-none">
+                        {s.prompt}
+                      </p>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           ) : (
@@ -460,14 +439,14 @@ export default function ChatPage() {
           {!empty && (
             <div className="flex items-center justify-between gap-2 mb-2">
               <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar min-w-0">
-                {QUICK_LINKS.map((q) => (
+                {QUICK_LINK_ITEMS.map((q, i) => (
                   <Link
                     key={q.href}
-                    href={q.href}
+                    href={getLocalePath(locale, q.href)}
                     className="shrink-0 inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-black rounded-full border-2 border-black bg-white hover:bg-red-50 transition"
                   >
                     <q.icon className="w-3 h-3" />
-                    <span className="whitespace-nowrap">{q.label}</span>
+                    <span className="whitespace-nowrap">{t("chat.quickLinks")[i].label}</span>
                   </Link>
                 ))}
               </div>
@@ -476,7 +455,7 @@ export default function ChatPage() {
                 className="shrink-0 inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-black rounded-full border-2 border-black bg-white hover:bg-neutral-100 transition"
               >
                 <Trash2 className="w-3 h-3" />
-                <span className="hidden xs:inline sm:inline">Clear</span>
+                <span className="hidden xs:inline sm:inline">{t("chat.clear")}</span>
               </button>
             </div>
           )}
@@ -492,7 +471,7 @@ export default function ChatPage() {
                 }
               }}
               rows={1}
-              placeholder="Ask about your channel, script, thumbnail, SEO…"
+              placeholder={t("chat.placeholder")}
               className="flex-1 min-w-0 resize-none bg-transparent outline-none text-sm font-medium py-2 px-2 max-h-[40vh] sm:max-h-[200px]"
             />
             {streaming ? (
@@ -501,7 +480,7 @@ export default function ChatPage() {
                 className="shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 text-xs font-black rounded-xl border-2 border-black bg-neutral-800 text-white hover:bg-black transition"
               >
                 <Square className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Stop</span>
+                <span className="hidden sm:inline">{t("chat.stop")}</span>
               </button>
             ) : (
               <button
@@ -510,29 +489,29 @@ export default function ChatPage() {
                 className="shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 text-xs font-black rounded-xl border-2 border-black bg-red-600 text-white hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
               >
                 <ArrowUp className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Send</span>
+                <span className="hidden sm:inline">{t("chat.send")}</span>
               </button>
             )}
           </div>
           <p className="text-[10px] text-neutral-400 font-medium mt-1.5 text-center px-2">
-            YTForge AI can be wrong — verify important advice before you ship.
+            {t("chat.footerNote")}
           </p>
         </div>
       </main>
 
       <Footer />
-      <ChatBreadcrumbJsonLd />
+      <ChatBreadcrumbJsonLd home={t("chat.homeCrumb")} chat={t("chat.chatCrumb")} />
     </div>
   );
 }
 
-function ChatBreadcrumbJsonLd() {
+function ChatBreadcrumbJsonLd({ home, chat }: { home: string; chat: string }) {
   const bc = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://ytforge.app/" },
-      { "@type": "ListItem", position: 2, name: "AI Chat", item: "https://ytforge.app/chat" },
+      { "@type": "ListItem", position: 1, name: home, item: "https://ytforge.app/" },
+      { "@type": "ListItem", position: 2, name: chat, item: "https://ytforge.app/chat" },
     ],
   };
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(bc) }} />;

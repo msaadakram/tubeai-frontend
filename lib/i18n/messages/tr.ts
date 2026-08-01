@@ -171,21 +171,16 @@ export const tr: Messages = {
     getStarted: "Başla",
     startTrial: "7 günlük deneme",
     contactSales: "Satışla iletişime geç",
+    homeCrumb: "Ana Sayfa",
+    pricingCrumb: "Fiyatlandırma",
     plans: {
-            starter: {
-        name: "Free",
-        tagline: "Get started with the basics",
-        description: "Perfect for new creators getting started.",
-        features: [
-          "Basic SEO Analyzer",
-          "5 AI Title Generations / mo",
-          "Tag Generator",
-          "Thumbnail Downloader",
-          "Standard Support"
-        ],
-        cta: "Get Started"
-      },
+
 free: {
+        notIncluded: [
+                "AI Senaryo Yazarı",
+                "Kanal Analizi",
+                "API erişimi"
+        ],
         name: "Ücretsiz",
         tagline: "Temel bilgilerle başlayın",
         features: [
@@ -236,11 +231,29 @@ free: {
       },
     },
     compareTitle: "Her planı yan yana karşılaştır",
+    compareBadge: "Tam Özellik Karşılaştırması",
     compareSubtitle: "Her özellik, her sınır — 30 saniyede doğru planı seçmeniz için net.",
     featureCol: "Özellik",
     testimonialsBadge: "200K+ içerik üreticinin sevdiği",
     testimonialsTitle: "Bize sadece sözümüze güvenmeyin",
     testimonialsSubtitle: "Gerçek içerik üreticiler, gerçek kanal büyümesi, gerçek ROI.",
+    testimonials: [
+      {
+        quote: "YTForge'un Creator planı ilk haftada kendini amorti etti. AI ile üretilen başlıklara geçtikten sonra CTR'ım %41 arttı.",
+        name: "Maya Chen",
+        role: "Teknoloji YouTuber'ı · 1,2 M abone",
+      },
+      {
+        quote: "Ağımız için 14 kanal yönetiyoruz. Pro planının toplu üretimi ekibime her hafta 30+ saat kazandırıyor.",
+        name: "Diego Ramirez",
+        role: "İçerik Direktörü · MediaCorp",
+      },
+      {
+        quote: "AI araçlarına şüpheyle yaklaşıyordum ama senaryo yazarı, dürüst olmak gerekirse en iyi uzun format işlerimden ayırt edilemiyor.",
+        name: "Aisha Patel",
+        role: "Belgesel Yönetmeni · 480 K abone",
+      },
+    ],
     faqBadge: "Fiyatlandırma SSS",
     faqTitle: "Merak edebileceğiniz her şey",
     faqSubtitle: "Hala sorularınız mı var? support@ytforge.app'e e-posta gönderin — 4 saat içinde yanıt veririz.",
@@ -309,8 +322,6 @@ free: {
       { label: "Destek", values: ["Topluluk", "Öncelikli sohbet", "7/24 telefon + AM"] },
     ],
   
-      finalCtaDesc: "Start free, upgrade when you're ready. No credit card required.",
-      finalCtaBtn: "Start Free",
 },
   faq: {
     title: "Sıkça sorulan sorular",
@@ -446,6 +457,7 @@ free: {
     noMatch: "Eşleşen dil yok",
     label: "Dil",
   },
+
   demo: {
     badge: "BY SOLUTIONS",
     title: "Çözümlerimiz",
@@ -535,6 +547,372 @@ free: {
     revenueSplit: "Gelir Paylaşımı",
     thisMonth: "BU AY",
     exploreButton: "Tüm Araçları Keşfet",
+  },
+  demoPage: {
+    heroBadge: "Canlı Demo · 11 Araç · Tek Çalışma Alanı",
+    heroTitle1: "AI'nin Buluştuğu Yer",
+    heroTitle2: "YouTube Video Düzenleme",
+    heroDesc: "Sonraki videonuz için senaryo, thumbnail, başlık ve açıklama üretin — hepsi tek bir şık arayüzde. Bu bir etkileşimli demo, reklam değil.",
+    startTrial: "Ücretsiz Dene",
+    exploreTools: "Araçları Keşfet",
+    tryFreeTools: "Ücretsiz Araçları Deneyin",
+    heroStats: [
+      {
+        value: "250K+",
+        label: "optimize edilmiş video",
+      },
+      {
+        value: "52K+",
+        label: "aktif yaratıcı",
+      },
+      {
+        value: "110M+",
+        label: "tahmini kazanılan izlenme",
+      },
+      {
+        value: "4.9/5",
+        label: "ortalama puan",
+      },
+    ],
+    featuredIn: "Şurada göründü",
+    tourBadge: "Etkileşimli Tur",
+    tourTitle: "Hesap olmadan YTForge'u deneyin",
+    tourDesc: "Aşağıdaki tüm demolar tarayıcınızda çalışır — girişleriniz yerel işlenir ve cihazınızdan asla çıkmaz. Hesap gerekmez, demo sınırı yok.",
+    tools: [
+      {
+        name: "Senaryo Oluşturucu",
+        desc: "Tek bir fikirden tam video senaryosu.",
+        metrics: {
+          gens: "12,4K",
+          lift: "+212%",
+        },
+        demo: null,
+      },
+      {
+        name: "Thumbnail Oluşturucu",
+        desc: "Başlığınıza dayalı tıklama çeken thumbnail konseptleri.",
+        metrics: {
+          gens: "8,7K",
+          lift: "+147%",
+        },
+        demo: null,
+      },
+      {
+        name: "Başlık Oluşturucu",
+        desc: "Konunuz için en fazla 25 yüksek performanslı başlık.",
+        metrics: {
+          gens: "15,1K",
+          lift: "+189%",
+        },
+        demo: null,
+      },
+      {
+        name: "Hashtag Oluşturucu",
+        desc: "İçeriğinizi doğru insanların önüne koyan etiketler.",
+        metrics: {
+          gens: "13,8K",
+          lift: "+156%",
+        },
+        demo: null,
+      },
+      {
+        name: "Etiket Oluşturucu",
+        desc: "Akıllı YouTube SEO, tek tıkla.",
+        metrics: {
+          gens: "9,3K",
+          lift: "+98%",
+        },
+        demo: null,
+      },
+      {
+        name: "Tanım Oluşturucu",
+        desc: "Videolarınız için net ve profesyonel tanımlar.",
+        metrics: {
+          gens: "5,9K",
+          lift: "+67%",
+        },
+        demo: null,
+      },
+      {
+        name: "Haber Oluşturucu",
+        desc: "Temel gerçekler ve bağlam ile güncel içerik.",
+        metrics: {
+          gens: "7,4K",
+          lift: "+83%",
+        },
+        demo: null,
+      },
+      {
+        name: "Yorum Oluşturucu",
+        desc: "Topluluk oluşturan etkileşimli yanıtlar.",
+        metrics: {
+          gens: "16,7K",
+          lift: "+234%",
+        },
+        demo: null,
+      },
+      {
+        name: "Viral İçerik Oluşturucu",
+        desc: "Paylaşım için tasarlanmış fikirler.",
+        metrics: {
+          gens: "11,2K",
+          lift: "+127%",
+        },
+        demo: null,
+      },
+      {
+        name: "Açıklama Oluşturucu",
+        desc: "Sizi daha iyi sıralayan ve satan açıklamalar.",
+        metrics: {
+          gens: "10,5K",
+          lift: "+143%",
+        },
+        demo: null,
+      },
+      {
+        name: "Hook Oluşturucu",
+        desc: "Her şeyi belirleyen ilk birkaç saniye.",
+        metrics: {
+          gens: "6,8K",
+          lift: "+79%",
+        },
+        demo: null,
+      },
+      {
+        name: "Anahtar Kelime Oluşturucu",
+        desc: "Kitleğinizin gerçekte ne aradığını keşfedin.",
+        metrics: {
+          gens: "14,3K",
+          lift: "+162%",
+        },
+        demo: null,
+      },
+      {
+        name: "Kredi Oluşturucu",
+        desc: "Ekip veya sponsorlarınız için profesyonel krediler.",
+        metrics: {
+          gens: "4,2K",
+          lift: "+54%",
+        },
+        demo: null,
+      },
+    ],
+    lifetimeGens: "13+ milyon",
+    avgLift: "Ortalama +139%",
+    sampleOutput: "Örnek çıktı",
+    livePreviewTitle: "Canlı Önizleme",
+    livePreviewDesc: "Konu girin, araç seçin, canlı çıktıyı test edin — hesap gerekmez.",
+    tryToolFreePre: "",
+    tryToolFreeSuffix: " ücretsiz dene",
+    workflowBadge: "Optimize Edilmiş",
+    workflowTitle: "Kavramdan Yayına Tek İş Akışı",
+    workflowDesc: "Beş sekme arasında zıplamaya gerek yok. YTForge videonun tüm yaşam döngüsünü tek bir çalışma alanında birleştirir.",
+    workflowSteps: [
+      {
+        n: "1",
+        t: "Araştır",
+        d: "Trend verileri ve rakip analiziyle kitleğin neyi görmek istediğini keşfedin.",
+      },
+      {
+        n: "2",
+        t: "Senaryo Yaz",
+        d: "Dikkati tutan hook, loop ve payoff ile yapılandırılmış senaryolar.",
+      },
+      {
+        n: "3",
+        t: "Thumbnail Tasarla",
+        d: "Kaydırma durduran yüksek dönüşlü konseptler.",
+      },
+      {
+        n: "4",
+        t: "Yayını Optimize Et",
+        d: "Başlık, açıklama, etiket ve hashtag — Google ve YouTube'ın sıraladığı şeyle hizalı.",
+      },
+      {
+        n: "5",
+        t: "Yayınla ve Analiz Et",
+        d: "Yayınla, performansı takip et, kanal analiziyle yinele.",
+      },
+    ],
+    benefitsBadge: "Neden YTForge",
+    benefitsTitle: "Yaratıcılar tarafından, yaratıcılar için yapıldı",
+    benefitsDesc: "Her araç, kendi kanallarımızda karşılaştığımız gerçek bir sorunu çözmek için yapıldı.",
+    benefits: [
+      {
+        t: "Büyük zaman tasarrufu",
+        d: "Video başına saatlerce üretim, dakikalara indirildi.",
+      },
+      {
+        t: "Tutarlı kalite",
+        d: "Her seferinde profesyonel senaryo, başlık ve konsept.",
+      },
+      {
+        t: "Veri odaklı büyüme",
+        d: "Gerçek veriler ve trendlere dayalı optimizasyonlar.",
+      },
+      {
+        t: "Kullanıcı dostu",
+        d: "Sıfır öğrenme eğrisi. Yazı yazabiliyorsanız YTForge kullanabilirsiniz.",
+      },
+      {
+        t: "Sürekli gelişiyor",
+        d: "Haftada bir yeni araç ve iyileştirme çıkarıyoruz.",
+      },
+      {
+        t: "Güvenli ve güvenilir",
+        d: "Fikirleriniz sizin — verilerinizi asla satmayız.",
+      },
+    ],
+    useCasesBadge: "Kullanım Alanları",
+    useCasesTitle: "Her tür yaratıcı için tasarlandı",
+    useCasesDesc: "Başlangıç YouTuber'larından tam zamanlı stüdyolara — YTForge iş akışınıza uyum sağlar.",
+    useCases: [
+      {
+        t: "Yeni başlayan yaratıcılar",
+        d: "Erken hataları önleyen yapılandırılmış senaryolar ve fikirlerle başlayın.",
+      },
+      {
+        t: "Tam zamanlı kanallar",
+        d: "Araştırma, düzenleme ve optimizasyonu basitleştirin — daha hızlı yayınlayın.",
+      },
+      {
+        t: "Ekipler ve stüdyolar",
+        d: "Editörler ve yazarlar arası üretimi tutarlı şablonlarla standardize edin.",
+      },
+      {
+        t: "Eğitmenler ve kurslar",
+        d: "Bilgiyi dikkati tutan yapılandırılmış videolara çevirin.",
+      },
+      {
+        t: "Markalar ve pazarlama",
+        d: "Marka otoritesini oluşturan tutarlı video serileri.",
+      },
+      {
+        t: "Oyuncular ve yayıncılar",
+        d: "Klipleri evergreen contenete dönüştüren başlık, montaj ve senaryolar.",
+      },
+    ],
+    testiBadge: "Referanslar",
+    testiTitle: "Yaratıcılar ne diyor",
+    testiDesc: "52.000+ yaratıcı YTForge ile daha iyi içerik, daha hızlı üretiyor.",
+    testimonials: [
+      {
+        quote: "YTForge iş akışımı değiştirdi. Fikirden yayına götürmek günler değil saatler sürüyor.",
+        name: "Sarah M.",
+        role: "Yaşam tarzı YouTuber, 180K abone",
+        channel: "Doğrulanmış kanal",
+        metric: "+212%",
+        metricLabel: "izlenme büyümesi",
+      },
+      {
+        quote: "Senaryo oluşturucu inanılmaz. Hook'lar kopyalayasımın yazdıklarından daha iyi — ve 30 kat daha hızlı.",
+        name: "David K.",
+        role: "Teknoloji yaratıcısı, 92K abone",
+        channel: "Pro abonesi",
+        metric: "38s",
+        metricLabel: "ayda tasarrufu",
+      },
+      {
+        quote: "İzlenmelerim iki ayda %30 arttı. Çok güzel olunca gerçek olamayacak diye düşündüm — analitikleri görene kadar.",
+        name: "Amina R.",
+        role: "Seyahat vlogçusu, 64K abone",
+        channel: "Doğrulanmış kanal",
+        metric: "+30%",
+        metricLabel: "60 günde izlenme",
+      },
+      {
+        quote: "Para kazanma kontrolcü kanalamda tam ne eksik olduğunu söyledi. Bir ay sonra Ortak Program'a girdim.",
+        name: "Marcus T.",
+        role: "Oyun yaratıcısı, 11K abone",
+        channel: "Topluluk üyesi",
+        metric: "1 ay",
+        metricLabel: "para kazanmaya kadar",
+      },
+    ],
+    guideBadge: "Rehber",
+    guideTitle: "YouTube Büyüme Hızlı Rehberi",
+    guideDesc: "Her YTForge aracına gömdüğümüz temel ilkeler — 2026'da hâlâ işe yarıyor.",
+    guideLead:
+      "YTForge, 2026'da YouTube içerik üreticileri için özel olarak oluşturulmuş en kapsamlı AI platformudur. ChatGPT gibi genel AI araçları senaryo yazabilir, Canva gibi tasarım araçları küçük resim oluşturabilir; ancak hiçbiri YouTube algoritmasını anlamaz: fark yaratan tıklama oranlarını, algoritmik destek kazandıran izlenme süresi eğrilerini veya videoları aramada üst sıralara taşıyan meta veri sinyallerini. YTForge tam da bu sinyaller için inşa edilmiştir; 4,2 milyon viral YouTube videosuyla eğitilir ve her hafta en güncel performans verileriyle güncellenir.",
+    seoContent: [
+      {
+        h3: "Dikkat tek para biriminiz",
+        p1: "YouTube bir dikkat oyunudur. CTR ve tutundurma neredeyse her şeyi belirler: izlenme, öneriler, para kazanma. Başka bir şeyi optimize etmeden önce, insanların neye tıkladığını ve neyi sonuna kadar izlediğini optimize edin.",
+      },
+      {
+        h3: "Senaryo değil araştırmayla başlayın",
+        p1: "Kazanır içerik insanların zaten aradığı şeylerle başlar. YTForge'un Anahtar Kelime aracını kullanarak gerçek talep olan konuları bulun, onları aşan içerik oluşturun.",
+      },
+      {
+        h3: "Hook bir vaattir, önizleme değil",
+        p1: "İlk 30 saniyeniz birisinin kalıp kalmayacağını belirler. Videoyu özetlemezler — izleyicinin cevap bulmak zorunda olduğu bir soru ekersiniz.",
+      },
+      {
+        h3: "Tutundurma yapıyla kazanılır",
+        p1: "Loop'lar — kendilerine kapanan video bölümleri — insanları bir sonraki videoya iter. Her bölümü bağımsız duracak şekilde yapın.",
+        p2: "YTForge senaryoları varsayılan olarak hook → loop → payoff yapısına göre inşa edilir.",
+      },
+      {
+        h3: "Thumbnail'lar başparmak boyutunda yargılanır",
+        p1: "Önizleme bolluğunda thumbnail'ınız başparmak büyüklüğünde okunabilir olmalı. Bir duygu, bir konu, bir kontrast. Birden fazla mesaj varsa akışta kaybolur.",
+      },
+      {
+        h3: "YouTube SEO = tıklama sinyalleri",
+        p1: "Başlık, açıklama ve etiket alanlar değil — sıralama sinyalleridir. Ana anahtar kelimenizi üçününe de doğal yerleştirin, gerisini YTForge halletsin.",
+      },
+      {
+        h3: "Tutarlılık savaşı kazanır",
+        p1: "Sürdürülebilir bir yayın ritmi ve net bir konu alışkanlık kitleleri oluşturur. Alışkanlığa dayalı tutundurma platformdaki en düşük değerlendirilen büyüme kollarından biridir.",
+      },
+    ],
+    faqBadge: "SSS",
+    faqTitle: "Sık Sorulan Sorular",
+    faqDesc: "Her zaman sormak istediğiniz her şey — müşteri desteği olmadan.",
+    faqs: [
+      {
+        q: "YTForge gerçekten ücretsiz mi?",
+        a: "Evet — ücretsiz plan günlük üretilme sınırıyla tüm araçlara erişim içerir. Etkileşimli demo ne hesap ne de ödeme ister.",
+      },
+      {
+        q: "Araçlar hangi dilleri destekliyor?",
+        a: "AI çıktıları giriş dilinizi takip eder — ayar değiştirmeye gerek yok. Sayfa kendisi 9 dilde mevcut.",
+      },
+      {
+        q: "Demo verilerimi işliyor mu?",
+        a: "Hayır. Demo tamamen tarayıcınızda çalışır: girişleriniz cihazınızdan asla çıkmaz. Sunucu gönderimi yok, depolama yok.",
+      },
+      {
+        q: "Demo çıktılarını videolarda kullanabilir miyim?",
+        a: "Evet, serbestçe — varlıkları bu yüzden. Ama demo kısıtlı bir sürüm; API ile tam üretim kayıtlı hesaplar içindir.",
+      },
+      {
+        q: "YTForge TubeBuddy veya VidIQ'dan nasıl farklı?",
+        a: "Onlar veriye odaklı tarayıcı eklentileri; YTForge büyüme araçlarıyla AI destekli bir yaratıcı stüdyosu, hepsi tek bir çalışma alanında.",
+      },
+      {
+        q: "Senaryolarım ve fikirlerim özel mi?",
+        a: "Evet. İçeriğiniz size aittir. Size hizmet etmek için kullanırız, asla sizin aleyhinize eğitmek veya satmak için değil.",
+      },
+      {
+        q: "İstediğim zaman iptal edebilir miyim?",
+        a: "Evet. İki tıkla istediğiniz zaman iptal edin — planınız fatura dönemi sonuna kadar aktif kalır, sonra ücretsiz plana düşersiniz.",
+      },
+      {
+        q: "YTForge izlenme veya abone garantisi veriyor mu?",
+        a: "Asla. Hiçbir araç bunu dürüstçe yapamaz. Sonuç değil üretim vaat ederiz — ama 52.000+ yaratıcı sayıları artırmak için bize güveniyor.",
+      },
+    ],
+    finalBadge: "Her şeyi değiştirmeye hazır mısınız?",
+    finalTitle1: "Tahmin etmeyi bırakın.",
+    finalTitle2: "Amaçla yaratmaya başlayın.",
+    finalDesc: "YTForge ile daha iyi içerik, daha hızlı üreten 52.000+ yaratıcıya katılın.",
+    noCreditCard: "Kredi kartı gerekmez",
+    cancelAnytime: "İstediğiniz zaman iptal edin",
+    refund30: "30 gün iade garantisi",
+    viewLift: "Vaka çalışmasını gör",
+    generations: "Üretimler",
+    homeCrumb: "Ana Sayfa",
+    demoCrumb: "Demo",
   },
   aiFeatures: {
     badge: "AI Destekli Özellikler",
@@ -632,8 +1010,231 @@ free: {
     loading: "Yükleniyor...",
     lastUpdated: "Son güncelleme",
   },
+  chat: {
+    brand: "YTForge AI",
+    heroTitle: "YouTube Büyüme Koçunuz",
+    heroDesc: "Kanalınız, senaryolarınız, thumbnail'larınız, SEO'nuz veya büyüme stratejiniz hakkında her şeyi sorun. Kesin ve uygulanabilir cevapları canlı alın.",
+    emptyTitle: "Nasıl büyümenize yardımcı olabilirim?",
+    emptyDesc: "Bir başlangıç noktası seçin veya kendi sorunuzu yazın. Teşhis koyarım, sonra bir sonraki videonuz için uygulanabilir bir şeyler veririm.",
+    starters: [
+      {
+        title: "Video fikrimi değerlendir",
+        prompt: "[Konunuz] hakkında bir YouTube videosu planlıyorum. Hangi açı gerçekten tıklama alır ve çoğu yaratıcı bu konuda hangi hatayı yapıyor?",
+      },
+      {
+        title: "Neden büyümiyorum?",
+        prompt: "Kanalım [niş] hakkında videolar yapıyor ve büyüme [abone/izlenme] civarında durdu. Önce neyi teşhis etmem gerektiğini anlat.",
+      },
+      {
+        title: "Bana 30 saniyelik bir hook yaz",
+        prompt: "[Videonuzun başlığı] adlı bir video için 30 saniyelik bir açılış hook'u yaz. 3 versiyon ver ve her hangi tutma tekniğini kullandığını açıkla.",
+      },
+      {
+        title: "Sonraki 4 videomu planla",
+        prompt: "Kanalım [niş] hakkında. Bir öncekine dayanan bir ilerleme olarak sonraki 4 video fikrimi, her biri için tek satırlık bir thumbnail konsepti ile öner.",
+      },
+    ],
+    quickLinks: [
+      {
+        label: "Etiket Oluşturucu",
+      },
+      {
+        label: "Hashtag Oluşturucu",
+      },
+      {
+        label: "Başlık Oluşturucu",
+      },
+    ],
+    placeholder: "Kanal, senaryo, thumbnail, SEO hakkında soru sorun…",
+    clear: "Temizle",
+    stop: "Durdur",
+    send: "Gönder",
+    footerNote: "YTForge AI hata yapabilir — yayınlamadan önce önemli tavsiyeleri kontrol edin.",
+    noResponse: "Bu sefer yanıt alamadım. Lütfen tekrar deneyin.",
+    stopped: "_Durduruldu._",
+    errorDefault: "Bir hata oluştu.",
+    streamingError: "Yayın hatası",
+    homeCrumb: "Ana Sayfa",
+    chatCrumb: "AI Sohbeti",
+  },
+  disclaimer: {
+    lastUpdated: "Son güncelleme: 10 Mayıs 2026",
+    title: "Sorumluluk Reddi",
+    intro: "YTForge araçları, AI çıktıları ve vadettiğimiz şeylerin sınırları hakkında önemli bağlam. Bizim ürettiğimiz herhangi bir şeye güvenmeden önce bunu okuyun.",
+    callouts: [
+      {
+        t: "AI kusursuz değil",
+        d: "Yayınlamadan önce çıktıları kontrol edin — AI yanlış, önyargılı veya eski olabilir.",
+      },
+      {
+        t: "Sonuçlar değişir",
+        d: "Kanal büyümesi niş, çaba ve yürütmeye bağlı — sadece araçlarımıza değil.",
+      },
+      {
+        t: "Sadece tahminler",
+        d: "Gelir, analizler ve öngörüler yaklaşıksal değerlerdir, garantiler değil.",
+      },
+      {
+        t: "Kendi riskinizle kullanın",
+        d: "YouTube politikalarına ve yasaya uyum sizin sorumluluğunuzdadır.",
+      },
+    ],
+    tocTitle: "İçindekiler",
+    effectiveDate: "Yürürlük tarihi: 10 Mayıs 2026 · Sürüm 2.1",
+    sections: [
+      {
+        id: "general",
+        title: "1. Genel Sorumluluk Reddi",
+        intro: "YTForge web sitesi ve ilişkili uygulamalar, API'ler veya hizmetler (toplu olarak \"Hizmet\") aracılığıyla sağlanan bilgiler, araçlar, AI ile üretilen içerikler, analizler, tahminler ve diğer materyaller yalnızca genel bilgi ve eğitim amaçlıdır. Hizmete erişerek veya kullanarak, bunu tamamen kendi riskiniz ve takdirinizle yaptığınızı kabul edersiniz.",
+        outro: "Hizmeti doğru, güncel ve faydalı tutmak için çok çalışıyoruz ancak Hizmet veya içeriğinin herhangi birinin tamamlığı, doğruluğu, güvenilirliği, uygunluğu veya kullanılabilirliği konusunda açık veya zımni hiçbir beyan veya garanti vermez.",
+      },
+      {
+        id: "ai",
+        title: "2. AI ile Üretilen İçerik",
+        intro: "YTForge araçları başlık, senaryo, thumbnail, transkripsiyon, kanal analizi ve diğer çıktılar üretmek için yapay zeka ve makine öğrenimi modellerini kullanır. AI ile üretilen içerik olasılıksaldır — yanlış, eksik, önyargılı, eski veya gerçek dışı olabilir.",
+        subheads: [
+          {
+            title: "Yayınlamadan önce doğrulayın",
+            body: "YouTube veya başka bir platformda yayınlamadan önce AI ile üretilen herhangi bir çıktının gözden geçirilmesi, gerçeklik kontrolü, düzenlenmesi ve doğrulanması yalnızca sizin sorumluluğunuzdadır. YTForge'un ürettiği herhangi bir şeyin doğru veya özel durumunuz için uygun olduğunu varsaymayın.",
+          },
+          {
+            title: "Halüsinasyon uyarısı",
+            body: "AI modelleri bazen \"halüsinasyon\" yapar — mantıklı görünen ancak uydurulmuş bilgileri güvenle üretirler. Bu, YTForge'a özgü bir kusur değil, mevcut üreteci AI teknolojisinin bilinen bir sınırlamasıdır. AI çıktılarındaki tüm gerçek iddiaları, istatistikleri, alıntıları ve referansları kontrol edilmesi gereken öneriler olarak kabul edin, otoriter gerçek olarak değil.",
+          },
+          {
+            title: "Önyargı ve hassasiyet",
+            body: "AI modelleri eğitim verilerindeki kalıpları yansıtır; bunlar kültürel, demografik veya dilsel önyargıları içerebilir. Belirli kitleler, topluluklar veya hassas konular için içerik üretiyorsanız, ekstra editoryal bir yargı uygulayın.",
+          },
+        ],
+      },
+      {
+        id: "results",
+        title: "3. Sonuç Garanti Edilmez",
+        intro: "YTForge kullanımından kaynaklanan hiçbir belirli sonucu garanti etmeyiz. İzlenme sayısı, abone büyümesi, tıklama oranı, tutundurma iyileştirmesi, para kazanma uygunluğu, gelir veya diğer kanal metriklerine atıflar açıklayıcı örnekler ve hedeflerdir — vaatler değil.",
+        outro: "Kanal performansımızın kontrolümüz dışında sayısız değişkene bağlıdır, bunlar şunları içerir ancak bunlarla sınırlı değildir:",
+        list: [
+          "Yaratıcının çabası, tutarlılığı ve üretim kalitesi",
+          "Niş rekabetçiliği ve izleyici talebi",
+          "YouTube algoritmasının mevcut durumu",
+          "Kültürel, coğrafi ve mevsimsel faktörler",
+          "YouTube politika değişiklikleri ve platform güncellemeleri",
+          "Kanalın geçmişi, itibarı ve mevcut kitle",
+        ],
+        outro2:
+          "YTForge'da yer alan referanslar ve vaka çalışmaları bireysel deneyimleri temsil eder ve tipik değildir. Sonuçlarınız farklı olacaktır.",
+      },
+      {
+        id: "earnings",
+        title: "4. Kazanç ve Mali Tahminler",
+        intro: "YTForge'da sunulan kazanç hesaplayıcı, para kazanma kontrolü, RPM referansları ve diğer mali rakamlar sektör ortalamaları ve halka açık verilere dayalı tahminlerdir. Bunlar garanti, öngörü veya mali tahmin değildir.",
+        outro: "Gerçek YouTube kazançları niş, izleyici coğrafyası, reklam envanteri, mevsimlilik, marka güvenliği filtreleri ve daha birçok faktöre göre büyük ölçüde değişir. YTForge bir mali danışman değildir ve vergi, muhasebe veya yatırım tavsiyesi vermez. Tahminlerimize dayalı iş kararı almadan önce nitelikli bir profesyonele danışın.",
+      },
+      {
+        id: "analytics",
+        title: "5. Analiz Doğruluğu",
+        intro: "Kanal analizi, kanal kimliği bulucu ve benzeri arama araçları YouTube'ın halka açık API'leri, halka açık CDN uç noktaları ve kendi istatistik modellerimizin bir kombinasyonuna dayanır. Verileri güncel ve doğru tutmaya çalışsak da:",
+        list: [
+          "YouTube tüm metrikleri halka açık etmez — bazı sayılar tahminidir",
+          "Kanal verileri önbelleklenmiş olabilir ve gerçeğin gecikmeli bir görünümünü yansıtabilir",
+          "Kanallar halka açık verilerini gizleyebilir veya kısıtlayabilir; bu durumda çıktılarımız sınırlı veya kullanılamaz olur",
+          "1.000'in üzerindeki abone sayıları YouTube tarafından yuvarlanır, YTForge tarafından değil",
+        ],
+        outro: "YTForge analizlerini bir yaratıcı veya kanal hakkında yasal, mali veya yatırım seviyesindeki kararlar için güvenmeyin.",
+      },
+      {
+        id: "third-party",
+        title: "6. Üçüncü Taraf İçerik",
+        intro: "YTForge arama araçları YouTube ve diğer üçüncü taraflardan halka açık olarak mevcut içeriği görüntüler — kanal adları, thumbnail'lar, video başlıkları ve meta veriler dahil. Bu içerik ilgili sahiplerinin mülkiyetinde kalır. Bir yaratıcıya, kanala, markaya veya ürüne atıf, YTForge ile onay, ortaklık veya bağlantı anlamına gelmez.",
+        outro: "YTForge aracılığıyla görüntülenen bir içeriğin haklarınızı ihlal ettiğini düşünüyorsanız, geçerli bir DMCA bildirimiyle dmca@ytforge.app adresine yazın ve hızla yanıtlayacağız.",
+      },
+      {
+        id: "youtube",
+        title: "7. YouTube Uyumluluğu",
+        intro: "YTForge bağımsız bir üçüncü taraf aracıdır. YouTube, Google veya Alphabet Inc. ile bağlantılı, onaylı veya sponsorlu değildir. \"YouTube\" Google LLC'nin ticari markasıdır.",
+        outro: "YTForge kullanımınızın şunlara uygunluğundan yalnızca siz sorumlusunuz:",
+        list: [
+          "YouTube Hizmet Şartları",
+          "YouTube Topluluk Kuralları",
+          "YouTube Ortak Programı Politikaları",
+          "YouTube API Hizmet Şartları (uygunse)",
+          "Yargı alanınızdaki tüm uygulanabilir yasalar",
+        ],
+        outro2:
+          "AI ile içerik üretmek sizi YouTube'un otantiklik, telif hakkı, deepfake, yanlış bilgi, para kazanma veya diğer politikalarından muaf tutmaz. YTForge, içeriğinizden kaynaklanan uyarılar, para kazanmanın durdurulması veya hesap kapatılmasından sorumlu değildir.",
+      },
+      {
+        id: "professional",
+        title: "8. Profesyonel Tavsiye Değil",
+        intro: "YTForge'daki hiçbir şey hukuki, mali, tıbbi, psikolojik, muhasebe veya başka profesyonel tavsiye teşkil etmez. Makaleler, araç çıktıları, blog yazıları ve destek yanıtları eğitim ve bilgi amaçlıdır. Durumunuza özel tavsiye için lisanslı bir profesyonele danışın.",
+      },
+      {
+        id: "external",
+        title: "9. Harici Bağlantılar",
+        intro: "Hizmet, YTForge dışında taraflarca işletilen üçüncü taraf web siteleri, hizmetleri veya kaynaklarına bağlantı içerebilir. Bu bağlantılar sizin kolaylığınız için sağlanır ve herhangi bir onay anlamına gelmez. Harici sitelerin içeriği, gizlilik uygulamaları veya doğruluğu üzerinde bir kontrolümüz yoktur ve bunlar sorumluluğunu reddederiz. Harici bağlantıları kendi riskinizle ziyaret edin.",
+      },
+      {
+        id: "trademarks",
+        title: "10. Ticari Markalar",
+        intro: "\"YTForge\" ve YTForge logosu YTForge Inc.'in ticari markasıdır. Hizmette bahsedilen diğer tüm ticari markalar, hizmet markaları, logolar ve marka adları — YouTube, Google, Stripe, Slack, Notion, TubeBuddy, VidIQ ve diğerleri dahil — ilgili sahiplerinin mülkiyetindedir. Atıflar yalnızca açıklayıcı ve bilgi amaçlıdır.",
+      },
+      {
+        id: "fair-use",
+        title: "11. Adil Kullanım",
+        intro: "Thumbnail indirici ve SEO analizörü gibi bazı özellikler halka açık YouTube video içeriklerini araştırma, yorum, eğitim ve ilham amaçlarıyla görüntüler veya indirir. Bu kullanım, ABD telif hakkı yasası ve uluslararası eşdeğer doktrinler kapsamında adil kullanım sınırları içinde kalmayı amaçlar.",
+        outro: "İndirilen veya referans verilen malzemelerin kendi kullanımınızın telif hakkı yasasına uygunluğundan emin olmaktan siz sorumlusunuz. Telif hakkıyla korunan thumbnail, ses veya videoyu izin olmadan kendi malınız gibi yeniden yayınlamak adil kullanımla korunmaz ve orijinal yaratıcının haklarını ihlal edebilir.",
+      },
+      {
+        id: "errors",
+        title: "12. Hatalar, Eksiklikler ve Güncellemeler",
+        intro: "Tüm çabamıza rağmen Hizmet yazım hataları, doğrulanmamış bilgiler veya eski bilgiler içerebilir. Herhangi bir hata, yanlışlık veya eksikliği düzeltme ve içeriği önceden haber vermeksizin herhangi bir zamanda değiştirme veya güncelleme hakkını saklı tutarız. Hataların düzeltilmesini garanti etmeyiz.",
+      },
+      {
+        id: "liability",
+        title: "13. Sorumluluk Sınırlaması",
+        intro: "YASALARIN İZİN VERDİĞİ MAKSİMUM ÖLÇÜDE, YTFORGE INC., YÖNETİCİLERİ, ÇALIŞANLARI, ACENTELERİ VE BAĞLI ORTAKLARI, HİZMETİNİZİN KULLANIMI VEYA KULLANAMAZLIĞI VEYA HERHANGİ BİR AI ÜRETİMİ ÇIKTISIYLA DOĞRUDAN VEYA DOLAYLI OLARAK İLGİLİ VEYA BAĞLI OLARAK OLUŞAN HERHANGİ BİR DOĞRUDAN, DOLAYLI, TESADÜFİ, ÖZEL, SONUÇSAL VEYA CEZAİ ZARARDAN — KÂR KAYBI, GELİR KAYBI, ABONE KAYBI, TELİF HAKKI UYARISI, PARA KAZANMA DURDURMA VEYA HESAP KAPATMA DAHİL ANCAK BUYLA SINIRLI OLMAK ÜZERE — SORUMLU TUTULMAZ.",
+      },
+      {
+        id: "changes",
+        title: "14. Bu Sorumluluk Reddinde Değişiklikler",
+        intro: "Bu sorumluluk reddini herhangi bir zamanda güncelleyebiliriz. Sayfa üstündeki \"Son güncelleme\" tarihi en son revizyonu yansıtır. Önemli değişiklikler e-posta ve Hizmet üzerindeki bir banner ile bildirilir. Yürürlük tarihi sonrası devam eden kullanım kabul oluşturur.",
+      },
+      {
+        id: "contact",
+        title: "15. İletişim",
+        intro: "Sorular, endişeler veya DMCA bildirimi? Bize ulaşın:",
+        contacts: [
+          {
+            label: "Genel:",
+            value: "support@ytforge.app",
+          },
+          {
+            label: "Hukuki:",
+            value: "legal@ytforge.app",
+          },
+          {
+            label: "DMCA:",
+            value: "dmca@ytforge.app",
+          },
+          {
+            label: "Posta:",
+            value: "YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
+          },
+        ],
+      },
+    ],
+    liabilityOutroPre: "Tam sorumluluk koşullarımız için ",
+    liabilityOutroLink: "Kullanım Şartları",
+    summaryTitle: "30 saniyelik özet",
+    summaryText: "YTForge güçlü bir AI araç setidir — ancak AI mükemmel değildir. Yayınlamadan önce her şeyi kontrol edin. Büyüme, gelir veya YouTube uyumluluğu garanti etmeyiz — bu sizin elinizdedir. Tahminleri tahmin olarak kabul edin, vaat olarak değil.",
+    termsCardTitle: "Kullanım Şartları",
+    termsCardSub: "Tam sözleşme",
+    privacyCardTitle: "Gizlilik Politikası",
+    privacyCardSub: "Verilerinizi nasıl işleriz",
+    homeCrumb: "Ana Sayfa",
+    disclaimerCrumb: "Sorumluluk Reddi",
+  },
   auth: {
-    signInTitle: "Tekrar hoş geldiniz",
+    signInTitle: "Giriş Yap",
     signInSubtitle: "YTForge hesabınıza giriş yapın",
     signUpTitle: "Hesabınızı oluşturun",
     signUpSubtitle: "Bugün kanalınızı büyütmeye başlayın",
@@ -652,6 +1253,99 @@ free: {
     or: "veya",
     continueGoogle: "Google ile devam et",
     agreeTerms: "Devam ederek Şartlarımızı ve Gizlilik Politikamızı kabul etmiş olursunuz",
+    signUp: "Kayıt Ol",
+    signIn: "Giriş Yap",
+    welcomeBackToast: "Tekrar hoş geldiniz!",
+    welcomeBackHeadline1: "Tekrar hoş geldiniz,",
+    welcomeBackHeadline2: "YTForge",
+    welcomeBackDesc: "Kaldığınız yerden devam etmek için giriş yapın.",
+    signInBenefits: [
+      {
+        t: "Daha hızlı büyüme",
+        d: "Senaryo, başlık ve thumbnail saniyelerde — günlerde değil.",
+      },
+      {
+        t: "Akıllı analiz",
+        d: "Kanalınız, nişiniz ve rakipleriniz hakkında uygulanabilir veriler.",
+      },
+      {
+        t: "Güvenli ve güvenilir",
+        d: "İçeriğiniz size aittir. Şifrelenmiş, asla satılmaz, model eğitimi için kullanılmaz.",
+      },
+    ],
+    viewLift: "Vaka çalışmasını gör",
+    creators: "yaratıcı bize güveniyor",
+    testimonialQuote: "30 dakikada YTForge, aylardır izlediğim YouTube videolarından çok daha fazla netlik verdi kanalam hakkında.",
+    testimonialName: "Amina R.",
+    testimonialHandle: "@amina_creates",
+    signingInGoogle: "Google ile giriş yapılıyor…",
+    googleNotConfigured: "Bu kurulumda Google girişi yapılandırılmamış. Bunun yerine e-posta ve şifre kullanın.",
+    googleNotConfiguredHint: ".env dosyanıza GOOGLE_CLIENT_ID ve GOOGLE_CLIENT_SECRET ekleyerek bu butonu etkinleştirin.",
+    keepSignedIn: "Oturumumu açık tut",
+    securityCheck: "Güvenlik kontrolü",
+    captchaRequired: "Lütfen güvenlik doğrulamasını tamamlayın.",
+    signingIn: "Giriş yapılıyor…",
+    forgot: "Şifremi unuttum?",
+    agreeSignIn: "Giriş yaparak bizim",
+    protectedBy: "ve Gizlilik Politikamız. Kurumsal düzeyde şifreleme ile korunur.",
+    createFreeAccount: "Ücretsiz hesap oluştur",
+    newHere: "Burada yeni misiniz?",
+    orWithEmail: "veya e-posta ile devam edin",
+    fullName: "Ad Soyad",
+    namePlaceholder: "Ahmet Yılmaz",
+    emailPlaceholder: "sen@ornek.com",
+    passwordPlaceholder: "Şifre oluştur",
+    referralPlaceholder: "Davet kodu (isteğe bağlı)",
+    referredBy: "Davet eden",
+    strengthLabel: "Şifre gücü",
+    strengthLabels: [
+      "Zayıf",
+      "Orta",
+      "İyi",
+      "Güçlü",
+      "Mükemmel",
+    ],
+    agreeSignUpPre: "Hesap oluştururak bizim",
+    agreeSignUpPost: "ve Gizlilik Politikamızı kabul etmiş olursunuz.",
+    creatingAccount: "Hesap oluşturuluyor…",
+    signUpNow: "Şimdi Kayıt Ol",
+    accountCreated: "Hesap oluşturuldu!",
+    welcomeReferredPre: "Hoş geldiniz",
+    welcomeReferredNamePre: "YTForge'e!",
+    freeBadge: "Ömür boyu ücretsiz — kart gerekmez",
+    alreadyMember: "Zaten üye misiniz?",
+    signUpGoogle: "Google ile Kayıt Ol",
+    signUpApple: "Apple ile Kayıt Ol",
+    noCreditCard: "Kredi kartı gerekmez",
+    cancelAnytime: "İstediğiniz zaman iptal edin",
+    refund30: "30 gün iade garantisi",
+    joinCreators: "52.000+ yaratıcıya katılın",
+    advantageHeadline1: "YouTube büyümesinin",
+    advantageHeadline2: "kısayolu",
+    advantageDesc: "Senaryo, thumbnail, SEO ve analiz — tam yaratıcı stüdyosu tek bir yerde.",
+    perks: [
+      {
+        t: "Anında AI cevapları",
+        d: "Senaryo, fikir ve hook saniyelerde — 7/24.",
+      },
+      {
+        t: "Büyüme araçları",
+        d: "Thumbnail, etiket, açıklama — kanalı büyüten her şey.",
+      },
+      {
+        t: "Ömür boyu ücretsiz",
+        d: "Başlamak için kart gerekmez. Ücretli planlar sizi daha da ileri taşır.",
+      },
+      {
+        t: "Yaratıcılar onayladı",
+        d: "52.000+ yaratıcı daha iyi, daha hızlı üretiyor.",
+      },
+    ],
+    signupTestimonialQuote: "AI aracı denemek için aylarca tereddüt ettim. YTForge ilk hafta tek bir video ile kendini ödedi.",
+    signupTestimonialName: "David K.",
+    signupTestimonialHandle: "@davidbuilds",
+    signupTestimonialMetric: "+212%",
+    signupTestimonialMetricLabel: "90 gün sonra izlenme büyümesi",
   },
   notFound: {
     title: "Sayfa bulunamadı",
