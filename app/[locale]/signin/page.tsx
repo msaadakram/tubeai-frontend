@@ -38,6 +38,7 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
+  const [keepSignedIn, setKeepSignedIn] = useState(true);
   const [turnstileToken, setTurnstileToken] = useState("");
 
   const turnstileRef = useRef<TurnstileHandle>(null);
@@ -93,7 +94,7 @@ export default function SignInPage() {
     setError(null);
     setLoading(true);
 
-    const res = await signIn(email.trim(), pwd, turnstileToken || undefined);
+    const res = await signIn(email.trim(), pwd, turnstileToken || undefined, keepSignedIn);
     setLoading(false);
 
     if (res.ok) {
@@ -294,7 +295,12 @@ export default function SignInPage() {
               </div>
 
               <label className="flex items-center gap-2 text-xs font-bold text-neutral-700 cursor-pointer select-none">
-                <input type="checkbox" className="w-4 h-4 accent-red-600" defaultChecked />
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 accent-red-600"
+                  checked={keepSignedIn}
+                  onChange={(e) => setKeepSignedIn(e.target.checked)}
+                />
                 {t("auth.keepSignedIn")}
               </label>
 

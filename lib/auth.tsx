@@ -42,7 +42,7 @@ type AuthResult = { ok: true; user: User } | { ok: false; error: string };
 type AuthCtx = {
   user: User | null;
   loading: boolean;
-  signIn: (email: string, password: string, turnstileToken?: string) => Promise<AuthResult>;
+  signIn: (email: string, password: string, turnstileToken?: string, rememberMe?: boolean) => Promise<AuthResult>;
   signUp: (name: string, email: string, password: string, referralCode?: string, turnstileToken?: string) => Promise<AuthResult>;
   signInWithGoogle: (idToken: string, referralCode?: string) => Promise<AuthResult>;
   signOut: () => void;
@@ -235,10 +235,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [persist]);
 
   const signIn = useCallback(
-    async (email: string, password: string, turnstileToken?: string): Promise<AuthResult> => {
+    async (email: string, password: string, turnstileToken?: string, rememberMe?: boolean): Promise<AuthResult> => {
       try {
-        const body: Record<string, string> = { email, password };
+        const body: Record<string, string | boolean> = { email, password };
         if (turnstileToken) body["cf-turnstile-response"] = turnstileToken;
+        if (rememberMe === false) body.rememberMe = false;
         const res = await authFetch<{ user: any; token: string }>("/api/auth/signin", { method: "POST", body: JSON.stringify(body) });
         const u = normalizeUser(res.user);
         persist(u, res.token);

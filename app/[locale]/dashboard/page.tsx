@@ -214,7 +214,7 @@ function ReferFriendCard() {
               </div>
               <div className="flex items-center gap-2 px-2.5 sm:px-3 border-2 border-black rounded-lg bg-white">
                 <Share2 className="w-4 h-4 text-red-600 shrink-0" />
-                <input readOnly value={shareUrl} className="flex-1 py-2.5 outline-none text-xs sm:text-sm font-medium bg-transparent truncate min-w-0" />
+                <input readOnly value={shareUrl} className="flex-1 py-2.5 outline-none text-xs sm:text-sm font-medium bg-transparent text-black truncate min-w-0" />
                 <button
                   onClick={() => copy(shareUrl)}
                   className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-red-600 text-white rounded-md text-[10px] sm:text-xs font-black uppercase border-2 border-black hover:bg-red-700 transition-colors shrink-0"
