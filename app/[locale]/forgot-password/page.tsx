@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
+import { useLocale } from "@/lib/i18n/LocaleContext";
+import { getLocalePath } from "@/lib/i18n/utils";
 import {
   Play,
   Mail,
@@ -19,17 +21,22 @@ import {
   Lock,
   AlertTriangle,
   RefreshCw,
+  AlertCircle,
 } from "lucide-react";
+import TurnstileWidget, { TurnstileHandle } from "@/components/ui/turnstile-widget";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
 const reassurances = [
   { icon: ShieldCheck, t: "Bank-grade security", d: "Reset links are signed, single-use, and expire fast" },
-  { icon: Clock, t: "15-minute expiry", d: "Links expire automatically — no lingering tokens" },
+  { icon: Clock, t: "1-hour expiry", d: "Links expire automatically — no lingering tokens" },
   { icon: Lock, t: "Account stays safe", d: "Your data and AI history remain locked until you reset" },
 ];
 
 const faqs = [
   { q: "I didn't get the email", a: "Check spam, or request a new link. Corporate firewalls sometimes delay delivery by a few minutes." },
-  { q: "Link says expired", a: "Reset links last 15 minutes. Just hit 'Resend' below to get a fresh one." },
+  { q: "Link says expired", a: "Reset links last 1 hour. Just hit 'Resend' below to get a fresh one." },
   { q: "Wrong email on file", a: "Contact support@ytforge.app from any address — we'll verify and update your account." },
 ];
 
@@ -38,28 +45,43 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [formError, setFormError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const { locale } = useLocale();
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSent(true);
-      setCooldown(30);
-      const timer = setInterval(() => {
-        setCooldown((c) => {
-          if (c <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
-          return c - 1;
-        });
-      }, 1000);
-    }, 1100);
+  const sendLink = async (targetEmail: string) => {
+    setFormError("");
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setFormError("Please complete the security check.");
+      return false;
+    }
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: targetEmail,
+          ...(turnstileToken ? { "cf-turnstile-response": turnstileToken } : {}),
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setFormError(data?.error || "Couldn't send the email right now. Please try again.");
+        turnstileRef.current?.reset();
+        setTurnstileToken("");
+        return false;
+      }
+      turnstileRef.current?.reset();
+      setTurnstileToken("");
+      return true;
+    } catch {
+      setFormError("Couldn't reach the server. Please check your connection and try again.");
+      return false;
+    }
   };
 
-  const resend = () => {
-    if (cooldown > 0) return;
+  const startCooldown = () => {
     setCooldown(30);
     const timer = setInterval(() => {
       setCooldown((c) => {
@@ -70,6 +92,22 @@ export default function ForgotPasswordPage() {
         return c - 1;
       });
     }, 1000);
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const ok = await sendLink(email);
+    setLoading(false);
+    if (ok) {
+      setSent(true);
+      startCooldown();
+    }
+  };
+
+  const resend = async () => {
+    if (cooldown > 0) return;
+    if (await sendLink(email)) startCooldown();
   };
 
   return (
@@ -113,7 +151,7 @@ export default function ForgotPasswordPage() {
             Locked out?<br />Let's get you back in.
           </h2>
           <p className="text-red-50 text-base xl:text-lg leading-relaxed mb-8 max-w-md">
-            Forgot your password? No drama. We'll send a one-tap reset link to the email on file — secure, fast, and good for 15 minutes.
+            Forgot your password? No drama. We'll send a one-tap reset link to the email on file — secure, fast, and good for 1 hour.
           </p>
 
           <div className="space-y-3 max-w-md">
@@ -151,14 +189,14 @@ export default function ForgotPasswordPage() {
             </div>
             <span className="font-black text-lg tracking-tight">YTForge</span>
           </Link>
-          <Link href="/signin" className="text-xs font-black text-red-600 hover:text-black">
+          <Link href={getLocalePath(locale, "/signin")} className="text-xs font-black text-red-600 hover:text-black">
             Sign In →
           </Link>
         </div>
 
         <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-            <Link href="/signin" className="inline-flex items-center gap-1.5 text-xs font-black text-neutral-500 hover:text-red-600 mb-6 group">
+            <Link href={getLocalePath(locale, "/signin")} className="inline-flex items-center gap-1.5 text-xs font-black text-neutral-500 hover:text-red-600 mb-6 group">
               <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
               Back to sign in
             </Link>
@@ -175,6 +213,12 @@ export default function ForgotPasswordPage() {
                   </p>
 
                   <form onSubmit={submit} className="space-y-4">
+                    {formError && (
+                      <div className="flex items-start gap-2 p-3 bg-red-50 border-2 border-red-500 rounded-xl text-xs font-bold text-red-700">
+                        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                        <span>{formError}</span>
+                      </div>
+                    )}
                     <div>
                       <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Email address</label>
                       <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">
@@ -195,6 +239,20 @@ export default function ForgotPasswordPage() {
                       </p>
                     </div>
 
+                    {TURNSTILE_SITE_KEY && (
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs font-black uppercase tracking-wider text-neutral-500">Security check</label>
+                        <TurnstileWidget
+                          ref={turnstileRef}
+                          siteKey={TURNSTILE_SITE_KEY}
+                          onToken={(t) => setTurnstileToken(t)}
+                          onExpire={() => setTurnstileToken("")}
+                          theme="light"
+                          className="mt-1"
+                        />
+                      </div>
+                    )}
+
                     <button
                       type="submit"
                       disabled={loading}
@@ -208,7 +266,7 @@ export default function ForgotPasswordPage() {
                   <div className="mt-7 grid grid-cols-3 gap-2">
                     {[
                       { i: ShieldCheck, t: "Encrypted" },
-                      { i: Clock, t: "15-min link" },
+                      { i: Clock, t: "1-hour link" },
                       { i: Sparkles, t: "1-click reset" },
                     ].map((b) => (
                       <div key={b.t} className="flex flex-col items-center gap-1 p-3 bg-white border-2 border-black rounded-xl">
@@ -220,11 +278,11 @@ export default function ForgotPasswordPage() {
 
                   <p className="mt-7 text-center text-xs text-neutral-500 font-bold">
                     Remembered it?{" "}
-                    <Link href="/signin" className="text-red-600 underline">
+                    <Link href={getLocalePath(locale, "/signin")} className="text-red-600 underline">
                       Sign in instead
                     </Link>
                     {" · "}
-                    <Link href="/signup" className="text-red-600 underline">
+                    <Link href={getLocalePath(locale, "/signup")} className="text-red-600 underline">
                       Create account
                     </Link>
                   </p>
@@ -236,7 +294,7 @@ export default function ForgotPasswordPage() {
                   </div>
                   <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">Check your inbox</h1>
                   <p className="text-sm text-neutral-600 mb-6 leading-relaxed">
-                    If an account exists for <span className="font-black text-black">{email}</span>, a reset link is on its way. The link expires in 15 minutes.
+                    If an account exists for <span className="font-black text-black">{email}</span>, a reset link is on its way. The link expires in 1 hour.
                   </p>
 
                   <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 mb-5">
@@ -266,7 +324,7 @@ export default function ForgotPasswordPage() {
                       {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend link"}
                     </button>
                     <Link
-                      href="/signin"
+                      href={getLocalePath(locale, "/signin")}
                       className="flex-1 inline-flex items-center justify-center gap-2 py-3 bg-red-600 text-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
                     >
                       Back to sign in <ArrowRight className="w-4 h-4" />
@@ -301,8 +359,8 @@ export default function ForgotPasswordPage() {
 
             <p className="mt-8 text-center text-[11px] text-neutral-500 leading-relaxed">
               Protected by enterprise-grade encryption. Read our{" "}
-              <Link href="/privacy" className="underline font-bold">Privacy Policy</Link> and{" "}
-              <Link href="/terms" className="underline font-bold">Terms</Link>.
+              <Link href={getLocalePath(locale, "/privacy")} className="underline font-bold">Privacy Policy</Link> and{" "}
+              <Link href={getLocalePath(locale, "/terms")} className="underline font-bold">Terms</Link>.
             </p>
           </motion.div>
         </div>

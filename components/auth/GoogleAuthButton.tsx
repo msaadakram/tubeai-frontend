@@ -2,21 +2,22 @@
 /**
  * GoogleAuthButton
  * ─────────────────────────────────────────────────────────────────────────────
- * Renders a styled "Continue with Google" button that triggers the Google
- * One-Tap / Authorization Code flow via @react-oauth/google.
+ * Renders a styled "Continue with Google" button.
+ *
+ * Uses the `GoogleLogin` render-prop pattern from @react-oauth/google to get
+ * a signed ID-token (`credential`) directly — the same token that the backend's
+ * `POST /api/auth/google` expects for server-side verification via
+ * `google-auth-library`'s `verifyIdToken()`.
  *
  * Usage:
  *   <GoogleAuthButton onSuccess={handleGoogleToken} label="Continue with Google" />
  *
  * The `onSuccess` callback receives the raw credential string (Google ID token)
  * which you then pass to `signInWithGoogle(idToken)` from useAuth().
- *
- * Loop-hole note: the actual account-merging/linking happens on the backend
- * (googleAuthService.ts). This component is UI-only.
  */
 
 import React from "react";
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
 import { Loader2 } from "lucide-react";
 
 function GoogleIcon() {
@@ -47,54 +48,28 @@ export default function GoogleAuthButton({
   loading = false,
   className = "",
 }: Props) {
-  /**
-   * `useGoogleLogin` with `flow="auth-code"` returns a server-side
-   * authorisation code; we switch to `flow="implicit"` which gives us a
-   * client-side `credential` (ID token) directly — no extra round-trip needed.
-   *
-   * For One-Tap / popup flow we use the implicit flow so the response contains
-   * `credential` (the signed JWT) that the backend verifies.
-   */
-  const login = useGoogleLogin({
-    flow: "implicit",
-    onSuccess: (tokenResponse) => {
-      // `tokenResponse.access_token` is the OAuth access token in implicit flow.
-      // We need the ID token instead — fetch it from Google's userinfo endpoint
-      // to get a verifiable JWT, or switch to GoogleLogin component which gives
-      // `credential` directly.
-      //
-      // Simplest pattern: call the userinfo endpoint and pass the access_token to
-      // the backend which exchanges it for profile data.
-      //
-      // Even simpler: use GoogleLogin component (credential response) — see
-      // GoogleOneTapButton below.
-      //
-      // Here we use the access_token approach via a thin backend endpoint:
-      onSuccess(tokenResponse.access_token);
-    },
-    onError: () => {
-      onError?.("Google sign-in was cancelled or failed. Please try again.");
-    },
-  });
-
   return (
-    <button
-      type="button"
-      onClick={() => !loading && login()}
-      disabled={loading}
-      aria-label={label}
-      className={[
-        "w-full flex items-center justify-center gap-2 px-4 py-3",
-        "bg-white border-2 border-black rounded-xl font-black text-sm",
-        "shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
-        "hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5",
-        "disabled:opacity-60 disabled:cursor-not-allowed",
-        "transition-all",
-        className,
-      ].join(" ")}
-    >
-      {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <GoogleIcon />}
-      {label}
-    </button>
+    <div className={className}>
+      <GoogleLogin
+        onSuccess={(credentialResponse: CredentialResponse) => {
+          const idToken = credentialResponse.credential;
+          if (!idToken) {
+            onError?.("Google did not return a valid token. Please try again.");
+            return;
+          }
+          onSuccess(idToken);
+        }}
+        onError={() => {
+          onError?.("Google sign-in was cancelled or failed. Please try again.");
+        }}
+        useOneTap={false}
+        type="standard"
+        theme="outline"
+        size="large"
+        width="100%"
+        text="continue_with"
+        shape="rectangular"
+      />
+    </div>
   );
 }

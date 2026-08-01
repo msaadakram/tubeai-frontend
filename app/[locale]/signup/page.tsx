@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/lib/auth";
+import { useAuth, authFetch } from "@/lib/auth";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { getLocalePath } from "@/lib/i18n/utils";
@@ -30,6 +30,7 @@ import {
   Zap,
   Shield,
   AlertCircle,
+  KeyRound,
   RefreshCw,
   Inbox,
 } from "lucide-react";
@@ -180,22 +181,15 @@ function SignUpPageInner() {
   const resendVerificationEmail = async () => {
     if (resendCd.active || !registeredEmail) return;
     setResendError("");
-    const base = process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
     try {
-      const res = await fetch(`${base}/api/auth/resend-verification`, {
+      await authFetch<{ ok: boolean }>("/api/auth/resend-verification", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: registeredEmail }),
       });
-      if (res.ok) {
-        toast.success(t("auth.verificationSent"));
-        resendCd.start();
-      } else {
-        const data = await res.json().catch(() => null);
-        setResendError(data?.message || t("auth.verificationResendFailed"));
-      }
-    } catch {
-      setResendError(t("auth.verificationResendFailed"));
+      toast.success(t("auth.verificationSent"));
+      resendCd.start();
+    } catch (err: any) {
+      setResendError(err?.message || t("auth.verificationResendFailed"));
     }
   };
 
@@ -311,6 +305,30 @@ function SignUpPageInner() {
                       Sign in with Google
                     </button>
                   )}
+                </div>
+              </div>
+            )}
+            {existingCode === "EMAIL_TAKEN" && (
+              <div className="flex flex-col gap-2 p-3.5 bg-yellow-50 border-2 border-yellow-400 rounded-xl">
+                <p className="text-xs font-bold text-neutral-800 leading-relaxed">
+                  An account with this email already exists — you may have signed up before. Sign in
+                  with your password, or get a reset link if you forgot it.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <button
+                    type="button"
+                    onClick={() => router.push(getLocalePath(locale, "/forgot-password"))}
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 bg-white border-2 border-black rounded-lg font-black text-xs uppercase tracking-wider hover:bg-neutral-50 transition-colors"
+                  >
+                    <KeyRound className="w-3.5 h-3.5 text-red-600" /> Reset password
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => router.push(getLocalePath(locale, "/signin"))}
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 bg-red-600 text-white border-2 border-black rounded-lg font-black text-xs uppercase tracking-wider hover:bg-red-700 transition-colors"
+                  >
+                    Sign in instead
+                  </button>
                 </div>
               </div>
             )}
