@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { getLocalePath } from "@/lib/i18n/utils";
+import { useCountdown } from "@/lib/useCountdown";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import TurnstileWidget, { TurnstileHandle } from "@/components/ui/turnstile-widget";
@@ -29,6 +30,8 @@ import {
   Zap,
   Shield,
   AlertCircle,
+  RefreshCw,
+  Inbox,
 } from "lucide-react";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
@@ -84,10 +87,13 @@ function SignUpPageInner() {
   const [referralCode, setReferralCode] = useState("");
   const [referrerName, setReferrerName] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [registeredEmail, setRegisteredEmail] = useState("");
+  const [resendError, setResendError] = useState("");
 
   const turnstileRef = useRef<TurnstileHandle>(null);
   const score = strength(pwd);
   const colors = ["bg-neutral-200", "bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-green-600"];
+  const resendCd = useCountdown(60);
 
   const { signUp, signInWithGoogle, user, loading: authLoading } = useAuth();
   const router = useRouter();
@@ -159,16 +165,34 @@ function SignUpPageInner() {
     setLoading(false);
 
     if (res.ok) {
-      toast.success(
-        referralCode
-          ? `${t("auth.welcomeReferredPre")} ${referrerName ? `${t("auth.welcomeReferredNamePre")} ${referrerName}.` : ""}`
-          : t("auth.accountCreated")
-      );
-      router.push(getLocalePath(locale, "/dashboard"));
+      setRegisteredEmail(email.trim());
+      resendCd.start();
     } else {
       turnstileRef.current?.reset();
       setTurnstileToken("");
       setError(res.error);
+    }
+  };
+
+  const resendVerificationEmail = async () => {
+    if (resendCd.active || !registeredEmail) return;
+    setResendError("");
+    const base = process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
+    try {
+      const res = await fetch(`${base}/api/auth/resend-verification`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: registeredEmail }),
+      });
+      if (res.ok) {
+        toast.success(t("auth.verificationSent"));
+        resendCd.start();
+      } else {
+        const data = await res.json().catch(() => null);
+        setResendError(data?.message || t("auth.verificationResendFailed"));
+      }
+    } catch {
+      setResendError(t("auth.verificationResendFailed"));
     }
   };
 
@@ -190,6 +214,16 @@ function SignUpPageInner() {
       {/* Form panel */}
       <div className="flex-1 flex items-center justify-center p-6 sm:p-10 order-2 lg:order-1">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
+          {registeredEmail ? (
+            <EmailSentPanel
+              email={registeredEmail}
+              resendCd={resendCd}
+              resendError={resendError}
+              onResend={resendVerificationEmail}
+              onGoDashboard={() => router.push(getLocalePath(locale, "/dashboard"))}
+            />
+          ) : (
+            <>
           <div className="hidden lg:flex mb-10">
             <Link href={getLocalePath(locale, "/")} className="inline-flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
@@ -380,6 +414,8 @@ function SignUpPageInner() {
               <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-green-600" /> {t("auth.refund30")}</span>
             </div>
           </form>
+            </>
+          )}
         </motion.div>
       </div>
 
@@ -444,6 +480,91 @@ function SignUpPageInner() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function EmailSentPanel({
+  email,
+  resendCd,
+  resendError,
+  onResend,
+  onGoDashboard,
+}: {
+  email: string;
+  resendCd: { left: number; active: boolean };
+  resendError: string;
+  onResend: () => void;
+  onGoDashboard: () => void;
+}) {
+  const { t } = useTranslations();
+  return (
+    <div>
+      <div className="hidden lg:flex mb-10">
+        <Link href="/" className="inline-flex items-center gap-2">
+          <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            <Play className="w-4 h-4 text-white fill-white" />
+          </div>
+          <span className="font-black text-2xl tracking-tight">YTForge</span>
+        </Link>
+      </div>
+
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+        <div className="w-14 h-14 rounded-2xl bg-emerald-500 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center mb-5">
+          <Inbox className="w-7 h-7 text-white" />
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">{t("auth.verificationTitle")}</h1>
+        <p className="text-sm text-neutral-600 mb-6 leading-relaxed">
+          {t("auth.verificationDesc")} <span className="font-black text-black">{email}</span>.{" "}
+          {t("auth.verificationSpam")}
+        </p>
+
+        <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-5 mb-5">
+          <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-3">
+            {t("auth.verificationStepsTitle")}
+          </div>
+          <ol className="space-y-2.5">
+            {[t("auth.verificationStep1"), t("auth.verificationStep2"), t("auth.verificationStep3")].map((s, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-sm font-bold">
+                <span className="w-5 h-5 rounded-md bg-red-600 text-white border-2 border-black flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">
+                  {i + 1}
+                </span>
+                {s}
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {resendError && (
+          <div className="flex items-start gap-2 p-3 bg-red-50 border-2 border-red-500 rounded-xl text-xs font-bold text-red-700 mb-4">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <span>{resendError}</span>
+          </div>
+        )}
+
+        <button
+          onClick={onResend}
+          disabled={resendCd.active}
+          className="w-full inline-flex items-center justify-center gap-2 py-3 bg-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] disabled:hover:translate-x-0 disabled:hover:translate-y-0 transition-all mb-3"
+        >
+          <RefreshCw className={`w-4 h-4 ${resendCd.active ? "" : ""} transition-transform`} />
+          {resendCd.active ? `${t("auth.verificationResendIn")} ${resendCd.left}s` : t("auth.verificationResend")}
+        </button>
+
+        <button
+          onClick={onGoDashboard}
+          className="w-full inline-flex items-center justify-center gap-2 py-3.5 bg-red-600 text-white font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all uppercase tracking-wider text-sm"
+        >
+          {t("auth.verificationGoDashboard")} <ArrowRight className="w-4 h-4" />
+        </button>
+
+        <p className="mt-6 text-center text-xs text-neutral-500 font-bold">
+          {t("auth.alreadyMember")}{" "}
+          <Link href="/signin" className="text-red-600 underline">
+            {t("auth.signIn")}
+          </Link>
+        </p>
+      </motion.div>
     </div>
   );
 }

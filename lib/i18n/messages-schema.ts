@@ -491,6 +491,18 @@ export type Messages = {
     creatingAccount: string;
     signUpNow: string;
     accountCreated: string;
+    verificationSent: string;
+    verificationResendFailed: string;
+    verificationTitle: string;
+    verificationDesc: string;
+    verificationStepsTitle: string;
+    verificationStep1: string;
+    verificationStep2: string;
+    verificationStep3: string;
+    verificationResend: string;
+    verificationResendIn: string;
+    verificationGoDashboard: string;
+    verificationSpam: string;
     welcomeReferredPre: string;
     welcomeReferredNamePre: string;
     freeBadge: string;

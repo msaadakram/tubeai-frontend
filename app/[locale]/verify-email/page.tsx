@@ -15,9 +15,11 @@ import {
   ArrowRight,
   Zap,
   BadgeCheck,
+  RefreshCw,
 } from "lucide-react";
 import { getLocalePath } from "@/lib/i18n/utils";
 import { useLocale } from "@/lib/i18n/LocaleContext";
+import { useCountdown } from "@/lib/useCountdown";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
 
@@ -39,6 +41,40 @@ function VerifyInner() {
   const token = searchParams.get("token") || "";
   const [status, setStatus] = useState<Status>("verifying");
   const [errorMsg, setErrorMsg] = useState("");
+  const [resendEmail, setResendEmail] = useState("");
+  const [resendMsg, setResendMsg] = useState("");
+  const [resendError, setResendError] = useState("");
+  const [resending, setResending] = useState(false);
+  const resendCd = useCountdown(60);
+
+  const resendVerificationEmail = async () => {
+    if (resendCd.active || resending) return;
+    if (!/^\S+@\S+\.\S+$/.test(resendEmail.trim())) {
+      setResendError("Please enter a valid email address.");
+      return;
+    }
+    setResending(true);
+    setResendError("");
+    setResendMsg("");
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/resend-verification`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resendEmail.trim() }),
+      });
+      const data = await res.json().catch(() => null);
+      if (res.ok) {
+        setResendMsg(data?.message || "If an account exists that is not yet verified, a new link has been sent.");
+        resendCd.start();
+      } else {
+        setResendError(data?.message || "Couldn't send the email right now. Please try again in a minute.");
+      }
+    } catch {
+      setResendError("Couldn't reach the server. Please check your connection and try again.");
+    } finally {
+      setResending(false);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -149,6 +185,49 @@ function VerifyInner() {
             >
               Go home
             </Link>
+          </div>
+
+          <div className="mt-8 pt-6 border-t-2 border-dashed border-neutral-200">
+            <div className="flex items-center gap-2 mb-3">
+              <RefreshCw className="w-4 h-4 text-red-600" />
+              <span className="text-xs font-black uppercase tracking-wider">Need a new link?</span>
+            </div>
+            <p className="text-xs text-neutral-600 font-bold mb-3 leading-relaxed">
+              Enter the email you signed up with and we&apos;ll send a fresh verification link.
+            </p>
+            <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow mb-2.5">
+              <Mail className="w-4 h-4 text-red-600 shrink-0" />
+              <input
+                type="email"
+                required
+                value={resendEmail}
+                onChange={(e) => setResendEmail(e.target.value)}
+                placeholder="you@channel.com"
+                className="flex-1 py-2.5 outline-none text-sm font-medium bg-transparent"
+              />
+            </div>
+            {resendError && (
+              <p className="text-xs font-bold text-red-600 mb-2.5">{resendError}</p>
+            )}
+            {resendMsg && (
+              <p className="text-xs font-bold text-emerald-700 mb-2.5 leading-relaxed">{resendMsg}</p>
+            )}
+            <button
+              onClick={resendVerificationEmail}
+              disabled={resendCd.active || resending}
+              className="w-full inline-flex items-center justify-center gap-2 py-2.5 bg-white border-2 border-black rounded-xl font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] disabled:hover:translate-x-0 disabled:hover:translate-y-0 transition-all"
+            >
+              {resending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <RefreshCw className="w-4 h-4" />
+              )}
+              {resending
+                ? "Sending..."
+                : resendCd.active
+                  ? `Resend in ${resendCd.left}s`
+                  : "Send new verification link"}
+            </button>
           </div>
         </div>
       )}
