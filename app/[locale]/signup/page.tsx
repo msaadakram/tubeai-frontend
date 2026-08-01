@@ -10,6 +10,7 @@ import { getLocalePath } from "@/lib/i18n/utils";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import TurnstileWidget, { TurnstileHandle } from "@/components/ui/turnstile-widget";
+import GoogleCredentialButton from "@/components/auth/GoogleCredentialButton";
 import {
   Play,
   Mail,
@@ -31,6 +32,7 @@ import {
 } from "lucide-react";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
 
 const PERK_ICONS = [Gift, Sparkles, Zap, Shield];
 
@@ -73,6 +75,7 @@ function SignUpSkeleton() {
 function SignUpPageInner() {
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -86,7 +89,7 @@ function SignUpPageInner() {
   const score = strength(pwd);
   const colors = ["bg-neutral-200", "bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-green-600"];
 
-  const { signUp, user, loading: authLoading } = useAuth();
+  const { signUp, signInWithGoogle, user, loading: authLoading } = useAuth();
   const router = useRouter();
   const { locale } = useLocale();
   const { t } = useTranslations();
@@ -123,6 +126,23 @@ function SignUpPageInner() {
       </div>
     );
   }
+
+  const handleGoogleSuccess = async (idToken: string) => {
+    setGoogleLoading(true);
+    setError(null);
+    const res = await signInWithGoogle(idToken, referralCode.trim() || undefined);
+    setGoogleLoading(false);
+    if (res.ok) {
+      toast.success(t("auth.accountCreated"));
+      router.push(getLocalePath(locale, "/dashboard"));
+    } else {
+      setError(res.error);
+    }
+  };
+
+  const handleGoogleError = (message: string) => {
+    setError(message);
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,15 +214,28 @@ function SignUpPageInner() {
           </div>
 
           <div className="space-y-3 mb-6">
-            <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-black rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
-              <GoogleIcon /> {t("auth.signUpGoogle")}
-            </button>
-            <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-black text-white border-2 border-black rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
-              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
-                <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
-              </svg>
-              {t("auth.signUpApple")}
-            </button>
+            {GOOGLE_CLIENT_ID ? (
+              <div>
+                <GoogleCredentialButton
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                />
+                {googleLoading && (
+                  <div className="flex items-center justify-center gap-2 mt-2 text-xs text-neutral-500 font-bold">
+                    <Loader2 className="w-3 h-3 animate-spin" /> {t("auth.signingInGoogle")}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                type="button"
+                disabled
+                title="Google OAuth not configured"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-black rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] opacity-40 cursor-not-allowed"
+              >
+                <GoogleIcon /> {t("auth.signUpGoogle")}
+              </button>
+            )}
           </div>
 
           <div className="flex items-center gap-3 mb-6">
