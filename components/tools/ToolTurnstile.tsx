@@ -62,15 +62,17 @@ export function ToolTurnstile({
         )}
       </div>
 
-      <TurnstileWidget
-        ref={turnstileRef}
-        siteKey={siteKey}
-        onToken={onToken}
-        onExpire={onExpire}
-        theme="light"
-        size={size}
-        className="mt-1 w-full overflow-hidden rounded-lg border-2 border-black"
-      />
+      <div className="mt-1 flex w-full justify-center">
+        <TurnstileWidget
+          ref={turnstileRef}
+          siteKey={siteKey}
+          onToken={onToken}
+          onExpire={onExpire}
+          theme="light"
+          size={size}
+          className="overflow-hidden rounded-lg border-2 border-black"
+        />
+      </div>
 
       {/* Inline hint or error.永远是last child so card height is stable. */}
       {error ? (

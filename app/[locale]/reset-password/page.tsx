@@ -241,15 +241,17 @@ function ResetInner() {
                     </span>
                   )}
                 </div>
-                <TurnstileWidget
-                  ref={turnstileRef}
-                  siteKey={TURNSTILE_SITE_KEY}
-                  onToken={(t) => setTurnstileToken(t)}
-                  onExpire={() => setTurnstileToken("")}
-                  theme="light"
-                  size="normal"
-                  className="mt-1 overflow-hidden rounded-lg border-2 border-black"
-                />
+                <div className="mt-1 flex w-full justify-center">
+                  <TurnstileWidget
+                    ref={turnstileRef}
+                    siteKey={TURNSTILE_SITE_KEY}
+                    onToken={(t) => setTurnstileToken(t)}
+                    onExpire={() => setTurnstileToken("")}
+                    theme="light"
+                    size="normal"
+                    className="overflow-hidden rounded-lg border-2 border-black"
+                  />
+                </div>
                 {!turnstileToken && (
                   <p className="mt-1 text-[11px] text-neutral-500 font-bold flex items-center gap-1">
                     <AlertTriangle className="w-3 h-3 text-yellow-600" />
