@@ -82,6 +82,13 @@ export default function ForgotPasswordPage() {
     const ok = await sendLink(email);
     setLoading(false);
     if (ok) {
+      // The form-branch widget is about to unmount; clear the (now-single-use)
+      // token so the sent-branch widget has to solve a fresh challenge before
+      // the resend button is enabled. Without this, resend would attempt to
+      // reuse the consumed token and the backend would reject with 403
+      // TURNSTILE_INVALID.
+      turnstileRef.current?.reset();
+      setTurnstileToken("");
       setSent(true);
       resendCd.start();
     }
@@ -89,7 +96,11 @@ export default function ForgotPasswordPage() {
 
   const resend = async () => {
     if (resendCd.active) return;
-    if (await sendLink(email)) resendCd.start();
+    if (await sendLink(email)) {
+      turnstileRef.current?.reset();
+      setTurnstileToken("");
+      resendCd.start();
+    }
   };
 
   return (
@@ -355,8 +366,8 @@ export default function ForgotPasswordPage() {
                         onToken={(t) => setTurnstileToken(t)}
                         onExpire={() => setTurnstileToken("")}
                         theme="light"
-                        size="compact"
-                        className="overflow-hidden rounded-lg border-2 border-black"
+                        size="normal"
+                        className="mt-1 overflow-hidden rounded-lg border-2 border-black self-start"
                       />
                       {!turnstileToken && (
                         <p className="mt-1 text-[11px] text-neutral-500 font-bold flex items-center gap-1">
