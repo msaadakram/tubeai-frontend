@@ -18,6 +18,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
@@ -29,6 +31,7 @@ export default function ShortsIdeasPage() {
   const tc = t("toolPages.shortsIdeas") as any;
   const { user } = useAuth();
   const isPro = user?.plan === "pro" || user?.plan === "enterprise";
+  const ts = useTurnstileHeader();
 
   const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
@@ -69,7 +72,8 @@ export default function ShortsIdeasPage() {
             <div className="flex flex-col gap-3">
               <div className="flex flex-col sm:flex-row gap-3">
                 <ToolInput value={topic} onChange={(e) => setTopic(e.target.value)} placeholder={tc.inputPlaceholder} className="flex-1" />
-                <PrimaryButton onClick={gen} disabled={loading || !topic.trim()}>
+                <ToolTurnstile actionLabel={tc.generateBtn as string} />
+                <PrimaryButton onClick={gen} disabled={loading || !topic.trim() || !ts.ready}>
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                   {loading ? tc.generatingBtn : tc.generateBtn}
                 </PrimaryButton>

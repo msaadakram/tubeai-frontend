@@ -38,6 +38,8 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 import {
@@ -186,6 +188,7 @@ const unused = true; // placeholder for diff
 export default function ChannelAnalyticsPage() {
   const { t } = useTranslations();
   const toolContent = t("toolPages.channelAnalytics") as NonNullable<ReturnType<typeof t<"toolPages.channelAnalytics">>>;
+  const ts = useTurnstileHeader();
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -205,7 +208,7 @@ export default function ChannelAnalyticsPage() {
     try {
       const res = await fetch(`${BASE_URL}/api/channel-analytics`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...ts.headers },
         body: JSON.stringify({ url: v }),
       });
       const body = await res.json().catch(() => ({}));
@@ -254,11 +257,12 @@ export default function ChannelAnalyticsPage() {
               className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
             />
           </div>
-          <PrimaryButton onClick={() => run()} disabled={loading || !input.trim()}>
+          <PrimaryButton onClick={() => run()} disabled={loading || !input.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <BarChart3 className="w-4 h-4" />}
             {loading ? toolContent.btnAnalyzing : toolContent.btnAnalyze}
           </PrimaryButton>
         </div>
+        <ToolTurnstile actionLabel={toolContent.btnAnalyze as string} />
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider">{toolContent.tryPrefix}</span>
           {toolContent.suggestions.map((s) => (

@@ -32,6 +32,8 @@ import {
   RadialBarChart, RadialBar, PolarAngleAxis, Cell,
 } from "recharts";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 import { useTranslations } from "@/lib/i18n/useTranslations";
@@ -211,6 +213,7 @@ function getStatusInfo(status: string, tc: any): StatusInfo {
 export default function MonetizationCheckerPage() {
   const { t } = useTranslations();
   const tc = t("toolPages.monetizationChecker");
+  const ts = useTurnstileHeader();
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -229,7 +232,7 @@ export default function MonetizationCheckerPage() {
     try {
       const res = await fetch(`${BASE_URL}/api/monetization`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...ts.headers },
         body: JSON.stringify({ url: v }),
       });
       const body = await res.json().catch(() => ({}));
@@ -271,7 +274,8 @@ export default function MonetizationCheckerPage() {
               className="flex-1 py-3 outline-none text-sm font-medium bg-transparent min-w-0"
             />
           </div>
-          <PrimaryButton onClick={() => run()} disabled={loading || !input.trim()}>
+          <ToolTurnstile actionLabel={tc.btnCheck as string} />
+          <PrimaryButton onClick={() => run()} disabled={loading || !input.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <DollarSign className="w-4 h-4" />}
             {loading ? tc.btnChecking : tc.btnCheck}
           </PrimaryButton>

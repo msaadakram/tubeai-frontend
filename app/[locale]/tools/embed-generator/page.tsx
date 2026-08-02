@@ -30,6 +30,8 @@ import {
   Play,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import {
   StatsStrip,
@@ -272,6 +274,7 @@ const guidesColorsAndIcons = [
 export default function EmbedGeneratorPage() {
   const { t, locale } = useTranslations();
   const tc = t("toolPages.embedGenerator") as NonNullable<ReturnType<typeof t<"toolPages.embedGenerator">>>;
+  const ts = useTurnstileHeader();
   const guides = tc.guides.map((g: { title: string; desc: string }, i: number) => ({
     ...g,
     icon: guidesColorsAndIcons[i % guidesColorsAndIcons.length].icon,
@@ -422,7 +425,8 @@ ${embedHtml}
               </button>
             )}
           </div>
-          <PrimaryButton onClick={() => handleGenerate()} disabled={loading || !input.trim()}>
+          <ToolTurnstile actionLabel={tc.btnGenerate as string} />
+          <PrimaryButton onClick={() => handleGenerate()} disabled={loading || !input.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {loading ? tc.btnGenerating : tc.btnGenerate}
           </PrimaryButton>

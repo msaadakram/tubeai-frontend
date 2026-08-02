@@ -15,6 +15,8 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
 import { useTranslations } from "@/lib/i18n/useTranslations";
@@ -46,6 +48,7 @@ const qualityOrder = ["maxresdefault", "sddefault", "hqdefault", "mqdefault", "d
 export default function ThumbnailDownloaderPage() {
   const { t } = useTranslations();
   const tc = t("toolPages.thumbnailDownloader") as any;
+  const ts = useTurnstileHeader();
 
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -68,7 +71,7 @@ export default function ThumbnailDownloaderPage() {
     const fallback = () => window.open(t.url, "_blank");
     try {
       const proxyUrl = `${BASE_URL}/api/thumbnail-proxy/${result.videoId}/${t.quality}`;
-      const res = await fetch(proxyUrl);
+      const res = await fetch(proxyUrl, { headers: ts.headers });
       if (!res.ok) throw new Error(`Download failed (${res.status})`);
       const blob = await res.blob();
       const objectUrl = URL.createObjectURL(blob);
@@ -95,7 +98,7 @@ export default function ThumbnailDownloaderPage() {
     try {
       const res = await fetch(`${BASE_URL}/api/thumbnail`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...ts.headers },
         body: JSON.stringify({ url: url.trim() }),
       });
       const body = await res.json().catch(() => ({}));
@@ -134,7 +137,8 @@ export default function ThumbnailDownloaderPage() {
               className="flex-1 py-3 outline-none text-sm font-medium"
             />
           </div>
-          <PrimaryButton onClick={handleFetch} disabled={loading || !url.trim()}>
+          <ToolTurnstile actionLabel={tc.fetchBtn as string} />
+          <PrimaryButton onClick={handleFetch} disabled={loading || !url.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
             {loading ? tc.fetchingBtn : tc.fetchBtn}
           </PrimaryButton>

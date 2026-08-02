@@ -16,6 +16,8 @@ import {
   Hash,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { streamJson } from "@/lib/streamJson";
 import { extractStringArray } from "@/lib/parseStream";
@@ -113,6 +115,7 @@ function localGenerate(topic: string): TagData {
 export default function TagGeneratorPage() {
   const { t } = useTranslations();
   const tc = t("toolPages.tagGenerator") as any;
+  const ts = useTurnstileHeader();
 
   const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
@@ -217,7 +220,8 @@ export default function TagGeneratorPage() {
               className="flex-1 py-3 outline-none text-sm font-medium"
             />
           </div>
-          <PrimaryButton onClick={() => run()} disabled={loading || !topic.trim()}>
+          <ToolTurnstile actionLabel={tc.generateBtn as string} />
+          <PrimaryButton onClick={() => run()} disabled={loading || !topic.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <TagIcon className="w-4 h-4" />}
             {loading ? tc.generatingBtn : tc.generateBtn}
           </PrimaryButton>

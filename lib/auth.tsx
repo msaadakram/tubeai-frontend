@@ -1,6 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import {
+  getTurnstileSessionId,
+} from "@/lib/turnstile/turnstile-header-bridge";
 
 export type Plan = "free" | "pro" | "enterprise";
 
@@ -159,6 +162,15 @@ export async function authFetch<T>(path: string, opts: RequestInit = {}): Promis
   };
   headers["X-Locale"] = getLocaleHeader();
   if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  // If the app-level Turnstile session has been verified by the user (via
+  // TurnstileSessionProvider), attach the backend-issued session id so tool
+  // endpoints behind `requireTurnstileSession` accept the request.
+  // Suppress via opts.__noTurnstile if a caller needs a true-unauthenticated call.
+  if (!(opts as any).__noTurnstile) {
+    const ts = getTurnstileSessionId();
+    if (ts) headers["X-Turnstile-Session"] = ts;
+  }
 
   const url = `${API_BASE}${path}`;
 

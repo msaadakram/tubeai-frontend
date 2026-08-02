@@ -28,6 +28,8 @@ import { useTranslations } from "@/lib/i18n/useTranslations";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StatsStrip, GuideGrid, Workflow, SeoContent, FaqAccordion, CrossCTA } from "@/components/tools/ToolSections";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -80,6 +82,7 @@ const suggestions = ["@MrBeast", "@MarquesBrownlee", "@AliAbdaal", "@Veritasium"
 export default function ChannelIdFinderPage() {
   const { t, locale } = useTranslations();
   const toolContent = t("toolPages.channelIdFinder") as NonNullable<ReturnType<typeof t<"toolPages.channelIdFinder">>>;
+  const ts = useTurnstileHeader();
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -101,7 +104,7 @@ export default function ChannelIdFinderPage() {
     try {
       const res = await fetch(`${BASE_URL}/api/channel-info`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...ts.headers },
         body: JSON.stringify({ url: v }),
       });
       const body = await res.json().catch(() => ({}));
@@ -152,11 +155,12 @@ export default function ChannelIdFinderPage() {
               className="flex-1 py-3 outline-none text-sm font-medium"
             />
           </div>
-          <PrimaryButton onClick={() => run()} disabled={loading || !input.trim()}>
+          <PrimaryButton onClick={() => run()} disabled={loading || !input.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
             {loading ? toolContent.btnFetching : toolContent.btnFind}
           </PrimaryButton>
         </div>
+        <ToolTurnstile actionLabel={toolContent.btnFind as string} />
         <div className="flex flex-wrap items-center gap-2 mt-4">
           <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">{toolContent.tryPrefix}</span>
           {toolContent.suggestions.map((s) => (

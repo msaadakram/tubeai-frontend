@@ -26,6 +26,8 @@ import {
 } from "lucide-react";
 import { copyToClipboard } from "@/lib/clipboard";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import {
   StatsStrip,
@@ -105,6 +107,7 @@ function writeHistory(items: HistoryItem[]) {
 export default function QrCodeGeneratorPage() {
   const { t } = useTranslations();
   const tc = t("toolPages.qrCodeGenerator");
+  const ts = useTurnstileHeader();
 
   const errorLevels: { value: ErrorLevel; label: string; hint: string }[] = [
     { value: "L", label: "L", hint: tc.customize.errorLevels.lHint },
@@ -390,7 +393,8 @@ export default function QrCodeGeneratorPage() {
               </button>
             )}
           </div>
-          <PrimaryButton onClick={() => generate()} disabled={loading || !input.trim()}>
+          <ToolTurnstile actionLabel={tc.inputConfig.generateBtn as string} />
+          <PrimaryButton onClick={() => generate()} disabled={loading || !input.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <QrCode className="w-4 h-4" />}
             {loading ? tc.inputConfig.generatingBtn : tc.inputConfig.generateBtn}
           </PrimaryButton>

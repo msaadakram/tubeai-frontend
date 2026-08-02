@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { Navbar } from "../layout/Navbar";
 import { Footer } from "../layout/Footer";
-import { TurnstileGate } from "./TurnstileGate";
 
 type ToolLayoutProps = {
   title: string;
@@ -106,12 +105,12 @@ export function ToolLayout({ title, description, icon: Icon, badge, children }: 
         </div>
       </section>
 
-      {/* Content — gated behind Turnstile verification */}
+      {/* Content — children render their own inline ToolTurnstile widget above
+          their PrimaryButton, gated on a single shared session via
+          <TurnstileSessionProvider> mounted in app/[locale]/layout.tsx */}
       <main className="flex-1 bg-neutral-50">
         <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
-          <TurnstileGate>
-            {children}
-          </TurnstileGate>
+          {children}
         </div>
       </main>
 

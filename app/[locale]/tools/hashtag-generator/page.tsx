@@ -17,6 +17,8 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { streamJson } from "@/lib/streamJson";
 import { extractObjectArray, extractStringArray, extractStringField, type HashtagItem } from "@/lib/parseStream";
@@ -150,6 +152,7 @@ function localGenerate(topic: string): HashtagData {
 export default function HashtagGeneratorPage() {
   const { t } = useTranslations();
   const tc = t("toolPages.hashtagGenerator") as NonNullable<ReturnType<typeof t<"toolPages.hashtagGenerator">>>;
+  const ts = useTurnstileHeader();
   const guides = tc.guides.map((g: { title: string; desc: string }, i: number) => ({
     ...g,
     icon: guidesColorsAndIcons[i % guidesColorsAndIcons.length].icon,
@@ -271,7 +274,8 @@ export default function HashtagGeneratorPage() {
               className="flex-1 py-3 outline-none text-sm font-medium"
             />
           </div>
-          <PrimaryButton onClick={() => run()} disabled={loading || !topic.trim()}>
+          <ToolTurnstile actionLabel={tc.btnGenerate as string} />
+          <PrimaryButton onClick={() => run()} disabled={loading || !topic.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Hash className="w-4 h-4" />}
             {loading ? tc.btnGenerating : tc.btnGenerate}
           </PrimaryButton>

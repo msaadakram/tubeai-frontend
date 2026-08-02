@@ -29,6 +29,8 @@ import {
   Flag,
 } from "lucide-react";
 import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StreamingPreview } from "@/components/tools/StreamingPreview";
@@ -92,6 +94,7 @@ export default function AIScriptWriterPage() {
 
   const { t } = useTranslations();
   const content = t("toolPages.aiScriptWriter");
+  const ts = useTurnstileHeader();
 
   // Fallback to avoid crashes while dictionary might be reloading
   if (!content) return null;
@@ -276,7 +279,8 @@ export default function AIScriptWriterPage() {
 
             <LanguageSelect value={language} onChange={setLanguage} />
 
-            <PrimaryButton onClick={generate} disabled={loading || !topic.trim()} className="w-full">
+            <ToolTurnstile actionLabel={content.generateBtn as string} />
+            <PrimaryButton onClick={generate} disabled={loading || !topic.trim() || !ts.ready} className="w-full">
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <PenTool className="w-4 h-4" />}
               {loading ? content.writingBtn : content.generateBtn}
             </PrimaryButton>

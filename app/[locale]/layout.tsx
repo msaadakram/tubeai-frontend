@@ -8,6 +8,7 @@ import { LocaleProvider } from "@/lib/i18n/LocaleContext";
 import { locales, defaultLocale, type Locale } from "@/lib/i18n/config";
 import { buildLocalizedMetadata } from "@/lib/seo";
 import GoogleOAuthProvider from "@/components/auth/GoogleOAuthProvider";
+import { TurnstileSessionProvider } from "@/lib/turnstile/TurnstileSessionProvider";
 
 const RTL_LOCALES: string[] = [];
 
@@ -72,10 +73,12 @@ export default async function LocaleLayout({
       />
       <GoogleOAuthProvider>
         <AuthProvider>
-          <LocaleProvider locale={resolved}>
-            <RouteShell>{children}</RouteShell>
-            <Toaster position="bottom-right" richColors closeButton />
-          </LocaleProvider>
+          <TurnstileSessionProvider>
+            <LocaleProvider locale={resolved}>
+              <RouteShell>{children}</RouteShell>
+              <Toaster position="bottom-right" richColors closeButton />
+            </LocaleProvider>
+          </TurnstileSessionProvider>
         </AuthProvider>
       </GoogleOAuthProvider>
     </>

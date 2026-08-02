@@ -30,6 +30,8 @@ import {
   ToolInput,
   PrimaryButton,
 } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
 import { StreamingPreview } from "@/components/tools/StreamingPreview";
@@ -432,6 +434,7 @@ export default function ViralTitleGeneratorPage() {
   const c = t("toolPages.viralTitleGenerator");
   // @ts-ignore
   const toolContent: any = c || {};
+  const ts = useTurnstileHeader();
 
   const [keyword, setKeyword] = useState("");
   const [language, setLanguage] = useState("en");
@@ -572,7 +575,8 @@ export default function ViralTitleGeneratorPage() {
             onKeyDown={(e) => e.key === "Enter" && generate()}
             className="flex-1"
           />
-          <PrimaryButton onClick={generate} disabled={loading || !keyword.trim()}>
+          <ToolTurnstile actionLabel={toolContent.generateBtn as string} />
+          <PrimaryButton onClick={generate} disabled={loading || !keyword.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {loading ? toolContent.generatingBtn : toolContent.generateBtn}
           </PrimaryButton>

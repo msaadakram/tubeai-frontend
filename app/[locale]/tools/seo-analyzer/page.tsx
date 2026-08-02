@@ -26,6 +26,8 @@ import {
   Wand2,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { StreamingPreview } from "@/components/tools/StreamingPreview";
 import { streamJson } from "@/lib/streamJson";
@@ -130,6 +132,7 @@ function CopyBtn({ text }: { text: string }) {
 export default function SeoAnalyzerPage() {
   const { t } = useTranslations();
   const content = t("toolPages.seoAnalyzer");
+  const ts = useTurnstileHeader();
 
   if (!content) return null;
 
@@ -273,7 +276,8 @@ export default function SeoAnalyzerPage() {
             </div>
           </div>
 
-          <PrimaryButton onClick={run} disabled={loading || !title.trim() || !description.trim()}>
+          <ToolTurnstile actionLabel={content.analyzeBtn as string} />
+          <PrimaryButton onClick={run} disabled={loading || !title.trim() || !description.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {loading ? content.analyzingBtn : content.analyzeBtn}
           </PrimaryButton>

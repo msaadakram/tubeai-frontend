@@ -23,6 +23,8 @@ import {
   ListOrdered,
 } from "lucide-react";
 import { ToolLayout, ToolCard, ToolInput, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import { LanguageSelect, getLanguage } from "@/components/tools/LanguageSelect";
@@ -117,6 +119,7 @@ export default function AITranscriptPage() {
   const { t } = useTranslations();
   const toolContent = t("toolPages.aiTranscript");
   const tc = toolContent as NonNullable<typeof toolContent>;
+  const ts = useTurnstileHeader();
 
   const [url, setUrl] = useState("");
   const [lang, setLang] = useState("en");
@@ -140,7 +143,7 @@ export default function AITranscriptPage() {
     try {
       const res = await fetch(`${BASE_URL}/api/transcribe`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...ts.headers },
         body: JSON.stringify({ url: url.trim(), language: targetLang }),
       });
       console.log("HTTP status:", res.status, res.statusText);
@@ -185,7 +188,7 @@ export default function AITranscriptPage() {
     console.groupCollapsed(`[Transcribe Proxy] ${langInfo.code} (${langInfo.name})`);
     console.log("Step 1 — GET caption XML:", `${BASE_URL}${langInfo.proxyUrl}`);
     try {
-      const xmlRes = await fetch(`${BASE_URL}${langInfo.proxyUrl}`);
+      const xmlRes = await fetch(`${BASE_URL}${langInfo.proxyUrl}`, { headers: ts.headers });
       console.log("XML fetch status:", xmlRes.status, xmlRes.statusText);
       if (!xmlRes.ok) {
         console.error("[Transcribe Proxy] XML fetch failed:", xmlRes.status);
@@ -201,7 +204,7 @@ export default function AITranscriptPage() {
       console.log("Step 2 — POST /api/transcribe/process with language:", lang);
       const procRes = await fetch(`${BASE_URL}/api/transcribe/process`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...ts.headers },
         body: JSON.stringify({ xml, language: lang }),
       });
       console.log("Process HTTP status:", procRes.status, procRes.statusText);
@@ -283,7 +286,8 @@ export default function AITranscriptPage() {
             <div className="flex-1 min-w-0">
               <LanguageSelect value={lang} onChange={setLang} compact label={tc.inputLanguageLabel} />
             </div>
-            <PrimaryButton onClick={() => run()} disabled={loading || !url.trim()}>
+            <ToolTurnstile actionLabel={tc.btnGenerate as string} />
+            <PrimaryButton onClick={() => run()} disabled={loading || !url.trim() || !ts.ready}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
               {loading ? tc.btnLoading : tc.btnGenerate}
             </PrimaryButton>

@@ -29,6 +29,8 @@ import {
   Zap,
 } from "lucide-react";
 import { ToolLayout, ToolCard, PrimaryButton } from "@/components/tools/ToolLayout";
+import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
+import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { ToolSeoJsonLd } from "@/components/tools/ToolSeoJsonLd";
 import {
   StatsStrip,
@@ -221,6 +223,7 @@ function DeviceFrame({ device, src, alt }: { device: DeviceId; src: string; alt:
 export default function ThumbnailPreviewPage() {
   const { t } = useTranslations();
   const tc = t("toolPages.thumbnailPreview") as any;
+  const ts = useTurnstileHeader();
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -353,7 +356,8 @@ export default function ThumbnailPreviewPage() {
               </button>
             )}
           </div>
-          <PrimaryButton onClick={() => handlePreview()} disabled={loading || !input.trim()}>
+          <ToolTurnstile actionLabel={tc.previewBtn as string} />
+          <PrimaryButton onClick={() => handlePreview()} disabled={loading || !input.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {loading ? tc.loadingBtn : tc.previewBtn}
           </PrimaryButton>

@@ -11,10 +11,17 @@
  * re-renders stay cheap. Returns an AbortController so the caller can cancel.
  */
 
+import { getTurnstileSessionId } from "@/lib/turnstile/turnstile-header-bridge";
+
 export type StreamJsonHandlers<T> = {
   onDelta?: (full: string, delta: string) => void;
   onDone?: (result: T | null, raw: string, error?: string) => void;
   onError?: (message: string) => void;
+};
+
+/** Optional extra headers to merge into the stream request (post-token + ts). */
+export type StreamJsonOptions = {
+  headers?: Record<string, string>;
 };
 
 const FLUSH_MS = 60;
@@ -22,7 +29,8 @@ const FLUSH_MS = 60;
 export function streamJson<T = unknown>(
   url: string,
   body: unknown,
-  handlers: StreamJsonHandlers<T>
+  handlers: StreamJsonHandlers<T>,
+  options?: StreamJsonOptions
 ): AbortController {
   const abort = new AbortController();
 
@@ -30,6 +38,7 @@ export function streamJson<T = unknown>(
     try {
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
+        ...(options?.headers || {}),
       };
       try {
         const token = localStorage.getItem("ytforge.token");
@@ -37,6 +46,12 @@ export function streamJson<T = unknown>(
       } catch {
         /* localStorage unavailable */
       }
+      // Attach the app-level Turnstile session id so tool endpoints behind
+      // `requireTurnstileSession` accept the streaming request. The session
+      // id is held in `<TurnstileSessionProvider>` and pushed here via the
+      // cross-module side-channel (no React-context access from non-component).
+      const tsSession = getTurnstileSessionId();
+      if (tsSession) headers["X-Turnstile-Session"] = tsSession;
       const res = await fetch(url, {
         method: "POST",
         headers,
