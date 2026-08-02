@@ -222,22 +222,51 @@ export default function ForgotPasswordPage() {
                     </div>
 
                     {TURNSTILE_SITE_KEY && (
-                      <div className="flex flex-col gap-1">
-                        <label className="text-xs font-black uppercase tracking-wider text-neutral-500">Security check</label>
-                        <TurnstileWidget
-                          ref={turnstileRef}
-                          siteKey={TURNSTILE_SITE_KEY}
-                          onToken={(t) => setTurnstileToken(t)}
-                          onExpire={() => setTurnstileToken("")}
-                          theme="light"
-                          className="mt-1"
-                        />
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs font-black uppercase tracking-wider text-neutral-500">
+                            Security check
+                          </label>
+                          {turnstileToken ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700">
+                              <CheckCircle2 className="w-3 h-3" /> Verified
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-neutral-400">
+                              <ShieldCheck className="w-3 h-3" /> Required
+                            </span>
+                          )}
+                        </div>
+                        <div className="relative">
+                          <div
+                            className={`rounded-xl border-2 transition-colors ${
+                              turnstileToken
+                                ? "border-emerald-400 bg-emerald-50/40"
+                                : "border-black bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)]"
+                            }`}
+                          >
+                            <TurnstileWidget
+                              ref={turnstileRef}
+                              siteKey={TURNSTILE_SITE_KEY}
+                              onToken={(t) => setTurnstileToken(t)}
+                              onExpire={() => setTurnstileToken("")}
+                              theme="light"
+                              className="p-1.5"
+                            />
+                          </div>
+                          {!turnstileToken && (
+                            <p className="mt-1.5 text-[11px] text-neutral-500 font-bold flex items-center gap-1">
+                              <AlertTriangle className="w-3 h-3 text-yellow-600" />
+                              Complete the check above to send the reset link.
+                            </p>
+                          )}
+                        </div>
                       </div>
                     )}
 
                     <button
                       type="submit"
-                      disabled={loading}
+                      disabled={loading || (Boolean(TURNSTILE_SITE_KEY) && !turnstileToken)}
                       className="w-full inline-flex items-center justify-center gap-2 py-3.5 bg-red-600 text-white font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed transition-all uppercase tracking-wider text-sm"
                     >
                       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
@@ -299,7 +328,7 @@ export default function ForgotPasswordPage() {
                   <div className="flex flex-col sm:flex-row gap-2.5">
                     <button
                       onClick={resend}
-                      disabled={resendCd.active}
+                      disabled={resendCd.active || (Boolean(TURNSTILE_SITE_KEY) && !turnstileToken)}
                       className="flex-1 inline-flex items-center justify-center gap-2 py-3 bg-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] disabled:hover:translate-x-0 disabled:hover:translate-y-0 transition-all"
                     >
                       <RefreshCw className={`w-4 h-4 ${resendCd.active ? "" : "group-hover:rotate-180"} transition-transform`} />
@@ -313,7 +342,49 @@ export default function ForgotPasswordPage() {
                     </Link>
                   </div>
 
-                  <button onClick={() => setSent(false)} className="mt-4 w-full text-center text-xs text-neutral-500 font-bold hover:text-red-600">
+                  {TURNSTILE_SITE_KEY && (
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="text-xs font-black uppercase tracking-wider text-neutral-500">
+                          Security check
+                        </label>
+                        {turnstileToken ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700">
+                            <CheckCircle2 className="w-3 h-3" /> Verified
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-neutral-400">
+                            <ShieldCheck className="w-3 h-3" /> Required to resend
+                          </span>
+                        )}
+                      </div>
+                      <div
+                        className={`rounded-xl border-2 p-1.5 transition-colors ${
+                          turnstileToken
+                            ? "border-emerald-400 bg-emerald-50/40"
+                            : "border-black bg-white"
+                        }`}
+                      >
+                        <TurnstileWidget
+                          ref={turnstileRef}
+                          siteKey={TURNSTILE_SITE_KEY}
+                          onToken={(t) => setTurnstileToken(t)}
+                          onExpire={() => setTurnstileToken("")}
+                          theme="light"
+                          size="compact"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      turnstileRef.current?.reset();
+                      setTurnstileToken("");
+                      setSent(false);
+                    }}
+                    className="mt-4 w-full text-center text-xs text-neutral-500 font-bold hover:text-red-600"
+                  >
                     Wrong email? <span className="underline">Try a different address</span>
                   </button>
                 </motion.div>
