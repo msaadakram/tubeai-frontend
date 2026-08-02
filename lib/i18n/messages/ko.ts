@@ -1145,7 +1145,7 @@ free: {
         id: "third-party",
         title: "6. 제3자 콘텐츠",
         intro: "YTForge의 검색 도구는 YouTube 및 기타 제3자로부터 공개적으로 사용 가능한 콘텐츠 — 채널 이름, 썸네일, 동영상 제목, 메타데이터 포함 — 를 표시합니다. 이 콘텐츠는 각 소유자의 자산으로 남아 있습니다. 크리에이터, 채널, 브랜드 또는 제품에 대한 언급은 YTForge와의 보증, 파트너십 또는 제휴를 의미하지 않습니다.",
-        outro: "YTForge를 통해 표시되는 콘텐츠가 귀하의 권리를 침해한다고 생각되는 경우, 유효한 DMCA 통지와 함께 dmca@ytforge.app로 연락하시면 신속히 대응하겠습니다.",
+        outro: "YTForge를 통해 표시되는 콘텐츠가 귀하의 권리를 침해한다고 생각되는 경우, 유효한 DMCA 통지와 함께 support@ytforge.app로 연락하시면 신속히 대응하겠습니다.",
       },
       {
         id: "youtube",
@@ -1209,11 +1209,11 @@ free: {
           },
           {
             label: "법무:",
-            value: "legal@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "DMCA:",
-            value: "dmca@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "우편:",
@@ -1511,7 +1511,7 @@ free: {
         title: "16. 연락처",
         intro: "본 약관에 대해 궁금한 점이 있으신가요? 다음으로 문의해 주세요:",
         items: [
-          "이메일: legal@ytforge.app",
+          "이메일: support@ytforge.app",
           "지원: support@ytforge.app",
           "우편: YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
         ],
@@ -1520,7 +1520,7 @@ free: {
     summaryTitle: "알기 쉬운 요약",
     summaryText: "YTForge를 합법적이고 윤리적으로 사용하세요. 만든 콘텐츠는 귀하의 것입니다. 당사는 도구를 \"있는 그대로\" 제공합니다 — 게시 전에 AI 출력물을 검증하세요. 언제든 취소 가능하며 30일 이내 환불이 가능합니다. 플랫폼을 무너뜨리려 하지 마세요.",
     helpTitle: "설명이 필요하신가요?",
-    helpDesc: "당사 법무팀이 2영업일 이내에 답변드립니다. legal@ytforge.app으로 이메일을 보내 주세요.",
+    helpDesc: "당사 법무팀이 2영업일 이내에 답변드립니다. support@ytforge.app으로 이메일을 보내 주세요.",
   },
   featuresPage: {
     homeCrumb: "홈",

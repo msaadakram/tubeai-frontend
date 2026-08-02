@@ -1125,7 +1125,7 @@ free: {
         intro:
           "YTForge's research tools display publicly available content from YouTube and other third parties — including channel names, thumbnails, video titles, and metadata. This content remains the property of its respective owners. Reference to any creator, channel, brand, or product does not imply endorsement, partnership, or affiliation with YTForge.",
         outro:
-          "If you believe any content displayed via YTForge infringes your rights, contact dmca@ytforge.app with a valid DMCA-style notice and we'll respond promptly.",
+          "If you believe any content displayed via YTForge infringes your rights, contact support@ytforge.app with a valid DMCA-style notice and we'll respond promptly.",
       },
       {
         id: "youtube",
@@ -1193,8 +1193,8 @@ free: {
         intro: "Questions, concerns, or DMCA notices? Reach out:",
         contacts: [
           { label: "General:", value: "support@ytforge.app" },
-          { label: "Legal:", value: "legal@ytforge.app" },
-          { label: "DMCA:", value: "dmca@ytforge.app" },
+          { label: "Legal:", value: "support@ytforge.app" },
+          { label: "DMCA:", value: "support@ytforge.app" },
           {
             label: "Mail:",
             value: "YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
@@ -1469,7 +1469,7 @@ free: {
         title: "16. Contact",
         intro: "Questions about these Terms? Reach out:",
         items: [
-          "Email: legal@ytforge.app",
+          "Email: support@ytforge.app",
           "Support: support@ytforge.app",
           "Mail: YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
         ],
@@ -1478,7 +1478,7 @@ free: {
     summaryTitle: "Plain-English summary",
     summaryText: "Use YTForge legally and ethically. You own what you create. We provide the tools \"as is\" — verify AI output before publishing. Cancel anytime, refund within 30 days. Don't try to break the platform.",
     helpTitle: "Need clarification?",
-    helpDesc: "Our legal team replies within 2 business days. Email legal@ytforge.app.",
+    helpDesc: "Our legal team replies within 2 business days. Email support@ytforge.app.",
   },
   featuresPage: {
     homeCrumb: "Home",

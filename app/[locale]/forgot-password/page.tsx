@@ -316,7 +316,7 @@ export default function ForgotPasswordPage() {
                     <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500 mb-3">Next steps</div>
                     <ol className="space-y-2.5">
                       {[
-                        "Open the email from no-reply@ytforge.app",
+                        "Open the email from noreply@ytforge.app",
                         "Click the secure 'Reset password' button",
                         "Choose a strong new password (8+ chars)",
                         "Sign back in and pick up where you left off",

@@ -125,7 +125,7 @@ export function Footer() {
         { name: t("footer.privacy"), href: getLocalePath(locale, "/privacy") },
         { name: t("footer.terms"), href: getLocalePath(locale, "/terms") },
         { name: t("footer.disclaimer"), href: getLocalePath(locale, "/disclaimer") },
-        { name: t("footer.contact"), href: "mailto:hello@ytforge.app" },
+        { name: t("footer.contact"), href: "mailto:support@ytforge.app" },
       ],
     },
   ];
@@ -286,8 +286,8 @@ export function Footer() {
             <h4 className="font-black text-sm uppercase tracking-wider mb-5">{t("footer.contact")}</h4>
             <ul className="flex flex-col gap-3 mb-5">
               <li>
-                <a href="mailto:hello@ytforge.app" className="text-sm text-neutral-400 hover:text-white inline-flex items-center gap-2 transition-colors">
-                  <Mail className="w-3.5 h-3.5 text-red-500" /> hello@ytforge.app
+                <a href="mailto:support@ytforge.app" className="text-sm text-neutral-400 hover:text-white inline-flex items-center gap-2 transition-colors">
+                  <Mail className="w-3.5 h-3.5 text-red-500" /> support@ytforge.app
                 </a>
               </li>
             </ul>
@@ -322,7 +322,7 @@ export function Footer() {
             <Link href={getLocalePath(locale, "/ai-policy")} className="text-xs text-neutral-500 hover:text-white transition-colors">{t("footer.aiPolicy")}</Link>
             <Link href={getLocalePath(locale, "/terms")} className="text-xs text-neutral-500 hover:text-white transition-colors">{t("footer.terms")}</Link>
             <Link href={getLocalePath(locale, "/disclaimer")} className="text-xs text-neutral-500 hover:text-white transition-colors">{t("footer.disclaimer")}</Link>
-            <a href="mailto:dmca@ytforge.app" className="text-xs text-neutral-500 hover:text-white transition-colors">DMCA</a>
+            <a href="mailto:support@ytforge.app" className="text-xs text-neutral-500 hover:text-white transition-colors">DMCA</a>
           </div>
         </div>
       </div>

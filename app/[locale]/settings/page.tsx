@@ -36,7 +36,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useAuth, authFetch, type Plan } from "@/lib/auth";
 
-const SALES_EMAIL = "arhamsaad453@gmail.com";
+const SALES_EMAIL = "support@ytforge.app";
 
 const plans: { id: Plan; name: string; price: string; period: string; tagline: string; icon: any; accent: string; features: string[]; popular?: boolean }[] = [
   {

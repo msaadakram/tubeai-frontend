@@ -1145,7 +1145,7 @@ free: {
         id: "third-party",
         title: "6. Contenido de terceros",
         intro: "Las herramientas de búsqueda de YTForge muestran contenido público de YouTube y otros terceros — incluyendo nombres de canales, thumbnails, títulos de vídeos y metadatos. Este contenido sigue siendo propiedad de sus respectivos dueños. La referencia a un creador, canal, marca o producto no implica respaldo, asociación o afiliación con YTForge.",
-        outro: "Si crees que el contenido mostrado vía YTForge infringe tus derechos, contacta dmca@ytforge.app con un aviso DMCA válido y responderemos rápido.",
+        outro: "Si crees que el contenido mostrado vía YTForge infringe tus derechos, contacta support@ytforge.app con un aviso DMCA válido y responderemos rápido.",
       },
       {
         id: "youtube",
@@ -1209,11 +1209,11 @@ free: {
           },
           {
             label: "Legal:",
-            value: "legal@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "DMCA:",
-            value: "dmca@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "Correo:",
@@ -1511,7 +1511,7 @@ free: {
         title: "16. Contacto",
         intro: "¿Preguntas sobre estos Términos? Ponte en contacto:",
         items: [
-          "Email: legal@ytforge.app",
+          "Email: support@ytforge.app",
           "Soporte: support@ytforge.app",
           "Correo postal: YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
         ],
@@ -1520,7 +1520,7 @@ free: {
     summaryTitle: "Resumen en lenguaje sencillo",
     summaryText: "Usa YTForge de forma legal y ética. Tú eres dueño de lo que creas. Proporcionamos las herramientas \"tal cual\" — verifica los resultados de la IA antes de publicar. Cancela cuando quieras, reembolso dentro de 30 días. No intentes romper la plataforma.",
     helpTitle: "¿Necesitas aclaraciones?",
-    helpDesc: "Nuestro equipo legal responde en un plazo de 2 días hábiles. Email: legal@ytforge.app.",
+    helpDesc: "Nuestro equipo legal responde en un plazo de 2 días hábiles. Email: support@ytforge.app.",
   },
   featuresPage: {
     homeCrumb: "Inicio",

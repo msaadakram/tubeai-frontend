@@ -1145,7 +1145,7 @@ free: {
         id: "third-party",
         title: "6. Üçüncü Taraf İçerik",
         intro: "YTForge arama araçları YouTube ve diğer üçüncü taraflardan halka açık olarak mevcut içeriği görüntüler — kanal adları, thumbnail'lar, video başlıkları ve meta veriler dahil. Bu içerik ilgili sahiplerinin mülkiyetinde kalır. Bir yaratıcıya, kanala, markaya veya ürüne atıf, YTForge ile onay, ortaklık veya bağlantı anlamına gelmez.",
-        outro: "YTForge aracılığıyla görüntülenen bir içeriğin haklarınızı ihlal ettiğini düşünüyorsanız, geçerli bir DMCA bildirimiyle dmca@ytforge.app adresine yazın ve hızla yanıtlayacağız.",
+        outro: "YTForge aracılığıyla görüntülenen bir içeriğin haklarınızı ihlal ettiğini düşünüyorsanız, geçerli bir DMCA bildirimiyle support@ytforge.app adresine yazın ve hızla yanıtlayacağız.",
       },
       {
         id: "youtube",
@@ -1209,11 +1209,11 @@ free: {
           },
           {
             label: "Hukuki:",
-            value: "legal@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "DMCA:",
-            value: "dmca@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "Posta:",
@@ -1511,7 +1511,7 @@ free: {
         title: "16. İletişim",
         intro: "Bu Koşullarla ilgili sorularınız mı var? Bize ulaşın:",
         items: [
-          "E-posta: legal@ytforge.app",
+          "E-posta: support@ytforge.app",
           "Destek: support@ytforge.app",
           "Posta: YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
         ],
@@ -1520,7 +1520,7 @@ free: {
     summaryTitle: "Sade dille özet",
     summaryText: "YTForge'u yasalara ve etik kurallara uygun şekilde kullanın. Oluşturduğunuz şeyin sahibi sizsiniz. Araçları \"olduğu gibi\" sunuyoruz — yayınlamadan önce yapay zekâ çıktısını doğrulayın. Dilediğiniz zaman iptal edin, 30 gün içinde iade alın. Platformu bozmaya çalışmayın.",
     helpTitle: "Açıklamaya mı ihtiyacınız var?",
-    helpDesc: "Hukuk ekibimiz 2 iş günü içinde yanıt verir. legal@ytforge.app adresine e-posta gönderin.",
+    helpDesc: "Hukuk ekibimiz 2 iş günü içinde yanıt verir. support@ytforge.app adresine e-posta gönderin.",
   },
   featuresPage: {
     homeCrumb: "Ana Sayfa",

@@ -224,7 +224,7 @@ export default function PricingPage() {
                   <button
                     onClick={() => {
                       if (plan.id === "enterprise") {
-                        window.location.href = `mailto:arhamsaad453@gmail.com?subject=YTForge%20Enterprise%20inquiry&body=Hi%2C%20I%27d%20like%20to%20discuss%20an%20YTForge%20Enterprise%20plan%20for%20my%20team.`;
+                        window.location.href = `mailto:support@ytforge.app?subject=YTForge%20Enterprise%20inquiry&body=Hi%2C%20I%27d%20like%20to%20discuss%20an%20YTForge%20Enterprise%20plan%20for%20my%20team.`;
                       } else if (plan.id === "pro") {
                         window.location.href = getLocalePath(locale, "/settings?tab=plan");
                       } else {

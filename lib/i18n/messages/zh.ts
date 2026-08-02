@@ -1145,7 +1145,7 @@ free: {
         id: "third-party",
         title: "6. 第三方内容",
         intro: "YTForge 搜索工具展示来自 YouTube 和其他第三方的公开可用内容 — 包括频道名称、缩略图、视频标题和元数据。这些内容归其各自所有者所有。提及某创作者、频道、品牌或产品，不代表 YTForge 的背书、合作或关联。",
-        outro: "若您认为通过 YTForge 显示的内容侵犯了您的权利，请附有效 DMCA 通知联系 dmca@ytforge.app，我们将迅速响应。",
+        outro: "若您认为通过 YTForge 显示的内容侵犯了您的权利，请附有效 DMCA 通知联系 support@ytforge.app，我们将迅速响应。",
       },
       {
         id: "youtube",
@@ -1209,11 +1209,11 @@ free: {
           },
           {
             label: "法律：",
-            value: "legal@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "DMCA：",
-            value: "dmca@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "邮寄：",
@@ -1511,7 +1511,7 @@ free: {
         title: "16. 联系方式",
         intro: "对这些条款有疑问？请联系：",
         items: [
-          "邮箱：legal@ytforge.app",
+          "邮箱：support@ytforge.app",
           "支持：support@ytforge.app",
           "邮寄：YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
         ],
@@ -1520,7 +1520,7 @@ free: {
     summaryTitle: "通俗摘要",
     summaryText: "合法且合乎道德地使用 YTForge。您创作的内容归您所有。我们按\"原样\"提供工具 — 发布前请核实 AI 输出。随时取消，30 天内退款。不要试图破坏平台。",
     helpTitle: "需要澄清？",
-    helpDesc: "我们的法务团队会在 2 个工作日内回复。发送邮件至 legal@ytforge.app。",
+    helpDesc: "我们的法务团队会在 2 个工作日内回复。发送邮件至 support@ytforge.app。",
   },
   featuresPage: {
     homeCrumb: "首页",

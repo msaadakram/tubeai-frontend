@@ -126,7 +126,7 @@ export default function PrivacyPage() {
 
                 <h2 id="intro">1. Introduction</h2>
                 <p>This Privacy Policy explains how YTForge Inc. ("YTForge", "we", "us") collects, uses, shares, and protects your personal information when you use our website, applications, APIs, and related services (collectively, the "Service"). It applies to all users worldwide, with additional rights for residents of the European Economic Area (EEA), United Kingdom, California, Brazil, and other jurisdictions with comprehensive data-protection laws.</p>
-                <p>We've written this in plain English. If anything is unclear, email <a href="mailto:privacy@ytforge.app">privacy@ytforge.app</a> and we'll explain.</p>
+                <p>We've written this in plain English. If anything is unclear, email <a href="mailto:support@ytforge.app">support@ytforge.app</a> and we'll explain.</p>
 
                 <h2 id="data-we-collect">2. Data We Collect</h2>
                 <h3>You provide directly</h3>
@@ -188,7 +188,7 @@ export default function PrivacyPage() {
                 </ul>
                 <p>We do <strong>not</strong> link your newsletter sign-up to a YTForge account unless you use the same email to register. We never share, rent, or sell the subscriber list.</p>
                 <h3>Consent & unsubscribing</h3>
-                <p>Subscribing is explicit consent to receive the weekly newsletter. You can withdraw consent at any time — every email includes a one-click unsubscribe link, and we process opt-outs immediately. You can also email <a href="mailto:privacy@ytforge.app">privacy@ytforge.app</a> with "Unsubscribe" in the subject line.</p>
+                <p>Subscribing is explicit consent to receive the weekly newsletter. You can withdraw consent at any time — every email includes a one-click unsubscribe link, and we process opt-outs immediately. You can also email <a href="mailto:support@ytforge.app">support@ytforge.app</a> with "Unsubscribe" in the subject line.</p>
                 <h3>Retention</h3>
                 <p>We keep your email for as long as you're subscribed, plus 30 days after you unsubscribe (to honor opt-outs across systems), then it's permanently deleted.</p>
 
@@ -251,8 +251,8 @@ export default function PrivacyPage() {
                   <li><strong>Withdraw consent:</strong> opt out of marketing or research participation</li>
                   <li><strong>Lodge a complaint:</strong> with your local data-protection authority</li>
                 </ul>
-                <p>Most rights can be exercised in one click via your account dashboard. Otherwise, email <a href="mailto:privacy@ytforge.app">privacy@ytforge.app</a> — we respond within 30 days, free of charge.</p>
-                <p><strong>Do Not Sell My Personal Information:</strong> we don't sell personal data. California residents can confirm this by emailing <a href="mailto:privacy@ytforge.app">privacy@ytforge.app</a>.</p>
+                <p>Most rights can be exercised in one click via your account dashboard. Otherwise, email <a href="mailto:support@ytforge.app">support@ytforge.app</a> — we respond within 30 days, free of charge.</p>
+                <p><strong>Do Not Sell My Personal Information:</strong> we don't sell personal data. California residents can confirm this by emailing <a href="mailto:support@ytforge.app">support@ytforge.app</a>.</p>
 
                 <h2 id="international">11. International Data Transfers</h2>
                 <p>YTForge is headquartered in the United States. If you're outside the U.S., your data may be transferred and processed there. For EEA/UK transfers, we rely on the Standard Contractual Clauses approved by the European Commission, plus supplementary measures (encryption, pseudonymization, transparency reports). EU-U.S. Data Privacy Framework certification is in progress.</p>
@@ -266,8 +266,8 @@ export default function PrivacyPage() {
                 <h2 id="contact">14. Contact & Data Protection Officer</h2>
                 <p>For privacy questions or to exercise your rights:</p>
                 <ul>
-                  <li><strong>Privacy team:</strong> <a href="mailto:privacy@ytforge.app">privacy@ytforge.app</a></li>
-                  <li><strong>Data Protection Officer:</strong> <a href="mailto:dpo@ytforge.app">dpo@ytforge.app</a></li>
+                  <li><strong>Privacy team:</strong> <a href="mailto:support@ytforge.app">support@ytforge.app</a></li>
+                  <li><strong>Data Protection Officer:</strong> <a href="mailto:support@ytforge.app">support@ytforge.app</a></li>
                   <li><strong>EU Representative:</strong> EuroDataRep B.V., Stationsplein 45, Rotterdam, Netherlands</li>
                   <li><strong>Mail:</strong> YTForge Inc., Attn: Privacy, 548 Market St #65512, San Francisco, CA 94104</li>
                 </ul>
@@ -277,7 +277,7 @@ export default function PrivacyPage() {
                   <div>
                     <div className="font-black text-sm mb-1">The 30-second summary</div>
                     <p className="text-xs text-neutral-700 leading-relaxed">
-                      We collect what we need to run the Service, store it encrypted, never sell it, never train our public models on it, and let you delete it anytime. Questions? <a href="mailto:privacy@ytforge.app" className="text-red-600 font-black underline">privacy@ytforge.app</a>.
+                      We collect what we need to run the Service, store it encrypted, never sell it, never train our public models on it, and let you delete it anytime. Questions? <a href="mailto:support@ytforge.app" className="text-red-600 font-black underline">support@ytforge.app</a>.
                     </p>
                   </div>
                 </div>
@@ -293,7 +293,7 @@ export default function PrivacyPage() {
               </div>
               <div className="flex-1">
                 <div className="font-black text-lg text-white mb-1">Want to exercise a right?</div>
-                <p className="text-sm text-neutral-300 leading-relaxed">Most actions are one click in your dashboard. Or email <a href="mailto:privacy@ytforge.app" className="text-red-500 font-black underline">privacy@ytforge.app</a> — we reply within 30 days, free.</p>
+                <p className="text-sm text-neutral-300 leading-relaxed">Most actions are one click in your dashboard. Or email <a href="mailto:support@ytforge.app" className="text-red-500 font-black underline">support@ytforge.app</a> — we reply within 30 days, free.</p>
               </div>
               <Link href="/terms" className="inline-flex items-center gap-2 px-5 py-3 bg-white text-black font-black rounded-xl border-2 border-white hover:bg-neutral-100 transition-colors uppercase tracking-wider text-xs whitespace-nowrap">
                 <Scale className="w-4 h-4" /> Terms of Service

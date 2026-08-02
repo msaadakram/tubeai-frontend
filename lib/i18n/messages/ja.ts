@@ -1145,7 +1145,7 @@ free: {
         id: "third-party",
         title: "6. サードパーティコンテンツ",
         intro: "YTForgeの検索ツールは、YouTubeやその他のサードパーティから公開されているコンテンツ — チャンネル名、サムネイル、動画タイトル、メタデータを含む — を表示します。これらのコンテンツはそれぞれの所有者の財産です。クリエイター、チャンネル、ブランド、製品への言及は、YTForgeとの推奨、提携、提携関係を意味しません。",
-        outro: "YTForgeを通じて表示されるコンテンツがお客様の権利を侵害すると思われる場合は、有効なDMCA通知を添えて dmca@ytforge.app までご連絡ください。迅速に対応いたします。",
+        outro: "YTForgeを通じて表示されるコンテンツがお客様の権利を侵害すると思われる場合は、有効なDMCA通知を添えて support@ytforge.app までご連絡ください。迅速に対応いたします。",
       },
       {
         id: "youtube",
@@ -1209,11 +1209,11 @@ free: {
           },
           {
             label: "法務:",
-            value: "legal@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "DMCA:",
-            value: "dmca@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "郵送:",
@@ -1511,7 +1511,7 @@ free: {
         title: "16. お問い合わせ",
         intro: "本規約についてご質問がありますか？ お問い合わせはこちら：",
         items: [
-          "メール：legal@ytforge.app",
+          "メール：support@ytforge.app",
           "サポート：support@ytforge.app",
           "郵便：YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
         ],
@@ -1520,7 +1520,7 @@ free: {
     summaryTitle: "分かりやすい要約",
     summaryText: "YTForgeを合法的かつ倫理的に使用してください。作成したものはお客様のものです。当社はツールを「現状のまま」提供します — 公開前にAI出力を確認してください。いつでも解約でき、30日以内なら返金されます。プラットフォームを破壊しようとしないでください。",
     helpTitle: "ご不明な点がありますか？",
-    helpDesc: "当社の法務チームが2営業日以内にご返信いたします。legal@ytforge.appまでメールをお送りください。",
+    helpDesc: "当社の法務チームが2営業日以内にご返信いたします。support@ytforge.appまでメールをお送りください。",
   },
   featuresPage: {
     homeCrumb: "ホーム",

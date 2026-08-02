@@ -1145,7 +1145,7 @@ free: {
         id: "third-party",
         title: "6. Inhalte Dritter",
         intro: "YTForge-Suchtools zeigen öffentlich verfügbare Inhalte von YouTube und anderen Dritten — einschließlich Kanalnamen, Thumbnails, Videotiteln und Metadaten. Diese Inhalte bleiben Eigentum ihrer jeweiligen Besitzer. Die Nennung eines Creators, Kanals, einer Marke oder eines Produkts impliziert keine Billigung, Partnerschaft oder Zugehörigkeit zu YTForge.",
-        outro: "Wenn du glaubst, dass über YTForge angezeigte Inhalte deine Rechte verletzen, kontaktiere dmca@ytforge.app mit einer gültigen DMCA-Mitteilung und wir werden umgehend reagieren.",
+        outro: "Wenn du glaubst, dass über YTForge angezeigte Inhalte deine Rechte verletzen, kontaktiere support@ytforge.app mit einer gültigen DMCA-Mitteilung und wir werden umgehend reagieren.",
       },
       {
         id: "youtube",
@@ -1209,11 +1209,11 @@ free: {
           },
           {
             label: "Rechtlich:",
-            value: "legal@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "DMCA:",
-            value: "dmca@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "Post:",
@@ -1511,7 +1511,7 @@ free: {
         title: "16. Kontakt",
         intro: "Fragen zu diesen Bedingungen? Melde dich:",
         items: [
-          "E-Mail: legal@ytforge.app",
+          "E-Mail: support@ytforge.app",
           "Support: support@ytforge.app",
           "Post: YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
         ],
@@ -1520,7 +1520,7 @@ free: {
     summaryTitle: "Zusammenfassung in einfacher Sprache",
     summaryText: "Nutze YTForge legal und ethisch. Dir gehört, was du erstellst. Wir stellen die Tools \"so wie sie sind\" bereit — verifiziere KI-Ausgaben vor der Veröffentlichung. Jederzeit kündbar, Rückerstattung innerhalb von 30 Tagen. Versuche nicht, die Plattform zu missbrauchen.",
     helpTitle: "Brauchst du Klarheit?",
-    helpDesc: "Unser Rechtsteam antwortet innerhalb von 2 Werktagen. E-Mail an legal@ytforge.app.",
+    helpDesc: "Unser Rechtsteam antwortet innerhalb von 2 Werktagen. E-Mail an support@ytforge.app.",
   },
   featuresPage: {
     homeCrumb: "Startseite",

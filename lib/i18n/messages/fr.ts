@@ -1145,7 +1145,7 @@ free: {
         id: "third-party",
         title: "6. Contenu tiers",
         intro: "Les outils de recherche de YTForge affichent du contenu publiquement disponible de YouTube et d'autres tiers — y compris les noms de chaînes, miniatures, titres de vidéos et métadonnées. Ce contenu reste la propriété de ses propriétaires respectifs. La référence à un créateur, une chaîne, une marque ou un produit n'implique aucun soutien, partenariat ou affiliation avec YTForge.",
-        outro: "Si vous estimez qu'un contenu affiché via YTForge porte atteinte à vos droits, contactez dmca@ytforge.app avec un avis valide de type DMCA et nous répondrons rapidement.",
+        outro: "Si vous estimez qu'un contenu affiché via YTForge porte atteinte à vos droits, contactez support@ytforge.app avec un avis valide de type DMCA et nous répondrons rapidement.",
       },
       {
         id: "youtube",
@@ -1209,11 +1209,11 @@ free: {
           },
           {
             label: "Juridique :",
-            value: "legal@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "DMCA :",
-            value: "dmca@ytforge.app",
+            value: "support@ytforge.app",
           },
           {
             label: "Courrier :",
@@ -1511,7 +1511,7 @@ free: {
         title: "16. Contact",
         intro: "Des questions sur ces conditions ? Contactez-nous :",
         items: [
-          "E-mail : legal@ytforge.app",
+          "E-mail : support@ytforge.app",
           "Support : support@ytforge.app",
           "Courrier : YTForge Inc., 548 Market St #65512, San Francisco, CA 94104",
         ],
@@ -1520,7 +1520,7 @@ free: {
     summaryTitle: "Résumé en langage clair",
     summaryText: "Utilisez YTForge de manière légale et éthique. Vous êtes propriétaire de ce que vous créez. Nous fournissons les outils \"en l'état\" — vérifiez les résultats de l'IA avant de publier. Annulez à tout moment, remboursement sous 30 jours. N'essayez pas de casser la plateforme.",
     helpTitle: "Besoin d'éclaircissements ?",
-    helpDesc: "Notre équipe juridique répond sous 2 jours ouvrés. Écrivez à legal@ytforge.app.",
+    helpDesc: "Notre équipe juridique répond sous 2 jours ouvrés. Écrivez à support@ytforge.app.",
   },
   featuresPage: {
     homeCrumb: "Accueil",

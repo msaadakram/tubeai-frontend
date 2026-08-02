@@ -186,7 +186,7 @@ export function AiPolicyContent() {
                   <li><strong>Withdraw</strong> any consent you've given for AI processing of your data.</li>
                   <li><strong>Lodge a complaint</strong> with your local data-protection authority.</li>
                 </ul>
-                <p>Exercise most rights in one click from your dashboard, or email <a href="mailto:ai@ytforge.app">ai@ytforge.app</a>.</p>
+                <p>Exercise most rights in one click from your dashboard, or email <a href="mailto:support@ytforge.app">support@ytforge.app</a>.</p>
 
                 <h2 id="safety">9. Safety & Abuse Prevention</h2>
                 <p>We don't allow YTForge's AI to be used to generate:</p>
@@ -197,7 +197,7 @@ export function AiPolicyContent() {
                   <li>Content that infringes others' copyright or trademarks.</li>
                   <li>Content that promotes violence, terrorism, or self-harm.</li>
                 </ul>
-                <p>We combine automated filters, provider-level safety models, and human review of flagged outputs. Violations can result in output blocking, account suspension, or termination. If you see harmful AI output from YTForge, report it to <a href="mailto:safety@ytforge.app">safety@ytforge.app</a>.</p>
+                <p>We combine automated filters, provider-level safety models, and human review of flagged outputs. Violations can result in output blocking, account suspension, or termination. If you see harmful AI output from YTForge, report it to <a href="mailto:support@ytforge.app">support@ytforge.app</a>.</p>
 
                 <h2 id="changes">10. Changes to This Policy</h2>
                 <p>AI moves fast, and this policy will evolve with it. We'll notify you of material changes (new providers with different data terms, changes to training practices) via email and an in-product banner at least 30 days before they take effect. The "Last updated" date at the top reflects the most recent revision.</p>
@@ -205,9 +205,9 @@ export function AiPolicyContent() {
                 <h2 id="contact">11. Contact</h2>
                 <p>Questions about how YTForge uses AI?</p>
                 <ul>
-                  <li><strong>AI team:</strong> <a href="mailto:ai@ytforge.app">ai@ytforge.app</a></li>
-                  <li><strong>Safety reports:</strong> <a href="mailto:safety@ytforge.app">safety@ytforge.app</a></li>
-                  <li><strong>Privacy / DPO:</strong> <a href="mailto:privacy@ytforge.app">privacy@ytforge.app</a></li>
+                  <li><strong>AI team:</strong> <a href="mailto:support@ytforge.app">support@ytforge.app</a></li>
+                  <li><strong>Safety reports:</strong> <a href="mailto:support@ytforge.app">support@ytforge.app</a></li>
+                  <li><strong>Privacy / DPO:</strong> <a href="mailto:support@ytforge.app">support@ytforge.app</a></li>
                 </ul>
 
                 <div className="mt-10 p-5 bg-yellow-50 border-2 border-black rounded-xl flex items-start gap-3 not-prose">
@@ -231,7 +231,7 @@ export function AiPolicyContent() {
               </div>
               <div className="flex-1">
                 <div className="font-black text-lg text-white mb-1">Have a question about our AI?</div>
-                <p className="text-sm text-neutral-300 leading-relaxed">Email <a href="mailto:ai@ytforge.app" className="text-red-500 font-black underline">ai@ytforge.app</a> — we reply within 2 business days.</p>
+                <p className="text-sm text-neutral-300 leading-relaxed">Email <a href="mailto:support@ytforge.app" className="text-red-500 font-black underline">support@ytforge.app</a> — we reply within 2 business days.</p>
               </div>
               <Link href="/privacy" className="inline-flex items-center gap-2 px-5 py-3 bg-white text-black font-black rounded-xl border-2 border-white hover:bg-neutral-100 transition-colors uppercase tracking-wider text-xs whitespace-nowrap">
                 <Scale className="w-4 h-4" /> Privacy Policy
