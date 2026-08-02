@@ -69,7 +69,7 @@ export function ToolTurnstile({
         onExpire={onExpire}
         theme="light"
         size={size}
-        className="mt-1 overflow-hidden rounded-lg border-2 border-black self-start"
+        className="mt-1 w-full overflow-hidden rounded-lg border-2 border-black"
       />
 
       {/* Inline hint or error.永远是last child so card height is stable. */}

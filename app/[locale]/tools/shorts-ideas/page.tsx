@@ -72,12 +72,12 @@ export default function ShortsIdeasPage() {
             <div className="flex flex-col gap-3">
               <div className="flex flex-col sm:flex-row gap-3">
                 <ToolInput value={topic} onChange={(e) => setTopic(e.target.value)} placeholder={tc.inputPlaceholder} className="flex-1" />
-                <ToolTurnstile actionLabel={tc.generateBtn as string} />
                 <PrimaryButton onClick={gen} disabled={loading || !topic.trim() || !ts.ready}>
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                   {loading ? tc.generatingBtn : tc.generateBtn}
                 </PrimaryButton>
               </div>
+              <ToolTurnstile actionLabel={tc.generateBtn as string} />
               <div className="max-w-sm">
                 <LanguageSelect value={language} onChange={setLanguage} label={tc.langLabel} />
               </div>

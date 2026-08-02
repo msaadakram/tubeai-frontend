@@ -137,12 +137,12 @@ export default function ThumbnailDownloaderPage() {
               className="flex-1 py-3 outline-none text-sm font-medium"
             />
           </div>
-          <ToolTurnstile actionLabel={tc.fetchBtn as string} />
           <PrimaryButton onClick={handleFetch} disabled={loading || !url.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
             {loading ? tc.fetchingBtn : tc.fetchBtn}
           </PrimaryButton>
         </div>
+        <ToolTurnstile actionLabel={tc.fetchBtn as string} />
 
         <AnimatePresence>
           {error && (

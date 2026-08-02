@@ -356,12 +356,12 @@ export default function ThumbnailPreviewPage() {
               </button>
             )}
           </div>
-          <ToolTurnstile actionLabel={tc.previewBtn as string} />
           <PrimaryButton onClick={() => handlePreview()} disabled={loading || !input.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {loading ? tc.loadingBtn : tc.previewBtn}
           </PrimaryButton>
         </div>
+        <ToolTurnstile actionLabel={tc.previewBtn as string} />
 
         <AnimatePresence>
           {error && (

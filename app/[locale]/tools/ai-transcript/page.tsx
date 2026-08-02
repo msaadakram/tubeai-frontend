@@ -286,12 +286,12 @@ export default function AITranscriptPage() {
             <div className="flex-1 min-w-0">
               <LanguageSelect value={lang} onChange={setLang} compact label={tc.inputLanguageLabel} />
             </div>
-            <ToolTurnstile actionLabel={tc.btnGenerate as string} />
             <PrimaryButton onClick={() => run()} disabled={loading || !url.trim() || !ts.ready}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
               {loading ? tc.btnLoading : tc.btnGenerate}
             </PrimaryButton>
           </div>
+          <ToolTurnstile actionLabel={tc.btnGenerate as string} />
         </div>
       </ToolCard>
 

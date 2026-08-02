@@ -274,12 +274,12 @@ export default function MonetizationCheckerPage() {
               className="flex-1 py-3 outline-none text-sm font-medium bg-transparent min-w-0"
             />
           </div>
-          <ToolTurnstile actionLabel={tc.btnCheck as string} />
           <PrimaryButton onClick={() => run()} disabled={loading || !input.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <DollarSign className="w-4 h-4" />}
             {loading ? tc.btnChecking : tc.btnCheck}
           </PrimaryButton>
         </div>
+        <ToolTurnstile actionLabel={tc.btnCheck as string} />
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <span className="text-[10px] font-black text-neutral-500 uppercase tracking-wider">{tc.tryPrefix}</span>
           {suggestions.map((s) => (

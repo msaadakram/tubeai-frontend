@@ -425,12 +425,12 @@ ${embedHtml}
               </button>
             )}
           </div>
-          <ToolTurnstile actionLabel={tc.btnGenerate as string} />
           <PrimaryButton onClick={() => handleGenerate()} disabled={loading || !input.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {loading ? tc.btnGenerating : tc.btnGenerate}
           </PrimaryButton>
         </div>
+        <ToolTurnstile actionLabel={tc.btnGenerate as string} />
 
         <AnimatePresence>
           {error && (

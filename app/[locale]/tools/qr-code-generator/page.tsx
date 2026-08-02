@@ -393,12 +393,12 @@ export default function QrCodeGeneratorPage() {
               </button>
             )}
           </div>
-          <ToolTurnstile actionLabel={tc.inputConfig.generateBtn as string} />
           <PrimaryButton onClick={() => generate()} disabled={loading || !input.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <QrCode className="w-4 h-4" />}
             {loading ? tc.inputConfig.generatingBtn : tc.inputConfig.generateBtn}
           </PrimaryButton>
         </div>
+        <ToolTurnstile actionLabel={tc.inputConfig.generateBtn as string} />
 
         <AnimatePresence>
           {error && (

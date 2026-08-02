@@ -220,12 +220,12 @@ export default function TagGeneratorPage() {
               className="flex-1 py-3 outline-none text-sm font-medium"
             />
           </div>
-          <ToolTurnstile actionLabel={tc.generateBtn as string} />
           <PrimaryButton onClick={() => run()} disabled={loading || !topic.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <TagIcon className="w-4 h-4" />}
             {loading ? tc.generatingBtn : tc.generateBtn}
           </PrimaryButton>
         </div>
+        <ToolTurnstile actionLabel={tc.generateBtn as string} />
         <div className="flex flex-wrap items-center gap-2 mt-4">
           <span className="text-[11px] font-black uppercase tracking-wider text-neutral-500">{tc.tryLabel}</span>
           {tc.suggestions.map((s: string) => (

@@ -575,12 +575,12 @@ export default function ViralTitleGeneratorPage() {
             onKeyDown={(e) => e.key === "Enter" && generate()}
             className="flex-1"
           />
-          <ToolTurnstile actionLabel={toolContent.generateBtn as string} />
           <PrimaryButton onClick={generate} disabled={loading || !keyword.trim() || !ts.ready}>
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {loading ? toolContent.generatingBtn : toolContent.generateBtn}
           </PrimaryButton>
         </div>
+        <ToolTurnstile actionLabel={toolContent.generateBtn as string} />
         <div className="mb-5 sm:mb-6 max-w-sm">
           <LanguageSelect value={language} onChange={setLanguage} label={toolContent.configLang} />
         </div>
