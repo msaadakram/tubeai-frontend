@@ -226,7 +226,7 @@ function ResetInner() {
             </div>
 
             {TURNSTILE_SITE_KEY && (
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-black uppercase tracking-wider text-neutral-500">
                     Security check
@@ -241,30 +241,21 @@ function ResetInner() {
                     </span>
                   )}
                 </div>
-                <div className="relative">
-                  <div
-                    className={`rounded-xl border-2 transition-colors ${
-                      turnstileToken
-                        ? "border-emerald-400 bg-emerald-50/40"
-                        : "border-black bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)]"
-                    }`}
-                  >
-                    <TurnstileWidget
-                      ref={turnstileRef}
-                      siteKey={TURNSTILE_SITE_KEY}
-                      onToken={(t) => setTurnstileToken(t)}
-                      onExpire={() => setTurnstileToken("")}
-                      theme="light"
-                      className="p-1.5"
-                    />
-                  </div>
-                  {!turnstileToken && (
-                    <p className="mt-1.5 text-[11px] text-neutral-500 font-bold flex items-center gap-1">
-                      <AlertTriangle className="w-3 h-3 text-yellow-600" />
-                      Complete the check above to reset your password.
-                    </p>
-                  )}
-                </div>
+                <TurnstileWidget
+                  ref={turnstileRef}
+                  siteKey={TURNSTILE_SITE_KEY}
+                  onToken={(t) => setTurnstileToken(t)}
+                  onExpire={() => setTurnstileToken("")}
+                  theme="light"
+                  size="normal"
+                  className="mt-1 overflow-hidden rounded-lg border-2 border-black"
+                />
+                {!turnstileToken && (
+                  <p className="mt-1 text-[11px] text-neutral-500 font-bold flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3 text-yellow-600" />
+                    Complete the check above to reset your password.
+                  </p>
+                )}
               </div>
             )}
 
