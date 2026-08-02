@@ -248,7 +248,7 @@ export default function ForgotPasswordPage() {
                             </span>
                           )}
                         </div>
-                        <div className="mt-1 flex w-full justify-center">
+                        <div className="mt-1 flex w-full justify-start">
                           <TurnstileWidget
                             ref={turnstileRef}
                             siteKey={TURNSTILE_SITE_KEY}
@@ -362,7 +362,7 @@ export default function ForgotPasswordPage() {
                           </span>
                         )}
                       </div>
-                      <div className="mt-1 flex w-full justify-center">
+                      <div className="mt-1 flex w-full justify-start">
                         <TurnstileWidget
                           ref={turnstileRef}
                           siteKey={TURNSTILE_SITE_KEY}
