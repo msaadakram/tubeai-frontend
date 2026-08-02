@@ -3,10 +3,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth";
+import { useAuth, authFetch } from "@/lib/auth";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { getLocalePath } from "@/lib/i18n/utils";
+import { useCountdown } from "@/lib/useCountdown";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import TurnstileWidget, { TurnstileHandle } from "@/components/ui/turnstile-widget";
@@ -15,6 +16,9 @@ import {
   Play,
   Mail,
   Lock,
+  AlertCircle,
+  RefreshCw,
+  Inbox,
   Eye,
   EyeOff,
   ArrowRight,
@@ -23,7 +27,6 @@ import {
   TrendingUp,
   Star,
   Shield,
-  AlertCircle,
 } from "lucide-react";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
@@ -36,10 +39,19 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // When the backend returns 403 EMAIL_NOT_VERIFIED (email/password user who
+  // hasn't clicked the verification link yet), we hold the email + a friendly
+  // message so the signin page can offer a one-click "Resend verification"
+  // CTA right next to the error block.
+  const [verifyNeededFor, setVerifyNeededFor] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
+  const [resendMsg, setResendMsg] = useState("");
+  const [resendError, setResendError] = useState("");
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [keepSignedIn, setKeepSignedIn] = useState(true);
   const [turnstileToken, setTurnstileToken] = useState("");
+  const resendCd = useCountdown(60);
 
   const turnstileRef = useRef<TurnstileHandle>(null);
   const { signIn, signInWithGoogle, user, loading: authLoading } = useAuth();
@@ -82,6 +94,30 @@ export default function SignInPage() {
     setError(message);
   };
 
+  const resendVerificationEmail = async () => {
+    if (resendCd.active || resending) return;
+    const target = verifyNeededFor || email.trim();
+    if (!/^\S+@\S+\.\S+$/.test(target)) {
+      setResendError("Please enter a valid email address.");
+      return;
+    }
+    setResending(true);
+    setResendError("");
+    setResendMsg("");
+    try {
+      const data = await authFetch<{ ok: boolean; message?: string }>("/api/auth/resend-verification", {
+        method: "POST",
+        body: JSON.stringify({ email: target }),
+      });
+      setResendMsg(data?.message || "A new verification link has been sent if that account exists.");
+      resendCd.start();
+    } catch (err: any) {
+      setResendError(err?.message || "Couldn't send the email right now. Please try again in a minute.");
+    } finally {
+      setResending(false);
+    }
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (loading) return;
@@ -92,6 +128,9 @@ export default function SignInPage() {
     }
 
     setError(null);
+    setVerifyNeededFor(null);
+    setResendMsg("");
+    setResendError("");
     setLoading(true);
 
     const res = await signIn(email.trim(), pwd, turnstileToken || undefined, keepSignedIn);
@@ -100,6 +139,14 @@ export default function SignInPage() {
     if (res.ok) {
       toast.success(t("auth.welcomeBackToast"));
       router.push(getLocalePath(locale, "/dashboard"));
+    } else if (res.code === "EMAIL_NOT_VERIFIED") {
+      // Email verification is compulsory — block the signin and surface a
+      // resend-verification CTA. The backend echoes the email so we don't
+      // need to ask the user to retype it.
+      setVerifyNeededFor(res.email || email.trim());
+      setError(res.error);
+      turnstileRef.current?.reset();
+      setTurnstileToken("");
     } else {
       turnstileRef.current?.reset();
       setTurnstileToken("");
@@ -255,6 +302,48 @@ export default function SignInPage() {
             </div>
 
             <form onSubmit={submit} className="space-y-4">
+              {verifyNeededFor && (
+                <div className="flex flex-col gap-2.5 p-3.5 bg-yellow-50 border-2 border-yellow-400 rounded-xl">
+                  <div className="flex items-start gap-2">
+                    <Inbox className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                    <p className="text-xs font-bold text-neutral-800 leading-relaxed">
+                      Your password is correct, but your email isn't verified yet. We sent a verification
+                      link to <span className="font-black text-black">{verifyNeededFor}</span> — click it to
+                      activate your account and you'll be able to sign in immediately.
+                    </p>
+                  </div>
+                  {resendMsg ? (
+                    <p className="text-xs font-bold text-emerald-700 leading-relaxed">{resendMsg}</p>
+                  ) : null}
+                  {resendError ? (
+                    <p className="text-xs font-bold text-red-600 leading-relaxed">{resendError}</p>
+                  ) : null}
+                  <button
+                    type="button"
+                    onClick={resendVerificationEmail}
+                    disabled={resendCd.active || resending}
+                    className="w-full inline-flex items-center justify-center gap-2 py-2.5 bg-white border-2 border-black rounded-lg font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] disabled:hover:translate-x-0 disabled:hover:translate-y-0 transition-all"
+                  >
+                    {resending ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <RefreshCw className="w-3.5 h-3.5" />
+                    )}
+                    {resending
+                      ? "Sending..."
+                      : resendCd.active
+                        ? `Resend in ${resendCd.left}s`
+                        : "Resend verification link"}
+                  </button>
+                  <Link
+                    href={getLocalePath(locale, "/verify-email")}
+                    className="text-[11px] font-black text-red-600 hover:text-black text-center"
+                  >
+                    Already have the link? Open the verify page →
+                  </Link>
+                </div>
+              )}
+
               <div>
                 <label className="block text-xs font-black uppercase tracking-wider mb-1.5">{t("auth.email")}</label>
                 <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow">

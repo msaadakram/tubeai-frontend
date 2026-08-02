@@ -37,7 +37,7 @@ export type User = {
   hasPassword?: boolean;
 };
 
-type AuthResult = { ok: true; user: User } | { ok: false; error: string; code?: string };
+type AuthResult = { ok: true; user: User } | { ok: false; error: string; code?: string; email?: string };
 
 type AuthCtx = {
   user: User | null;
@@ -208,9 +208,12 @@ export async function authFetch<T>(path: string, opts: RequestInit = {}): Promis
       friendlyAuthError(text, res.status);
     const err = new Error(
       typeof message === "string" ? message : "Request failed"
-    ) as Error & { status?: number; code?: string };
+    ) as Error & { status?: number; code?: string; email?: string };
     err.status = res.status;
     err.code = data?.code;
+    // EMAIL_NOT_VERIFIED carries the email so the caller (lib/auth.tsx signIn)
+    // can hit /resend-verification without asking the user to retype it.
+    if (data && typeof data.email === "string") err.email = data.email;
     throw err;
   }
 
@@ -370,6 +373,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         persist(u, res.token, res.refreshToken);
         return { ok: true, user: u };
       } catch (err: any) {
+        // EMAIL_NOT_VERIFIED is raised by the backend when an email/password
+        // user signs in correctly but hasn't clicked the verification link
+        // yet. Forward the code + email unchanged so the signin page can
+        // surface a "Resend verification" CTA; do NOT collapse it to
+        // "Invalid email or password" (the previous behavior hid the real
+        // reason and left the user stuck).
+        if (err?.code === "EMAIL_NOT_VERIFIED") {
+          return {
+            ok: false,
+            error: err?.message || "Please verify your email before signing in.",
+            code: "EMAIL_NOT_VERIFIED",
+            email: (err as any)?.email || email,
+          } as AuthResult;
+        }
         if (err?.status === 401 || err?.status === 403)
           return { ok: false, error: "Invalid email or password" };
         return { ok: false, error: err?.message || "Sign in failed" };
