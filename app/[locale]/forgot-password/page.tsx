@@ -5,6 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { getLocalePath } from "@/lib/i18n/utils";
+import { authFetch } from "@/lib/auth";
+import { useCountdown } from "@/lib/useCountdown";
 import {
   Play,
   Mail,
@@ -25,7 +27,6 @@ import {
 } from "lucide-react";
 import TurnstileWidget, { TurnstileHandle } from "@/components/ui/turnstile-widget";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
 const reassurances = [
@@ -44,54 +45,35 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [cooldown, setCooldown] = useState(0);
   const [formError, setFormError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const turnstileRef = useRef<TurnstileHandle>(null);
   const { locale } = useLocale();
+  const resendCd = useCountdown(60);
 
-  const sendLink = async (targetEmail: string) => {
+  const sendLink = async (targetEmail: string): Promise<boolean> => {
     setFormError("");
     if (TURNSTILE_SITE_KEY && !turnstileToken) {
       setFormError("Please complete the security check.");
       return false;
     }
     try {
-      const res = await fetch(`${API_BASE}/api/auth/forgot-password`, {
+      await authFetch<{ ok: boolean }>("/api/auth/forgot-password", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: targetEmail,
           ...(turnstileToken ? { "cf-turnstile-response": turnstileToken } : {}),
         }),
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => null);
-        setFormError(data?.error || "Couldn't send the email right now. Please try again.");
-        turnstileRef.current?.reset();
-        setTurnstileToken("");
-        return false;
-      }
       turnstileRef.current?.reset();
       setTurnstileToken("");
       return true;
-    } catch {
-      setFormError("Couldn't reach the server. Please check your connection and try again.");
+    } catch (err: any) {
+      setFormError(err?.message || "Couldn't send the email right now. Please try again.");
+      turnstileRef.current?.reset();
+      setTurnstileToken("");
       return false;
     }
-  };
-
-  const startCooldown = () => {
-    setCooldown(30);
-    const timer = setInterval(() => {
-      setCooldown((c) => {
-        if (c <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return c - 1;
-      });
-    }, 1000);
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -101,13 +83,13 @@ export default function ForgotPasswordPage() {
     setLoading(false);
     if (ok) {
       setSent(true);
-      startCooldown();
+      resendCd.start();
     }
   };
 
   const resend = async () => {
-    if (cooldown > 0) return;
-    if (await sendLink(email)) startCooldown();
+    if (resendCd.active) return;
+    if (await sendLink(email)) resendCd.start();
   };
 
   return (
@@ -128,7 +110,7 @@ export default function ForgotPasswordPage() {
           <motion.div animate={{ y: [0, 10, 0], rotate: [-6, -8, -6] }} transition={{ duration: 9, repeat: Infinity, delay: 0.5 }} className="absolute bottom-40 left-10 w-32 h-20 bg-yellow-300 border-2 border-black rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-3 flex items-center gap-2">
             <Clock className="w-5 h-5 text-black" />
             <div>
-              <div className="font-black text-[10px]">15 min</div>
+              <div className="font-black text-[10px]">1 hour</div>
               <div className="text-[8px] text-black/70 font-bold">Expires fast</div>
             </div>
           </motion.div>
@@ -317,11 +299,11 @@ export default function ForgotPasswordPage() {
                   <div className="flex flex-col sm:flex-row gap-2.5">
                     <button
                       onClick={resend}
-                      disabled={cooldown > 0}
+                      disabled={resendCd.active}
                       className="flex-1 inline-flex items-center justify-center gap-2 py-3 bg-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] disabled:hover:translate-x-0 disabled:hover:translate-y-0 transition-all"
                     >
-                      <RefreshCw className={`w-4 h-4 ${cooldown > 0 ? "" : "group-hover:rotate-180"} transition-transform`} />
-                      {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend link"}
+                      <RefreshCw className={`w-4 h-4 ${resendCd.active ? "" : "group-hover:rotate-180"} transition-transform`} />
+                      {resendCd.active ? `Resend in ${resendCd.left}s` : "Resend link"}
                     </button>
                     <Link
                       href={getLocalePath(locale, "/signin")}

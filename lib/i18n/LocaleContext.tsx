@@ -4,6 +4,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { defaultLocale, isLocale, locales, LOCALE_COOKIE, type Locale } from "./config";
 import type { Messages } from "./messages-schema";
 import { getMessages } from "./messages";
+import { setRequestLocale } from "@/lib/auth";
 
 type LocaleContextValue = {
   locale: Locale;
@@ -35,6 +36,12 @@ export function LocaleProvider({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locale]);
+
+  // Sync module-level locale used by authFetch's X-Locale header so the very
+  // first auth request (before any cookie is set) uses the correct language.
+  useEffect(() => {
+    setRequestLocale(activeLocale);
+  }, [activeLocale]);
 
   const setLocale = useCallback((next: Locale) => {
     if (!isLocale(next)) return;

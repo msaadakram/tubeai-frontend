@@ -19,9 +19,8 @@ import {
 } from "lucide-react";
 import { getLocalePath } from "@/lib/i18n/utils";
 import { useLocale } from "@/lib/i18n/LocaleContext";
+import { authFetch } from "@/lib/auth";
 import { useCountdown } from "@/lib/useCountdown";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
 
 export default function VerifyEmailPage() {
   return (
@@ -57,20 +56,14 @@ function VerifyInner() {
     setResendError("");
     setResendMsg("");
     try {
-      const res = await fetch(`${API_BASE}/api/auth/resend-verification`, {
+      const data = await authFetch<{ ok: boolean; message?: string }>("/api/auth/resend-verification", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: resendEmail.trim() }),
       });
-      const data = await res.json().catch(() => null);
-      if (res.ok) {
-        setResendMsg(data?.message || "If an account exists that is not yet verified, a new link has been sent.");
-        resendCd.start();
-      } else {
-        setResendError(data?.message || "Couldn't send the email right now. Please try again in a minute.");
-      }
-    } catch {
-      setResendError("Couldn't reach the server. Please check your connection and try again.");
+      setResendMsg(data?.message || "If an account exists that is not yet verified, a new link has been sent.");
+      resendCd.start();
+    } catch (err: any) {
+      setResendError(err?.message || "Couldn't send the email right now. Please try again in a minute.");
     } finally {
       setResending(false);
     }
@@ -85,26 +78,25 @@ function VerifyInner() {
     }
     (async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/auth/verify-email`, {
+        const data = await authFetch<{ ok: boolean; message?: string }>("/api/auth/verify-email", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token }),
         });
         if (cancelled) return;
-        const data = await res.json();
-        if (res.ok && data.ok) {
+        if (data.ok) {
           setStatus("success");
         } else {
           setStatus("error");
-          setErrorMsg(
-            data?.message ||
-              "This verification link is invalid or has expired. Please request a new one."
-          );
+          setErrorMsg(data?.message || "This verification link is invalid or has expired. Please request a new one.");
         }
-      } catch {
-        if (!cancelled) {
-          setStatus("error");
-          setErrorMsg("We couldn't reach the verification service. Please try again in a moment.");
+      } catch (err: any) {
+        if (cancelled) return;
+        setStatus("error");
+        const status = err?.status;
+        if (status && status >= 500) {
+          setErrorMsg("Our servers hit a snag. Please try again in a moment.");
+        } else {
+          setErrorMsg(err?.message || "This verification link is invalid or has expired. Please request a new one.");
         }
       }
     })();

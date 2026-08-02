@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { friendlyApiError } from "@/lib/apiError";
 
 export type Plan = "free" | "pro" | "enterprise";
 
@@ -46,7 +45,7 @@ type AuthCtx = {
   signIn: (email: string, password: string, turnstileToken?: string, rememberMe?: boolean) => Promise<AuthResult>;
   signUp: (name: string, email: string, password: string, referralCode?: string, turnstileToken?: string) => Promise<AuthResult>;
   signInWithGoogle: (idToken: string, referralCode?: string) => Promise<AuthResult>;
-  signOut: () => void;
+  signOut: () => Promise<void>;
   upgrade: (plan: Plan) => Promise<void>;
   updateProfile: (patch: Partial<Pick<User, "name" | "email" | "avatar">>) => Promise<void>;
   setGoal: (goal: Goal) => Promise<void>;
@@ -59,7 +58,7 @@ const Ctx = createContext<AuthCtx>({
   signIn: async () => ({ ok: false, error: "Not implemented" }),
   signUp: async () => ({ ok: false, error: "Not implemented" }),
   signInWithGoogle: async () => ({ ok: false, error: "Not implemented" }),
-  signOut: () => {},
+  signOut: async () => {},
   upgrade: async () => {},
   updateProfile: async () => {},
   setGoal: async () => {},
@@ -175,17 +174,26 @@ export async function authFetch<T>(path: string, opts: RequestInit = {}): Promis
   }
 
   if (res.status === 401 && !(opts as any).__isRetry) {
-    // Token may be expired — try to refresh.
+    // Token may be expired — try to refresh (single-flight dedupes parallel calls).
     const refreshed = await tryRefreshToken();
-    if (refreshed) {
+    if (refreshed.ok) {
       // Retry the original request with the new token.
       headers["Authorization"] = `Bearer ${refreshed.accessToken}`;
-      res = await fetch(url, { ...opts, headers, __isRetry: true } as any);
-    } else {
-      // Refresh failed — user must sign in again.
+      try {
+        res = await fetch(url, { ...opts, headers, __isRetry: true } as any);
+      } catch (networkErr: any) {
+        throw new Error(
+          `Cannot reach the server at ${API_BASE}. ` +
+          `Check your internet connection or the NEXT_PUBLIC_API_URL Vercel env var. ` +
+          `(${networkErr?.message || "Network error"})`
+        );
+      }
+    } else if (refreshed.reason === "invalid" || refreshed.reason === "no-token") {
+      // Refresh token is genuinely gone/rejected → force re-auth.
       clearTokens();
       if (setUserContext) setUserContext(null);
     }
+    // else: "transient" → keep tokens and user as-is; caller can retry shortly.
   }
 
   const text = await res.text();
@@ -197,7 +205,7 @@ export async function authFetch<T>(path: string, opts: RequestInit = {}): Promis
   if (!res.ok) {
     const message =
       (data && (data.error || data.message)) ||
-      friendlyApiError(text, res.status);
+      friendlyAuthError(text, res.status);
     const err = new Error(
       typeof message === "string" ? message : "Request failed"
     ) as Error & { status?: number; code?: string };
@@ -209,28 +217,60 @@ export async function authFetch<T>(path: string, opts: RequestInit = {}): Promis
   return data as T;
 }
 
+/** Friendly error text for /api/auth/* endpoints — avoids AI-flavored wording. */
+function friendlyAuthError(_raw: string, status: number): string {
+  if (status === 401) return "Your session has expired. Please sign in again.";
+  if (status === 403) return "You don't have permission to do that.";
+  if (status === 429) return "Too many attempts. Please wait a minute and try again.";
+  if (status >= 500) return "Our servers hit a snag. Please give it a moment and retry.";
+  return "Something went wrong. Please try again.";
+}
+
 // Internal ref to the React context's setUser — set by AuthProvider.
 let setUserContext: React.Dispatch<React.SetStateAction<User | null>> | null = null;
 
-/** Attempt a silent refresh using the stored refresh token. */
-async function tryRefreshToken(): Promise<{ accessToken: string; refreshToken: string } | null> {
-  const refreshToken = readRefreshToken();
-  if (!refreshToken) return null;
+// Single-flight refresh token: when multiple `authFetch` calls hit a 401
+// concurrently (e.g. dashboard booting fires /me + /billing + /referral in
+// parallel) they all share ONE inflight refresh promise. Without this,
+// N parallel refreshes with the SAME stored refresh token would race on the
+// backend's rotation logic, the loser calls revokeFamily() and the whole
+// token family dies → mass logout. Single-flight guarantees one network call.
+type RefreshOutcome =
+  | { ok: true; accessToken: string; refreshToken: string }
+  | { ok: false; reason: "no-token" | "invalid" | "transient" };
+let inflightRefresh: Promise<RefreshOutcome> | null = null;
 
+/** Attempt a silent refresh using the stored refresh token. Dedupes parallel callers. */
+async function tryRefreshToken(): Promise<RefreshOutcome> {
+  if (inflightRefresh) return inflightRefresh; // share the single inflight call
+  inflightRefresh = (async (): Promise<RefreshOutcome> => {
+    const refreshToken = readRefreshToken();
+    if (!refreshToken) return { ok: false, reason: "no-token" };
+
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      });
+      // 401 = refresh token genuinely invalid (revoked/expired/reused) → log out.
+      // 5xx / network = transient server problem → preserve session, retry later.
+      if (res.status === 401 || res.status === 403) return { ok: false, reason: "invalid" };
+      if (!res.ok) return { ok: false, reason: "transient" };
+      const data = await res.json();
+      if (!data.accessToken) return { ok: false, reason: "invalid" };
+      writeToken(data.accessToken);
+      if (data.refreshToken) writeRefreshToken(data.refreshToken);
+      return { ok: true, accessToken: data.accessToken, refreshToken: data.refreshToken };
+    } catch {
+      // Network error (CORS blip, DNS fail, offline) → transient, keep tokens.
+      return { ok: false, reason: "transient" };
+    }
+  })();
   try {
-    const res = await fetch(`${API_BASE}/api/auth/refresh`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data.accessToken) return null;
-    writeToken(data.accessToken);
-    if (data.refreshToken) writeRefreshToken(data.refreshToken);
-    return { accessToken: data.accessToken, refreshToken: data.refreshToken };
-  } catch {
-    return null;
+    return await inflightRefresh;
+  } finally {
+    inflightRefresh = null;
   }
 }
 
@@ -279,10 +319,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(u);
         cacheUser(u);
       })
-      .catch(() => {
+      .catch((err: any) => {
         if (cancelled) return;
-        clearTokens();
-        setUser(null);
+        // Only clear tokens on a definite session rejection. A 401/403 here
+        // means the access token is dead AND the refresh attempt inside
+        // authFetch failed with `invalid`/`no-token` (refresh token revoked).
+        // On 5xx or network errors we keep the cached user + tokens so a
+        // backend hiccup at boot doesn't log the user out.
+        const status = err?.status;
+        if (status === 401 || status === 403) {
+          clearTokens();
+          setUser(null);
+        }
       })
       .finally(() => { if (!cancelled) setLoading(false); });
 
@@ -352,7 +400,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }, [persist]);
 
-  const signOut = useCallback(() => { clearTokens(); setUser(null); }, []);
+  const signOut = useCallback(async () => {
+    // Revoke the refresh token server-side so a stolen token can't survive
+    // a sign-out. Best-effort: even if the network call fails (offline, 5xx),
+    // we always wipe local state so the user is signed out on this device.
+    const refreshToken = readRefreshToken();
+    try {
+      if (refreshToken) {
+        await fetch(`${API_BASE}/api/auth/logout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken }),
+        });
+      }
+    } catch {
+      /* swallow — sign-out is best-effort on the network side */
+    }
+    clearTokens();
+    setUser(null);
+  }, []);
 
   const updateProfile = useCallback(
     async (patch: Partial<Pick<User, "name" | "email" | "avatar">>) => {

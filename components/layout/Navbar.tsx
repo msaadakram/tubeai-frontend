@@ -89,8 +89,8 @@ export function Navbar() {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
-  const handleSignOut = () => {
-    signOut();
+  const handleSignOut = async () => {
+    await signOut();
     setUserOpen(false);
     setMobileOpen(false);
     router.push(getLocalePath(locale, "/"));

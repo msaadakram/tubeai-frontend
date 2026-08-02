@@ -7,7 +7,7 @@ import RouteShell from "@/components/RouteShell";
 import { LocaleProvider } from "@/lib/i18n/LocaleContext";
 import { locales, defaultLocale, type Locale } from "@/lib/i18n/config";
 import { buildLocalizedMetadata } from "@/lib/seo";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import GoogleOAuthProvider from "@/components/auth/GoogleOAuthProvider";
 
 const RTL_LOCALES: string[] = [];
 
@@ -70,7 +70,7 @@ export default async function LocaleLayout({
           __html: `document.documentElement.lang="${resolved}";document.documentElement.dir="${dir}";`,
         }}
       />
-      <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+      <GoogleOAuthProvider>
         <AuthProvider>
           <LocaleProvider locale={resolved}>
             <RouteShell>{children}</RouteShell>

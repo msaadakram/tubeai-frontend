@@ -21,8 +21,7 @@ import {
 } from "lucide-react";
 import { getLocalePath } from "@/lib/i18n/utils";
 import { useLocale } from "@/lib/i18n/LocaleContext";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.ytforge.app";
+import { authFetch } from "@/lib/auth";
 
 export default function ResetPasswordPage() {
   return (
@@ -68,21 +67,36 @@ function ResetInner() {
     setStatus("loading");
     setErrorMsg("");
     try {
-      const res = await fetch(`${API_BASE}/api/auth/reset-password`, {
+      const data = await authFetch<{ ok: boolean }>("/api/auth/reset-password", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword: pwd }),
       });
-      const data = await res.json();
-      if (res.ok && data.ok) {
+      if (data.ok) {
         setStatus("success");
       } else {
         setLinkBroken(true);
-        setErrorMsg(data?.message || "This reset link is invalid or has expired.");
+        setErrorMsg("This reset link is invalid or has expired.");
       }
-    } catch {
-      setStatus("form");
-      setErrorMsg("We couldn't reach the server. Please check your connection and try again.");
+    } catch (err: any) {
+      const status = err?.status;
+      const code = err?.code;
+      // 400 INVALID_RESET_TOKEN → link broken (expired/used). Show the "request a new link" UI.
+      if (status === 400 && (code === "INVALID_RESET_TOKEN" || code === "WEAK_PASSWORD")) {
+        setLinkBroken(true);
+        if (code === "WEAK_PASSWORD") {
+          setErrorMsg(err?.message || "Password must be at least 8 characters.");
+          setLinkBroken(false);
+          setStatus("form");
+        } else {
+          setErrorMsg(err?.message || "This reset link is invalid or has expired.");
+        }
+      } else if (status && status >= 500) {
+        setStatus("form");
+        setErrorMsg("Our servers hit a snag. Please give it a moment and retry.");
+      } else {
+        setStatus("form");
+        setErrorMsg(err?.message || "We couldn't reach the server. Please check your connection and try again.");
+      }
     }
   };
 
