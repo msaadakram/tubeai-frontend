@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useState, useRef, Suspense } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { useSearchParams } from "next/navigation";
@@ -22,6 +22,9 @@ import {
 import { getLocalePath } from "@/lib/i18n/utils";
 import { useLocale } from "@/lib/i18n/LocaleContext";
 import { authFetch } from "@/lib/auth";
+import TurnstileWidget, { TurnstileHandle } from "@/components/ui/turnstile-widget";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
 export default function ResetPasswordPage() {
   return (
@@ -45,6 +48,8 @@ function ResetInner() {
   const [pwd, setPwd] = useState("");
   const [confirm, setConfirm] = useState("");
   const [showPwd, setShowPwd] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<TurnstileHandle>(null);
 
   const pwdValid = pwd.length >= 8 && pwd.length <= 128;
   const match = confirm.length > 0 && confirm === pwd;
@@ -64,12 +69,20 @@ function ResetInner() {
       setErrorMsg("Passwords don't match.");
       return;
     }
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setErrorMsg("Please complete the security check.");
+      return;
+    }
     setStatus("loading");
     setErrorMsg("");
     try {
       const data = await authFetch<{ ok: boolean }>("/api/auth/reset-password", {
         method: "POST",
-        body: JSON.stringify({ token, newPassword: pwd }),
+        body: JSON.stringify({
+          token,
+          newPassword: pwd,
+          ...(turnstileToken ? { "cf-turnstile-response": turnstileToken } : {}),
+        }),
       });
       if (data.ok) {
         setStatus("success");
@@ -81,7 +94,12 @@ function ResetInner() {
       const status = err?.status;
       const code = err?.code;
       // 400 INVALID_RESET_TOKEN → link broken (expired/used). Show the "request a new link" UI.
-      if (status === 400 && (code === "INVALID_RESET_TOKEN" || code === "WEAK_PASSWORD")) {
+      if (status === 400 && code === "TURNSTILE_MISSING") {
+        setStatus("form");
+        setErrorMsg("Please complete the security check before resetting your password.");
+        turnstileRef.current?.reset();
+        setTurnstileToken("");
+      } else if (status === 400 && (code === "INVALID_RESET_TOKEN" || code === "WEAK_PASSWORD")) {
         setLinkBroken(true);
         if (code === "WEAK_PASSWORD") {
           setErrorMsg(err?.message || "Password must be at least 8 characters.");
@@ -93,9 +111,13 @@ function ResetInner() {
       } else if (status && status >= 500) {
         setStatus("form");
         setErrorMsg("Our servers hit a snag. Please give it a moment and retry.");
+        turnstileRef.current?.reset();
+        setTurnstileToken("");
       } else {
         setStatus("form");
         setErrorMsg(err?.message || "We couldn't reach the server. Please check your connection and try again.");
+        turnstileRef.current?.reset();
+        setTurnstileToken("");
       }
     }
   };
@@ -203,9 +225,52 @@ function ResetInner() {
               </div>
             </div>
 
+            {TURNSTILE_SITE_KEY && (
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-black uppercase tracking-wider text-neutral-500">
+                    Security check
+                  </label>
+                  {turnstileToken ? (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700">
+                      <CheckCircle2 className="w-3 h-3" /> Verified
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-neutral-400">
+                      <ShieldCheck className="w-3 h-3" /> Required
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <div
+                    className={`rounded-xl border-2 transition-colors ${
+                      turnstileToken
+                        ? "border-emerald-400 bg-emerald-50/40"
+                        : "border-black bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)]"
+                    }`}
+                  >
+                    <TurnstileWidget
+                      ref={turnstileRef}
+                      siteKey={TURNSTILE_SITE_KEY}
+                      onToken={(t) => setTurnstileToken(t)}
+                      onExpire={() => setTurnstileToken("")}
+                      theme="light"
+                      className="p-1.5"
+                    />
+                  </div>
+                  {!turnstileToken && (
+                    <p className="mt-1.5 text-[11px] text-neutral-500 font-bold flex items-center gap-1">
+                      <AlertTriangle className="w-3 h-3 text-yellow-600" />
+                      Complete the check above to reset your password.
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={status === "loading"}
+              disabled={status === "loading" || (Boolean(TURNSTILE_SITE_KEY) && !turnstileToken)}
               className="w-full inline-flex items-center justify-center gap-2 py-3.5 bg-red-600 text-white font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed transition-all uppercase tracking-wider text-sm"
             >
               {status === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
