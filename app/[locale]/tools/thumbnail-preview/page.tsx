@@ -258,6 +258,7 @@ export default function ThumbnailPreviewPage() {
   };
 
   const handlePreview = async (val?: string) => {
+    if (!ts.ready) return; // security check must be solved first (Enter/chip paths bypass the disabled button)
     const raw = (val ?? input).trim();
     if (!raw) return;
     if (val !== undefined) setInput(val);

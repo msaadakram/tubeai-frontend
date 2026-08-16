@@ -46,9 +46,9 @@ export function ToolTurnstile({
   if (!siteKey) return null;
 
   return (
-    <div className={`flex flex-col gap-1.5 ${className}`}>
-      <div className="flex items-center justify-between">
-        <label className="text-xs font-black uppercase tracking-wider text-neutral-500">
+    <div className={`mt-3 flex flex-col gap-1.5 ${className}`}>
+      <div className="flex items-center justify-between gap-3">
+        <label className="text-[11px] font-black uppercase tracking-wider text-neutral-500">
           Security check
         </label>
         {verified ? (
@@ -74,7 +74,7 @@ export function ToolTurnstile({
         />
       </div>
 
-      {/* Inline hint or error.永远是last child so card height is stable. */}
+      {/* Inline hint or error — always the last child so the card height stays stable. */}
       {error ? (
         <p className="mt-1 text-[11px] text-red-600 font-bold flex items-center gap-1">
           <AlertTriangle className="w-3 h-3 shrink-0" />

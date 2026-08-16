@@ -183,8 +183,6 @@ function calculateEstimatedEarnings(totalViews: number, videoCount: number) {
 
 import { useTranslations } from "@/lib/i18n/useTranslations";
 
-const unused = true; // placeholder for diff
-
 export default function ChannelAnalyticsPage() {
   const { t } = useTranslations();
   const toolContent = t("toolPages.channelAnalytics") as NonNullable<ReturnType<typeof t<"toolPages.channelAnalytics">>>;
@@ -198,6 +196,7 @@ export default function ChannelAnalyticsPage() {
   const [descExpanded, setDescExpanded] = useState(false);
 
   const run = async (val?: string) => {
+    if (!ts.ready) return; // security check must be solved first (Enter/chip paths bypass the disabled button)
     const v = (val ?? input).trim();
     if (!v || loading) return;
     if (val !== undefined) setInput(val);

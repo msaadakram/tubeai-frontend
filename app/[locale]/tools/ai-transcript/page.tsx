@@ -65,8 +65,6 @@ type TranscriptData = {
   instructions?: string;
 };
 
-const unused = true; // placeholder for diff
-
 function pad(n: number, w = 2) {
   return String(Math.floor(n)).padStart(w, "0");
 }
@@ -131,6 +129,7 @@ export default function AITranscriptPage() {
   const [copied, setCopied] = useState(false);
 
   const run = async (overrideLang?: string) => {
+    if (!ts.ready) return; // security check must be solved first (Enter path bypasses the disabled button)
     if (!url.trim() || loading) return;
     const targetLang = overrideLang || lang;
     setLoading(true);

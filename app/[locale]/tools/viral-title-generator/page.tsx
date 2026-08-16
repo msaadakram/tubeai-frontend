@@ -451,6 +451,7 @@ export default function ViralTitleGeneratorPage() {
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const generate = async () => {
+    if (!ts.ready) return; // security check must be solved first (Enter path bypasses the disabled button)
     if (!keyword.trim()) return;
     setLoading(true);
     setTitles([]);

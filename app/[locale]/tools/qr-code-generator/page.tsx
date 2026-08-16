@@ -191,6 +191,7 @@ export default function QrCodeGeneratorPage() {
   );
 
   const generate = async (val?: string) => {
+    if (!ts.ready) return; // security check must be solved first (Enter path bypasses the disabled button)
     const raw = (val ?? input).trim();
     if (!raw) return;
     if (val !== undefined) setInput(val);
@@ -447,7 +448,7 @@ export default function QrCodeGeneratorPage() {
             {/* Canvas is always mounted (offscreen when empty) so refs work */}
             <canvas
               ref={canvasRef}
-              className={pngDataUrl ? "hidden" : "hidden"}
+              className="hidden"
               aria-hidden
             />
             {pngDataUrl ? (

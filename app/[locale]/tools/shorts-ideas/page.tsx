@@ -39,6 +39,7 @@ export default function ShortsIdeasPage() {
   const [ideas, setIdeas] = useState<{ hook: string; body: string; cta: string }[]>([]);
 
   const gen = () => {
+    if (!ts.ready) return; // security check must be solved first (Enter path bypasses the disabled button)
     if (!topic.trim()) return;
     setLoading(true);
     setIdeas([]);

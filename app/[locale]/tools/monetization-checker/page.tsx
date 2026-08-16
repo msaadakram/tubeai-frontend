@@ -222,6 +222,7 @@ export default function MonetizationCheckerPage() {
   const [bannerFailed, setBannerFailed] = useState(false);
 
   const run = async (val?: string) => {
+    if (!ts.ready) return; // security check must be solved first (Enter/chip paths bypass the disabled button)
     const v = (val ?? input).trim();
     if (!v || loading) return;
     if (val !== undefined) setInput(val);

@@ -100,6 +100,7 @@ export default function AIScriptWriterPage() {
   if (!content) return null;
 
   const generate = async () => {
+    if (!ts.ready) return; // security check must be solved first (Enter/retry paths bypass the disabled button)
     if (!topic.trim()) return;
     setLoading(true);
     setScript(null);

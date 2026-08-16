@@ -90,6 +90,7 @@ export default function ThumbnailDownloaderPage() {
   };
 
   const handleFetch = async () => {
+    if (!ts.ready) return; // security check must be solved first (Enter path bypasses the disabled button)
     if (!url.trim() || loading) return;
     setLoading(true);
     setError(null);

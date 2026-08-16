@@ -304,6 +304,7 @@ export default function EmbedGeneratorPage() {
   };
 
   const handleGenerate = (val?: string) => {
+    if (!ts.ready) return; // security check must be solved first (Enter path bypasses the disabled button)
     const raw = (val ?? input).trim();
     if (!raw) return;
     if (val !== undefined) setInput(val);

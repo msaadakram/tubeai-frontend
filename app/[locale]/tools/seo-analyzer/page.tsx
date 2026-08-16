@@ -168,6 +168,7 @@ export default function SeoAnalyzerPage() {
   }, [loading]);
 
   const run = async () => {
+    if (!ts.ready) return; // security check must be solved first (any direct path bypasses the disabled button)
     if (!title.trim() || !description.trim() || loading) return;
     setLoading(true);
     setError(null);

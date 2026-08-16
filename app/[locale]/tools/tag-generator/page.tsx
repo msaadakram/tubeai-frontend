@@ -126,6 +126,7 @@ export default function TagGeneratorPage() {
   const abortRef = useRef<AbortController | null>(null);
 
   const run = async (val?: string) => {
+    if (!ts.ready) return; // security check must be solved first (Enter/chip paths bypass the disabled button)
     const v = (val ?? topic).trim();
     if (!v || loading) return;
     if (val !== undefined) setTopic(val);
