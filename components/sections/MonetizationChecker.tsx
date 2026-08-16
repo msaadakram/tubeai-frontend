@@ -134,8 +134,10 @@ export function MonetizationChecker() {
           mapper would relabel as an "AI service" failure). Render the widget
           only when Turnstile is configured; it self-suppresses in dev. */}
       {ts.enabled && (
-        <div className="mt-3 bg-white rounded-xl border-2 border-black p-3 shadow-[4px_4px_0px_0px_rgba(220,38,38,1)]">
-          <ToolTurnstile actionLabel={mcTranslations.checkButton as string} />
+        <div className="mt-3 flex justify-center lg:justify-start">
+          <div className="rounded-xl bg-white p-2.5 sm:p-3 shadow-[4px_4px_0px_0px_rgba(220,38,38,1)]">
+            <ToolTurnstile actionLabel={mcTranslations.checkButton as string} />
+          </div>
         </div>
       )}
 
