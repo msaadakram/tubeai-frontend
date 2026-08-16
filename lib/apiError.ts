@@ -19,6 +19,25 @@ export function friendlyApiError(raw: string, status: number): string {
 
   const lower = innerMessage.toLowerCase();
 
+  // A 401/403 from the Turnstile security gate is NOT an AI-service auth
+  // problem — the endpoint may not even use AI (e.g. /api/monetization only
+  // calls the public YouTube Data API). Surface the backend's actual, actionable
+  // message instead of mislabeling it as "couldn't authenticate with the AI
+  // service".
+  if (/security check|turnstile|captcha|human verification|bot protection/i.test(lower)) {
+    return innerMessage && innerMessage !== text
+      ? innerMessage
+      : "Please complete the security check before using this tool.";
+  }
+
+  // A 403 whose body is a CORS/origin rejection is a server-side allowlist
+  // problem, NOT an AI-service auth issue. The backend's global error handler
+  // emits "CORS: origin ... is not allowed" when a frontend origin is missing
+  // from its allowlist — label that truthfully instead of as an AI failure.
+  if (innerStatus === 403 && /cors:|origin.*not allowed|is not allowed/i.test(lower)) {
+    return "The server rejected this request from your browser (cross-origin policy). Please try again shortly — our team has been notified.";
+  }
+
   if (innerStatus === 429 || /rate.?limit|too many requests|platform overloaded|quota/i.test(lower)) {
     return "The AI service is overloaded with traffic right now. Please wait a minute and try again — your request didn't go through.";
   }
