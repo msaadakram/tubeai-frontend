@@ -322,7 +322,7 @@ function GoalsTab() {
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-5">
       <Card title="Set your goal" desc="A clear north star helps you ship the right videos. Pick a preset or define your own." icon={Target}>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-3 mb-6">
           {goalPresets.map((p) => {
             const active = title === p.title;
             return (
@@ -348,7 +348,7 @@ function GoalsTab() {
             <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Hit 100K subscribers" className="flex-1 py-3 outline-none text-sm font-medium bg-transparent" />
           </Field>
 
-          <div className="grid sm:grid-cols-3 gap-3">
+          <div className="grid md:grid-cols-3 gap-3">
             <Field label="Metric">
               <Sparkles className="w-4 h-4 text-red-600 shrink-0" />
               <select value={metric} onChange={(e) => setMetric(e.target.value)} className="flex-1 py-3 outline-none text-sm font-bold bg-transparent">
@@ -377,12 +377,12 @@ function GoalsTab() {
           <div className="bg-black text-white border-2 border-black rounded-xl p-5 relative overflow-hidden">
             <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-red-600/40 blur-3xl" />
             <div className="relative">
-              <div className="flex items-center justify-between mb-2">
-                <div>
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <div className="min-w-0 flex-1">
                   <div className="text-[10px] font-black uppercase tracking-wider text-neutral-300">Live preview</div>
-                  <div className="font-black text-lg tracking-tight">{title || "Your goal"}</div>
+                  <div className="font-black text-lg tracking-tight truncate">{title || "Your goal"}</div>
                 </div>
-                <div className="text-3xl font-black text-yellow-300">{pct}%</div>
+                <div className="text-3xl font-black text-yellow-300 shrink-0">{pct}%</div>
               </div>
               <div className="h-2.5 bg-white/20 rounded-full overflow-hidden mb-2">
                 <motion.div className="h-full bg-yellow-300" initial={false} animate={{ width: `${pct}%` }} transition={{ type: "spring", stiffness: 120, damping: 20 }} />
@@ -479,7 +479,7 @@ function PlanTab() {
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-5">
       <Card title="Subscription" desc={`You're on the ${user!.plan} plan. Upgrade to Pro for unlimited everything, or contact sales for Enterprise.`} icon={Crown}>
-        <div className="grid sm:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
           {plans.map((p) => {
             const isCurrent = p.id === user!.plan;
             const isLoading = pending === p.id;
@@ -606,11 +606,11 @@ function PlanTab() {
                   <>You'll move from <span className="font-black capitalize">{user!.plan}</span> to <span className="font-black capitalize">{confirm}</span>.</>
                 )}
               </p>
-              <div className="flex gap-2">
-                <button onClick={() => setConfirm(null)} disabled={!!pending} className="flex-1 py-3 bg-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider hover:bg-neutral-100 disabled:opacity-50 transition-colors">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button onClick={() => setConfirm(null)} disabled={!!pending} className="w-full sm:w-auto sm:flex-1 py-3 bg-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider hover:bg-neutral-100 disabled:opacity-50 transition-colors">
                   Cancel
                 </button>
-                <button onClick={apply} disabled={!!pending} className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 bg-red-600 text-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-70 transition-all">
+                <button onClick={apply} disabled={!!pending} className="w-full sm:w-auto sm:flex-1 inline-flex items-center justify-center gap-1.5 py-3 bg-red-600 text-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-70 transition-all">
                   {pending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
                   {pending ? "Processing..." : "Confirm & pay"}
                 </button>
@@ -885,11 +885,11 @@ function DangerTab({ onSignOut }: { onSignOut: () => void }) {
                 placeholder={user!.email}
                 className="w-full px-3 py-3 border-2 border-black rounded-xl text-sm font-medium bg-white outline-none focus:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow mb-4"
               />
-              <div className="flex gap-2">
-                <button onClick={() => setConfirmOpen(false)} disabled={deleting} className="flex-1 py-3 bg-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider hover:bg-neutral-100 disabled:opacity-50 transition-colors">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button onClick={() => setConfirmOpen(false)} disabled={deleting} className="w-full sm:w-auto sm:flex-1 py-3 bg-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider hover:bg-neutral-100 disabled:opacity-50 transition-colors">
                   Cancel
                 </button>
-                <button onClick={doDelete} disabled={!emailMatches || deleting} className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 bg-red-600 text-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                <button onClick={doDelete} disabled={!emailMatches || deleting} className="w-full sm:w-auto sm:flex-1 inline-flex items-center justify-center gap-1.5 py-3 bg-red-600 text-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                   {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                   {deleting ? "Deleting..." : "Delete forever"}
                 </button>
