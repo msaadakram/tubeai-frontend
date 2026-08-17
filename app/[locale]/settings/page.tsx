@@ -129,35 +129,35 @@ function SettingsPageInner() {
       <Navbar />
 
       {/* Header */}
-      <section className="relative bg-red-600 border-b-4 border-black overflow-hidden pt-28 pb-12">
+      <section className="relative bg-red-600 border-b-4 border-black overflow-hidden pt-24 sm:pt-28 pb-10 sm:pb-12">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.18)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.18)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_70%_60%_at_30%_30%,#000_30%,transparent_100%)]" />
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-xs font-black text-white/80 hover:text-white mb-5 group">
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
             Back to dashboard
           </Link>
-          <div className="flex items-center gap-4">
-            <img src={user.avatar} alt="" className="w-16 h-16 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" />
-            <div>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <img src={user.avatar} alt="" className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] shrink-0" />
+            <div className="min-w-0 flex-1">
               <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-300 text-black border-2 border-black text-[10px] font-black uppercase tracking-wider mb-1.5">
                 <Crown className="w-3 h-3" /> {user.plan} plan
               </div>
-              <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white [text-shadow:_2px_2px_0_rgb(0_0_0_/_30%)]">Account settings</h1>
-              <p className="text-sm text-red-50 font-medium">Manage your profile, goals, and subscription.</p>
+              <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white break-words [text-shadow:_2px_2px_0_rgb(0_0_0_/_30%)]">Account settings</h1>
+              <p className="text-xs sm:text-sm text-red-50 font-medium">Manage your profile, goals, and subscription.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid lg:grid-cols-[240px_1fr] gap-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 grid lg:grid-cols-[240px_1fr] gap-6 lg:gap-8">
         {/* Sidebar tabs */}
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <nav className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-2 flex lg:flex-col gap-1 overflow-x-auto">
+          <nav className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-2 flex lg:flex-col gap-1.5 overflow-x-auto no-scrollbar snap-x">
             {tabs.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl font-black text-sm border-2 whitespace-nowrap transition-all ${
+                className={`flex items-center gap-2.5 px-3 sm:px-3.5 py-2.5 rounded-xl font-black text-sm border-2 whitespace-nowrap shrink-0 snap-start transition-all ${
                   tab === t.id
                     ? "bg-red-600 text-white border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
                     : "border-transparent hover:bg-neutral-100 text-neutral-700"
@@ -566,7 +566,7 @@ function PlanTab() {
               {card?.expMonth ? <div className="text-[10px] text-neutral-500 font-bold">Expires {String(card.expMonth).padStart(2, "0")}/{card.expYear}</div> : null}
             </div>
           </div>
-          <div className="border-2 border-black rounded-xl p-4 flex items-center justify-between gap-3">
+          <div className="border-2 border-black rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Cancel subscription</div>
               <div className="font-black tracking-tight text-xs">{onPro ? "Drop to Free at period end" : "You're on the free plan"}</div>
@@ -574,7 +574,7 @@ function PlanTab() {
             <button
               onClick={cancelPlan}
               disabled={!onPro || canceling}
-              className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border-2 border-black rounded-lg text-xs font-black uppercase tracking-wider hover:bg-neutral-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-white border-2 border-black rounded-lg text-xs font-black uppercase tracking-wider hover:bg-neutral-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
             >
               {canceling ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArrowRight className="w-3.5 h-3.5" />}
               Cancel
@@ -594,7 +594,7 @@ function PlanTab() {
       <AnimatePresence>
         {confirm && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => !pending && setConfirm(null)}>
-            <motion.div initial={{ scale: 0.95, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 12 }} className="w-full max-w-md bg-white border-2 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6" onClick={(e) => e.stopPropagation()}>
+            <motion.div initial={{ scale: 0.95, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 12 }} className="w-full max-w-md bg-white border-2 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6" onClick={(e) => e.stopPropagation()}>
               <div className="w-12 h-12 rounded-xl bg-red-600 border-2 border-black flex items-center justify-center mb-4">
                 <Crown className="w-5 h-5 text-white" />
               </div>
@@ -696,8 +696,8 @@ function ReferTab() {
               <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Share link</label>
               <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white">
                 <Share2 className="w-4 h-4 text-red-600 shrink-0" />
-                <input readOnly value={shareUrl} className="flex-1 py-3 outline-none text-sm font-medium bg-transparent truncate" />
-                <button onClick={() => copy(shareUrl)} className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-red-600 text-white rounded-lg text-xs font-black uppercase border-2 border-black hover:bg-red-700 transition-colors">
+                <input readOnly value={shareUrl} className="flex-1 min-w-0 py-3 outline-none text-sm font-medium bg-transparent truncate" />
+                <button onClick={() => copy(shareUrl)} className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-red-600 text-white rounded-lg text-xs font-black uppercase border-2 border-black hover:bg-red-700 transition-colors shrink-0">
                   {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   {copied ? "Copied" : "Copy"}
                 </button>
@@ -842,7 +842,7 @@ function DangerTab({ onSignOut }: { onSignOut: () => void }) {
               <div className="font-black tracking-tight">Sign out everywhere</div>
               <div className="text-xs text-neutral-500 font-bold">Ends your sessions on every device.</div>
             </div>
-            <button onClick={onSignOut} className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-black text-white border-2 border-black rounded-xl font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
+            <button onClick={onSignOut} className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-black text-white border-2 border-black rounded-xl font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all w-full sm:w-auto">
               <ArrowRight className="w-3.5 h-3.5" /> Sign out
             </button>
           </div>
@@ -851,7 +851,7 @@ function DangerTab({ onSignOut }: { onSignOut: () => void }) {
               <div className="font-black tracking-tight text-red-700">Delete account</div>
               <div className="text-xs text-red-700 font-bold">Permanently removes your account, generations, goals, and billing info. This cannot be undone.</div>
             </div>
-            <button onClick={() => setConfirmOpen(true)} className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-red-600 text-white border-2 border-black rounded-xl font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all">
+            <button onClick={() => setConfirmOpen(true)} className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-red-600 text-white border-2 border-black rounded-xl font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all w-full sm:w-auto">
               <Trash2 className="w-3.5 h-3.5" /> Delete account
             </button>
           </div>
@@ -867,7 +867,7 @@ function DangerTab({ onSignOut }: { onSignOut: () => void }) {
       <AnimatePresence>
         {confirmOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => !deleting && setConfirmOpen(false)}>
-            <motion.div initial={{ scale: 0.95, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 12 }} className="w-full max-w-md bg-white border-2 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6" onClick={(e) => e.stopPropagation()}>
+            <motion.div initial={{ scale: 0.95, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 12 }} className="w-full max-w-md bg-white border-2 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6" onClick={(e) => e.stopPropagation()}>
               <div className="w-12 h-12 rounded-xl bg-red-600 border-2 border-black flex items-center justify-center mb-4">
                 <Trash2 className="w-5 h-5 text-white" />
               </div>
@@ -906,7 +906,7 @@ function DangerTab({ onSignOut }: { onSignOut: () => void }) {
 function Card({ title, desc, icon: Icon, children }: { title: string; desc: string; icon: any; children: React.ReactNode }) {
   return (
     <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
-      <div className="px-6 py-5 border-b-2 border-black bg-neutral-50 flex items-start gap-3">
+      <div className="px-4 sm:px-6 py-4 sm:py-5 border-b-2 border-black bg-neutral-50 flex items-start gap-3">
         <div className="w-10 h-10 rounded-xl bg-red-600 text-white border-2 border-black flex items-center justify-center shrink-0">
           <Icon className="w-4 h-4" />
         </div>
@@ -915,7 +915,7 @@ function Card({ title, desc, icon: Icon, children }: { title: string; desc: stri
           <div className="text-xs text-neutral-500 font-bold">{desc}</div>
         </div>
       </div>
-      <div className="p-6">{children}</div>
+      <div className="p-4 sm:p-6">{children}</div>
     </div>
   );
 }
