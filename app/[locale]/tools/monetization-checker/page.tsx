@@ -172,9 +172,9 @@ function getStatusInfo(status: string, tc: any): StatusInfo {
       cardBorder: "border-green-600",
       badgeBg: "bg-green-500",
       shadowColor: "rgba(22,163,74,1)",
-      label: tc.status.likely.label,
+      label: tc.status.likelyLabel,
       icon: CheckCircle2,
-      desc: tc.status.likely.desc,
+      desc: tc.status.likelyDesc,
     };
   }
   if (s === "RESTRICTED_REGION") {
@@ -183,9 +183,9 @@ function getStatusInfo(status: string, tc: any): StatusInfo {
       cardBorder: "border-red-600",
       badgeBg: "bg-red-600",
       shadowColor: "rgba(220,38,38,1)",
-      label: tc.status.restrictedRegion.label,
+      label: tc.status.restrictedRegionLabel,
       icon: Ban,
-      desc: tc.status.restrictedRegion.desc,
+      desc: tc.status.restrictedRegionDesc,
     };
   }
   if (s === "RESTRICTED") {
@@ -194,9 +194,9 @@ function getStatusInfo(status: string, tc: any): StatusInfo {
       cardBorder: "border-yellow-500",
       badgeBg: "bg-yellow-500",
       shadowColor: "rgba(234,179,8,1)",
-      label: tc.status.restricted.label,
+      label: tc.status.restrictedLabel,
       icon: AlertTriangle,
-      desc: tc.status.restricted.desc,
+      desc: tc.status.restrictedDesc,
     };
   }
   return {
@@ -204,9 +204,9 @@ function getStatusInfo(status: string, tc: any): StatusInfo {
     cardBorder: "border-orange-500",
     badgeBg: "bg-orange-500",
     shadowColor: "rgba(249,115,22,1)",
-    label: tc.status.notMonetized.label,
+    label: tc.status.notMonetizedLabel,
     icon: XCircle,
-    desc: tc.status.notMonetized.desc,
+    desc: tc.status.notMonetizedDesc,
   };
 }
 
