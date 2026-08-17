@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Youtube, Search, DollarSign, TrendingUp, Users, Briefcase, Loader2, AlertCircle } from "lucide-react";
 import { friendlyApiError } from "@/lib/apiError";
-import { ToolTurnstile } from "@/components/tools/ToolTurnstile";
-import { useTurnstileHeader } from "@/lib/turnstile/useTurnstileHeader";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const BASE_URL =
@@ -43,7 +41,6 @@ function fmtHandle(r: Result): string {
 export function MonetizationChecker() {
   const { t } = useTranslations();
   const mcTranslations = t("monetizationChecker");
-  const ts = useTurnstileHeader();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
@@ -52,17 +49,14 @@ export function MonetizationChecker() {
   const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();
     const v = input.trim();
-    // Wait for the Turnstile security check to verify before hitting the
-    // backend — /api/monetization is gated by requireTurnstileSession and
-    // rejects with 401 (misreportable as an "AI service" error) otherwise.
-    if (!v || loading || !ts.ready) return;
+    if (!v || loading) return;
     setLoading(true);
     setResult(null);
     setError(null);
     try {
       const res = await fetch(`${BASE_URL}/api/monetization`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", ...ts.headers },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: v }),
       });
       const body = await res.json().catch(() => ({}));
@@ -118,7 +112,7 @@ export function MonetizationChecker() {
         />
         <button
           type="submit"
-          disabled={loading || !input.trim() || !ts.ready}
+          disabled={loading || !input.trim()}
           className="m-1.5 px-4 md:px-6 py-3 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white rounded-xl font-bold text-sm flex items-center gap-2 transition-colors shrink-0"
         >
           {loading ? (
@@ -134,18 +128,6 @@ export function MonetizationChecker() {
           )}
         </button>
       </form>
-
-      {/* Security check — /api/monetization requires a verified Turnstile
-          session; without it the backend returns 401 (which the generic error
-          mapper would relabel as an "AI service" failure). Render the widget
-          only when Turnstile is configured; it self-suppresses in dev. */}
-      {ts.enabled && (
-        <div className="mt-3 flex justify-center lg:justify-start">
-          <div className="rounded-xl bg-white p-2.5 sm:p-3 shadow-[4px_4px_0px_0px_rgba(220,38,38,1)]">
-            <ToolTurnstile actionLabel={mcTranslations.checkButton as string} />
-          </div>
-        </div>
-      )}
 
       {/* Suggestions */}
       {!result && !loading && !error && (
