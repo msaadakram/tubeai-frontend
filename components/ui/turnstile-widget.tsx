@@ -58,38 +58,64 @@ interface TurnstileWidgetProps {
 }
 
 const SCRIPT_ID = "cf-turnstile-script";
-const GLOBAL_READY_TIMEOUT_MS = 4000;
+// On a slow mobile connection Cloudflare's API script can take well over 4s to
+// download and parse. A tight deadline made the widget permanently bail to the
+// "unverified" state on phones (it never completed), while laptops — fast
+// networks — finished in time. Keep the deadline generous so mobile completes
+// too; fast networks still resolve almost immediately.
+const GLOBAL_READY_TIMEOUT_MS = 15000;
 const GLOBAL_READY_POLL_MS = 25;
-const CONTAINER_READY_MAX_TRIES = 30; // ~30 rAF frames ≈ 500ms
+// A single transient load failure (weak signal, WARP, content-blocker) used to
+// kill the widget forever. Retry with a fresh tag so the widget can still
+// complete instead of silently staying broken.
+const SCRIPT_RETRIES = 3;
+const SCRIPT_RETRY_DELAY_MS = 800;
+const CONTAINER_READY_MAX_TRIES = 60; // ~60 rAF frames ≈ 1s (slow-mobile layout)
 
-function loadScript(): Promise<void> {
+function loadScript(retriesLeft: number = SCRIPT_RETRIES): Promise<void> {
   return new Promise((resolve, reject) => {
     if (window.turnstile) {
       resolve();
       return;
     }
-    const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
-    if (existing) {
-      if (existing.dataset.loaded === "true") {
-        // Script tag finished loading — but the global may not be attached yet.
-        waitForGlobal().then(resolve).catch(reject);
+
+    const retry = () => {
+      if (retriesLeft <= 0) {
+        reject(new Error("Turnstile script failed to load"));
         return;
       }
+      // Drop the failed tag so a later render picks up a fresh <script>, then
+      // try again after a short delay.
+      document.getElementById(SCRIPT_ID)?.remove();
+      setTimeout(() => {
+        loadScript(retriesLeft - 1).then(resolve, reject);
+      }, SCRIPT_RETRY_DELAY_MS);
+    };
+
+    const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
+    if (existing && existing.dataset.loaded === "true") {
+      // Tag already finished loading — but the global may not be attached yet.
+      waitForGlobal().then(resolve).catch(retry);
+      return;
+    }
+
+    if (existing) {
       const onLoaded = () => {
         existing.removeEventListener("load", onLoaded);
         existing.removeEventListener("error", onError);
         existing.dataset.loaded = "true";
-        waitForGlobal().then(resolve).catch(reject);
+        waitForGlobal().then(resolve).catch(retry);
       };
       const onError = () => {
         existing.removeEventListener("load", onLoaded);
         existing.removeEventListener("error", onError);
-        reject(new Error("Turnstile script failed to load"));
+        retry();
       };
       existing.addEventListener("load", onLoaded);
       existing.addEventListener("error", onError);
       return;
     }
+
     const script = document.createElement("script");
     script.id = SCRIPT_ID;
     script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
@@ -97,10 +123,10 @@ function loadScript(): Promise<void> {
     script.defer = true;
     script.onload = () => {
       script.dataset.loaded = "true";
-      waitForGlobal().then(resolve).catch(reject);
+      waitForGlobal().then(resolve).catch(retry);
     };
     script.onerror = () => {
-      reject(new Error("Turnstile script failed to load"));
+      retry();
     };
     document.head.appendChild(script);
   });
