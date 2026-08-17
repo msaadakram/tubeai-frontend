@@ -238,11 +238,17 @@ export default function MonetizationCheckerPage() {
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok || !body?.success) {
-        throw new Error(friendlyApiError(body?.error || "", res.status));
+        throw Object.assign(
+          new Error(friendlyApiError(body?.error || "", res.status)),
+          { mapped: true }
+        );
       }
       setData(body.data as MonetizationData);
     } catch (err: any) {
-      setError(friendlyApiError(err?.message || "", 0));
+      // err is already friendly-mapped using the real HTTP status — re-running
+      // friendlyApiError(err.message, 0) here would strip the status signal and
+      // could re-classify an already-correct message. Reuse it as-is.
+      setError(err?.mapped ? err.message : friendlyApiError(err?.message || "", 0));
     } finally {
       setLoading(false);
     }

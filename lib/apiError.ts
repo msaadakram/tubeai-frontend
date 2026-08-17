@@ -41,7 +41,23 @@ export function friendlyApiError(raw: string, status: number): string {
   if (innerStatus === 429 || /rate.?limit|too many requests|platform overloaded|quota/i.test(lower)) {
     return "The AI service is overloaded with traffic right now. Please wait a minute and try again — your request didn't go through.";
   }
-  if (innerStatus === 401 || innerStatus === 403 || /unauthorized|forbidden|invalid api key/i.test(lower)) {
+
+  // A 401/403 from a Turnstile-gated endpoint with an EMPTY (or non-JSON)
+  // body is a session expiry, NOT an AI-service auth failure. `res.json()`
+  // returning `{}` (e.g. a Vercel-edge error page or a malformed response)
+  // leaves `innerMessage` empty — labeling that as "couldn't authenticate
+  // with the AI service" sends the user down entirely the wrong path when
+  // the real fix is "complete the security check again".
+  if ((innerStatus === 401 || innerStatus === 403) && !innerMessage) {
+    return "Please complete the security check before using this tool.";
+  }
+
+  // Only label as an AI-service auth failure when there is actual evidence
+  // the call hit an authenticating third party: a non-empty body carrying a
+  // 401/403, or explicit auth keywords. A bare 401/403 status with no body is
+  // handled above (Turnstile session expiry); with a body but no security or
+  // CORS signal it is a genuine vendor auth rejection.
+  if ((innerMessage && (innerStatus === 401 || innerStatus === 403)) || /unauthorized|forbidden|invalid api key/i.test(lower)) {
     return "We couldn't authenticate with the AI service. Our team has been notified — please try again shortly.";
   }
   if (innerStatus === 400 || /bad request|invalid request/i.test(lower)) {
