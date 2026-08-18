@@ -36,6 +36,26 @@ export function StreamingPreview({ open, text, onCancel, title = "Generating" }:
                 </button>
               )}
             </div>
+
+            {/* Animated waiting line */}
+            <div
+              aria-hidden
+              className="relative h-1.5 overflow-hidden bg-neutral-200"
+            >
+              {/* Sweeping gradient pill (indeterminate loading) */}
+              <motion.div
+                className="absolute inset-y-0 w-1/3 rounded-full bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400"
+                animate={{ x: ["-120%", "420%"] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+              />
+              {/* Soft shimmer gliding across the track */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent"
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: "linear" }}
+              />
+            </div>
+
             <pre className="max-h-64 overflow-auto p-3 text-[12px] leading-relaxed text-neutral-700 font-mono whitespace-pre-wrap break-words">
               {text || "…"}
               <motion.span
