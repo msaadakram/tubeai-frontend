@@ -405,6 +405,9 @@ export function Navbar() {
                     <Link href={getLocalePath(locale, "/dashboard")} className="w-full inline-flex items-center justify-center gap-2 py-3 text-sm font-black text-white bg-red-600 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase tracking-wider">
                       <LayoutDashboard className="w-4 h-4" /> {t("nav.dashboard")}
                     </Link>
+                    <Link href={getLocalePath(locale, "/settings")} onClick={() => setMobileOpen(false)} className="w-full inline-flex items-center justify-center gap-2 py-3 text-sm font-black text-black border-2 border-black rounded-xl bg-white hover:bg-neutral-100 transition-colors uppercase tracking-wider">
+                      <Settings className="w-4 h-4" /> {t("nav.settings")}
+                    </Link>
                     <button onClick={handleSignOut} className="w-full inline-flex items-center justify-center gap-2 py-3 text-sm font-black text-red-600 border-2 border-black rounded-xl bg-white hover:bg-red-600 hover:text-white transition-colors uppercase tracking-wider">
                       <LogOut className="w-4 h-4" /> {t("nav.signOut")}
                     </button>
