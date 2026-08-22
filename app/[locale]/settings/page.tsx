@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
@@ -102,6 +102,7 @@ function SettingsPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<Tab>("profile");
+  const tabNavRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!user) router.replace("/signin");
@@ -113,6 +114,15 @@ function SettingsPageInner() {
       setTab(t);
     }
   }, [searchParams]);
+
+  // On mobile/tablet the tab strip scrolls horizontally — keep the active
+  // pill visible instead of letting it stay off-screen.
+  useEffect(() => {
+    if (!window.matchMedia("(max-width: 1023px)").matches) return;
+    tabNavRef.current
+      ?.querySelector<HTMLButtonElement>("[data-active='true']")
+      ?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [tab]);
 
   if (!user) return null;
 
@@ -151,12 +161,13 @@ function SettingsPageInner() {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 grid lg:grid-cols-[240px_1fr] gap-6 lg:gap-8">
         {/* Sidebar tabs */}
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <nav className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-2 flex lg:flex-col gap-1.5 overflow-x-auto no-scrollbar snap-x">
+        <aside className="relative min-w-0 lg:sticky lg:top-24 lg:self-start">
+          <nav ref={tabNavRef} className="min-w-0 max-w-full bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-2 flex lg:flex-col gap-1.5 overflow-x-auto no-scrollbar snap-x overscroll-contain">
             {tabs.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
+                data-active={tab === t.id}
                 className={`flex items-center gap-2.5 px-3 sm:px-3.5 py-2.5 rounded-xl font-black text-sm border-2 whitespace-nowrap shrink-0 snap-start transition-all ${
                   tab === t.id
                     ? "bg-red-600 text-white border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
@@ -168,10 +179,11 @@ function SettingsPageInner() {
               </button>
             ))}
           </nav>
+          <div aria-hidden className="pointer-events-none absolute top-2 bottom-2 right-2 w-8 rounded-r-xl bg-gradient-to-l from-white via-white/60 to-transparent lg:hidden" />
         </aside>
 
         {/* Content */}
-        <div>
+        <div className="min-w-0">
           <AnimatePresence mode="wait">
             {tab === "profile" && <ProfileTab key="profile" />}
             {tab === "goals" && <GoalsTab key="goals" />}
@@ -234,7 +246,7 @@ function ProfileTab() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
-              className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
+              className="flex-1 py-3 outline-none text-base sm:text-sm font-medium bg-transparent"
             />
             <span className="text-[10px] font-black text-neutral-400">{name.length}/40</span>
           </Field>
@@ -246,7 +258,7 @@ function ProfileTab() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 py-3 outline-none text-sm font-medium bg-transparent"
+              className="flex-1 py-3 outline-none text-base sm:text-sm font-medium bg-transparent"
             />
           </Field>
 
@@ -322,7 +334,7 @@ function GoalsTab() {
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-5">
       <Card title="Set your goal" desc="A clear north star helps you ship the right videos. Pick a preset or define your own." icon={Target}>
-        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-3 mb-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           {goalPresets.map((p) => {
             const active = title === p.title;
             return (
@@ -345,13 +357,13 @@ function GoalsTab() {
         <form onSubmit={submit} className="space-y-4">
           <Field label="Goal title">
             <Target className="w-4 h-4 text-red-600 shrink-0" />
-            <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Hit 100K subscribers" className="flex-1 py-3 outline-none text-sm font-medium bg-transparent" />
+            <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Hit 100K subscribers" className="flex-1 py-3 outline-none text-base sm:text-sm font-medium bg-transparent" />
           </Field>
 
           <div className="grid md:grid-cols-3 gap-3">
             <Field label="Metric">
               <Sparkles className="w-4 h-4 text-red-600 shrink-0" />
-              <select value={metric} onChange={(e) => setMetric(e.target.value)} className="flex-1 py-3 outline-none text-sm font-bold bg-transparent">
+              <select value={metric} onChange={(e) => setMetric(e.target.value)} className="flex-1 py-3 outline-none text-base sm:text-sm font-bold bg-transparent">
                 <option value="subscribers">Subscribers</option>
                 <option value="views">Views</option>
                 <option value="videos">Videos</option>
@@ -361,17 +373,17 @@ function GoalsTab() {
             </Field>
             <Field label="Current">
               <TrendingUp className="w-4 h-4 text-red-600 shrink-0" />
-              <input type="number" min={0} value={current} onChange={(e) => setCurrent(Number(e.target.value))} className="flex-1 py-3 outline-none text-sm font-medium bg-transparent" />
+              <input type="number" min={0} value={current} onChange={(e) => setCurrent(Number(e.target.value))} className="flex-1 py-3 outline-none text-base sm:text-sm font-medium bg-transparent" />
             </Field>
             <Field label="Target">
               <Trophy className="w-4 h-4 text-red-600 shrink-0" />
-              <input type="number" min={1} required value={target} onChange={(e) => setTarget(Number(e.target.value))} className="flex-1 py-3 outline-none text-sm font-medium bg-transparent" />
+              <input type="number" min={1} required value={target} onChange={(e) => setTarget(Number(e.target.value))} className="flex-1 py-3 outline-none text-base sm:text-sm font-medium bg-transparent" />
             </Field>
           </div>
 
           <Field label="Deadline">
             <Calendar className="w-4 h-4 text-red-600 shrink-0" />
-            <input type="date" required value={deadline} onChange={(e) => setDeadline(e.target.value)} className="flex-1 py-3 outline-none text-sm font-medium bg-transparent" />
+            <input type="date" required value={deadline} onChange={(e) => setDeadline(e.target.value)} className="flex-1 py-3 outline-none text-base sm:text-sm font-medium bg-transparent" />
           </Field>
 
           <div className="bg-black text-white border-2 border-black rounded-xl p-5 relative overflow-hidden">
@@ -387,7 +399,7 @@ function GoalsTab() {
               <div className="h-2.5 bg-white/20 rounded-full overflow-hidden mb-2">
                 <motion.div className="h-full bg-yellow-300" initial={false} animate={{ width: `${pct}%` }} transition={{ type: "spring", stiffness: 120, damping: 20 }} />
               </div>
-              <div className="flex items-center justify-between text-[11px] font-bold text-neutral-300">
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 min-w-0 text-[11px] font-bold text-neutral-300">
                 <span>{current.toLocaleString()} / {target.toLocaleString()} {metric}</span>
                 <span className="inline-flex items-center gap-1"><Calendar className="w-3 h-3" /> by {deadline}</span>
               </div>
@@ -594,7 +606,7 @@ function PlanTab() {
       <AnimatePresence>
         {confirm && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => !pending && setConfirm(null)}>
-            <motion.div initial={{ scale: 0.95, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 12 }} className="w-full max-w-md bg-white border-2 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6" onClick={(e) => e.stopPropagation()}>
+            <motion.div initial={{ scale: 0.95, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 12 }} className="w-full max-w-md max-h-[85dvh] overflow-y-auto bg-white border-2 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6" onClick={(e) => e.stopPropagation()}>
               <div className="w-12 h-12 rounded-xl bg-red-600 border-2 border-black flex items-center justify-center mb-4">
                 <Crown className="w-5 h-5 text-white" />
               </div>
@@ -696,7 +708,7 @@ function ReferTab() {
               <label className="block text-xs font-black uppercase tracking-wider mb-1.5">Share link</label>
               <div className="flex items-center gap-2 px-3 border-2 border-black rounded-xl bg-white">
                 <Share2 className="w-4 h-4 text-red-600 shrink-0" />
-                <input readOnly value={shareUrl} className="flex-1 min-w-0 py-3 outline-none text-sm font-medium bg-transparent truncate" />
+                <input readOnly value={shareUrl} className="flex-1 min-w-0 py-3 outline-none text-base sm:text-sm font-medium bg-transparent truncate" />
                 <button onClick={() => copy(shareUrl)} className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-red-600 text-white rounded-lg text-xs font-black uppercase border-2 border-black hover:bg-red-700 transition-colors shrink-0">
                   {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   {copied ? "Copied" : "Copy"}
@@ -766,7 +778,7 @@ function ReferTab() {
                         </div>
                       </div>
                       <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border-2 border-black ${
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border-2 border-black shrink-0 ${
                           h.status === "rewarded" ? "bg-emerald-100 text-emerald-800" : h.status === "voided" ? "bg-neutral-100 text-neutral-500" : "bg-yellow-100 text-yellow-800"
                         }`}
                       >
@@ -829,14 +841,14 @@ function DangerTab({ onSignOut }: { onSignOut: () => void }) {
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
       <div className="bg-white border-2 border-red-600 rounded-2xl shadow-[4px_4px_0px_0px_rgba(220,38,38,1)] overflow-hidden">
-        <div className="bg-red-50 border-b-2 border-red-600 px-6 py-4 flex items-center gap-2">
+        <div className="bg-red-50 border-b-2 border-red-600 px-4 sm:px-6 py-4 flex items-center gap-2">
           <AlertTriangle className="w-5 h-5 text-red-600" />
           <div>
             <div className="font-black tracking-tight">Danger zone</div>
             <div className="text-xs text-red-700 font-bold">These actions cannot be undone.</div>
           </div>
         </div>
-        <div className="p-6 space-y-4">
+        <div className="p-4 sm:p-6 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border-2 border-black rounded-xl">
             <div className="flex-1">
               <div className="font-black tracking-tight">Sign out everywhere</div>
@@ -867,7 +879,7 @@ function DangerTab({ onSignOut }: { onSignOut: () => void }) {
       <AnimatePresence>
         {confirmOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => !deleting && setConfirmOpen(false)}>
-            <motion.div initial={{ scale: 0.95, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 12 }} className="w-full max-w-md bg-white border-2 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6" onClick={(e) => e.stopPropagation()}>
+            <motion.div initial={{ scale: 0.95, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 12 }} className="w-full max-w-md max-h-[85dvh] overflow-y-auto bg-white border-2 border-black rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-5 sm:p-6" onClick={(e) => e.stopPropagation()}>
               <div className="w-12 h-12 rounded-xl bg-red-600 border-2 border-black flex items-center justify-center mb-4">
                 <Trash2 className="w-5 h-5 text-white" />
               </div>
@@ -883,7 +895,7 @@ function DangerTab({ onSignOut }: { onSignOut: () => void }) {
                 value={typedEmail}
                 onChange={(e) => setTypedEmail(e.target.value)}
                 placeholder={user!.email}
-                className="w-full px-3 py-3 border-2 border-black rounded-xl text-sm font-medium bg-white outline-none focus:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow mb-4"
+                className="w-full px-3 py-3 border-2 border-black rounded-xl text-base sm:text-sm font-medium bg-white outline-none focus:shadow-[3px_3px_0px_0px_rgba(220,38,38,1)] transition-shadow mb-4"
               />
               <div className="flex flex-col sm:flex-row gap-2">
                 <button onClick={() => setConfirmOpen(false)} disabled={deleting} className="w-full sm:w-auto sm:flex-1 py-3 bg-white border-2 border-black rounded-xl font-black text-sm uppercase tracking-wider hover:bg-neutral-100 disabled:opacity-50 transition-colors">
